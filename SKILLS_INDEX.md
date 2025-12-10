@@ -20,6 +20,7 @@
 | Build trading signals, technical analysis | [trading-signals-skill](#trading-signals-skill) | active/ |
 | Set up sales automation, cold outreach | [sales-outreach-skill](#sales-outreach-skill) | active/ |
 | Deploy models to GPU, RunPod serverless | [runpod-deployment-skill](#runpod-deployment-skill) | active/ |
+| Build multi-agent systems, LangGraph orchestration | [langgraph-agents-skill](#langgraph-agents-skill) | active/ |
 
 ---
 
@@ -133,6 +134,32 @@ RunPod serverless and pod deployment patterns for GPU-accelerated AI workloads.
 
 ---
 
+### langgraph-agents-skill
+**Location:** `./active/langgraph-agents-skill/SKILL.md`
+**Lines:** ~109
+
+Production-tested patterns for multi-agent systems with LangGraph and LangChain. NO OPENAI.
+
+| Pattern | Use When |
+|---------|----------|
+| Supervisor | Centralized routing, clear hierarchy |
+| Swarm | Peer-to-peer, dynamic handoffs |
+| Master Orchestrator | Complex workflows, learning systems |
+
+**Reference Files (6):**
+- `reference/state-schemas.md` - TypedDict, Annotated reducers, concurrent patterns
+- `reference/base-agent-architecture.md` - Multi-provider setup (Anthropic, Groq, Cerebras)
+- `reference/tools-organization.md` - Modular tool design, testing patterns
+- `reference/orchestration-patterns.md` - Supervisor vs swarm vs master decision matrix
+- `reference/context-engineering.md` - Memory compaction, just-in-time loading
+- `reference/cost-optimization.md` - Provider routing, caching, token budgets
+
+**Keywords:** `langgraph`, `langchain`, `agents`, `orchestration`, `swarm`, `supervisor`, `state`, `multi-agent`
+
+**Projects:** sales-agent, robot-brain, vozlux, fieldvault-ai
+
+---
+
 ## Folder Structure
 
 ```
@@ -144,9 +171,12 @@ skills/
 │   ├── sales-outreach-skill/
 │   │   ├── SKILL.md                     # ~99 lines
 │   │   └── reference/                   # 3 files
-│   └── runpod-deployment-skill/
-│       ├── SKILL.md                     # ~105 lines
-│       └── reference/                   # 4 files
+│   ├── runpod-deployment-skill/
+│   │   ├── SKILL.md                     # ~105 lines
+│   │   └── reference/                   # 4 files
+│   └── langgraph-agents-skill/
+│       ├── SKILL.md                     # ~109 lines
+│       └── reference/                   # 6 files
 ├── stable/                              # Production-ready skills
 │   ├── workflow-enforcer/
 │   │   ├── SKILL.md                     # ~91 lines
@@ -184,7 +214,9 @@ skills/
 ```
 trading-signals-skill ──┬──→ runpod-deployment-skill (model serving)
                         │
-sales-outreach-skill ───┘    (LLM-powered agents)
+sales-outreach-skill ───┼──→ langgraph-agents-skill (multi-agent orchestration)
+                        │
+langgraph-agents-skill ─┘    (state schemas, orchestration patterns)
 
 workflow-enforcer ──────────→ All projects (global)
 project-context-skill ──────→ All projects (global)
@@ -197,4 +229,6 @@ project-context-skill ──────→ All projects (global)
 | ThetaRoom | Elliott Wave, Fibonacci (golden pocket), Wyckoff, Markov, Pattern Recognition, Swarm Consensus |
 | SwaggyStacks | Turtle Trading, Halving Supercycle, 7-state Markov, Combinatorial Backtesting |
 | cold-reach | Domain warming, Email sequences |
-| sales-agent | 6-agent architecture, Lead scoring |
+| sales-agent | 6-agent architecture, Lead scoring, LangGraph state schemas, multi-provider routing |
+| robot-brain | Supervisor vs swarm orchestration, handoff mechanisms |
+| vozlux | Master orchestrator, context engineering, self-learning patterns |
