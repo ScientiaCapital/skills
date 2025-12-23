@@ -1,6 +1,5 @@
 ---
 name: technical-research-skill
-version: 1.0.0
 description: |
   Framework comparisons, API evaluations, and implementation pattern research.
   Use when evaluating technologies, comparing frameworks, or planning integrations.

@@ -1,6 +1,5 @@
 ---
 name: runpod-deployment-skill
-version: 1.0.0
 description: |
   RunPod serverless and pod deployment patterns for GPU-accelerated AI workloads.
   Use when deploying ML models, setting up vLLM inference endpoints, configuring

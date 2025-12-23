@@ -1,6 +1,5 @@
 ---
 name: sales-outreach-skill
-version: 1.0.0
 description: |
   B2B sales automation patterns for cold outreach, lead scraping, and multi-agent
   sales systems. Use when building sales infrastructure, creating email sequences,

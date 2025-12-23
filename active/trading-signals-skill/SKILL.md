@@ -1,6 +1,5 @@
 ---
 name: trading-signals-skill
-version: 1.0.0
 description: |
   Technical analysis patterns for quantitative trading projects. Use when building
   trading systems, signal generation, or confluence detection. Covers Elliott Wave,

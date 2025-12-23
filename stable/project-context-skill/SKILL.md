@@ -1,6 +1,5 @@
 ---
 name: project-context-skill
-version: 1.0.0
 description: |
   Maintains project context and progress tracking across Claude sessions.
   Use at session start to load context, on session end to save progress.

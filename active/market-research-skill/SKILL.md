@@ -1,6 +1,5 @@
 ---
 name: market-research-skill
-version: 1.0.0
 description: |
   Company research, competitive analysis, and lead enrichment for B2B sales.
   Use when researching companies, building profiles, analyzing competitors, or

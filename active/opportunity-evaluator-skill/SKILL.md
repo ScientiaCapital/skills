@@ -1,6 +1,5 @@
 ---
 name: opportunity-evaluator-skill
-version: 1.0.0
 description: |
   General-purpose brainstorming partner for exploring opportunities. Use when thinking
   through project ideas, evaluating potential clients/customers, or digging into any

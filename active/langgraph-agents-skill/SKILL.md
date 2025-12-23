@@ -1,6 +1,5 @@
 ---
 name: langgraph-agents-skill
-version: 1.0.0
 description: |
   Use when building multi-agent systems with LangGraph/LangChain. Covers state coordination,
   orchestration patterns (supervisor/swarm/master), multi-provider routing, and cost optimization.

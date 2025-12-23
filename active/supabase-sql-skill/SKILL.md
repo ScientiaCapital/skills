@@ -1,6 +1,5 @@
 ---
 name: supabase-sql-skill
-version: 1.0.0
 description: |
   Clean and format SQL migrations for Supabase. Handles typo fixes, idempotency,
   RLS policy corrections, unused code removal, and consistent formatting.

@@ -1,6 +1,5 @@
 ---
 name: workflow-enforcer
-version: 1.0.0
 description: |
   Enforces workflow discipline across ALL projects. Ensures Claude checks for
   specialized agents before responding, announces skill/agent usage, and creates

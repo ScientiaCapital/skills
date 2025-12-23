@@ -33,7 +33,7 @@
 
 ### workflow-enforcer
 **Location:** `./stable/workflow-enforcer/SKILL.md`
-**Version:** 1.0.0
+
 **Global:** Symlinked to `~/.claude/skills/`
 
 Enforces workflow discipline across ALL projects. Ensures Claude checks for specialized agents, announces usage, and creates TodoWrite todos.
@@ -47,7 +47,7 @@ Enforces workflow discipline across ALL projects. Ensures Claude checks for spec
 
 ### project-context-skill
 **Location:** `./stable/project-context-skill/SKILL.md`
-**Version:** 1.0.0
+
 **Global:** Symlinked to `~/.claude/skills/`
 
 Maintains project context and progress tracking across Claude sessions. Works in both Claude Code (terminal) and Claude Desktop.
@@ -64,7 +64,7 @@ Maintains project context and progress tracking across Claude sessions. Works in
 
 ### trading-signals-skill
 **Location:** `./active/trading-signals-skill/SKILL.md`
-**Version:** 1.0.0
+
 
 Technical analysis patterns for quantitative trading systems.
 
@@ -96,7 +96,7 @@ Technical analysis patterns for quantitative trading systems.
 
 ### sales-outreach-skill
 **Location:** `./active/sales-outreach-skill/SKILL.md`
-**Version:** 1.0.0
+
 
 B2B sales automation patterns for cold outreach and multi-agent sales systems.
 
@@ -118,7 +118,7 @@ B2B sales automation patterns for cold outreach and multi-agent sales systems.
 
 ### runpod-deployment-skill
 **Location:** `./active/runpod-deployment-skill/SKILL.md`
-**Version:** 1.0.0
+
 
 RunPod serverless and pod deployment patterns for GPU-accelerated AI workloads.
 
@@ -143,7 +143,7 @@ RunPod serverless and pod deployment patterns for GPU-accelerated AI workloads.
 
 ### langgraph-agents-skill
 **Location:** `./active/langgraph-agents-skill/SKILL.md`
-**Version:** 1.0.0
+
 
 Production-tested patterns for multi-agent systems with LangGraph and LangChain. NO OPENAI.
 
@@ -169,7 +169,7 @@ Production-tested patterns for multi-agent systems with LangGraph and LangChain.
 
 ### supabase-sql-skill
 **Location:** `./active/supabase-sql-skill/SKILL.md`
-**Version:** 1.0.0
+
 
 Clean SQL migrations for Supabase. Handles typo fixes, idempotency, RLS policy corrections, and consistent formatting.
 
@@ -193,7 +193,7 @@ Clean SQL migrations for Supabase. Handles typo fixes, idempotency, RLS policy c
 
 ### market-research-skill
 **Location:** `./active/market-research-skill/SKILL.md`
-**Version:** 1.0.0
+
 
 Company research, competitive analysis, and lead enrichment for B2B sales.
 
@@ -219,7 +219,7 @@ Company research, competitive analysis, and lead enrichment for B2B sales.
 
 ### technical-research-skill
 **Location:** `./active/technical-research-skill/SKILL.md`
-**Version:** 1.0.0
+
 
 Framework comparisons, API evaluations, and implementation pattern research. NO OpenAI.
 
@@ -244,7 +244,7 @@ Framework comparisons, API evaluations, and implementation pattern research. NO 
 
 ### opportunity-evaluator-skill
 **Location:** `./active/opportunity-evaluator-skill/SKILL.md`
-**Version:** 1.0.0
+
 
 General-purpose brainstorming partner for exploring opportunities. Works as a thinking partner, not a judge.
 
