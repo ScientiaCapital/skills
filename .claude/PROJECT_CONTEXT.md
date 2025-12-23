@@ -3,36 +3,39 @@
 **Branch**: main | **Updated**: 2025-12-23
 
 ## Status
-Production-ready skills library with 16 skills (2 stable, 14 active). Today added 6 GTM/sales skills for GTME path and copied all to global `~/.claude/skills/`.
+Production-ready skills library with **17 skills** (2 stable, 15 active). Complete GTME competency stack from ICP definition to investor presentations.
 
-## Today's Focus
-1. [x] Build gtm-strategy-skill (ICP, positioning, messaging)
-2. [x] Build demo-discovery-skill (SPIN, MEDDIC, objection handling)
-3. [x] Build revenue-ops-skill (pipeline, CAC/LTV, forecasting)
-4. [x] Build content-marketing-skill (LinkedIn, blog SEO, case studies)
-5. [x] Build pricing-strategy-skill (tiering, packaging, psychology)
-6. [x] Build voice-ai-skill (Cartesia, Deepgram, Twilio, ElevenLabs)
-7. [x] Copy all 6 new skills to ~/.claude/skills/
-8. [x] Create zips for Claude Desktop in dist/
-9. [x] Update SKILLS_INDEX.md with all new entries
-10. [x] Run enterprise security/quality checklist
+## Current State
 
-## Done (This Session)
-- Created 6 new skills in active/:
-  - gtm-strategy-skill (205 lines + 1 reference file)
-  - demo-discovery-skill (284 lines)
-  - revenue-ops-skill (323 lines)
-  - content-marketing-skill (367 lines)
-  - pricing-strategy-skill (401 lines)
-  - voice-ai-skill (431 lines)
-- Copied all to ~/.claude/skills/ (now 16 total)
-- Created 6 new zips in dist/ (now 16 total)
-- Updated SKILLS_INDEX.md (skill count: 10 → 16)
-- Security scan: CLEAN (no secrets, no actual OpenAI usage)
-- Frontmatter validation: All valid (name + description only)
+### Stable Skills (2)
+- workflow-enforcer
+- project-context-skill
+
+### Active Skills (15)
+| Category | Skills |
+|----------|--------|
+| Trading/Finance | trading-signals-skill |
+| Sales/GTM | sales-outreach-skill, gtm-strategy-skill, demo-discovery-skill, revenue-ops-skill, pricing-strategy-skill |
+| AI/Agents | langgraph-agents-skill, voice-ai-skill |
+| Infrastructure | runpod-deployment-skill, supabase-sql-skill |
+| Research | market-research-skill, technical-research-skill, opportunity-evaluator-skill |
+| Content | content-marketing-skill |
+| Data | data-analysis-skill |
+
+### Deployment
+- All 17 skills in `~/.claude/skills/` (global access)
+- All 17 zips in `dist/` (Claude Desktop)
+- All committed to GitHub
 
 ## Blockers
 None
+
+## Next Tasks
+| Priority | Task | Notes |
+|----------|------|-------|
+| P1 | Refine skills based on usage | Monitor trigger accuracy |
+| P2 | Add more reference files | Based on real project needs |
+| P3 | Consider promoting active → stable | After battle-testing |
 
 ## Quick Commands
 ```bash
