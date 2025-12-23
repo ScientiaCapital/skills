@@ -1,7 +1,7 @@
 # Skills Index
 
 > Last updated: 2025-12-23
-> Total skills: 10 (2 stable, 8 active)
+> Total skills: 16 (2 stable, 14 active)
 
 ## Architecture
 
@@ -26,6 +26,12 @@
 | Research companies, competitive analysis | [market-research-skill](#market-research-skill) | active/ |
 | Evaluate frameworks, APIs, LLM providers | [technical-research-skill](#technical-research-skill) | active/ |
 | Brainstorm opportunities, evaluate clients | [opportunity-evaluator-skill](#opportunity-evaluator-skill) | active/ |
+| Define ICP, positioning, messaging | [gtm-strategy-skill](#gtm-strategy-skill) | active/ |
+| Run discovery calls, MEDDIC qualification | [demo-discovery-skill](#demo-discovery-skill) | active/ |
+| Pipeline analysis, forecasting, RevOps | [revenue-ops-skill](#revenue-ops-skill) | active/ |
+| Content strategy, LinkedIn, blog SEO | [content-marketing-skill](#content-marketing-skill) | active/ |
+| Pricing models, packaging, tiering | [pricing-strategy-skill](#pricing-strategy-skill) | active/ |
+| Build voice agents (Cartesia, Deepgram, Twilio) | [voice-ai-skill](#voice-ai-skill) | active/ |
 
 ---
 
@@ -265,11 +271,112 @@ General-purpose brainstorming partner for exploring opportunities. Works as a th
 
 ---
 
+### gtm-strategy-skill
+**Location:** `./active/gtm-strategy-skill/SKILL.md`
+
+Go-to-market strategy development for B2B SaaS and services.
+
+| Covers | Methodology |
+|--------|-------------|
+| ICP Definition | Jobs-to-be-done, firmographics, technographics |
+| Positioning | April Dunford framework (5 components) |
+| Messaging | Value hierarchy, personas, objection handling |
+| Competitive Intel | Battlecard framework, differentiation |
+
+**Reference Files:**
+- `reference/icp-templates.md` - ICP canvas templates
+
+**Triggers:** "define ICP", "positioning statement", "competitive analysis", "GTM strategy"
+
+---
+
+### demo-discovery-skill
+**Location:** `./active/demo-discovery-skill/SKILL.md`
+
+Discovery calls, demos, and qualification for B2B sales.
+
+| Framework | Coverage |
+|-----------|----------|
+| SPIN | Situation, Problem, Implication, Need-Payoff |
+| MEDDIC | Metrics, Economic Buyer, Decision Process/Criteria, Pain, Champion |
+| Demo Flow | Recap, Agenda, Show Value, Summarize, Next Steps |
+| LAER | Listen, Acknowledge, Explore, Respond (objections) |
+
+**Triggers:** "discovery call", "run a demo", "MEDDIC", "qualification", "objection handling"
+
+---
+
+### revenue-ops-skill
+**Location:** `./active/revenue-ops-skill/SKILL.md`
+
+Sales metrics, pipeline analysis, and revenue forecasting.
+
+| Metric Type | Coverage |
+|-------------|----------|
+| Pipeline | Coverage ratio, velocity, weighted pipeline |
+| Conversion | Lead→MQL→SQL→Opp→Win funnel |
+| Efficiency | CAC, LTV, LTV:CAC, payback period |
+| Attribution | First/last touch, linear, U-shaped, W-shaped |
+
+**Triggers:** "pipeline analysis", "forecast", "CAC", "LTV", "win rate", "conversion funnel"
+
+---
+
+### content-marketing-skill
+**Location:** `./active/content-marketing-skill/SKILL.md`
+
+B2B content strategy for demand generation and thought leadership.
+
+| Content Type | Funnel Stage |
+|--------------|--------------|
+| LinkedIn posts | Top (awareness) |
+| Blog/SEO | Top-Mid (discovery) |
+| Case studies | Mid (consideration) |
+| Video/Webinar | Mid-Bottom (decision) |
+
+**Triggers:** "content strategy", "LinkedIn post", "blog SEO", "case study", "thought leadership"
+
+---
+
+### pricing-strategy-skill
+**Location:** `./active/pricing-strategy-skill/SKILL.md`
+
+B2B pricing strategy, packaging, and monetization.
+
+| Model | Use Case |
+|-------|----------|
+| Per-seat | Team tools, collaboration |
+| Usage-based | APIs, infrastructure |
+| Tiered (Good/Better/Best) | Feature differentiation |
+| Hybrid | Enterprise SaaS |
+
+**Triggers:** "pricing strategy", "packaging", "tiering", "value-based pricing", "price increase"
+
+---
+
+### voice-ai-skill
+**Location:** `./active/voice-ai-skill/SKILL.md`
+
+Voice AI agents with Cartesia, Deepgram, AssemblyAI, Twilio, ElevenLabs. NO OPENAI.
+
+| Component | Primary | Fallback |
+|-----------|---------|----------|
+| STT | Deepgram | AssemblyAI |
+| TTS | Cartesia | ElevenLabs |
+| Telephony | Twilio | - |
+| LLM | Claude/DeepSeek | - |
+
+**Triggers:** "voice agent", "voice AI", "Twilio", "Deepgram", "Cartesia", "phone bot"
+
+**Projects:** vozlux, solarvoice-ai, langgraph-voice-agents
+
+---
+
 ## Folder Structure
 
 ```
 skills/
-├── active/                              # Skills being developed (8)
+├── active/                              # Skills being developed (14)
 │   ├── trading-signals-skill/
 │   ├── sales-outreach-skill/
 │   ├── runpod-deployment-skill/
@@ -277,18 +384,28 @@ skills/
 │   ├── supabase-sql-skill/
 │   ├── market-research-skill/
 │   ├── technical-research-skill/
-│   └── opportunity-evaluator-skill/
+│   ├── opportunity-evaluator-skill/
+│   ├── gtm-strategy-skill/              # NEW
+│   ├── demo-discovery-skill/            # NEW
+│   ├── revenue-ops-skill/               # NEW
+│   ├── content-marketing-skill/         # NEW
+│   ├── pricing-strategy-skill/          # NEW
+│   └── voice-ai-skill/                  # NEW
 ├── stable/                              # Production-ready skills (2)
 │   ├── workflow-enforcer/
 │   └── project-context-skill/
+├── dist/                                # Zips for Claude Desktop (16)
 ├── templates/
 │   └── SKILL_TEMPLATE.md
 ├── CLAUDE.md
 └── SKILLS_INDEX.md                      # This file
 
-~/.claude/skills/                        # Global symlinks
-├── workflow-enforcer -> .../stable/workflow-enforcer
-└── project-context-skill -> .../stable/project-context-skill
+~/.claude/skills/                        # Global copies (16 skills)
+├── workflow-enforcer/
+├── project-context-skill/
+├── trading-signals-skill/
+├── ... (all 16 skills)
+└── voice-ai-skill/
 ```
 
 ---
