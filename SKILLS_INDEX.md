@@ -1,7 +1,7 @@
 # Skills Index
 
 > Last updated: 2025-12-23
-> Total skills: 16 (2 stable, 14 active)
+> Total skills: 17 (2 stable, 15 active)
 
 ## Architecture
 
@@ -32,6 +32,7 @@
 | Content strategy, LinkedIn, blog SEO | [content-marketing-skill](#content-marketing-skill) | active/ |
 | Pricing models, packaging, tiering | [pricing-strategy-skill](#pricing-strategy-skill) | active/ |
 | Build voice agents (Cartesia, Deepgram, Twilio) | [voice-ai-skill](#voice-ai-skill) | active/ |
+| Executive data analysis, dashboards, investor presentations | [data-analysis-skill](#data-analysis-skill) | active/ |
 
 ---
 
@@ -372,11 +373,36 @@ Voice AI agents with Cartesia, Deepgram, AssemblyAI, Twilio, ElevenLabs. NO OPEN
 
 ---
 
+### data-analysis-skill
+**Location:** `./active/data-analysis-skill/SKILL.md`
+
+Executive-grade data analysis for VC, PE, angels, C-suite, and founders.
+
+| Capability | Tools |
+|------------|-------|
+| Data ingestion | pandas, polars, pdfplumber, python-pptx |
+| Wrangling | pandas/polars transforms, DuckDB |
+| Visualization | Plotly, Altair, Seaborn (McKinsey/BCG style) |
+| Dashboards | Streamlit production patterns |
+| SaaS metrics | CAC, LTV, MRR, ARR, NRR, cohort analysis |
+
+**Reference Files (4):**
+- `reference/chart-gallery.md` - 20+ executive chart templates
+- `reference/saas-metrics.md` - Complete SaaS KPI definitions
+- `reference/streamlit-patterns.md` - Production dashboard patterns
+- `reference/data-wrangling.md` - Format-specific extraction guides
+
+**Triggers:** "analyze this data", "build a dashboard", "investor presentation", "SaaS metrics", "cohort analysis"
+
+**Differentiator:** GTME who presents findings to C-suite, not just codes behind keyboard.
+
+---
+
 ## Folder Structure
 
 ```
 skills/
-├── active/                              # Skills being developed (14)
+├── active/                              # Skills being developed (15)
 │   ├── trading-signals-skill/
 │   ├── sales-outreach-skill/
 │   ├── runpod-deployment-skill/
@@ -385,16 +411,17 @@ skills/
 │   ├── market-research-skill/
 │   ├── technical-research-skill/
 │   ├── opportunity-evaluator-skill/
-│   ├── gtm-strategy-skill/              # NEW
-│   ├── demo-discovery-skill/            # NEW
-│   ├── revenue-ops-skill/               # NEW
-│   ├── content-marketing-skill/         # NEW
-│   ├── pricing-strategy-skill/          # NEW
-│   └── voice-ai-skill/                  # NEW
+│   ├── gtm-strategy-skill/
+│   ├── demo-discovery-skill/
+│   ├── revenue-ops-skill/
+│   ├── content-marketing-skill/
+│   ├── pricing-strategy-skill/
+│   ├── voice-ai-skill/
+│   └── data-analysis-skill/             # NEW
 ├── stable/                              # Production-ready skills (2)
 │   ├── workflow-enforcer/
 │   └── project-context-skill/
-├── dist/                                # Zips for Claude Desktop (16)
+├── dist/                                # Zips for Claude Desktop (17)
 ├── templates/
 │   └── SKILL_TEMPLATE.md
 ├── CLAUDE.md
