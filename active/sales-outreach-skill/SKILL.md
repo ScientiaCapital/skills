@@ -1,10 +1,12 @@
 ---
 name: sales-outreach-skill
+version: 1.0.0
 description: |
   B2B sales automation patterns for cold outreach, lead scraping, and multi-agent
   sales systems. Use when building sales infrastructure, creating email sequences,
-  implementing lead scoring, or developing GTM automation.
-  Keywords: cold outreach, lead scoring, BDR, email sequence, ICP, domain warming
+  implementing lead scoring, or developing GTM automation. Triggers: "cold email",
+  "lead scoring", "email sequence", "BDR automation", "domain warming", "sales pipeline",
+  "ICP definition", "outreach campaign", "lead qualification".
 ---
 
 # Sales Outreach Skill

@@ -1,9 +1,11 @@
 ---
 name: workflow-enforcer
+version: 1.0.0
 description: |
   Enforces workflow discipline across ALL projects. Ensures Claude checks for
   specialized agents before responding, announces skill/agent usage, and creates
   TodoWrite todos for multi-step tasks. Activates on every session start.
+  Triggers: automatic on all sessions, "use the right agent", "follow workflow".
 ---
 
 # Workflow Enforcement

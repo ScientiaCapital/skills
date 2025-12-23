@@ -1,11 +1,12 @@
 ---
 name: trading-signals-skill
+version: 1.0.0
 description: |
   Technical analysis patterns for quantitative trading projects. Use when building
   trading systems, signal generation, or confluence detection. Covers Elliott Wave,
   Wyckoff, Fibonacci, Markov Regime, Turtle Trading, pattern recognition, and
-  multi-LLM swarm consensus.
-  Keywords: fibonacci, elliott wave, wyckoff, turtle, confluence, golden pocket, swarm
+  multi-LLM swarm consensus. Triggers: "analyze chart", "fibonacci levels", "elliott wave",
+  "wyckoff analysis", "trading signals", "confluence detection", "technical analysis".
 ---
 
 # Trading Signals Skill
@@ -102,3 +103,4 @@ trading-project/
 **Advanced Patterns:**
 - `reference/pattern-recognition.md` - Candlestick + chart patterns
 - `reference/swarm-consensus.md` - Multi-LLM voting system
+- `reference/chinese-llm-stack.md` - Cost-optimized Chinese LLMs for trading

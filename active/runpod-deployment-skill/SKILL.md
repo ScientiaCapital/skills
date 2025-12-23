@@ -1,10 +1,12 @@
 ---
 name: runpod-deployment-skill
+version: 1.0.0
 description: |
   RunPod serverless and pod deployment patterns for GPU-accelerated AI workloads.
   Use when deploying ML models, setting up vLLM inference endpoints, configuring
-  serverless GPU workers, or managing RunPod infrastructure.
-  Keywords: runpod, serverless, vllm, GPU, inference, A100, H100, deployment
+  serverless GPU workers, or managing RunPod infrastructure. Triggers: "deploy to RunPod",
+  "GPU serverless", "vLLM endpoint", "A100 deployment", "scale to zero", "RunPod worker".
+  Note: M1 Mac requires GitHub Actions for Docker builds (no local build).
 ---
 
 # RunPod Deployment Skill

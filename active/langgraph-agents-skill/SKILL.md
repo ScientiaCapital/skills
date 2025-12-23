@@ -1,6 +1,11 @@
 ---
 name: langgraph-agents-skill
-description: Use when building multi-agent systems with LangGraph/LangChain and encountering state coordination issues, orchestration pattern decisions, or cost optimization needs across LLM providers. Applies patterns from production systems with 20+ agents including supervisor/swarm/master orchestration, state schema design, multi-provider routing, and context engineering.
+version: 1.0.0
+description: |
+  Use when building multi-agent systems with LangGraph/LangChain. Covers state coordination,
+  orchestration patterns (supervisor/swarm/master), multi-provider routing, and cost optimization.
+  Triggers: "build LangGraph agent", "multi-agent workflow", "supervisor pattern", "agent orchestration",
+  "StateGraph", "coordinate multiple agents", "agentic workflow". NO OPENAI - uses Claude, DeepSeek, Gemini.
 ---
 
 # LangGraph Multi-Agent Systems
@@ -48,16 +53,19 @@ class AgentState(TypedDict, total=False):
 ```
 **Deep dive:** `reference/state-schemas.md` (reducers, annotations, multi-level state)
 
-### 2. Multi-Provider Configuration
+### 2. Multi-Provider Configuration (via lang-core)
 ```python
-# Route by complexity/cost (NO OPENAI)
-llm_config = {
-    "cheap": ChatGroq(model="llama-3.1-8b"),       # Simple tasks
-    "smart": ChatAnthropic(model="claude-sonnet"),  # Complex reasoning
-    "fast": ChatCerebras(model="llama-3.3-70b")    # High throughput
-}
+# Use lang-core for unified provider access (NO OPENAI)
+from lang_core.providers import get_llm_for_task, LLMPriority
+
+# Auto-select by priority
+llm_cheap = get_llm_for_task(priority=LLMPriority.COST)   # DeepSeek
+llm_smart = get_llm_for_task(priority=LLMPriority.QUALITY)  # Claude
+llm_fast = get_llm_for_task(priority=LLMPriority.SPEED)   # Cerebras
+llm_local = get_llm_for_task(priority=LLMPriority.LOCAL)  # Ollama
 ```
 **Deep dive:** `reference/base-agent-architecture.md`, `reference/cost-optimization.md`
+**Infrastructure:** See `lang-core` package for middleware, tracing, caching
 
 ### 3. Tool Organization
 ```python
@@ -107,3 +115,23 @@ workflow.add_conditional_edges("agent_a", route_to_next, {
 | Infinite loops | Add termination condition in conditional edges |
 | High costs | Route simple tasks to cheaper models |
 | Context loss | Use checkpointers or memory systems |
+
+## lang-core Integration
+
+For production deployments, use **lang-core** for:
+- **Middleware**: Cost tracking, budget enforcement, retry, caching, PII safety
+- **LangSmith**: Unified tracing with `@traced_agent` decorators
+- **Providers**: Auto-selection via `get_llm_for_task(priority=...)`
+- **Celery**: Background agent execution with progress tracking
+- **Redis**: Distributed locks, rate limiting, event pub/sub
+
+```python
+# Example: Agent with full lang-core stack
+from lang_core import traced_agent, get_llm_for_task, LLMPriority
+from lang_core.middleware import budget_enforcement_middleware, cost_tracking_middleware
+
+@traced_agent("QualificationAgent", tags=["sales"])
+async def run_qualification(data):
+    llm = get_llm_for_task(priority=LLMPriority.SPEED)
+    # ... agent logic
+```
