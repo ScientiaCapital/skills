@@ -8,7 +8,7 @@
 
 ## Active Work
 
-### Worktree-Manager .env Enhancement
+### Worktree-Manager .env Enhancement (COMPLETED 2025-12-24)
 
 | Task | Status |
 |------|--------|
@@ -16,9 +16,11 @@
 | Update config.json envFilePriority | complete |
 | Update templates/worktree.json | complete |
 | Add safety warning | complete |
-| Regenerate dist/ zip | pending |
-| Update global skill | pending |
-| Git commit | pending |
+| Add model selection (opus/sonnet/haiku) | complete |
+| Regenerate dist/ zip | complete |
+| Update global skill | complete |
+| Git commit & push | complete |
+| Security audit | complete |
 
 ---
 
