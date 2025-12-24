@@ -1,6 +1,7 @@
 {
   "terminal": "ghostty",
   "shell": "zsh",
+  "defaultModel": "sonnet",
   "claudeCommand": "claude --dangerously-skip-permissions",
   "portPool": {
     "start": 8100,
@@ -8,7 +9,8 @@
   },
   "portsPerWorktree": 2,
   "worktreeBase": "~/tmp/worktrees",
-  "defaultCopyDirs": [".agents", ".env.example"],
+  "defaultCopyDirs": [".agents"],
+  "envFilePriority": [".env.local", ".env", ".env.example"],
   "maxConcurrentWorktrees": 3,
   "memoryWarningThresholdGB": 6
 }

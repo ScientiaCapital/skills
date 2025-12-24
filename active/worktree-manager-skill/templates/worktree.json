@@ -16,7 +16,12 @@
     "stop": "docker-compose down"
   },
 
-  "copyDirs": [".agents", ".env.example"],
+  "copyDirs": [".agents"],
+
+  "envFiles": {
+    "copy": [".env.local", ".env"],
+    "fallback": ".env.example"
+  },
 
   "preBranch": null,
   "postCreate": null

@@ -293,7 +293,16 @@ For EACH branch (can run in parallel):
 
 4. COPY UNCOMMITTED RESOURCES
    cp -r .agents $WORKTREE_PATH/ 2>/dev/null || true
-   cp .env.example $WORKTREE_PATH/.env 2>/dev/null || true
+
+   # Copy environment files (priority: .env.local > .env > .env.example)
+   if [ -f ".env.local" ]; then
+       cp .env.local "$WORKTREE_PATH/.env.local"
+   fi
+   if [ -f ".env" ]; then
+       cp .env "$WORKTREE_PATH/.env"
+   elif [ -f ".env.example" ]; then
+       cp .env.example "$WORKTREE_PATH/.env"
+   fi
 
 5. INSTALL DEPENDENCIES
    cd $WORKTREE_PATH
@@ -340,20 +349,27 @@ cat ~/.claude/worktree-registry.json | jq -r ".worktrees[] | select(.project == 
 
 If `launch-agent.sh` fails:
 
-**For Ghostty:**
+**For Ghostty (with model selection):**
 ```bash
+# Default (sonnet)
 open -na "Ghostty.app" --args -e bash -c "cd '$WORKTREE_PATH' && claude --dangerously-skip-permissions"
+
+# With Opus for complex tasks
+open -na "Ghostty.app" --args -e bash -c "cd '$WORKTREE_PATH' && claude --model opus --dangerously-skip-permissions"
+
+# With Haiku for quick tasks
+open -na "Ghostty.app" --args -e bash -c "cd '$WORKTREE_PATH' && claude --model haiku --dangerously-skip-permissions"
 ```
 
 **For iTerm2:**
 ```bash
 osascript -e 'tell application "iTerm2" to create window with default profile' \
-  -e 'tell application "iTerm2" to tell current session of current window to write text "cd '"$WORKTREE_PATH"' && claude"'
+  -e 'tell application "iTerm2" to tell current session of current window to write text "cd '"$WORKTREE_PATH"' && claude --model opus --dangerously-skip-permissions"'
 ```
 
 **For tmux:**
 ```bash
-tmux new-session -d -s "wt-$PROJECT-$BRANCH_SLUG" -c "$WORKTREE_PATH" "bash -c 'claude --dangerously-skip-permissions'"
+tmux new-session -d -s "wt-$PROJECT-$BRANCH_SLUG" -c "$WORKTREE_PATH" "bash -c 'claude --model opus --dangerously-skip-permissions'"
 ```
 
 ### 4. Cleanup Worktree
@@ -511,6 +527,9 @@ You:
 
 5. **Max worktrees**: With 100-port pool and 2 ports each, max ~50 concurrent worktrees
 
+6. **Environment files**: Never commit `.env` or `.env.local` to git.
+   Worktree copies inherit parent's secrets but remain gitignored.
+
 ---
 
 ## Script Reference
@@ -569,7 +588,8 @@ Location: `~/.claude/skills/worktree-manager/config.json`
 ```json
 {
   "terminal": "ghostty",
-  "shell": "bash",
+  "shell": "zsh",
+  "defaultModel": "sonnet",
   "claudeCommand": "claude --dangerously-skip-permissions",
   "portPool": {
     "start": 8100,
@@ -577,14 +597,36 @@ Location: `~/.claude/skills/worktree-manager/config.json`
   },
   "portsPerWorktree": 2,
   "worktreeBase": "~/tmp/worktrees",
-  "defaultCopyDirs": [".agents", ".env.example"]
+  "defaultCopyDirs": [".agents"],
+  "envFilePriority": [".env.local", ".env", ".env.example"]
 }
 ```
 
 **Options:**
 - **terminal**: `ghostty`, `iterm2`, `tmux`, `wezterm`, `kitty`, `alacritty`
 - **shell**: `bash`, `zsh`, `fish` (adjust syntax in claudeCommand if using fish)
-- **claudeCommand**: The command to launch Claude Code (default uses `--dangerously-skip-permissions` for autonomous operation)
+- **defaultModel**: `opus`, `sonnet`, `haiku` (model to use for worktree agents)
+- **claudeCommand**: The command to launch Claude Code (uses `--dangerously-skip-permissions` for autonomous operation)
+- **envFilePriority**: Order of env files to copy (first found wins for `.env`, all `.env.local` copied)
+
+### Model Selection
+
+To start a worktree with a specific model:
+
+```bash
+# Use Opus 4.5 for complex tasks
+claude --model opus --dangerously-skip-permissions
+
+# Use Sonnet 4.5 (default) for balanced performance
+claude --model sonnet --dangerously-skip-permissions
+
+# Use Haiku for quick, simple tasks
+claude --model haiku --dangerously-skip-permissions
+```
+
+**Tip:** When spinning up worktrees, you can request a specific model:
+- "Spin up worktree for feature/auth with opus" → Uses Opus 4.5
+- "Create worktree with haiku for quick fix" → Uses Haiku
 
 ---
 

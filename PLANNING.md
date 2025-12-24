@@ -1,60 +1,51 @@
 # Skills Library Planning
 
-**Current Sprint:** Add 8 External Skills
-**Start Date:** 2025-12-23
+**Current Sprint:** Worktree-Manager Enhancement
+**Date:** 2025-12-24
 **Constraint:** M1 8GB RAM - max 2-3 parallel agents
 
 ---
 
-## Active Workstreams
+## Active Work
 
-| Stream | Status | Agent |
-|--------|--------|-------|
-| worktree-manager-skill | ✅ complete | Wave 1 |
-| create-plans-skill | ✅ complete | Wave 1 |
-| debug-like-expert-skill | ✅ complete | Wave 1 |
-| create-subagents-skill | ✅ complete | Wave 2 |
-| create-agent-skills-skill | ✅ complete | Wave 2 |
-| create-hooks-skill | ✅ complete | Wave 2 |
-| create-slash-commands-skill | ✅ complete | Wave 2 |
-| create-meta-prompts-skill | ✅ complete | Wave 2 |
+### Worktree-Manager .env Enhancement
 
----
-
-## Review Gates
-
-- [x] RG1: Repos cloned successfully
-- [x] RG2: All SKILL.md have valid YAML frontmatter
-- [x] RG3: No OpenAI refs in main skills (only LangChain examples in reference/)
-- [x] RG4: All 8 skills in ~/.claude/skills/
-- [x] RG5: SKILLS_INDEX.md shows 25 skills
-- [x] RG6: Git commit clean
+| Task | Status |
+|------|--------|
+| Update SKILL.md env copy logic | complete |
+| Update config.json envFilePriority | complete |
+| Update templates/worktree.json | complete |
+| Add safety warning | complete |
+| Regenerate dist/ zip | pending |
+| Update global skill | pending |
+| Git commit | pending |
 
 ---
 
-## Memory Budget (8GB M1)
+## Next Up (From Backlog P1)
 
-| Component | RAM |
-|-----------|-----|
-| macOS base | ~2GB |
-| Ghostty | ~100MB |
-| Claude agent | ~1.5GB each |
-| **Available** | ~4GB (2-3 agents max) |
+- [ ] Test each skill activation with trigger phrases
+- [ ] Add reference/ folders for complex skills
+- [ ] Document worktree workflow in README
+- [ ] Create skill dependency graph
 
 ---
 
-## Completed This Session (2025-12-23)
+## Worktree Maintenance Schedule
 
-- [x] Created PLANNING.md
-- [x] Created BACKLOG.md
-- [x] Cloned worktree-manager-skill + taches-cc-resources
-- [x] Converted all 8 skills to Tim's format
-- [x] Created M1/8GB optimized config.json (4 worktrees, Ghostty)
-- [x] Deployed all 25 skills to ~/.claude/skills/
-- [x] Updated SKILLS_INDEX.md (17 → 25)
-- [x] Created dist/ zips for Claude Desktop
-- [x] Created audit.sh with logging
-- [x] Added shell aliases (wt, wt-audit, wt-cleanup, wt-memory)
-- [x] Initialized worktree registry
-- [x] Security sweep: secrets=0, CVEs=0, env=clean
-- [x] Updated 24 Next.js projects to 15.5.9 (critical vulns fixed)
+**Weekly (Monday):**
+- Run `wt-audit` to check status
+- Clean merged: `wt-clean-merged`
+- Review stale worktrees (7+ days)
+
+**Monthly (1st):**
+- Full audit + clean orphans
+- Review audit log: `wt-log-full`
+
+**Before new worktrees:**
+- Check memory: `wt-memory`
+- Max 4 concurrent (8GB M1, warning at 5GB)
+
+---
+
+> **Archive:** See [ARCHIVE.md](./ARCHIVE.md) for completed sprints.
