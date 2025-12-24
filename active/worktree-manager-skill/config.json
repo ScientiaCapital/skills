@@ -1,0 +1,14 @@
+{
+  "terminal": "ghostty",
+  "shell": "zsh",
+  "claudeCommand": "claude --dangerously-skip-permissions",
+  "portPool": {
+    "start": 8100,
+    "end": 8115
+  },
+  "portsPerWorktree": 2,
+  "worktreeBase": "~/tmp/worktrees",
+  "defaultCopyDirs": [".agents", ".env.example"],
+  "maxConcurrentWorktrees": 3,
+  "memoryWarningThresholdGB": 6
+}

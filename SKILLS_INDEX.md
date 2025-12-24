@@ -1,7 +1,7 @@
 # Skills Index
 
 > Last updated: 2025-12-23
-> Total skills: 17 (2 stable, 15 active)
+> Total skills: 25 (2 stable, 23 active)
 
 ## Architecture
 
@@ -33,6 +33,14 @@
 | Pricing models, packaging, tiering | [pricing-strategy-skill](#pricing-strategy-skill) | active/ |
 | Build voice agents (Cartesia, Deepgram, Twilio) | [voice-ai-skill](#voice-ai-skill) | active/ |
 | Executive data analysis, dashboards, investor presentations | [data-analysis-skill](#data-analysis-skill) | active/ |
+| Manage parallel git worktrees with agents | [worktree-manager-skill](#worktree-manager-skill) | active/ |
+| Create hierarchical project plans | [create-plans-skill](#create-plans-skill) | active/ |
+| Systematic expert debugging | [debug-like-expert-skill](#debug-like-expert-skill) | active/ |
+| Build specialized Claude subagents | [create-subagents-skill](#create-subagents-skill) | active/ |
+| Author new Claude skills | [create-agent-skills-skill](#create-agent-skills-skill) | active/ |
+| Create automation hooks | [create-hooks-skill](#create-hooks-skill) | active/ |
+| Build custom slash commands | [create-slash-commands-skill](#create-slash-commands-skill) | active/ |
+| Design meta-prompts for chaining | [create-meta-prompts-skill](#create-meta-prompts-skill) | active/ |
 
 ---
 
@@ -398,11 +406,122 @@ Executive-grade data analysis for VC, PE, angels, C-suite, and founders.
 
 ---
 
+### worktree-manager-skill
+**Location:** `./active/worktree-manager-skill/SKILL.md`
+
+Git worktree automation for parallel development with Claude agents. M1/8GB optimized.
+
+| Feature | Configuration |
+|---------|---------------|
+| Terminal | Ghostty (GPU-accelerated) |
+| Max concurrent | 3 worktrees |
+| Port range | 8100-8115 |
+| Memory warning | 6GB threshold |
+
+**Triggers:** "create worktree", "spin up worktrees", "parallel development", "worktree status", "cleanup worktrees"
+
+**Source:** [Wirasm/worktree-manager-skill](https://github.com/Wirasm/worktree-manager-skill)
+
+---
+
+### create-plans-skill
+**Location:** `./active/create-plans-skill/SKILL.md`
+
+Hierarchical project planning where "PLAN.md IS the prompt". Solo developer + Claude workflow.
+
+**Workflow:** Brief → Roadmap → Research → PLAN.md → Execute → Summary
+
+**Features:**
+- Domain-aware planning (loads expertise skills)
+- Atomic tasks (2-3 per plan to avoid context degradation)
+- 5 embedded deviation rules for autonomous execution
+- Auto-handoff at 10% context remaining
+
+**Triggers:** "create plan", "project planning", "roadmap", "break down this task", "phase planning"
+
+**Source:** [glittercowboy/taches-cc-resources](https://github.com/glittercowboy/taches-cc-resources)
+
+---
+
+### debug-like-expert-skill
+**Location:** `./active/debug-like-expert-skill/SKILL.md`
+
+Systematic debugging with evidence gathering and hypothesis testing. Scientific method approach.
+
+**Methodology:** Observe → Hypothesize → Test → Verify
+
+**Triggers:** "debug systematically", "root cause analysis", "expert debugging", "why is this failing"
+
+**Source:** [glittercowboy/taches-cc-resources](https://github.com/glittercowboy/taches-cc-resources)
+
+---
+
+### create-subagents-skill
+**Location:** `./active/create-subagents-skill/SKILL.md`
+
+Builds specialized Claude instances for isolated contexts with optimized system prompts.
+
+**Triggers:** "create subagent", "spawn agent", "specialized Claude", "isolated agent"
+
+**Source:** [glittercowboy/taches-cc-resources](https://github.com/glittercowboy/taches-cc-resources)
+
+---
+
+### create-agent-skills-skill
+**Location:** `./active/create-agent-skills-skill/SKILL.md`
+
+Meta-skill for building new skills through natural language description. Includes /heal-skill for self-improvement.
+
+**Skill Types:**
+- Task-execution skills (workflows, automation)
+- Domain expertise skills (5k-10k+ knowledge bases)
+
+**Triggers:** "create new skill", "build a skill", "skill authoring", "teach Claude to"
+
+**Source:** [glittercowboy/taches-cc-resources](https://github.com/glittercowboy/taches-cc-resources)
+
+---
+
+### create-hooks-skill
+**Location:** `./active/create-hooks-skill/SKILL.md`
+
+Event-driven automation for tool calls, session events, and prompt submissions.
+
+**Hook Types:** PreToolUse, PostToolUse, Stop, Prompt-based
+
+**Triggers:** "create hook", "automation trigger", "on tool call", "event-driven"
+
+**Source:** [glittercowboy/taches-cc-resources](https://github.com/glittercowboy/taches-cc-resources)
+
+---
+
+### create-slash-commands-skill
+**Location:** `./active/create-slash-commands-skill/SKILL.md`
+
+Command authoring with YAML configs, arguments, and dynamic context loading.
+
+**Triggers:** "create slash command", "new command", "custom command", "/command authoring"
+
+**Source:** [glittercowboy/taches-cc-resources](https://github.com/glittercowboy/taches-cc-resources)
+
+---
+
+### create-meta-prompts-skill
+**Location:** `./active/create-meta-prompts-skill/SKILL.md`
+
+Builds prompts with structured outputs for chaining (research.md → plan.md → implement).
+
+**Triggers:** "create meta-prompt", "prompt chaining", "structured prompt", "workflow prompts"
+
+**Source:** [glittercowboy/taches-cc-resources](https://github.com/glittercowboy/taches-cc-resources)
+
+---
+
 ## Folder Structure
 
 ```
 skills/
-├── active/                              # Skills being developed (15)
+├── active/                              # Skills being developed (23)
 │   ├── trading-signals-skill/
 │   ├── sales-outreach-skill/
 │   ├── runpod-deployment-skill/
@@ -417,22 +536,34 @@ skills/
 │   ├── content-marketing-skill/
 │   ├── pricing-strategy-skill/
 │   ├── voice-ai-skill/
-│   └── data-analysis-skill/             # NEW
+│   ├── data-analysis-skill/
+│   ├── worktree-manager-skill/          # NEW: parallel development
+│   ├── create-plans-skill/              # NEW: project planning
+│   ├── debug-like-expert-skill/         # NEW: expert debugging
+│   ├── create-subagents-skill/          # NEW: subagent builder
+│   ├── create-agent-skills-skill/       # NEW: skill authoring
+│   ├── create-hooks-skill/              # NEW: automation hooks
+│   ├── create-slash-commands-skill/     # NEW: command builder
+│   └── create-meta-prompts-skill/       # NEW: prompt chaining
 ├── stable/                              # Production-ready skills (2)
 │   ├── workflow-enforcer/
 │   └── project-context-skill/
-├── dist/                                # Zips for Claude Desktop (17)
+├── dist/                                # Zips for Claude Desktop (25)
 ├── templates/
 │   └── SKILL_TEMPLATE.md
+├── PLANNING.md                          # Sprint tracking
+├── BACKLOG.md                           # Priority queue
 ├── CLAUDE.md
 └── SKILLS_INDEX.md                      # This file
 
-~/.claude/skills/                        # Global copies (16 skills)
+~/.claude/skills/                        # Global copies (25 skills)
 ├── workflow-enforcer/
 ├── project-context-skill/
 ├── trading-signals-skill/
-├── ... (all 16 skills)
-└── voice-ai-skill/
+├── worktree-manager-skill/              # NEW
+├── create-plans-skill/                  # NEW
+├── ... (all 25 skills)
+└── create-meta-prompts-skill/
 ```
 
 ---
