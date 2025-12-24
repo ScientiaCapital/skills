@@ -349,16 +349,22 @@ cat ~/.claude/worktree-registry.json | jq -r ".worktrees[] | select(.project == 
 
 If `launch-agent.sh` fails:
 
-**For Ghostty (with model selection):**
+**For macOS Terminal.app (recommended for Claude Desktop):**
 ```bash
-# Default (sonnet)
-open -na "Ghostty.app" --args -e bash -c "cd '$WORKTREE_PATH' && claude --dangerously-skip-permissions"
+osascript -e 'tell application "Terminal" to do script "cd '"$WORKTREE_PATH"' && claude --model opus --dangerously-skip-permissions"'
+```
 
-# With Opus for complex tasks
-open -na "Ghostty.app" --args -e bash -c "cd '$WORKTREE_PATH' && claude --model opus --dangerously-skip-permissions"
-
-# With Haiku for quick tasks
-open -na "Ghostty.app" --args -e bash -c "cd '$WORKTREE_PATH' && claude --model haiku --dangerously-skip-permissions"
+**For Ghostty:**
+```bash
+# Create a temp script for reliable execution
+TEMP_SCRIPT=$(mktemp /tmp/worktree-launch.XXXXXX.sh)
+cat > "$TEMP_SCRIPT" << SCRIPT
+#!/bin/bash
+cd '$WORKTREE_PATH'
+exec claude --model opus --dangerously-skip-permissions
+SCRIPT
+chmod +x "$TEMP_SCRIPT"
+open -na "Ghostty.app" --args -e "$TEMP_SCRIPT"
 ```
 
 **For iTerm2:**
@@ -371,6 +377,8 @@ osascript -e 'tell application "iTerm2" to create window with default profile' \
 ```bash
 tmux new-session -d -s "wt-$PROJECT-$BRANCH_SLUG" -c "$WORKTREE_PATH" "bash -c 'claude --model opus --dangerously-skip-permissions'"
 ```
+
+**IMPORTANT for Claude Desktop users:** Use `terminal` as your terminal setting in config.json. The Terminal.app method using AppleScript is the most reliable for launching Claude sessions from Claude Desktop.
 
 ### 4. Cleanup Worktree
 
@@ -532,6 +540,37 @@ You:
 
 ---
 
+## Auto-Cleanup on Merge
+
+When a PR is merged, you should clean up its associated worktree to free ports and resources:
+
+**Trigger:** User says "cleanup merged worktrees" or "my PR was merged, clean it up"
+
+**Steps:**
+1. Check which worktrees have merged PRs
+2. For each merged worktree:
+   - Kill processes on allocated ports: `lsof -ti:<port> | xargs kill -9`
+   - Remove the worktree directory
+   - Update registry to remove entry
+   - Release ports back to pool
+   - Optionally delete local/remote branches
+
+**Quick cleanup command:**
+```bash
+~/.claude/skills/worktree-manager/scripts/cleanup.sh <project> <branch> --delete-branch
+```
+
+**Check for merged PRs:**
+```bash
+# List PRs that have been merged
+gh pr list --state merged --author @me --limit 10
+
+# Check if specific branch's PR was merged
+gh pr view <branch> --json state --jq '.state'
+```
+
+---
+
 ## Script Reference
 
 Scripts are in `~/.claude/skills/worktree-manager/scripts/`
@@ -589,8 +628,8 @@ Location: `~/.claude/skills/worktree-manager/config.json`
 {
   "terminal": "ghostty",
   "shell": "zsh",
-  "defaultModel": "sonnet",
-  "claudeCommand": "claude --dangerously-skip-permissions",
+  "defaultModel": "opus",
+  "claudeCommand": "claude --model opus --dangerously-skip-permissions",
   "portPool": {
     "start": 8100,
     "end": 8199
@@ -598,16 +637,19 @@ Location: `~/.claude/skills/worktree-manager/config.json`
   "portsPerWorktree": 2,
   "worktreeBase": "~/tmp/worktrees",
   "defaultCopyDirs": [".agents"],
-  "envFilePriority": [".env.local", ".env", ".env.example"]
+  "envFilePriority": [".env.local", ".env", ".env.example"],
+  "autoCleanupOnMerge": true
 }
 ```
 
 **Options:**
-- **terminal**: `ghostty`, `iterm2`, `tmux`, `wezterm`, `kitty`, `alacritty`
+- **terminal**: `ghostty`, `terminal`, `iterm2`, `tmux`, `wezterm`, `kitty`, `alacritty`
+  - Use `terminal` for macOS Terminal.app (recommended for Claude Desktop)
 - **shell**: `bash`, `zsh`, `fish` (adjust syntax in claudeCommand if using fish)
-- **defaultModel**: `opus`, `sonnet`, `haiku` (model to use for worktree agents)
+- **defaultModel**: `opus`, `sonnet`, `haiku` (model to use for worktree agents, default: opus)
 - **claudeCommand**: The command to launch Claude Code (uses `--dangerously-skip-permissions` for autonomous operation)
 - **envFilePriority**: Order of env files to copy (first found wins for `.env`, all `.env.local` copied)
+- **autoCleanupOnMerge**: If true, automatically kill ports and cleanup worktree when PR is merged
 
 ### Model Selection
 

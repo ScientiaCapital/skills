@@ -1,8 +1,8 @@
 {
   "terminal": "ghostty",
   "shell": "zsh",
-  "defaultModel": "sonnet",
-  "claudeCommand": "claude --dangerously-skip-permissions",
+  "defaultModel": "opus",
+  "claudeCommand": "claude --model opus --dangerously-skip-permissions",
   "portPool": {
     "start": 8100,
     "end": 8115
@@ -12,5 +12,6 @@
   "defaultCopyDirs": [".agents"],
   "envFilePriority": [".env.local", ".env", ".env.example"],
   "maxConcurrentWorktrees": 3,
-  "memoryWarningThresholdGB": 6
+  "memoryWarningThresholdGB": 6,
+  "autoCleanupOnMerge": true
 }

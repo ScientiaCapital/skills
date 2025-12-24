@@ -1,21 +1,41 @@
 #!/bin/bash
-# launch-agent.sh - Launch Claude Code in a new Ghostty terminal for a worktree
+# launch-agent.sh - Launch Claude Code in a new terminal for a worktree
 #
-# Usage: ./launch-agent.sh <worktree-path> [task-description]
+# Usage: ./launch-agent.sh <worktree-path> [task-description] [--terminal <type>]
+#
+# Terminal types: ghostty, terminal, iterm2, tmux, wezterm, kitty, alacritty
+# The "terminal" option uses macOS Terminal.app
 #
 # Examples:
 #   ./launch-agent.sh ~/tmp/worktrees/my-project/feature-auth
 #   ./launch-agent.sh ~/tmp/worktrees/my-project/feature-auth "Implement OAuth login"
+#   ./launch-agent.sh ~/tmp/worktrees/my-project/feature-auth "Task" --terminal terminal
 
 set -e
 
 WORKTREE_PATH="$1"
 TASK="$2"
+OVERRIDE_TERMINAL=""
+
+# Parse optional --terminal flag
+shift 2 2>/dev/null || true
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --terminal)
+            OVERRIDE_TERMINAL="$2"
+            shift 2
+            ;;
+        *)
+            shift
+            ;;
+    esac
+done
 
 # Validate input
 if [ -z "$WORKTREE_PATH" ]; then
     echo "Error: Worktree path required"
-    echo "Usage: $0 <worktree-path> [task-description]"
+    echo "Usage: $0 <worktree-path> [task-description] [--terminal <type>]"
+    echo "Terminal types: ghostty, terminal, iterm2, tmux, wezterm, kitty, alacritty"
     exit 1
 fi
 
@@ -32,6 +52,11 @@ else
     TERMINAL="ghostty"
     SHELL_CMD="bash"
     CLAUDE_CMD="claude --dangerously-skip-permissions"
+fi
+
+# Override terminal if specified
+if [ -n "$OVERRIDE_TERMINAL" ]; then
+    TERMINAL="$OVERRIDE_TERMINAL"
 fi
 
 # Note: CLAUDE_CMD defaults to "claude --dangerously-skip-permissions" for autonomous operation
@@ -84,19 +109,54 @@ fi
 case "$TERMINAL" in
     ghostty)
         if ! command -v ghostty &> /dev/null && [ ! -d "/Applications/Ghostty.app" ]; then
-            echo "Error: Ghostty not found"
-            exit 1
+            echo "Error: Ghostty not found, falling back to Terminal.app"
+            # Fall through to terminal case
+            osascript <<EOF
+tell application "Terminal"
+    activate
+    do script "cd '$WORKTREE_PATH' && echo 'Worktree: $PROJECT / $BRANCH' && echo 'Task: $TASK' && echo '' && $CLAUDE_CMD"
+end tell
+EOF
+        else
+            # Create a temp script for Ghostty to execute
+            # This ensures the Claude session starts reliably
+            TEMP_SCRIPT=$(mktemp /tmp/worktree-launch.XXXXXX.sh)
+            cat > "$TEMP_SCRIPT" << SCRIPT
+#!/bin/bash
+cd '$WORKTREE_PATH'
+echo 'Worktree: $PROJECT / $BRANCH'
+echo 'Task: $TASK'
+echo ''
+exec $CLAUDE_CMD
+SCRIPT
+            chmod +x "$TEMP_SCRIPT"
+
+            # Launch Ghostty with the temp script
+            # The script will self-cleanup on exec
+            open -na "Ghostty.app" --args -e "$TEMP_SCRIPT"
+
+            # Cleanup temp script after a delay (in background)
+            (sleep 5 && rm -f "$TEMP_SCRIPT") &
         fi
-        # Launch Ghostty with the command
-        open -na "Ghostty.app" --args -e "$SHELL_CMD" -c "$INNER_CMD"
+        ;;
+
+    terminal|terminal.app|mac)
+        # macOS Terminal.app - reliable for Claude Desktop
+        osascript <<EOF
+tell application "Terminal"
+    activate
+    do script "cd '$WORKTREE_PATH' && echo 'Worktree: $PROJECT / $BRANCH' && echo 'Task: $TASK' && echo '' && $CLAUDE_CMD"
+end tell
+EOF
         ;;
 
     iterm2|iterm)
         osascript <<EOF
 tell application "iTerm2"
+    activate
     create window with default profile
     tell current session of current window
-        write text "cd '$WORKTREE_PATH' && $CLAUDE_CMD"
+        write text "cd '$WORKTREE_PATH' && echo 'Worktree: $PROJECT / $BRANCH' && echo 'Task: $TASK' && echo '' && $CLAUDE_CMD"
     end tell
 end tell
 EOF
@@ -138,7 +198,7 @@ EOF
 
     *)
         echo "Error: Unknown terminal type: $TERMINAL"
-        echo "Supported: ghostty, iterm2, tmux, wezterm, kitty, alacritty"
+        echo "Supported: ghostty, terminal, iterm2, tmux, wezterm, kitty, alacritty"
         exit 1
         ;;
 esac
