@@ -14,22 +14,22 @@ echo ""
 
 mkdir -p "$DIST_DIR"
 
-# Rebuild active skills
+# Rebuild active skills (SKILL.md at root of zip)
 for skill in "$REPO_DIR"/active/*/; do
     name=$(basename "$skill")
     zip_file="$DIST_DIR/${name}.zip"
     rm -f "$zip_file"
-    (cd "$REPO_DIR/active" && zip -rq "$zip_file" "$name/" -x "*.pyc" -x "*__pycache__*")
+    (cd "$skill" && zip -rq "$zip_file" . -x "*.pyc" -x "*__pycache__*")
     size=$(ls -lh "$zip_file" | awk '{print $5}')
     echo "  ✓ $name.zip ($size)"
 done
 
-# Rebuild stable skills
+# Rebuild stable skills (SKILL.md at root of zip)
 for skill in "$REPO_DIR"/stable/*/; do
     name=$(basename "$skill")
     zip_file="$DIST_DIR/${name}.zip"
     rm -f "$zip_file"
-    (cd "$REPO_DIR/stable" && zip -rq "$zip_file" "$name/" -x "*.pyc" -x "*__pycache__*")
+    (cd "$skill" && zip -rq "$zip_file" . -x "*.pyc" -x "*__pycache__*")
     size=$(ls -lh "$zip_file" | awk '{print $5}')
     echo "  ✓ $name.zip ($size)"
 done
