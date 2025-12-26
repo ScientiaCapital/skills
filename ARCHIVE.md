@@ -4,6 +4,29 @@
 
 ---
 
+## Sprint: GROQ Inference Skill (2025-12-25)
+
+### GROQ Inference Skill (COMPLETED)
+
+| Task | Status |
+|------|--------|
+| Create folder structure | complete |
+| Write SKILL.md with core patterns | complete |
+| Write 6 reference files | complete |
+| Create templates/groq-client.py | complete |
+| Package dist/groq-inference-skill.zip | complete |
+| Deploy to ~/.claude/skills/ | complete |
+| Update SKILLS_INDEX.md | complete |
+
+**Key Features:**
+- Audio transcription and speech synthesis
+- Tool use patterns with parallel execution  
+- Vision and multimodal capabilities
+- Cost optimization strategies
+- Model catalog with reasoning models
+
+---
+
 ## Sprint: 2025-12-23 (8 External Skills)
 
 **Constraint:** M1 8GB RAM - max 2-3 parallel agents

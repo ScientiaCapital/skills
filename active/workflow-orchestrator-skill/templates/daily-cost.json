@@ -1,0 +1,153 @@
+{
+  "date": "{{DATE}}",
+  "session_id": "{{SESSION_ID}}",
+  "summary": {
+    "total_cost": {{TOTAL_COST}},
+    "budget_remaining": {{BUDGET_REMAINING}},
+    "budget_used_percent": {{BUDGET_USED_PERCENT}},
+    "cost_vs_yesterday": {{COST_VS_YESTERDAY}},
+    "projected_monthly": {{PROJECTED_MONTHLY}}
+  },
+  "costs_by_model": {
+    "claude": {
+      "opus": {
+        "calls": {{OPUS_CALLS}},
+        "input_tokens": {{OPUS_INPUT_TOKENS}},
+        "output_tokens": {{OPUS_OUTPUT_TOKENS}},
+        "cost": {{OPUS_COST}}
+      },
+      "sonnet": {
+        "calls": {{SONNET_CALLS}},
+        "input_tokens": {{SONNET_INPUT_TOKENS}},
+        "output_tokens": {{SONNET_OUTPUT_TOKENS}},
+        "cost": {{SONNET_COST}}
+      },
+      "haiku": {
+        "calls": {{HAIKU_CALLS}},
+        "input_tokens": {{HAIKU_INPUT_TOKENS}},
+        "output_tokens": {{HAIKU_OUTPUT_TOKENS}},
+        "cost": {{HAIKU_COST}}
+      }
+    },
+    "deepseek": {
+      "v3": {
+        "calls": {{DEEPSEEK_CALLS}},
+        "input_tokens": {{DEEPSEEK_INPUT_TOKENS}},
+        "output_tokens": {{DEEPSEEK_OUTPUT_TOKENS}},
+        "cost": {{DEEPSEEK_COST}}
+      }
+    },
+    "groq": {
+      "llama": {
+        "calls": {{GROQ_CALLS}},
+        "tokens": {{GROQ_TOKENS}},
+        "cost": {{GROQ_COST}}
+      }
+    },
+    "ollama": {
+      "local": {
+        "calls": {{OLLAMA_CALLS}},
+        "tokens": {{OLLAMA_TOKENS}},
+        "cost": 0
+      }
+    }
+  },
+  "costs_by_task": {
+    "research": {
+      "duration_minutes": {{RESEARCH_DURATION}},
+      "cost": {{RESEARCH_COST}},
+      "models_used": {{RESEARCH_MODELS}}
+    },
+    "development": {
+      "duration_minutes": {{DEV_DURATION}},
+      "cost": {{DEV_COST}},
+      "models_used": {{DEV_MODELS}}
+    },
+    "debugging": {
+      "duration_minutes": {{DEBUG_DURATION}},
+      "cost": {{DEBUG_COST}},
+      "models_used": {{DEBUG_MODELS}}
+    },
+    "testing": {
+      "duration_minutes": {{TEST_DURATION}},
+      "cost": {{TEST_COST}},
+      "models_used": {{TEST_MODELS}}
+    },
+    "documentation": {
+      "duration_minutes": {{DOC_DURATION}},
+      "cost": {{DOC_COST}},
+      "models_used": {{DOC_MODELS}}
+    }
+  },
+  "costs_by_feature": [
+    {
+      "feature": "{{FEATURE_NAME}}",
+      "cost": {{FEATURE_COST}},
+      "percentage": {{FEATURE_PERCENTAGE}},
+      "status": "{{FEATURE_STATUS}}"
+    }
+  ],
+  "infrastructure_costs": {
+    "compute": {
+      "runpod_hours": {{RUNPOD_HOURS}},
+      "cost": {{COMPUTE_COST}}
+    },
+    "storage": {
+      "gb_used": {{STORAGE_GB}},
+      "cost": {{STORAGE_COST}}
+    },
+    "bandwidth": {
+      "gb_transferred": {{BANDWIDTH_GB}},
+      "cost": {{BANDWIDTH_COST}}
+    }
+  },
+  "api_calls": {
+    "github": {{GITHUB_CALLS}},
+    "vercel": {{VERCEL_CALLS}},
+    "supabase": {{SUPABASE_CALLS}},
+    "other": {{OTHER_API_CALLS}}
+  },
+  "optimization_opportunities": [
+    {
+      "type": "{{OPT_TYPE}}",
+      "description": "{{OPT_DESCRIPTION}}",
+      "potential_savings": {{OPT_SAVINGS}},
+      "difficulty": "{{OPT_DIFFICULTY}}"
+    }
+  ],
+  "alerts": [
+    {
+      "level": "{{ALERT_LEVEL}}",
+      "message": "{{ALERT_MESSAGE}}",
+      "timestamp": "{{ALERT_TIME}}"
+    }
+  ],
+  "session_metrics": {
+    "total_llm_calls": {{TOTAL_LLM_CALLS}},
+    "cache_hits": {{CACHE_HITS}},
+    "cache_hit_rate": {{CACHE_HIT_RATE}},
+    "average_response_time": {{AVG_RESPONSE_TIME}},
+    "errors_encountered": {{ERROR_COUNT}},
+    "fallback_model_uses": {{FALLBACK_USES}}
+  },
+  "budget_tracking": {
+    "daily_budget": {{DAILY_BUDGET}},
+    "daily_used": {{DAILY_USED}},
+    "daily_remaining": {{DAILY_REMAINING}},
+    "monthly_budget": {{MONTHLY_BUDGET}},
+    "mtd_used": {{MTD_USED}},
+    "monthly_remaining": {{MONTHLY_REMAINING}},
+    "projected_overrun": {{PROJECTED_OVERRUN}}
+  },
+  "recommendations": [
+    "{{RECOMMENDATION_1}}",
+    "{{RECOMMENDATION_2}}",
+    "{{RECOMMENDATION_3}}"
+  ],
+  "metadata": {
+    "generated_at": "{{GENERATED_AT}}",
+    "generator_version": "{{VERSION}}",
+    "next_review": "{{NEXT_REVIEW}}",
+    "data_retention_days": {{RETENTION_DAYS}}
+  }
+}

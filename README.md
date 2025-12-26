@@ -1,6 +1,6 @@
 # Skills Library
 
-A curated collection of 17 Claude Code skills for software development, business operations, and AI infrastructure.
+A curated collection of 19 Claude Code skills for software development, business operations, and AI infrastructure.
 
 ## Quick Start
 
@@ -44,17 +44,18 @@ A curated collection of 17 Claude Code skills for software development, business
 | **data-analysis** | Executive data analysis and dashboards |
 | **trading-signals** | Technical analysis for trading systems |
 
-### Core (2 skills)
+### Core (3 skills)
 | Skill | Description |
 |-------|-------------|
 | **project-context** | Track context across sessions |
 | **workflow-enforcer** | Enforce workflow discipline |
+| **workflow-orchestrator** | Full-day workflow orchestration with cost tracking |
 
 ## Project Structure
 
 ```
 skills/
-├── active/           # 15 skills in development
+├── active/           # 17 skills in development
 ├── stable/           # 2 battle-tested skills
 ├── dist/             # Zip files for Claude Desktop
 ├── scripts/

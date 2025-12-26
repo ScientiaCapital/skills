@@ -3,9 +3,9 @@
 ## P1: Current Priority
 
 - [ ] Test each skill activation with trigger phrases
-- [ ] Add reference/ folders for complex skills
 - [ ] Document worktree workflow in README
 - [ ] Create skill dependency graph
+- [ ] Deploy skills globally with symlinks
 
 ---
 

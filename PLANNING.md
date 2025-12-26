@@ -1,26 +1,27 @@
 # Skills Library Planning
 
-**Current Sprint:** GROQ Inference Skill
-**Date:** 2025-12-25
+**Current Sprint:** Workflow Orchestrator Skill
+**Date:** 2025-12-26
 **Constraint:** M1 8GB RAM - max 2-3 parallel agents
 
 ---
 
 ## Active Work
 
-### GROQ Inference Skill (COMPLETED 2025-12-25)
+### Workflow Orchestrator Skill v2.0 (IN PROGRESS)
 
 | Task | Status |
 |------|--------|
-| Create folder structure | complete |
-| Write SKILL.md with core patterns | complete |
-| Write 6 reference files | complete |
-| Create templates/groq-client.py | complete |
-| Package dist/groq-inference-skill.zip | complete |
-| Deploy to ~/.claude/skills/ | complete |
-| Update SKILLS_INDEX.md | complete |
-| Code review | pending |
-| Git commit & push | pending |
+| Update PLANNING.md and archive completed work | in_progress |
+| Clean up Backlog.md | pending |
+| Create workflow-orchestrator-skill folder | pending |
+| Write SKILL.md with YAML frontmatter | pending |
+| Create 8 reference/*.md files | pending |
+| Create 4 template files | pending |
+| Update SKILLS_INDEX.md | pending |
+| Package as .skill zip | pending |
+| Update deploy.sh for symlinks | pending |
+| Test and commit | pending |
 
 ### Worktree-Manager .env Enhancement (COMPLETED 2025-12-24)
 

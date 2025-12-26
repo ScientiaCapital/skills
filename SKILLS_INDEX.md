@@ -1,7 +1,7 @@
 # Skills Index
 
-> Last updated: 2025-12-25
-> Total skills: 18 (2 stable, 16 active)
+> Last updated: 2025-12-26
+> Total skills: 19 (2 stable, 17 active)
 
 ## Architecture
 
@@ -34,6 +34,7 @@
 | Trading signals, technical analysis | [trading-signals](#trading-signals-skill) | Business |
 | Track project context across sessions | [project-context](#project-context-skill) | Core |
 | Enforce workflow discipline | [workflow-enforcer](#workflow-enforcer) | Core |
+| Orchestrate full-day workflows with cost tracking | [workflow-orchestrator](#workflow-orchestrator-skill) | Core |
 
 ---
 
@@ -58,6 +59,40 @@ Maintains project context and progress tracking across Claude sessions.
 ---
 
 ## Active Skills by Category
+
+### Core
+
+#### workflow-orchestrator-skill
+**Location:** `active/workflow-orchestrator-skill/`
+
+Comprehensive workflow orchestration for full-day Claude sessions with cost tracking, model routing, and team coordination.
+
+**Key Features:**
+- **5 Workflow Phases:** START DAY → RESEARCH → FEATURE DEVELOPMENT → DEBUG → END DAY
+- **Cost Optimization:** Intelligent model routing (Claude/DeepSeek/GROQ/Ollama) based on budget
+- **Parallel Execution:** Git worktree management with isolated environments
+- **70+ Agent Catalog:** Smart routing to specialized agents based on task type
+- **Security Gates:** Automated security scanning before commits
+
+**Reference Files (8):**
+- `reference/start-day-protocol.md` - Session initialization, context loading
+- `reference/research-workflow.md` - Systematic research with cost optimization  
+- `reference/feature-development.md` - Multi-phase development with quality gates
+- `reference/debug-methodology.md` - Evidence-based debugging
+- `reference/end-day-protocol.md` - Security sweeps, context preservation
+- `reference/cost-tracking.md` - Model pricing, budget management
+- `reference/agent-routing.md` - Complete 70+ agent catalog
+- `reference/rollback-recovery.md` - Rollback strategies and recovery
+
+**Templates (4):**
+- `templates/PROJECT_CONTEXT.md` - Dynamic context generation
+- `templates/RESEARCH.md` - Research documentation format
+- `templates/daily-cost.json` - Cost tracking data structure
+- `templates/worktree-registry.json` - Worktree management registry
+
+**Triggers:** "start day", "end day", "orchestrate workflow", "track costs", "route agent"
+
+---
 
 ### Dev Tools
 
@@ -296,7 +331,7 @@ Technical analysis for quantitative trading systems.
 
 ```
 skills/
-├── active/                    # 16 active skills
+├── active/                    # 17 active skills
 │   ├── content-marketing-skill/
 │   ├── crm-integration-skill/
 │   ├── data-analysis-skill/
@@ -312,6 +347,7 @@ skills/
 │   ├── supabase-sql-skill/
 │   ├── trading-signals-skill/
 │   ├── voice-ai-skill/
+│   ├── workflow-orchestrator-skill/
 │   └── worktree-manager-skill/
 ├── stable/                    # 2 stable skills
 │   ├── project-context-skill/

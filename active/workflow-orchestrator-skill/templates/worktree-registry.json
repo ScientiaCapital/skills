@@ -1,0 +1,118 @@
+{
+  "version": "{{VERSION}}",
+  "last_updated": "{{LAST_UPDATED}}",
+  "project": "{{PROJECT_NAME}}",
+  "main_repo": "{{MAIN_REPO_PATH}}",
+  "worktrees": [
+    {
+      "id": "{{WORKTREE_ID}}",
+      "name": "{{WORKTREE_NAME}}",
+      "path": "{{WORKTREE_PATH}}",
+      "branch": "{{BRANCH_NAME}}",
+      "created_at": "{{CREATED_AT}}",
+      "last_commit": "{{LAST_COMMIT_SHA}}",
+      "last_commit_date": "{{LAST_COMMIT_DATE}}",
+      "status": "{{STATUS}}",
+      "purpose": "{{PURPOSE}}",
+      "parent_task": "{{PARENT_TASK_ID}}",
+      "ports": [
+        {
+          "service": "{{SERVICE_NAME}}",
+          "port": {{PORT_NUMBER}},
+          "protocol": "{{PROTOCOL}}"
+        }
+      ],
+      "environment": {
+        "node_version": "{{NODE_VERSION}}",
+        "python_version": "{{PYTHON_VERSION}}",
+        "env_file": "{{ENV_FILE_PATH}}"
+      },
+      "agents": [
+        {
+          "agent": "{{AGENT_NAME}}",
+          "assigned_at": "{{ASSIGNED_AT}}",
+          "task": "{{AGENT_TASK}}"
+        }
+      ],
+      "metrics": {
+        "files_changed": {{FILES_CHANGED}},
+        "commits_ahead": {{COMMITS_AHEAD}},
+        "commits_behind": {{COMMITS_BEHIND}},
+        "last_activity": "{{LAST_ACTIVITY}}",
+        "size_mb": {{SIZE_MB}}
+      },
+      "health": {
+        "status": "{{HEALTH_STATUS}}",
+        "issues": [
+          "{{ISSUE_1}}",
+          "{{ISSUE_2}}"
+        ],
+        "last_check": "{{LAST_HEALTH_CHECK}}"
+      },
+      "flags": {
+        "has_uncommitted": {{HAS_UNCOMMITTED}},
+        "has_unpushed": {{HAS_UNPUSHED}},
+        "is_behind_main": {{IS_BEHIND_MAIN}},
+        "merge_conflicts": {{HAS_CONFLICTS}},
+        "ready_for_merge": {{READY_FOR_MERGE}},
+        "marked_for_cleanup": {{MARKED_FOR_CLEANUP}}
+      }
+    }
+  ],
+  "port_registry": {
+    "allocated_ports": [
+      {
+        "port": {{PORT}},
+        "service": "{{SERVICE}}",
+        "worktree_id": "{{WORKTREE_ID}}",
+        "allocated_at": "{{ALLOCATED_AT}}"
+      }
+    ],
+    "port_ranges": {
+      "development": {
+        "start": {{DEV_PORT_START}},
+        "end": {{DEV_PORT_END}},
+        "current": {{DEV_PORT_CURRENT}}
+      },
+      "testing": {
+        "start": {{TEST_PORT_START}},
+        "end": {{TEST_PORT_END}},
+        "current": {{TEST_PORT_CURRENT}}
+      },
+      "services": {
+        "start": {{SERVICE_PORT_START}},
+        "end": {{SERVICE_PORT_END}},
+        "current": {{SERVICE_PORT_CURRENT}}
+      }
+    }
+  },
+  "cleanup_policy": {
+    "max_age_days": {{MAX_AGE_DAYS}},
+    "max_inactive_days": {{MAX_INACTIVE_DAYS}},
+    "max_worktrees": {{MAX_WORKTREES}},
+    "auto_cleanup": {{AUTO_CLEANUP_ENABLED}},
+    "cleanup_schedule": "{{CLEANUP_SCHEDULE}}"
+  },
+  "statistics": {
+    "total_worktrees_created": {{TOTAL_CREATED}},
+    "total_worktrees_cleaned": {{TOTAL_CLEANED}},
+    "current_active": {{CURRENT_ACTIVE}},
+    "current_inactive": {{CURRENT_INACTIVE}},
+    "average_lifespan_days": {{AVG_LIFESPAN}},
+    "peak_concurrent": {{PEAK_CONCURRENT}},
+    "last_cleanup": "{{LAST_CLEANUP_DATE}}"
+  },
+  "automation": {
+    "sync_enabled": {{SYNC_ENABLED}},
+    "sync_interval": "{{SYNC_INTERVAL}}",
+    "auto_prune": {{AUTO_PRUNE}},
+    "notification_webhook": "{{WEBHOOK_URL}}",
+    "backup_location": "{{BACKUP_PATH}}"
+  },
+  "metadata": {
+    "schema_version": "2.0",
+    "created_by": "workflow-orchestrator-skill",
+    "platform": "{{PLATFORM}}",
+    "git_version": "{{GIT_VERSION}}"
+  }
+}
