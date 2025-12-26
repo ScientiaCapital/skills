@@ -399,16 +399,28 @@ Ultra-fast LLM inference with GROQ API. Chat, vision, audio (Whisper STT, PlayAI
 ### voice-ai-skill
 **Location:** `./active/voice-ai-skill/SKILL.md`
 
-Voice AI agents with Cartesia, Deepgram, AssemblyAI, Twilio, ElevenLabs. NO OPENAI.
+Production voice AI agents with ultra-low latency (<500ms). VozLux-tested patterns. NO OPENAI.
 
-| Component | Primary | Fallback |
-|-----------|---------|----------|
-| STT | Deepgram | AssemblyAI |
-| TTS | Cartesia | ElevenLabs |
-| Telephony | Twilio | - |
-| LLM | Claude/DeepSeek | - |
+| Component | Provider | Latency | Model |
+|-----------|----------|---------|-------|
+| STT | Deepgram | ~150ms | Nova-3 |
+| LLM | **GROQ** | ~220ms | llama-3.1-8b-instant |
+| TTS | Cartesia | ~90ms | Sonic-3 (57 emotions) |
+| Telephony | Twilio | Realtime | Media Streams |
 
-**Triggers:** "voice agent", "voice AI", "Twilio", "Deepgram", "Cartesia", "phone bot"
+**Reference Files (6):**
+- `reference/deepgram-setup.md` - STT config, VAD, utterance detection
+- `reference/cartesia-tts.md` - TTS emotions, speed control, voice IDs
+- `reference/groq-voice-llm.md` - Fast LLM for voice (~220ms TTFB)
+- `reference/twilio-webhooks.md` - Media Streams, call transfer
+- `reference/latency-optimization.md` - Sub-500ms patterns
+- `reference/voice-prompts.md` - Voice-specific prompting
+
+**Tier System:** Free (3000ms) → Starter (2500ms) → Pro (600ms) → Enterprise (400ms)
+
+**Templates:** `templates/voice-agent-starter.py` - Production-ready quick start
+
+**Triggers:** "voice agent", "voice AI", "Twilio", "Deepgram", "Cartesia", "phone bot", "STT", "TTS", "voice latency", "IVR"
 
 **Projects:** vozlux, solarvoice-ai, langgraph-voice-agents
 
