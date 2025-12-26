@@ -1,7 +1,7 @@
 # Skills Index
 
 > Last updated: 2025-12-25
-> Total skills: 17 (2 stable, 15 active)
+> Total skills: 18 (2 stable, 16 active)
 
 ## Architecture
 
@@ -25,6 +25,7 @@
 | Fast GROQ API inference | [groq-inference](#groq-inference-skill) | Infrastructure |
 | Build voice AI agents | [voice-ai](#voice-ai-skill) | Infrastructure |
 | Clean Supabase SQL migrations | [supabase-sql](#supabase-sql-skill) | Infrastructure |
+| CRM integration (Close, HubSpot, Salesforce) | [crm-integration](#crm-integration-skill) | Business |
 | GTM strategy, pricing, opportunity eval | [gtm-pricing](#gtm-pricing-skill) | Business |
 | Market + technical research | [research](#research-skill) | Business |
 | Sales outreach, discovery, RevOps | [sales-revenue](#sales-revenue-skill) | Business |
@@ -193,6 +194,24 @@ Clean SQL migrations for Supabase: typo fixes, idempotency, RLS patterns.
 
 ### Business
 
+#### crm-integration-skill
+**Location:** `active/crm-integration-skill/`
+
+Unified CRM integration patterns for Close CRM, HubSpot, and Salesforce.
+
+| CRM | Auth | Best For |
+|-----|------|----------|
+| Close | API Key | SMB sales, simplicity (daily driver) |
+| HubSpot | OAuth 2.0 | Marketing + Sales alignment |
+| Salesforce | JWT Bearer | Enterprise, complex workflows |
+
+**Reference Files:**
+- `reference/close-deep-dive.md` - Query language, Smart Views, automation
+
+**Triggers:** "Close CRM", "HubSpot", "Salesforce", "CRM API", "lead sync", "deal sync"
+
+---
+
 #### gtm-pricing-skill
 **Location:** `active/gtm-pricing-skill/`
 
@@ -277,8 +296,9 @@ Technical analysis for quantitative trading systems.
 
 ```
 skills/
-├── active/                    # 15 active skills
+├── active/                    # 16 active skills
 │   ├── content-marketing-skill/
+│   ├── crm-integration-skill/
 │   ├── data-analysis-skill/
 │   ├── debug-like-expert-skill/
 │   ├── extension-authoring-skill/
