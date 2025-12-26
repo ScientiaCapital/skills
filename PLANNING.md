@@ -1,12 +1,26 @@
 # Skills Library Planning
 
-**Current Sprint:** Worktree-Manager Enhancement
-**Date:** 2025-12-24
+**Current Sprint:** GROQ Inference Skill
+**Date:** 2025-12-25
 **Constraint:** M1 8GB RAM - max 2-3 parallel agents
 
 ---
 
 ## Active Work
+
+### GROQ Inference Skill (COMPLETED 2025-12-25)
+
+| Task | Status |
+|------|--------|
+| Create folder structure | complete |
+| Write SKILL.md with core patterns | complete |
+| Write 6 reference files | complete |
+| Create templates/groq-client.py | complete |
+| Package dist/groq-inference-skill.zip | complete |
+| Deploy to ~/.claude/skills/ | complete |
+| Update SKILLS_INDEX.md | complete |
+| Code review | pending |
+| Git commit & push | pending |
 
 ### Worktree-Manager .env Enhancement (COMPLETED 2025-12-24)
 

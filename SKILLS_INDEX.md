@@ -1,7 +1,7 @@
 # Skills Index
 
-> Last updated: 2025-12-23
-> Total skills: 25 (2 stable, 23 active)
+> Last updated: 2025-12-25
+> Total skills: 26 (2 stable, 24 active)
 
 ## Architecture
 
@@ -34,6 +34,7 @@
 | Build voice agents (Cartesia, Deepgram, Twilio) | [voice-ai-skill](#voice-ai-skill) | active/ |
 | Executive data analysis, dashboards, investor presentations | [data-analysis-skill](#data-analysis-skill) | active/ |
 | Manage parallel git worktrees with agents | [worktree-manager-skill](#worktree-manager-skill) | active/ |
+| Fast LLM inference with GROQ API | [groq-inference-skill](#groq-inference-skill) | active/ |
 | Create hierarchical project plans | [create-plans-skill](#create-plans-skill) | active/ |
 | Systematic expert debugging | [debug-like-expert-skill](#debug-like-expert-skill) | active/ |
 | Build specialized Claude subagents | [create-subagents-skill](#create-subagents-skill) | active/ |
@@ -363,6 +364,38 @@ B2B pricing strategy, packaging, and monetization.
 
 ---
 
+### groq-inference-skill
+**Location:** `./active/groq-inference-skill/SKILL.md`
+
+Ultra-fast LLM inference with GROQ API. Chat, vision, audio (Whisper STT, PlayAI TTS), tool use, and reasoning models. NO OPENAI.
+
+| Capability | Models |
+|------------|--------|
+| Chat/Fast Inference | llama-3.3-70b-versatile, llama-3.1-8b-instant |
+| Vision/OCR | meta-llama/llama-4-scout-17b-16e-instruct |
+| STT | whisper-large-v3 (GROQ-hosted, NOT OpenAI) |
+| TTS | playai-tts (Fritz-PlayAI voice) |
+| Reasoning | meta-llama/llama-4-maverick-17b-128e-instruct |
+| Tool Use | compound-beta (built-in web search, code exec) |
+
+**Reference Files (6):**
+- `reference/models-catalog.md` - All GROQ models with specs and pricing
+- `reference/vision-multimodal.md` - Llama 4 Scout/Maverick image processing
+- `reference/audio-speech.md` - Whisper STT, PlayAI TTS, voice agent patterns
+- `reference/tool-use-patterns.md` - Built-in tools, MCP, local calling
+- `reference/reasoning-models.md` - Reasoning format options
+- `reference/cost-optimization.md` - Batch API, caching, provider routing
+
+**Alternative Audio Providers:**
+- STT: Deepgram (lowest latency), AssemblyAI (speaker diarization)
+- TTS: Cartesia (emotional control), ElevenLabs (voice cloning)
+
+**Triggers:** "groq", "fast inference", "low latency", "whisper", "PlayAI TTS", "Llama 4", "vision API", "tool calling", "reasoning model", "compound beta"
+
+**Projects:** VozLux, FieldVault-AI
+
+---
+
 ### voice-ai-skill
 **Location:** `./active/voice-ai-skill/SKILL.md`
 
@@ -537,7 +570,8 @@ skills/
 │   ├── pricing-strategy-skill/
 │   ├── voice-ai-skill/
 │   ├── data-analysis-skill/
-│   ├── worktree-manager-skill/          # NEW: parallel development
+│   ├── groq-inference-skill/            # NEW: fast GROQ inference
+│   ├── worktree-manager-skill/          # parallel development
 │   ├── create-plans-skill/              # NEW: project planning
 │   ├── debug-like-expert-skill/         # NEW: expert debugging
 │   ├── create-subagents-skill/          # NEW: subagent builder
@@ -548,7 +582,7 @@ skills/
 ├── stable/                              # Production-ready skills (2)
 │   ├── workflow-enforcer/
 │   └── project-context-skill/
-├── dist/                                # Zips for Claude Desktop (25)
+├── dist/                                # Zips for Claude Desktop (26)
 ├── templates/
 │   └── SKILL_TEMPLATE.md
 ├── PLANNING.md                          # Sprint tracking
@@ -556,7 +590,7 @@ skills/
 ├── CLAUDE.md
 └── SKILLS_INDEX.md                      # This file
 
-~/.claude/skills/                        # Global copies (25 skills)
+~/.claude/skills/                        # Global copies (26 skills)
 ├── workflow-enforcer/
 ├── project-context-skill/
 ├── trading-signals-skill/
