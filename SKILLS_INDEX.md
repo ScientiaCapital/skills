@@ -1,6 +1,6 @@
 # Skills Index
 
-> Last updated: 2025-12-26
+> Last updated: 2025-12-29
 > Total skills: 19 (2 stable, 17 active)
 
 ## Architecture
@@ -25,6 +25,7 @@
 | Fast GROQ API inference | [groq-inference](#groq-inference-skill) | Infrastructure |
 | Build voice AI agents | [voice-ai](#voice-ai-skill) | Infrastructure |
 | Clean Supabase SQL migrations | [supabase-sql](#supabase-sql-skill) | Infrastructure |
+| Stripe payments + webhooks | [stripe-stack](#stripe-stack-skill) | Infrastructure |
 | CRM integration (Close, HubSpot, Salesforce) | [crm-integration](#crm-integration-skill) | Business |
 | GTM strategy, pricing, opportunity eval | [gtm-pricing](#gtm-pricing-skill) | Business |
 | Market + technical research | [research](#research-skill) | Business |
@@ -227,6 +228,43 @@ Clean SQL migrations for Supabase: typo fixes, idempotency, RLS patterns.
 
 ---
 
+#### stripe-stack-skill
+**Location:** `active/stripe-stack-skill/`
+
+Production Stripe integration for Next.js + Supabase. Extracted from NetZero Suite (netzero-bot, solarappraisal-ai, fieldvault-ai, solarvoice-ai).
+
+**Key Patterns:**
+- Database-backed webhook idempotency (NOT in-memory)
+- Lazy Stripe client initialization
+- Environment variable price IDs (test→live switching)
+
+**Reference Files (4):**
+- `references/webhook-patterns.md` - Idempotency, event handling
+- `references/pricing-models.md` - Plans vs Credits vs Usage-based
+- `references/environment-vars.md` - Standard conventions
+- `references/common-errors.md` - Troubleshooting guide
+
+**Workflows (5):**
+- `workflows/setup-new-project.md` - Fresh Stripe integration
+- `workflows/add-webhook-handler.md` - Add to existing project
+- `workflows/implement-subscriptions.md` - Subscription billing
+- `workflows/add-credit-system.md` - Pay-as-you-go credits
+- `workflows/go-live-checklist.md` - Test → Production
+
+**Templates (6):**
+- `templates/webhook-handler-nextjs.ts` - Complete webhook handler
+- `templates/stripe-client.ts` - Lazy client factory
+- `templates/plans-config.ts` - Type-safe plan definitions
+- `templates/idempotency-migration.sql` - Supabase migration
+- `templates/webhook-handler.test.ts` - Vitest/Jest tests
+- `templates/env-example.txt` - Environment template
+
+**GitHub:** https://github.com/ScientiaCapital/stripe-stack (private)
+
+**Triggers:** "stripe", "payments", "billing", "subscription", "webhook", "checkout"
+
+---
+
 ### Business
 
 #### crm-integration-skill
@@ -344,6 +382,7 @@ skills/
 │   ├── research-skill/
 │   ├── runpod-deployment-skill/
 │   ├── sales-revenue-skill/
+│   ├── stripe-stack-skill/
 │   ├── supabase-sql-skill/
 │   ├── trading-signals-skill/
 │   ├── voice-ai-skill/

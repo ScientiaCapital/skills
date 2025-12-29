@@ -1,0 +1,110 @@
+# =============================================================================
+# Stripe Environment Variables Template
+# =============================================================================
+# Copy to: .env.local (local development)
+# Configure in: Vercel Dashboard (production)
+#
+# IMPORTANT: Never commit actual keys to git!
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# Required: Core Stripe Keys
+# -----------------------------------------------------------------------------
+
+# Server-side secret key (NEVER expose to client)
+# Get from: https://dashboard.stripe.com/apikeys
+# Test mode: starts with sk_test_
+# Live mode: starts with sk_live_
+STRIPE_SECRET_KEY=sk_test_your_key_here
+
+# Webhook signing secret (from Stripe Dashboard or CLI)
+# Dashboard: Webhooks → Your endpoint → Signing secret
+# CLI: Output from `stripe listen --forward-to localhost:3000/api/stripe/webhook`
+STRIPE_WEBHOOK_SECRET=whsec_your_secret_here
+
+# Client-side publishable key (safe to expose)
+# Used for Stripe.js and checkout redirects
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_your_key_here
+
+# -----------------------------------------------------------------------------
+# Optional: Price IDs (for test→live switching)
+# -----------------------------------------------------------------------------
+# Using env vars makes switching from test to live seamless
+# Get from: https://dashboard.stripe.com/products
+
+# Starter Plan
+STRIPE_PRICE_STARTER_MONTHLY=price_starter_monthly_test
+STRIPE_PRICE_STARTER_ANNUAL=price_starter_annual_test
+
+# Pro Plan
+STRIPE_PRICE_PRO_MONTHLY=price_pro_monthly_test
+STRIPE_PRICE_PRO_ANNUAL=price_pro_annual_test
+
+# Business Plan
+STRIPE_PRICE_BUSINESS_MONTHLY=price_business_monthly_test
+STRIPE_PRICE_BUSINESS_ANNUAL=price_business_annual_test
+
+# -----------------------------------------------------------------------------
+# Optional: Credit Packs (for pay-as-you-go systems)
+# -----------------------------------------------------------------------------
+
+STRIPE_PRICE_CREDITS_100=price_credits_100_test
+STRIPE_PRICE_CREDITS_250=price_credits_250_test
+STRIPE_PRICE_CREDITS_500=price_credits_500_test
+STRIPE_PRICE_CREDITS_1000=price_credits_1000_test
+
+# -----------------------------------------------------------------------------
+# Supabase (if using Supabase for database)
+# -----------------------------------------------------------------------------
+
+# Public URL and anon key (safe for client)
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# Service role key (server-side only, for webhooks)
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+# -----------------------------------------------------------------------------
+# Application URLs
+# -----------------------------------------------------------------------------
+
+# Used for checkout success/cancel redirects
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Production (set in Vercel):
+# NEXT_PUBLIC_APP_URL=https://your-app.vercel.app
+
+# -----------------------------------------------------------------------------
+# Development Helpers
+# -----------------------------------------------------------------------------
+
+# Enable Stripe webhook logging
+# STRIPE_WEBHOOK_DEBUG=true
+
+# Override API version (usually not needed)
+# STRIPE_API_VERSION=2025-12-15.clover
+
+# =============================================================================
+# Setup Instructions
+# =============================================================================
+#
+# LOCAL DEVELOPMENT:
+# 1. Copy this file to .env.local
+# 2. Replace placeholder values with your test mode keys
+# 3. For webhooks, run: stripe listen --forward-to localhost:3000/api/stripe/webhook
+# 4. Copy the CLI-provided webhook secret to STRIPE_WEBHOOK_SECRET
+#
+# VERCEL DEPLOYMENT:
+# 1. Go to Project → Settings → Environment Variables
+# 2. Add each variable for Production environment
+# 3. For live mode, use sk_live_ and pk_live_ keys
+# 4. Create a new webhook endpoint in Stripe Dashboard pointing to your Vercel URL
+# 5. Use the new webhook's signing secret
+#
+# SHARED STRIPE ACCOUNT:
+# If multiple projects share one Stripe account:
+# - Same API keys across projects
+# - DIFFERENT webhook secrets (each project has its own endpoint)
+# - Price IDs can be shared or project-specific
+#
+# =============================================================================
