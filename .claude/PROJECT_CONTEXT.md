@@ -1,38 +1,49 @@
 # Skills Library
 
-**Branch**: main | **Updated**: 2025-12-24
+**Branch**: main | **Updated**: 2026-01-01
 
 ## Status
-Production-ready skills library with **25 skills** (2 stable, 23 active). Worktree-manager enhanced with .env file copying and model selection.
+Production-ready skills library with **22 skills** (2 stable, 20 active). All skills now comply with Anthropic YAML specification. New strategic framework skills added.
+
+## Today's Session (2026-01-01)
+
+### Completed
+- [x] Fixed YAML frontmatter for all 19 existing skills (Anthropic spec)
+- [x] Added `business-model-canvas-skill` (Osterwalder's 9 blocks)
+- [x] Added `blue-ocean-strategy-skill` (ERRC, Strategy Canvas, Six Paths)
+- [x] Enhanced `unsloth-training-skill` with 15+ new features (FP8, Docker, vision, mobile)
+- [x] Added reference files for `worktree-manager-skill`
+- [x] Rebuilt all zip files with SKILL.md at root level
+- [x] Updated SKILLS_INDEX.md
+
+### Key Discovery
+Anthropic YAML spec requires:
+```yaml
+---
+name: "skill-name"
+description: "Description. Use when: trigger1, trigger2."
+---
+```
+- Quoted values required
+- Only `name` and `description` allowed
+- Single-line descriptions
 
 ## Current State
 
-### Stable Skills (2)
-- workflow-enforcer
-- project-context-skill
+### Skills by Category (22 total)
 
-### Active Skills (23)
 | Category | Skills |
 |----------|--------|
-| Trading/Finance | trading-signals-skill |
-| Sales/GTM | sales-outreach-skill, gtm-strategy-skill, demo-discovery-skill, revenue-ops-skill, pricing-strategy-skill |
-| AI/Agents | langgraph-agents-skill, voice-ai-skill |
-| Infrastructure | runpod-deployment-skill, supabase-sql-skill, worktree-manager-skill |
-| Research | market-research-skill, technical-research-skill, opportunity-evaluator-skill |
-| Content | content-marketing-skill |
-| Data | data-analysis-skill |
-| Meta/Claude | create-plans-skill, debug-like-expert-skill, create-subagents-skill, create-agent-skills-skill, create-hooks-skill, create-slash-commands-skill, create-meta-prompts-skill |
+| **Strategy** | business-model-canvas, blue-ocean-strategy |
+| **Infrastructure** | unsloth-training, runpod-deployment, voice-ai, groq-inference, langgraph-agents, supabase-sql, stripe-stack |
+| **Dev Tools** | worktree-manager, extension-authoring, debug-like-expert, planning-prompts |
+| **Business** | crm-integration, gtm-pricing, research, sales-revenue, content-marketing, data-analysis, trading-signals |
+| **Core** | workflow-orchestrator, workflow-enforcer (stable), project-context (stable) |
 
-### Deployment
-- All 25 skills in `~/.claude/skills/` (global access)
-- All 25 zips in `dist/` (Claude Desktop)
+### Deployment Status
+- All 22 skills in `active/` and `stable/`
+- 23 zips in `dist/` (ready for Claude Desktop upload)
 - All committed to GitHub
-
-## Recent Changes (2025-12-24)
-- Enhanced worktree-manager with .env/.env.local copying
-- Added model selection (opus/sonnet/haiku) for worktree agents
-- Created ARCHIVE.md for completed work
-- Cleaned up PLANNING.md and BACKLOG.md
 
 ## Blockers
 None
@@ -40,25 +51,27 @@ None
 ## Next Tasks
 | Priority | Task | Notes |
 |----------|------|-------|
-| P1 | Test each skill activation with trigger phrases | Monitor trigger accuracy |
-| P2 | Add reference/ folders for complex skills | Based on real project needs |
-| P3 | Document worktree workflow in README | User-facing docs |
+| P1 | Upload new skill zips to Claude Desktop | Test trigger activation |
+| P2 | Test business-model-canvas skill | Use on real startup idea |
+| P3 | Test blue-ocean-strategy skill | Apply to market analysis |
+
+## Recent Commits
+```
+ea1cac4 feat(skills): Add strategic frameworks + fix YAML spec compliance
+8efb839 Add stripe-stack-skill for Stripe + Supabase integrations
+2a70139 feat(skills): Add comprehensive Workflow Orchestrator Skill v2.0
+```
 
 ## Quick Commands
 ```bash
 # View all skills
 cat SKILLS_INDEX.md
 
-# Check global skills
-ls ~/.claude/skills/
+# Check zips
+ls dist/*.zip | wc -l  # Should be 23
 
-# View zips
-ls dist/*.zip
-
-# Worktree commands
-wt-audit       # Check worktree status
-wt-memory      # Check available memory
-wt-cleanup     # Clean merged worktrees
+# Upload to Claude Desktop
+# Drag zip file to Claude Desktop settings > Skills
 ```
 
 ## Tech Stack
