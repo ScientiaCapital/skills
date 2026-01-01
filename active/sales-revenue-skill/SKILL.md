@@ -1,12 +1,6 @@
 ---
-name: sales-revenue-skill
-description: |
-  Comprehensive B2B sales skill covering outreach automation, revenue operations, and
-  demo/discovery execution. Includes cold email sequences, lead scoring, pipeline metrics,
-  MEDDIC qualification, and objection handling. Use for any sales-related task.
-  Triggers: "cold email", "lead scoring", "pipeline", "forecast", "discovery call", "demo",
-  "MEDDIC", "BANT", "CAC", "LTV", "win rate", "sales metrics", "outreach sequence",
-  "objection handling", "qualification", "revenue ops", "sales dashboard".
+name: "sales-revenue"
+description: "B2B sales - cold outreach, lead scoring, pipeline metrics, MEDDIC/BANT qualification, discovery calls, demos, objection handling. Use when: cold email, lead scoring, pipeline, forecast, discovery call, demo, MEDDIC, BANT, CAC, LTV, win rate, sales metrics, outreach sequence."
 ---
 
 # Sales & Revenue Skill

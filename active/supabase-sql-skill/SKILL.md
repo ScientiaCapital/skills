@@ -1,10 +1,6 @@
 ---
-name: supabase-sql-skill
-description: |
-  Clean and format SQL migrations for Supabase. Handles typo fixes, idempotency,
-  RLS policy corrections, unused code removal, and consistent formatting.
-  Triggers: "fix this SQL", "clean migration", "RLS policy", "Supabase schema",
-  "format this postgres", "prepare for SQL Editor", "idempotent migration".
+name: "supabase-sql"
+description: "Clean and format SQL migrations for Supabase - idempotency, RLS policies, formatting, schema fixes. Use when: fix this SQL, clean migration, RLS policy, Supabase schema, format postgres, prepare for SQL Editor, idempotent migration."
 ---
 
 # Supabase SQL Cleaner

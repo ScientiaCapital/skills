@@ -1,10 +1,6 @@
 ---
-name: langgraph-agents-skill
-description: |
-  Use when building multi-agent systems with LangGraph/LangChain. Covers state coordination,
-  orchestration patterns (supervisor/swarm/master), multi-provider routing, and cost optimization.
-  Triggers: "build LangGraph agent", "multi-agent workflow", "supervisor pattern", "agent orchestration",
-  "StateGraph", "coordinate multiple agents", "agentic workflow". NO OPENAI - uses Claude, DeepSeek, Gemini.
+name: "langgraph-agents"
+description: "Multi-agent systems with LangGraph - supervisor/swarm patterns, state coordination, multi-provider routing. Use when: build LangGraph agent, multi-agent workflow, supervisor pattern, agent orchestration, StateGraph, coordinate multiple agents, agentic workflow. Uses Claude, DeepSeek, Gemini (no OpenAI)."
 ---
 
 # LangGraph Multi-Agent Systems

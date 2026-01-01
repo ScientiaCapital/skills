@@ -1,6 +1,6 @@
 ---
-name: extension-authoring
-description: Comprehensive guide for authoring Claude Code extensions including skills (SKILL.md), hooks, slash commands, and subagents. Use when creating, modifying, or learning about any Claude Code extension type.
+name: "extension-authoring"
+description: "Comprehensive guide for authoring Claude Code extensions including skills (SKILL.md), hooks, slash commands, and subagents. Use when: creating skills, writing hooks, making slash commands, building subagents, learning Claude Code extensions."
 ---
 
 <objective>

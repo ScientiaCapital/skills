@@ -1,13 +1,6 @@
 ---
-name: research-skill
-description: |
-  Comprehensive research framework for market intelligence, technical evaluations,
-  and documentation discovery. Use when researching companies, analyzing competitors,
-  evaluating frameworks, comparing APIs, or making technology decisions.
-  Triggers: "research this company", "analyze competitors", "evaluate this framework",
-  "compare these tools", "should we use X", "LLM provider comparison", "API assessment",
-  "find market opportunities", "assess market size", "tech stack decision", "MCP discovery".
-  Respects NO OpenAI constraint - uses Claude, DeepSeek, Gemini.
+name: "research"
+description: "Market intelligence, competitive analysis, technical evaluations, API comparisons, and technology decisions. Use when: research company, analyze competitors, evaluate framework, compare tools, should we use X, LLM provider comparison, API assessment, market opportunities, tech stack decision."
 ---
 
 # Research Skill

@@ -1,11 +1,6 @@
 ---
-name: groq-inference-skill
-description: |
-  Fast LLM inference with GROQ API - chat completions, vision/multimodal, audio (STT/TTS),
-  tool use, and reasoning models. Use when building voice agents, document processing,
-  real-time AI features, or when fast inference speed and low latency are critical.
-  Triggers: "groq", "fast inference", "low latency", "whisper", "PlayAI TTS",
-  "Llama 4", "vision API", "tool calling", "reasoning model", "compound beta".
+name: "groq-inference"
+description: "Fast LLM inference with Groq API - chat, vision, audio STT/TTS, tool use. Use when: groq, fast inference, low latency, whisper, PlayAI TTS, Llama, vision API, tool calling, voice agents, real-time AI."
 ---
 
 # GROQ Inference Skill

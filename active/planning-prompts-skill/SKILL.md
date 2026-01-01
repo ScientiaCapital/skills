@@ -1,6 +1,6 @@
 ---
-name: planning-prompts
-description: Comprehensive skill for project planning and prompt engineering. Covers hierarchical plans (briefs, roadmaps, phases), Claude-to-Claude meta-prompts, and multi-stage workflows (research -> plan -> implement). Use for any planning, prompt creation, or agentic pipeline work.
+name: "planning-prompts"
+description: "Comprehensive skill for project planning and prompt engineering. Covers hierarchical plans (briefs, roadmaps, phases), Claude-to-Claude meta-prompts, and multi-stage workflows. Use when: planning, prompt creation, agentic pipeline work, project roadmap, meta-prompts, research to implement workflow."
 ---
 
 <essential_principles>

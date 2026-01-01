@@ -1,11 +1,6 @@
 ---
-name: trading-signals-skill
-description: |
-  Technical analysis patterns for quantitative trading projects. Use when building
-  trading systems, signal generation, or confluence detection. Covers Elliott Wave,
-  Wyckoff, Fibonacci, Markov Regime, Turtle Trading, pattern recognition, and
-  multi-LLM swarm consensus. Triggers: "analyze chart", "fibonacci levels", "elliott wave",
-  "wyckoff analysis", "trading signals", "confluence detection", "technical analysis".
+name: "trading-signals"
+description: "Technical analysis patterns - Elliott Wave, Wyckoff, Fibonacci, Markov Regime, Turtle Trading, pattern recognition, multi-LLM consensus. Use when: analyze chart, fibonacci levels, elliott wave, wyckoff analysis, trading signals, confluence detection, technical analysis."
 ---
 
 # Trading Signals Skill

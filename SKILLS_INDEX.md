@@ -1,7 +1,7 @@
 # Skills Index
 
-> Last updated: 2025-12-29
-> Total skills: 19 (2 stable, 17 active)
+> Last updated: 2026-01-01
+> Total skills: 22 (2 stable, 20 active)
 
 ## Architecture
 
@@ -20,6 +20,7 @@
 | Systematic expert debugging | [debug-like-expert](#debug-like-expert-skill) | Dev Tools |
 | Create project plans, meta-prompts | [planning-prompts](#planning-prompts-skill) | Dev Tools |
 | Manage git worktrees for parallel dev | [worktree-manager](#worktree-manager-skill) | Dev Tools |
+| Fine-tune LLMs with GRPO/SFT | [unsloth-training](#unsloth-training-skill) | Infrastructure |
 | Build multi-agent LangGraph systems | [langgraph-agents](#langgraph-agents-skill) | Infrastructure |
 | Deploy to RunPod GPU serverless | [runpod-deployment](#runpod-deployment-skill) | Infrastructure |
 | Fast GROQ API inference | [groq-inference](#groq-inference-skill) | Infrastructure |
@@ -33,6 +34,8 @@
 | B2B content marketing | [content-marketing](#content-marketing-skill) | Business |
 | Executive data analysis, dashboards | [data-analysis](#data-analysis-skill) | Business |
 | Trading signals, technical analysis | [trading-signals](#trading-signals-skill) | Business |
+| Design business models (9 blocks) | [business-model-canvas](#business-model-canvas-skill) | Strategy |
+| Blue ocean market differentiation | [blue-ocean-strategy](#blue-ocean-strategy-skill) | Strategy |
 | Track project context across sessions | [project-context](#project-context-skill) | Core |
 | Enforce workflow discipline | [workflow-enforcer](#workflow-enforcer) | Core |
 | Orchestrate full-day workflows with cost tracking | [workflow-orchestrator](#workflow-orchestrator-skill) | Core |
@@ -178,7 +181,7 @@ Production voice AI agents with ultra-low latency (<500ms). VozLux-tested.
 |-----------|----------|---------|
 | STT | Deepgram Nova-3 | ~150ms |
 | LLM | GROQ llama-3.1-8b | ~220ms |
-| TTS | Cartesia Sonic-3 | ~90ms |
+| TTS | Cartesia Sonic-2 | ~90ms |
 | Telephony | Twilio Media Streams | Realtime |
 
 **Reference Files (6):** deepgram-setup, cartesia-tts, groq-voice-llm, twilio-webhooks, latency-optimization, voice-prompts
@@ -216,6 +219,30 @@ Multi-agent systems with LangGraph. NO OPENAI.
 | Master Orchestrator | Complex workflows |
 
 **Triggers:** "LangGraph agent", "multi-agent", "supervisor pattern"
+
+---
+
+#### unsloth-training-skill
+**Location:** `active/unsloth-training-skill/`
+
+Fine-tune LLMs with Unsloth using GRPO (reinforcement learning) or SFT (supervised fine-tuning).
+
+| Method | Use When | Data Needed |
+|--------|----------|-------------|
+| GRPO | Improving reasoning, aligning behavior | Prompts + verifiable answers |
+| SFT | Teaching formats, domain knowledge | Input/output pairs |
+
+**Reference Files (4):**
+- `references/reward-design.md` - Reward function patterns and testing
+- `references/domain-examples.md` - Voice AI, Sales Agent, Support examples
+- `references/hyperparameters.md` - GRPOConfig complete reference
+- `references/troubleshooting.md` - Common issues and fixes
+
+**Reference Code:**
+- `reference/grpo/basic_grpo.py` - Minimal working GRPO example
+- `reference/sft/sales_extractor_training.py` - Complete SFT script
+
+**Triggers:** "train with GRPO", "fine-tune model", "create reward functions", "SFT training", "Unsloth", "export to GGUF"
 
 ---
 
@@ -365,11 +392,68 @@ Technical analysis for quantitative trading systems.
 
 ---
 
+### Strategy
+
+#### business-model-canvas-skill
+**Location:** `active/business-model-canvas-skill/`
+
+Business model design using Alexander Osterwalder's 9 building blocks framework.
+
+| Block | Focus |
+|-------|-------|
+| Customer Segments | Who are we serving? |
+| Value Propositions | What value do we deliver? |
+| Channels | How do we reach customers? |
+| Customer Relationships | How do we engage? |
+| Revenue Streams | How do we make money? |
+| Key Resources | What do we need? |
+| Key Activities | What must we do? |
+| Key Partnerships | Who helps us? |
+| Cost Structure | What does it cost? |
+
+**Key Features:**
+- Canvas generation algorithm
+- Validation checklist for each block
+- Canvas health metrics (viability scoring)
+- Example sessions with real scenarios
+
+**Triggers:** "business model canvas", "value proposition", "customer segments", "revenue model", "startup canvas"
+
+---
+
+#### blue-ocean-strategy-skill
+**Location:** `active/blue-ocean-strategy-skill/`
+
+Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested market space.
+
+| Framework | Purpose |
+|-----------|---------|
+| ERRC Grid | Eliminate, Reduce, Raise, Create |
+| Strategy Canvas | Value curves vs competitors |
+| Six Paths | Alternative market exploration |
+| Blue Ocean Index | Opportunity scoring (0-100) |
+
+**Key Concepts:**
+- Value Innovation (differentiation + low cost)
+- Three tiers of noncustomers
+- Red Ocean vs Blue Ocean comparison
+
+**Classic Examples:**
+- Cirque du Soleil (eliminated animal shows, created artistic elements)
+- Southwest Airlines (eliminated meals, created point-to-point)
+- Yellow Tail Wine (eliminated complexity, created easy drinking)
+
+**Triggers:** "blue ocean", "ERRC framework", "strategy canvas", "value innovation", "market differentiation"
+
+---
+
 ## Folder Structure
 
 ```
 skills/
-├── active/                    # 17 active skills
+├── active/                    # 20 active skills
+│   ├── blue-ocean-strategy-skill/
+│   ├── business-model-canvas-skill/
 │   ├── content-marketing-skill/
 │   ├── crm-integration-skill/
 │   ├── data-analysis-skill/
@@ -385,6 +469,7 @@ skills/
 │   ├── stripe-stack-skill/
 │   ├── supabase-sql-skill/
 │   ├── trading-signals-skill/
+│   ├── unsloth-training-skill/
 │   ├── voice-ai-skill/
 │   ├── workflow-orchestrator-skill/
 │   └── worktree-manager-skill/
@@ -429,3 +514,12 @@ On 2025-12-25, 14 skills were consolidated into 5 comprehensive skills:
 | sales-revenue | sales-outreach, revenue-ops, demo-discovery |
 
 This reduced the library from 31 to 17 skills with no functionality loss.
+
+On 2026-01-01, 4 skills were audited and restructured to XML format (<500 lines each):
+
+| Skill | Before | After | Changes |
+|-------|--------|-------|---------|
+| runpod-deployment-skill | 1172 lines | 451 lines | Full XML structure, reference files |
+| crm-integration-skill | 788 lines | 489 lines | Updated with Context7 SDK patterns |
+| voice-ai-skill | 652 lines | 493 lines | Deepgram v5 SDK, Cartesia Sonic-2 |
+| gtm-pricing-skill | 510 lines | 496 lines | Trimmed integration notes |

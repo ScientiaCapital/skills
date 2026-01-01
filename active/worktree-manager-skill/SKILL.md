@@ -1,13 +1,50 @@
 ---
-name: worktree-manager
-description: Create, manage, and cleanup git worktrees with Claude Code agents across all projects. USE THIS SKILL when user says "create worktree", "spin up worktrees", "new worktree for X", "worktree status", "cleanup worktrees", or wants parallel development branches. Handles worktree creation, dependency installation, validation, agent launching in Ghostty, and global registry management.
+name: "worktree-manager"
+description: "Parallel development with git worktrees and Claude Code agents. Ghostty terminal launching, port allocation, global registry. Use when: create worktree, spin up worktrees, parallel development, worktree status, cleanup worktrees, launch agent in worktree."
 ---
 
-# Global Worktree Manager
+<objective>
+Manage parallel development across ALL projects using git worktrees with Claude Code agents. Each worktree is an isolated copy of the repo on a different branch, stored centrally at `~/tmp/worktrees/`. This enables multiple agents to work simultaneously without conflicts.
+</objective>
 
-Manage parallel development across ALL projects using git worktrees with Claude Code agents. Each worktree is an isolated copy of the repo on a different branch, stored centrally at `~/tmp/worktrees/`.
+<quick_start>
+**Create a single worktree with agent:**
+```
+/worktree create feature/auth
+```
 
-**IMPORTANT**: You (Claude) can perform ALL operations manually using standard tools (jq, git, bash). Scripts are helpers, not requirements. If a script fails, fall back to manual operations described in this document.
+Claude will:
+1. Allocate ports (8100-8101)
+2. Create worktree at `~/tmp/worktrees/[project]/feature-auth`
+3. Install dependencies
+4. Create WORKTREE_TASK.md for the agent
+5. Launch Ghostty terminal with Claude Opus 4.5 agent
+</quick_start>
+
+<success_criteria>
+A worktree setup is successful when:
+- Worktree created at `~/tmp/worktrees/[project]/[branch-slug]`
+- Ports allocated and registered globally
+- Dependencies installed
+- Agent launched in Ghostty terminal
+- Entry added to `~/.claude/worktree-registry.json`
+</success_criteria>
+
+<current_state>
+Git repository:
+!`git status --short --branch 2>/dev/null`
+
+Existing worktrees:
+!`git worktree list 2>/dev/null`
+
+Worktree registry:
+!`cat ~/.claude/worktree-registry.json 2>/dev/null | jq -r '.worktrees[] | "\(.project)/\(.branch) → \(.status)"' | head -10`
+
+Available ports:
+!`cat ~/.claude/worktree-registry.json 2>/dev/null | jq '.portPool.allocated | length' || echo "0"` allocated
+</current_state>
+
+<activation_triggers>
 
 ## When This Skill Activates
 
@@ -18,12 +55,23 @@ Manage parallel development across ALL projects using git worktrees with Claude 
 - "what's the status of my worktrees?"
 - "show all worktrees" / "show worktrees for this project"
 - "clean up merged worktrees"
-- "clean up the auth worktree"
 - "launch agent in worktree X"
 
----
+## Invocation
 
-## File Locations
+**Command syntax:**
+- `/worktree create feature/auth` - Single worktree
+- `/worktree create feat1 feat2 feat3` - Multiple worktrees
+- `/worktree status` - Check all worktrees
+- `/worktree status --project myapp` - Filter by project
+- `/worktree cleanup feature/auth` - Remove worktree
+- `/worktree launch feature/auth` - Launch agent in worktree
+
+</activation_triggers>
+
+<file_locations>
+
+## Key Files
 
 | File | Purpose |
 |------|---------|
@@ -32,12 +80,16 @@ Manage parallel development across ALL projects using git worktrees with Claude 
 | `~/.claude/skills/worktree-manager/scripts/` | **Helper scripts** - optional, can do everything manually |
 | `~/tmp/worktrees/` | **Worktree storage** - all worktrees live here |
 | `.claude/worktree.json` (per-project) | **Project config** - optional custom settings |
+| `WORKTREE_TASK.md` (per-worktree) | **Auto-loaded task prompt** - agent reads on startup |
 
----
+</file_locations>
+
+<core_concepts>
 
 ## Core Concepts
 
 ### Centralized Worktree Storage
+
 All worktrees live in `~/tmp/worktrees/<project-name>/<branch-slug>/`
 
 ```
@@ -51,219 +103,67 @@ All worktrees live in `~/tmp/worktrees/<project-name>/<branch-slug>/`
 ```
 
 ### Branch Slug Convention
-Branch names are slugified for filesystem safety by replacing `/` with `-`:
+
+Branch names are slugified for filesystem safety:
 - `feature/auth` → `feature-auth`
 - `fix/login-bug` → `fix-login-bug`
-- `feat/user-profile` → `feat-user-profile`
 
-**Slugify manually:** `echo "feature/auth" | tr '/' '-'` → `feature-auth`
+**Slugify manually:** `echo "feature/auth" | tr '/' '-'`
 
-### Port Allocation Rules
+### Port Allocation
+
 - **Global pool**: 8100-8199 (100 ports total)
 - **Per worktree**: 2 ports allocated (for API + frontend patterns)
-- **Globally unique**: Ports are tracked globally to avoid conflicts across projects
-- **Check before use**: Always verify port isn't in use by system: `lsof -i :<port>`
+- **Globally unique**: Ports tracked to avoid conflicts across projects
 
----
+**See:** `references/port-allocation.md` for detailed operations.
 
-## Global Registry
+### Required Defaults
 
-### Location
-`~/.claude/worktree-registry.json`
+**CRITICAL**: These settings MUST be used when launching agents:
 
-### Schema
+| Setting | Value | Reason |
+|---------|-------|--------|
+| Terminal | Ghostty | Required terminal for agent launching |
+| Model | `claude-opus-4-5-20250514` | Most capable for autonomous work |
+| Flags | `--dangerously-skip-permissions` | Required for autonomous file ops |
+
+**Launch command pattern:**
+```bash
+ghostty -e "cd {worktree_path} && claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions"
+```
+
+</core_concepts>
+
+<config>
+
+## Skill Config
+
+Location: `~/.claude/skills/worktree-manager/config.json`
+
 ```json
 {
-  "worktrees": [
-    {
-      "id": "unique-uuid",
-      "project": "obsidian-ai-agent",
-      "repoPath": "/Users/rasmus/Projects/obsidian-ai-agent",
-      "branch": "feature/auth",
-      "branchSlug": "feature-auth",
-      "worktreePath": "/Users/rasmus/tmp/worktrees/obsidian-ai-agent/feature-auth",
-      "ports": [8100, 8101],
-      "createdAt": "2025-12-04T10:00:00Z",
-      "validatedAt": "2025-12-04T10:02:00Z",
-      "agentLaunchedAt": "2025-12-04T10:03:00Z",
-      "task": "Implement OAuth login",
-      "prNumber": null,
-      "status": "active"
-    }
-  ],
-  "portPool": {
-    "start": 8100,
-    "end": 8199,
-    "allocated": [8100, 8101]
-  }
+  "terminal": "ghostty",
+  "shell": "zsh",
+  "defaultModel": "opus",
+  "modelId": "claude-opus-4-5-20250514",
+  "claudeCommand": "claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions",
+  "portPool": { "start": 8100, "end": 8199 },
+  "portsPerWorktree": 2,
+  "worktreeBase": "~/tmp/worktrees",
+  "defaultCopyDirs": [".agents"],
+  "envFilePriority": [".env.local", ".env", ".env.example"],
+  "autoCleanupOnMerge": true
 }
 ```
 
-### Field Descriptions
+</config>
 
-**Worktree entry fields:**
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | string | Unique identifier (UUID) |
-| `project` | string | Project name (from git remote or directory) |
-| `repoPath` | string | Absolute path to original repository |
-| `branch` | string | Full branch name (e.g., `feature/auth`) |
-| `branchSlug` | string | Filesystem-safe name (e.g., `feature-auth`) |
-| `worktreePath` | string | Absolute path to worktree |
-| `ports` | number[] | Allocated port numbers (usually 2) |
-| `createdAt` | string | ISO 8601 timestamp |
-| `validatedAt` | string\|null | When validation passed |
-| `agentLaunchedAt` | string\|null | When agent was launched |
-| `task` | string\|null | Task description for the agent |
-| `prNumber` | number\|null | Associated PR number if exists |
-| `status` | string | `active`, `orphaned`, or `merged` |
-
-**Port pool fields:**
-| Field | Type | Description |
-|-------|------|-------------|
-| `start` | number | First port in pool (default: 8100) |
-| `end` | number | Last port in pool (default: 8199) |
-| `allocated` | number[] | Currently allocated ports |
-
-### Manual Registry Operations
-
-**Read entire registry:**
-```bash
-cat ~/.claude/worktree-registry.json | jq '.'
-```
-
-**List all worktrees:**
-```bash
-cat ~/.claude/worktree-registry.json | jq '.worktrees[]'
-```
-
-**List worktrees for specific project:**
-```bash
-cat ~/.claude/worktree-registry.json | jq '.worktrees[] | select(.project == "my-project")'
-```
-
-**Get allocated ports:**
-```bash
-cat ~/.claude/worktree-registry.json | jq '.portPool.allocated'
-```
-
-**Find worktree by branch (partial match):**
-```bash
-cat ~/.claude/worktree-registry.json | jq '.worktrees[] | select(.branch | contains("auth"))'
-```
-
-**Add worktree entry manually:**
-```bash
-TMP=$(mktemp)
-jq '.worktrees += [{
-  "id": "'$(uuidgen)'",
-  "project": "my-project",
-  "repoPath": "/path/to/repo",
-  "branch": "feature/auth",
-  "branchSlug": "feature-auth",
-  "worktreePath": "/Users/me/tmp/worktrees/my-project/feature-auth",
-  "ports": [8100, 8101],
-  "createdAt": "'$(date -u +%Y-%m-%dT%H:%M:%SZ)'",
-  "validatedAt": null,
-  "agentLaunchedAt": null,
-  "task": "My task",
-  "prNumber": null,
-  "status": "active"
-}]' ~/.claude/worktree-registry.json > "$TMP" && mv "$TMP" ~/.claude/worktree-registry.json
-```
-
-**Add ports to allocated pool:**
-```bash
-TMP=$(mktemp)
-jq '.portPool.allocated += [8100, 8101] | .portPool.allocated |= unique | .portPool.allocated |= sort_by(.)' \
-  ~/.claude/worktree-registry.json > "$TMP" && mv "$TMP" ~/.claude/worktree-registry.json
-```
-
-**Remove worktree entry:**
-```bash
-TMP=$(mktemp)
-jq 'del(.worktrees[] | select(.project == "my-project" and .branch == "feature/auth"))' \
-  ~/.claude/worktree-registry.json > "$TMP" && mv "$TMP" ~/.claude/worktree-registry.json
-```
-
-**Release ports from pool:**
-```bash
-TMP=$(mktemp)
-jq '.portPool.allocated = (.portPool.allocated | map(select(. != 8100 and . != 8101)))' \
-  ~/.claude/worktree-registry.json > "$TMP" && mv "$TMP" ~/.claude/worktree-registry.json
-```
-
-**Initialize empty registry (if missing):**
-```bash
-mkdir -p ~/.claude
-cat > ~/.claude/worktree-registry.json << 'EOF'
-{
-  "worktrees": [],
-  "portPool": {
-    "start": 8100,
-    "end": 8199,
-    "allocated": []
-  }
-}
-EOF
-```
-
----
-
-## Manual Port Allocation
-
-If `scripts/allocate-ports.sh` fails, allocate ports manually:
-
-**Step 1: Get currently allocated ports**
-```bash
-ALLOCATED=$(cat ~/.claude/worktree-registry.json | jq -r '.portPool.allocated[]' | sort -n)
-echo "Currently allocated: $ALLOCATED"
-```
-
-**Step 2: Find first available port (not in allocated list AND not in use by system)**
-```bash
-for PORT in $(seq 8100 8199); do
-  # Check if in registry
-  if ! echo "$ALLOCATED" | grep -q "^${PORT}$"; then
-    # Check if in use by system
-    if ! lsof -i :"$PORT" &>/dev/null; then
-      echo "Available: $PORT"
-      break
-    fi
-  fi
-done
-```
-
-**Step 3: Add to allocated pool**
-```bash
-TMP=$(mktemp)
-jq '.portPool.allocated += [8100] | .portPool.allocated |= unique | .portPool.allocated |= sort_by(.)' \
-  ~/.claude/worktree-registry.json > "$TMP" && mv "$TMP" ~/.claude/worktree-registry.json
-```
-
----
-
-## What You (Claude) Do vs What Scripts Do
-
-| Task | Script Available | Manual Fallback |
-|------|------------------|-----------------|
-| Determine project name | No | Parse `git remote get-url origin` or `basename $(pwd)` |
-| Detect package manager | No | Check for lockfiles (see Detection section) |
-| Create git worktree | No | `git worktree add <path> -b <branch>` |
-| Copy .agents/ directory | No | `cp -r .agents <worktree-path>/` |
-| Install dependencies | No | Run detected install command |
-| Validate (health check) | No | Start server, curl endpoint, stop server |
-| Allocate ports | `scripts/allocate-ports.sh 2` | Manual (see above) |
-| Register worktree | `scripts/register.sh` | Manual jq (see above) |
-| Launch agent in terminal | `scripts/launch-agent.sh` | Manual (see below) |
-| Show status | `scripts/status.sh` | `cat ~/.claude/worktree-registry.json \| jq ...` |
-| Cleanup worktree | `scripts/cleanup.sh` | Manual (see Cleanup section) |
-
----
+<workflows>
 
 ## Workflows
 
-### 1. Create Multiple Worktrees with Agents
+### Create Multiple Worktrees
 
 **User says:** "Spin up 3 worktrees for feature/auth, feature/payments, and fix/login-bug"
 
@@ -273,61 +173,42 @@ jq '.portPool.allocated += [8100] | .portPool.allocated |= unique | .portPool.al
 For EACH branch (can run in parallel):
 
 1. SETUP
-   a. Get project name:
-      PROJECT=$(basename $(git remote get-url origin 2>/dev/null | sed 's/\.git$//') 2>/dev/null || basename $(pwd))
-   b. Get repo root:
-      REPO_ROOT=$(git rev-parse --show-toplevel)
-   c. Slugify branch:
-      BRANCH_SLUG=$(echo "feature/auth" | tr '/' '-')
-   d. Determine worktree path:
-      WORKTREE_PATH=~/tmp/worktrees/$PROJECT/$BRANCH_SLUG
+   PROJECT=$(basename $(git remote get-url origin 2>/dev/null | sed 's/\.git$//') || basename $(pwd))
+   REPO_ROOT=$(git rev-parse --show-toplevel)
+   BRANCH_SLUG=$(echo "feature/auth" | tr '/' '-')
+   WORKTREE_PATH=~/tmp/worktrees/$PROJECT/$BRANCH_SLUG
 
 2. ALLOCATE PORTS
-   Option A (script): ~/.claude/skills/worktree-manager/scripts/allocate-ports.sh 2
-   Option B (manual): Find 2 unused ports from 8100-8199, add to registry
+   Find 2 unused ports from 8100-8199, add to registry
 
 3. CREATE WORKTREE
    mkdir -p ~/tmp/worktrees/$PROJECT
    git worktree add $WORKTREE_PATH -b $BRANCH
-   # If branch exists already, omit -b flag
 
 4. COPY UNCOMMITTED RESOURCES
    cp -r .agents $WORKTREE_PATH/ 2>/dev/null || true
+   Copy .env.local or .env as appropriate
 
-   # Copy environment files (priority: .env.local > .env > .env.example)
-   if [ -f ".env.local" ]; then
-       cp .env.local "$WORKTREE_PATH/.env.local"
-   fi
-   if [ -f ".env" ]; then
-       cp .env "$WORKTREE_PATH/.env"
-   elif [ -f ".env.example" ]; then
-       cp .env.example "$WORKTREE_PATH/.env"
-   fi
+5. CREATE WORKTREE_TASK.md
+   Create detailed task file for agent
 
-5. INSTALL DEPENDENCIES
-   cd $WORKTREE_PATH
-   # Detect and run: npm install / uv sync / etc.
+6. INSTALL DEPENDENCIES
+   Detect package manager, run install command
 
-6. VALIDATE (start server, health check, stop)
-   a. Start server with allocated port
-   b. Wait and health check: curl -sf http://localhost:$PORT/health
-   c. Stop server
-   d. If FAILS: report error but continue with other worktrees
+7. VALIDATE (optional)
+   Start server, health check, stop
 
-7. REGISTER IN GLOBAL REGISTRY
-   Option A (script): ~/.claude/skills/worktree-manager/scripts/register.sh ...
-   Option B (manual): Update ~/.claude/worktree-registry.json with jq
+8. REGISTER IN GLOBAL REGISTRY
+   Update ~/.claude/worktree-registry.json with entry
 
-8. LAUNCH AGENT
-   Option A (script): ~/.claude/skills/worktree-manager/scripts/launch-agent.sh $WORKTREE_PATH "task"
-   Option B (manual): Open terminal manually, cd to path, run claude
+9. LAUNCH AGENT
+   ghostty -e "cd $WORKTREE_PATH && claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions"
 
 AFTER ALL COMPLETE:
 - Report summary table to user
-- Note any failures with details
 ```
 
-### 2. Check Status
+### Check Status
 
 **With script:**
 ```bash
@@ -337,185 +218,38 @@ AFTER ALL COMPLETE:
 
 **Manual:**
 ```bash
-# All worktrees
-cat ~/.claude/worktree-registry.json | jq -r '.worktrees[] | "\(.project)\t\(.branch)\t\(.ports | join(","))\t\(.status)\t\(.task // "-")"'
-
-# For current project
-PROJECT=$(basename $(git remote get-url origin 2>/dev/null | sed 's/\.git$//'))
-cat ~/.claude/worktree-registry.json | jq -r ".worktrees[] | select(.project == \"$PROJECT\") | \"\(.branch)\t\(.ports | join(\",\"))\t\(.status)\""
+cat ~/.claude/worktree-registry.json | jq -r '.worktrees[] | "\(.project)\t\(.branch)\t\(.ports | join(","))\t\(.status)"'
 ```
 
-### 3. Launch Agent Manually
+### Cleanup Worktree
 
-If `launch-agent.sh` fails:
+**See:** `references/cleanup-operations.md` for full cleanup procedure.
 
-**For macOS Terminal.app (recommended for Claude Desktop):**
+**Quick cleanup:**
 ```bash
-osascript -e 'tell application "Terminal" to do script "cd '"$WORKTREE_PATH"' && claude --model opus --dangerously-skip-permissions"'
+~/.claude/skills/worktree-manager/scripts/cleanup.sh <project> <branch> --delete-branch
 ```
 
-**For Ghostty:**
-```bash
-# Create a temp script for reliable execution
-TEMP_SCRIPT=$(mktemp /tmp/worktree-launch.XXXXXX.sh)
-cat > "$TEMP_SCRIPT" << SCRIPT
-#!/bin/bash
-cd '$WORKTREE_PATH'
-exec claude --model opus --dangerously-skip-permissions
-SCRIPT
-chmod +x "$TEMP_SCRIPT"
-open -na "Ghostty.app" --args -e "$TEMP_SCRIPT"
-```
+</workflows>
 
-**For iTerm2:**
-```bash
-osascript -e 'tell application "iTerm2" to create window with default profile' \
-  -e 'tell application "iTerm2" to tell current session of current window to write text "cd '"$WORKTREE_PATH"' && claude --model opus --dangerously-skip-permissions"'
-```
+<routing>
 
-**For tmux:**
-```bash
-tmux new-session -d -s "wt-$PROJECT-$BRANCH_SLUG" -c "$WORKTREE_PATH" "bash -c 'claude --model opus --dangerously-skip-permissions'"
-```
+## Reference Files
 
-**IMPORTANT for Claude Desktop users:** Use `terminal` as your terminal setting in config.json. The Terminal.app method using AppleScript is the most reliable for launching Claude sessions from Claude Desktop.
+For detailed operations, see:
 
-### 4. Cleanup Worktree
+| Topic | File |
+|-------|------|
+| Registry operations | `references/registry-operations.md` |
+| Port allocation | `references/port-allocation.md` |
+| Agent launching | `references/agent-launching.md` |
+| Script reference | `references/script-reference.md` |
+| Cleanup operations | `references/cleanup-operations.md` |
+| Troubleshooting | `references/troubleshooting.md` |
 
-**With script:**
-```bash
-~/.claude/skills/worktree-manager/scripts/cleanup.sh my-project feature/auth --delete-branch
-```
+</routing>
 
-**Manual cleanup:**
-```bash
-# 1. Get worktree info from registry
-ENTRY=$(cat ~/.claude/worktree-registry.json | jq '.worktrees[] | select(.project == "my-project" and .branch == "feature/auth")')
-WORKTREE_PATH=$(echo "$ENTRY" | jq -r '.worktreePath')
-PORTS=$(echo "$ENTRY" | jq -r '.ports[]')
-REPO_PATH=$(echo "$ENTRY" | jq -r '.repoPath')
-
-# 2. Kill processes on ports
-for PORT in $PORTS; do
-  lsof -ti:"$PORT" | xargs kill -9 2>/dev/null || true
-done
-
-# 3. Remove worktree
-cd "$REPO_PATH"
-git worktree remove "$WORKTREE_PATH" --force 2>/dev/null || rm -rf "$WORKTREE_PATH"
-git worktree prune
-
-# 4. Remove from registry
-TMP=$(mktemp)
-jq 'del(.worktrees[] | select(.project == "my-project" and .branch == "feature/auth"))' \
-  ~/.claude/worktree-registry.json > "$TMP" && mv "$TMP" ~/.claude/worktree-registry.json
-
-# 5. Release ports
-TMP=$(mktemp)
-for PORT in $PORTS; do
-  jq ".portPool.allocated = (.portPool.allocated | map(select(. != $PORT)))" \
-    ~/.claude/worktree-registry.json > "$TMP" && mv "$TMP" ~/.claude/worktree-registry.json
-done
-
-# 6. Optionally delete branch
-git branch -D feature/auth
-git push origin --delete feature/auth
-```
-
----
-
-## Package Manager Detection
-
-Detect by checking for lockfiles in priority order:
-
-| File | Package Manager | Install Command |
-|------|-----------------|-----------------|
-| `bun.lockb` | bun | `bun install` |
-| `pnpm-lock.yaml` | pnpm | `pnpm install` |
-| `yarn.lock` | yarn | `yarn install` |
-| `package-lock.json` | npm | `npm install` |
-| `uv.lock` | uv | `uv sync` |
-| `pyproject.toml` (no uv.lock) | uv | `uv sync` |
-| `requirements.txt` | pip | `pip install -r requirements.txt` |
-| `go.mod` | go | `go mod download` |
-| `Cargo.toml` | cargo | `cargo build` |
-
-**Detection logic:**
-```bash
-cd $WORKTREE_PATH
-if [ -f "bun.lockb" ]; then bun install
-elif [ -f "pnpm-lock.yaml" ]; then pnpm install
-elif [ -f "yarn.lock" ]; then yarn install
-elif [ -f "package-lock.json" ]; then npm install
-elif [ -f "uv.lock" ]; then uv sync
-elif [ -f "pyproject.toml" ]; then uv sync
-elif [ -f "requirements.txt" ]; then pip install -r requirements.txt
-elif [ -f "go.mod" ]; then go mod download
-elif [ -f "Cargo.toml" ]; then cargo build
-fi
-```
-
----
-
-## Dev Server Detection
-
-Look for dev commands in this order:
-
-1. **docker-compose.yml / compose.yml**: `docker-compose up -d` or `docker compose up -d`
-2. **package.json scripts**: Look for `dev`, `start:dev`, `serve`
-3. **Python with uvicorn**: `uv run uvicorn app.main:app --port $PORT`
-4. **Python with Flask**: `flask run --port $PORT`
-5. **Go**: `go run .`
-
-**Port injection**: Most servers accept `PORT` env var or `--port` flag
-
----
-
-## Project-Specific Config (Optional)
-
-Projects can provide `.claude/worktree.json` for custom settings:
-
-```json
-{
-  "ports": {
-    "count": 2,
-    "services": ["api", "frontend"]
-  },
-  "install": "uv sync && cd frontend && npm install",
-  "validate": {
-    "start": "docker-compose up -d",
-    "healthCheck": "curl -sf http://localhost:{{PORT}}/health",
-    "stop": "docker-compose down"
-  },
-  "copyDirs": [".agents", ".env.example", "data/fixtures"]
-}
-```
-
-If this file exists, use its settings. Otherwise, auto-detect.
-
----
-
-## Parallel Worktree Creation
-
-When creating multiple worktrees, use subagents for parallelization:
-
-```
-User: "Spin up worktrees for feature/a, feature/b, feature/c"
-
-You:
-1. Allocate ports for ALL worktrees upfront (6 ports total)
-2. Spawn 3 subagents, one per worktree
-3. Each subagent:
-   - Creates its worktree
-   - Installs deps
-   - Validates
-   - Registers (with its pre-allocated ports)
-   - Launches agent
-4. Collect results from all subagents
-5. Report unified summary with any failures noted
-```
-
----
+<safety_guidelines>
 
 ## Safety Guidelines
 
@@ -531,185 +265,11 @@ You:
 
 3. **Port conflicts**: If port in use by non-worktree process, pick different port
 
-4. **Orphaned worktrees**: If original repo deleted, mark as `orphaned` in status
+4. **Environment files**: Never commit `.env` or `.env.local` to git
 
-5. **Max worktrees**: With 100-port pool and 2 ports each, max ~50 concurrent worktrees
+</safety_guidelines>
 
-6. **Environment files**: Never commit `.env` or `.env.local` to git.
-   Worktree copies inherit parent's secrets but remain gitignored.
-
----
-
-## Auto-Cleanup on Merge
-
-When a PR is merged, you should clean up its associated worktree to free ports and resources:
-
-**Trigger:** User says "cleanup merged worktrees" or "my PR was merged, clean it up"
-
-**Steps:**
-1. Check which worktrees have merged PRs
-2. For each merged worktree:
-   - Kill processes on allocated ports: `lsof -ti:<port> | xargs kill -9`
-   - Remove the worktree directory
-   - Update registry to remove entry
-   - Release ports back to pool
-   - Optionally delete local/remote branches
-
-**Quick cleanup command:**
-```bash
-~/.claude/skills/worktree-manager/scripts/cleanup.sh <project> <branch> --delete-branch
-```
-
-**Check for merged PRs:**
-```bash
-# List PRs that have been merged
-gh pr list --state merged --author @me --limit 10
-
-# Check if specific branch's PR was merged
-gh pr view <branch> --json state --jq '.state'
-```
-
----
-
-## Script Reference
-
-Scripts are in `~/.claude/skills/worktree-manager/scripts/`
-
-### allocate-ports.sh
-```bash
-~/.claude/skills/worktree-manager/scripts/allocate-ports.sh <count>
-# Returns: space-separated port numbers (e.g., "8100 8101")
-# Automatically updates registry
-```
-
-### register.sh
-```bash
-~/.claude/skills/worktree-manager/scripts/register.sh \
-  <project> <branch> <branch-slug> <worktree-path> <repo-path> <ports> [task]
-# Example:
-~/.claude/skills/worktree-manager/scripts/register.sh \
-  "my-project" "feature/auth" "feature-auth" \
-  "$HOME/tmp/worktrees/my-project/feature-auth" \
-  "/path/to/repo" "8100,8101" "Implement OAuth"
-```
-
-### launch-agent.sh
-```bash
-~/.claude/skills/worktree-manager/scripts/launch-agent.sh <worktree-path> [task]
-# Opens new terminal window (Ghostty by default) with Claude Code
-```
-
-### status.sh
-```bash
-~/.claude/skills/worktree-manager/scripts/status.sh [--project <name>]
-# Shows all worktrees, or filtered by project
-```
-
-### cleanup.sh
-```bash
-~/.claude/skills/worktree-manager/scripts/cleanup.sh <project> <branch> [--delete-branch]
-# Kills ports, removes worktree, updates registry
-# --delete-branch also removes local and remote git branches
-```
-
-### release-ports.sh
-```bash
-~/.claude/skills/worktree-manager/scripts/release-ports.sh <port1> [port2] ...
-# Releases ports back to pool
-```
-
----
-
-## Skill Config
-
-Location: `~/.claude/skills/worktree-manager/config.json`
-
-```json
-{
-  "terminal": "ghostty",
-  "shell": "zsh",
-  "defaultModel": "opus",
-  "claudeCommand": "claude --model opus --dangerously-skip-permissions",
-  "portPool": {
-    "start": 8100,
-    "end": 8199
-  },
-  "portsPerWorktree": 2,
-  "worktreeBase": "~/tmp/worktrees",
-  "defaultCopyDirs": [".agents"],
-  "envFilePriority": [".env.local", ".env", ".env.example"],
-  "autoCleanupOnMerge": true
-}
-```
-
-**Options:**
-- **terminal**: `ghostty`, `terminal`, `iterm2`, `tmux`, `wezterm`, `kitty`, `alacritty`
-  - Use `terminal` for macOS Terminal.app (recommended for Claude Desktop)
-- **shell**: `bash`, `zsh`, `fish` (adjust syntax in claudeCommand if using fish)
-- **defaultModel**: `opus`, `sonnet`, `haiku` (model to use for worktree agents, default: opus)
-- **claudeCommand**: The command to launch Claude Code (uses `--dangerously-skip-permissions` for autonomous operation)
-- **envFilePriority**: Order of env files to copy (first found wins for `.env`, all `.env.local` copied)
-- **autoCleanupOnMerge**: If true, automatically kill ports and cleanup worktree when PR is merged
-
-### Model Selection
-
-To start a worktree with a specific model:
-
-```bash
-# Use Opus 4.5 for complex tasks
-claude --model opus --dangerously-skip-permissions
-
-# Use Sonnet 4.5 (default) for balanced performance
-claude --model sonnet --dangerously-skip-permissions
-
-# Use Haiku for quick, simple tasks
-claude --model haiku --dangerously-skip-permissions
-```
-
-**Tip:** When spinning up worktrees, you can request a specific model:
-- "Spin up worktree for feature/auth with opus" → Uses Opus 4.5
-- "Create worktree with haiku for quick fix" → Uses Haiku
-
----
-
-## Common Issues
-
-### "Worktree already exists"
-```bash
-git worktree list
-git worktree remove <path> --force
-git worktree prune
-```
-
-### "Branch already exists"
-```bash
-# Use existing branch (omit -b flag)
-git worktree add <path> <branch>
-```
-
-### "Port already in use"
-```bash
-lsof -i :<port>
-# Kill if stale, or pick different port
-```
-
-### Registry out of sync
-```bash
-# Compare registry to actual worktrees
-cat ~/.claude/worktree-registry.json | jq '.worktrees[].worktreePath'
-find ~/tmp/worktrees -maxdepth 2 -type d
-
-# Remove orphaned entries or add missing ones
-```
-
-### Validation failed
-1. Check stderr/logs for error message
-2. Common issues: missing env vars, database not running, wrong port
-3. Report to user with details
-4. Continue with other worktrees
-5. User can fix and re-validate manually
-
----
+<example_session>
 
 ## Example Session
 
@@ -718,40 +278,29 @@ find ~/tmp/worktrees -maxdepth 2 -type d
 **You:**
 1. Detect project: `obsidian-ai-agent` (from git remote)
 2. Detect package manager: `uv` (found uv.lock)
-3. Allocate 4 ports: `~/.claude/skills/worktree-manager/scripts/allocate-ports.sh 4` → `8100 8101 8102 8103`
+3. Allocate 4 ports: `8100 8101 8102 8103`
 4. Create worktrees:
    ```bash
-   mkdir -p ~/tmp/worktrees/obsidian-ai-agent
    git worktree add ~/tmp/worktrees/obsidian-ai-agent/feature-dark-mode -b feature/dark-mode
    git worktree add ~/tmp/worktrees/obsidian-ai-agent/fix-login-bug -b fix/login-bug
    ```
-5. Copy .agents/:
+5. Copy .agents/ and .env to each
+6. Install deps: `(cd <path> && uv sync)`
+7. Register both in `~/.claude/worktree-registry.json`
+8. Launch agents:
    ```bash
-   cp -r .agents ~/tmp/worktrees/obsidian-ai-agent/feature-dark-mode/
-   cp -r .agents ~/tmp/worktrees/obsidian-ai-agent/fix-login-bug/
+   ghostty -e "cd ~/tmp/worktrees/.../feature-dark-mode && claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions"
    ```
-6. Install deps in each worktree:
-   ```bash
-   (cd ~/tmp/worktrees/obsidian-ai-agent/feature-dark-mode && uv sync)
-   (cd ~/tmp/worktrees/obsidian-ai-agent/fix-login-bug && uv sync)
+9. Report:
    ```
-7. Validate each (start server, health check, stop)
-8. Register both worktrees in `~/.claude/worktree-registry.json`
-9. Launch agents:
-   ```bash
-   ~/.claude/skills/worktree-manager/scripts/launch-agent.sh \
-     ~/tmp/worktrees/obsidian-ai-agent/feature-dark-mode "Implement dark mode toggle"
-   ~/.claude/skills/worktree-manager/scripts/launch-agent.sh \
-     ~/tmp/worktrees/obsidian-ai-agent/fix-login-bug "Fix login redirect bug"
-   ```
-10. Report:
-    ```
-    Created 2 worktrees with agents:
+   Created 2 worktrees with agents:
 
-    | Branch | Ports | Path | Task |
-    |--------|-------|------|------|
-    | feature/dark-mode | 8100, 8101 | ~/tmp/worktrees/.../feature-dark-mode | Implement dark mode |
-    | fix/login-bug | 8102, 8103 | ~/tmp/worktrees/.../fix-login-bug | Fix login redirect |
+   | Branch | Ports | Path | Task |
+   |--------|-------|------|------|
+   | feature/dark-mode | 8100, 8101 | ~/tmp/worktrees/.../feature-dark-mode | Implement dark mode |
+   | fix/login-bug | 8102, 8103 | ~/tmp/worktrees/.../fix-login-bug | Fix login redirect |
 
-    Both agents running in Ghostty windows.
-    ```
+   Both agents running in Ghostty windows.
+   ```
+
+</example_session>

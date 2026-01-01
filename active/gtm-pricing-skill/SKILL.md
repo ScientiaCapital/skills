@@ -1,13 +1,6 @@
 ---
-name: gtm-pricing-skill
-description: |
-  Comprehensive go-to-market, pricing, and opportunity evaluation skill for B2B SaaS and services.
-  Covers ICP development, positioning, messaging, competitive intelligence, pricing models, packaging,
-  value-based pricing, and opportunity scoring. Use when planning market entry, defining pricing,
-  evaluating opportunities, or developing GTM strategy.
-  Triggers: "GTM strategy", "go-to-market", "pricing strategy", "ICP", "ideal customer profile",
-  "positioning", "messaging framework", "competitive analysis", "pricing model", "opportunity evaluation",
-  "should I pursue this", "value-based pricing", "packaging", "tiering", "market entry", "launch plan".
+name: "gtm-pricing"
+description: "B2B go-to-market strategy, pricing models, ICP development, positioning, competitive intelligence, and opportunity evaluation. Use when: GTM strategy, go-to-market, pricing strategy, ICP, ideal customer profile, positioning, messaging, competitive analysis, opportunity evaluation."
 ---
 
 # GTM, Pricing & Opportunity Skill
@@ -488,22 +481,8 @@ These aren't deal-breakers, but point them out:
 
 ---
 
-## Integration Notes
-
-This comprehensive skill combines:
-- **GTM Strategy**: ICP, positioning, messaging, competitive intel
-- **Pricing Strategy**: Models, packaging, value-based pricing, psychology
-- **Opportunity Evaluation**: Scoring, red flags, complexity assessment
-
-**Pairs with:**
-- market-research-skill (company intel)
-- demo-discovery-skill (execution)
-- sales-outreach-skill (sequences)
-- content-marketing-skill (assets)
-- revenue-ops-skill (metrics)
-
 ## Reference Files
 
-- `reference/pricing.md` - Pricing models, strategies, services pricing
 - `reference/gtm.md` - ICP templates, launch playbooks, channel strategy
-- `reference/opportunity.md` - Scorecards, unit economics, build vs partner
+- `reference/pricing.md` - Models, value-based pricing, psychology
+- `reference/opportunity.md` - Scoring, unit economics, complexity

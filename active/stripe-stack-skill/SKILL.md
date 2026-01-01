@@ -1,9 +1,6 @@
 ---
-name: stripe-stack-skill
-description: |
-  Stripe integration patterns for Next.js + Supabase projects.
-  Use when: adding payments, subscriptions, webhooks, or credit systems.
-  Triggers: "stripe", "payments", "billing", "subscription", "webhook", "checkout"
+name: "stripe-stack"
+description: "Stripe integration patterns for Next.js + Supabase - payments, subscriptions, webhooks, credit systems, checkout. Use when: stripe, payments, billing, subscription, webhook, checkout, add payments to project."
 ---
 
 <essential_principles>

@@ -1,11 +1,6 @@
 ---
-name: workflow-orchestrator
-description: |
-  Universal project workflow system with cost tracking, parallel execution, security gates,
-  and intelligent agent orchestration. Activates on session start/end and major workflow
-  transitions. Triggers: "start day", "begin session", "what's the status", "new feature",
-  "build", "implement", "end day", "wrap up", "done for today", "debug", "investigate",
-  "why is this broken", "research", "evaluate", "should we use".
+name: "workflow-orchestrator"
+description: "Project workflow system - cost tracking, parallel execution, security gates, agent orchestration. Use when: start day, begin session, status check, new feature, build, implement, end day, wrap up, debug, investigate, research, evaluate."
 ---
 
 # Workflow Orchestrator Skill v2.0

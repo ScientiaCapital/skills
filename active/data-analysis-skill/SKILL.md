@@ -1,14 +1,6 @@
 ---
-name: data-analysis-skill
-description: |
-  Executive-grade data analysis and visualization for VC, PE, angels, C-suite, and founders.
-  Ingests data from any format (.csv, .xlsx, .sql, .pdf, .ppt, .json, .md), wrangles with
-  pandas/polars, and produces McKinsey/BCG-quality charts using Plotly, Altair, and Streamlit.
-  Covers SaaS metrics (CAC, LTV, MRR, ARR, cohort analysis), financial modeling, and
-  investor-ready presentations. Use when analyzing data, building dashboards, creating
-  investor reports, or preparing executive presentations.
-  Triggers: "analyze this data", "build a dashboard", "create charts", "investor presentation",
-  "SaaS metrics", "cohort analysis", "visualize", "pandas", "streamlit", "executive summary".
+name: "data-analysis"
+description: "Executive-grade data analysis with pandas/polars and McKinsey-quality visualizations. Use when: analyze data, build dashboard, create charts, investor presentation, SaaS metrics, cohort analysis, visualize, pandas, streamlit, executive summary."
 ---
 
 # Data Analysis Skill

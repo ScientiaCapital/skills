@@ -1,11 +1,6 @@
 ---
-name: content-marketing-skill
-description: |
-  Creates B2B content marketing strategies including thought leadership, SEO, LinkedIn content,
-  and demand generation campaigns. Covers blog posts, case studies, whitepapers, and video scripts.
-  Use when planning content calendars, writing posts, optimizing SEO, or building thought leadership.
-  Triggers: "content strategy", "blog post", "LinkedIn post", "thought leadership", "SEO",
-  "case study", "whitepaper", "content calendar", "demand gen content", "video script".
+name: "content-marketing"
+description: "B2B content marketing strategies - thought leadership, SEO, LinkedIn, blog posts, case studies, whitepapers. Use when: content strategy, blog post, LinkedIn post, thought leadership, SEO, case study, whitepaper, content calendar, demand gen content, video script."
 ---
 
 # Content Marketing Skill
