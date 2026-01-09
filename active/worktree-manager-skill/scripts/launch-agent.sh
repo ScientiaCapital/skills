@@ -151,15 +151,27 @@ EOF
         ;;
 
     iterm2|iterm)
+        # Get worktree count for tab numbering (Boris's 1-5 pattern)
+        REGISTRY_FILE="$HOME/.claude/worktree-registry.json"
+        if [ -f "$REGISTRY_FILE" ] && command -v jq &> /dev/null; then
+            ACTIVE_COUNT=$(jq '[.worktrees[] | select(.status == "active")] | length' "$REGISTRY_FILE" 2>/dev/null || echo "0")
+            TAB_NUMBER=$((ACTIVE_COUNT + 1))
+        else
+            TAB_NUMBER=1
+        fi
+        TAB_TITLE="[$TAB_NUMBER] $PROJECT - $BRANCH"
+
         osascript <<EOF
 tell application "iTerm2"
     activate
     create window with default profile
     tell current session of current window
+        set name to "$TAB_TITLE"
         write text "cd '$WORKTREE_PATH' && echo 'Worktree: $PROJECT / $BRANCH' && echo 'Task: $TASK' && echo '' && $CLAUDE_CMD"
     end tell
 end tell
 EOF
+        echo "   Tab: $TAB_TITLE"
         ;;
 
     tmux)
