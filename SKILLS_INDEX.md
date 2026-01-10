@@ -1,7 +1,7 @@
 # Skills Index
 
-> Last updated: 2026-01-01
-> Total skills: 22 (2 stable, 20 active)
+> Last updated: 2026-01-09
+> Total skills: 25 (2 stable, 23 active)
 
 ## Architecture
 
@@ -20,6 +20,9 @@
 | Systematic expert debugging | [debug-like-expert](#debug-like-expert-skill) | Dev Tools |
 | Create project plans, meta-prompts | [planning-prompts](#planning-prompts-skill) | Dev Tools |
 | Manage git worktrees for parallel dev | [worktree-manager](#worktree-manager-skill) | Dev Tools |
+| Write tests, TDD, test coverage | [testing](#testing-skill) | Dev Tools |
+| Design REST/GraphQL APIs | [api-design](#api-design-skill) | Dev Tools |
+| Auth, secrets, OWASP, security audit | [security](#security-skill) | Dev Tools |
 | Fine-tune LLMs with GRPO/SFT | [unsloth-training](#unsloth-training-skill) | Infrastructure |
 | Build multi-agent LangGraph systems | [langgraph-agents](#langgraph-agents-skill) | Infrastructure |
 | Deploy to RunPod GPU serverless | [runpod-deployment](#runpod-deployment-skill) | Infrastructure |
@@ -147,6 +150,71 @@ Git worktree automation for parallel development with Claude agents.
 **Features:** Ghostty terminal, 3 concurrent worktrees, M1/8GB optimized
 
 **Triggers:** "create worktree", "parallel development", "cleanup worktrees"
+
+---
+
+#### testing-skill
+**Location:** `active/testing-skill/`
+
+Comprehensive testing skill covering TDD workflow, test pyramid, mocking patterns, and coverage strategies.
+
+**Reference Files (4):**
+- `reference/unit-testing.md` - Unit test patterns, mocking, fixtures
+- `reference/integration-testing.md` - API tests, database tests, E2E
+- `reference/test-organization.md` - File structure, naming conventions
+- `reference/coverage-strategies.md` - Coverage targets, what to test
+
+**Key Concepts:**
+- TDD: Red-Green-Refactor cycle
+- Test Pyramid: Unit (70%) → Integration (20%) → E2E (10%)
+- Mock external services, not your own code
+
+**Triggers:** "write tests", "TDD", "test coverage", "unit test", "integration test", "mocking"
+
+---
+
+#### api-design-skill
+**Location:** `active/api-design-skill/`
+
+REST and GraphQL API design patterns for consistent, maintainable APIs.
+
+**Reference Files (5):**
+- `reference/rest-patterns.md` - Resource design, CRUD operations
+- `reference/error-handling.md` - Error response format, status codes
+- `reference/pagination.md` - Cursor vs offset, implementation
+- `reference/versioning.md` - URL versioning, deprecation strategy
+- `reference/documentation.md` - OpenAPI spec, README patterns
+
+**Key Patterns:**
+- RESTful naming conventions (plural nouns, kebab-case)
+- Consistent error response format with request ID
+- Cursor-based pagination for real-time data
+- URL path versioning (/api/v1/, /api/v2/)
+
+**Triggers:** "design API", "REST endpoints", "error responses", "pagination", "API versioning"
+
+---
+
+#### security-skill
+**Location:** `active/security-skill/`
+
+Application security patterns for web applications.
+
+**Reference Files (5):**
+- `reference/auth-patterns.md` - JWT, OAuth, session management
+- `reference/secrets-management.md` - Environment variables, rotation
+- `reference/input-validation.md` - Zod schemas, sanitization
+- `reference/rls-policies.md` - Supabase Row Level Security
+- `reference/owasp-top-10.md` - Vulnerability checklist
+
+**Key Areas:**
+- Authentication: JWT (short-lived) + refresh tokens
+- Secrets: Never in code, validate at startup
+- Input: Validate with Zod, sanitize HTML with DOMPurify
+- SQL: Always use parameterized queries
+- XSS: React auto-escapes, use CSP headers
+
+**Triggers:** "auth", "JWT", "secrets", "API keys", "SQL injection", "XSS", "CSRF", "RLS", "security audit"
 
 ---
 
@@ -451,7 +519,8 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ```
 skills/
-├── active/                    # 20 active skills
+├── active/                    # 23 active skills
+│   ├── api-design-skill/
 │   ├── blue-ocean-strategy-skill/
 │   ├── business-model-canvas-skill/
 │   ├── content-marketing-skill/
@@ -466,8 +535,10 @@ skills/
 │   ├── research-skill/
 │   ├── runpod-deployment-skill/
 │   ├── sales-revenue-skill/
+│   ├── security-skill/
 │   ├── stripe-stack-skill/
 │   ├── supabase-sql-skill/
+│   ├── testing-skill/
 │   ├── trading-signals-skill/
 │   ├── unsloth-training-skill/
 │   ├── voice-ai-skill/
