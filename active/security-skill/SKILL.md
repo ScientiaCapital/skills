@@ -1,5 +1,5 @@
 ---
-name: "security-skill"
+name: "security"
 description: "Application security patterns - authentication, secrets management, input validation, OWASP Top 10. Use when: auth, JWT, secrets, API keys, SQL injection, XSS, CSRF, RLS, security audit, pen testing basics."
 ---
 
@@ -8,6 +8,40 @@ Comprehensive security skill covering authentication patterns, secrets managemen
 
 Security is not optional - it's a fundamental requirement. This skill helps you build secure applications from the start, not bolt on security as an afterthought.
 </objective>
+
+<quick_start>
+**Security essentials for any new project:**
+
+1. **Secrets**: Never commit to git, validate at startup
+   ```typescript
+   // .env (gitignored) + envSchema.parse(process.env)
+   ```
+
+2. **Auth**: Short-lived JWTs + httpOnly cookies
+   ```typescript
+   jwt.sign(payload, secret, { expiresIn: '15m' })
+   ```
+
+3. **Input**: Validate everything with schemas
+   ```typescript
+   const data = z.object({ email: z.string().email() }).parse(input)
+   ```
+
+4. **SQL**: Always use parameterized queries (ORMs handle this)
+
+5. **RLS**: Enable on all Supabase tables with user-scoped policies
+</quick_start>
+
+<success_criteria>
+Security implementation is successful when:
+- All secrets in environment variables, validated at startup
+- No secrets in version control (verified with gitleaks)
+- JWT tokens short-lived (≤15 min) with refresh token rotation
+- All user input validated with Zod or similar schema validation
+- RLS enabled on all database tables with appropriate policies
+- CSP headers configured (no unsafe-inline where possible)
+- Security checklist completed before deployment
+</success_criteria>
 
 <security_mindset>
 ## The Security Mindset

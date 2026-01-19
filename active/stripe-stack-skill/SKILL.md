@@ -3,6 +3,41 @@ name: "stripe-stack"
 description: "Stripe integration patterns for Next.js + Supabase - payments, subscriptions, webhooks, credit systems, checkout. Use when: stripe, payments, billing, subscription, webhook, checkout, add payments to project."
 ---
 
+<objective>
+Guide Stripe payment integration for Next.js + Supabase projects with production-ready patterns for webhooks, subscriptions, and credit systems. Ensures idempotency, proper test/live mode separation, and secure key handling.
+</objective>
+
+<quick_start>
+**Add payments to a Next.js + Supabase project:**
+
+1. Install Stripe: `npm install stripe @stripe/stripe-js`
+2. Add env vars (see quick_reference below)
+3. Create idempotency table (see schema below)
+4. Choose workflow: `setup-new-project.md` or `add-webhook-handler.md`
+
+```typescript
+// Lazy-loaded Stripe client
+import Stripe from 'stripe';
+let _stripe: Stripe | null = null;
+export function getStripe(): Stripe {
+  if (!_stripe) {
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2025-12-15.clover' });
+  }
+  return _stripe;
+}
+```
+</quick_start>
+
+<success_criteria>
+Integration is successful when:
+- Webhook handler uses database-backed idempotency (not in-memory)
+- All keys in environment variables (never hardcoded)
+- Test mode fully working before any live mode deployment
+- Signature verification on all webhook endpoints
+- Event logging before processing (insert-before-process pattern)
+- Go-live checklist completed before production deployment
+</success_criteria>
+
 <essential_principles>
 
 ## Core Principles
@@ -52,22 +87,22 @@ Before proceeding, identify your use case:
 
 **If setting up Stripe in a new project:**
 → Read `workflows/setup-new-project.md`
-→ Then read `references/environment-vars.md`
+→ Then read `reference/environment-vars.md`
 → Use `templates/stripe-client.ts` and `templates/env-example.txt`
 
 **If adding webhook handling:**
 → Read `workflows/add-webhook-handler.md`
-→ Then read `references/webhook-patterns.md`
+→ Then read `reference/webhook-patterns.md`
 → Use `templates/webhook-handler-nextjs.ts` and `templates/idempotency-migration.sql`
 
 **If implementing subscription billing:**
 → Read `workflows/implement-subscriptions.md`
-→ Then read `references/pricing-models.md`
+→ Then read `reference/pricing-models.md`
 → Use `templates/plans-config.ts`
 
 **If adding credit/usage-based system:**
 → Read `workflows/add-credit-system.md`
-→ Then read `references/pricing-models.md`
+→ Then read `reference/pricing-models.md`
 
 **If migrating test → production:**
 → Read `workflows/go-live-checklist.md`
@@ -199,10 +234,10 @@ Private templates and examples available at:
 
 | File | Purpose |
 |------|---------|
-| `references/webhook-patterns.md` | Idempotency, event handling, error recovery |
-| `references/pricing-models.md` | Plans vs Credits vs Usage-based billing |
-| `references/environment-vars.md` | Standard env var conventions |
-| `references/common-errors.md` | Troubleshooting guide |
+| `reference/webhook-patterns.md` | Idempotency, event handling, error recovery |
+| `reference/pricing-models.md` | Plans vs Credits vs Usage-based billing |
+| `reference/environment-vars.md` | Standard env var conventions |
+| `reference/common-errors.md` | Troubleshooting guide |
 
 ## Template Files
 

@@ -1,10 +1,35 @@
 ---
 name: "sales-revenue"
-description: "B2B sales - cold outreach, lead scoring, pipeline metrics, MEDDIC/BANT qualification, discovery calls, demos, objection handling. Use when: cold email, lead scoring, pipeline, forecast, discovery call, demo, MEDDIC, BANT, CAC, LTV, win rate, sales metrics, outreach sequence."
+description: "B2B sales - cold outreach, lead scoring, pipeline metrics, MEDDIC/BANT qualification, discovery calls, and demos. Use when writing cold emails, scoring leads, running pipeline reviews, or preparing for sales calls."
 ---
 
-# Sales & Revenue Skill
+<objective>
+Comprehensive B2B sales skill covering cold outreach (email sequences, domain warming, lead scoring), revenue operations (pipeline metrics, forecasting, LTV:CAC), and sales execution (MEDDIC qualification, SPIN discovery, demo delivery, objection handling).
+</objective>
 
+<quick_start>
+**Lead scoring:** Hot: 70+ | Warm: 40-69 | Nurture: <40
+
+**Pipeline coverage:** 3-4x quota (SMB), 4-5x (Enterprise)
+
+**LTV:CAC ratio:** Target >3:1
+
+**MEDDIC:** Metrics, Economic Buyer, Decision Criteria, Decision Process, Identify Pain, Champion
+
+**Cold email:** Under 100 words, problem-forward, clear single CTA
+</quick_start>
+
+<success_criteria>
+Sales process is successful when:
+- Leads scored and tiered (Gold/Silver/Bronze) before outreach
+- Pipeline coverage at 3-4x quota minimum
+- LTV:CAC ratio >3:1
+- MEDDIC criteria documented for each qualified opportunity
+- Demo follows RECAP → AGENDA → SHOW VALUE → SUMMARIZE → NEXT STEPS
+- Objections handled with LAER (Listen, Acknowledge, Explore, Respond)
+</success_criteria>
+
+<core_content>
 Comprehensive B2B sales skill: outreach, revenue operations, and demo execution.
 
 ## Quick Reference
@@ -274,3 +299,4 @@ R - Respond (address specifically)
 - `reference/outreach.md` - Email templates, domain warming, agent architecture
 - `reference/revenue-ops.md` - Metrics, dashboards, forecasting
 - `reference/discovery.md` - MEDDIC scorecard, demo scripts, objection library
+</core_content>

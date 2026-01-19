@@ -1,10 +1,38 @@
 ---
 name: "gtm-pricing"
-description: "B2B go-to-market strategy, pricing models, ICP development, positioning, competitive intelligence, and opportunity evaluation. Use when: GTM strategy, go-to-market, pricing strategy, ICP, ideal customer profile, positioning, messaging, competitive analysis, opportunity evaluation."
+description: "B2B go-to-market strategy, pricing models, ICP development, positioning, and competitive intelligence. Use when planning GTM strategy, setting pricing, defining ICP, or evaluating opportunities."
 ---
 
-# GTM, Pricing & Opportunity Skill
+<objective>
+Comprehensive B2B go-to-market framework covering ICP development (firmographics, technographics, psychographics), positioning (April Dunford canvas), pricing strategy (value-based, tiered, feature gating), and opportunity evaluation (scoring, red flags, complexity levels).
+</objective>
 
+<quick_start>
+**ICP scoring:** 80+ = Ideal | 60-79 = Good | 40-59 = Marginal | <40 = Pass
+
+**Positioning statement:**
+```
+For [target] who [need], [product] is a [category] that [benefit].
+Unlike [alternative], our product [differentiator].
+```
+
+**Value-based pricing:** Price at 10-20% of quantified value delivered
+
+**Opportunity score:** /100 across Market Fit, Technical Fit, GTM Fit, Personal Fit, Economics
+</quick_start>
+
+<success_criteria>
+GTM strategy is successful when:
+- ICP documented with scoring criteria (firmographics, technographics, psychographics)
+- Positioning statement follows April Dunford framework
+- Pricing anchored to quantified value (not cost-plus)
+- Tier structure follows Good/Better/Best with clear feature gates
+- Opportunity scoring identifies red flags and good signals
+- Battle cards created for top 3 competitors
+- Launch checklist completed (pre-launch, launch, post-launch)
+</success_criteria>
+
+<core_content>
 Comprehensive guide for B2B go-to-market strategy, pricing, and opportunity evaluation.
 
 ## Quick Reference

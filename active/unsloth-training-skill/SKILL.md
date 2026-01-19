@@ -95,18 +95,18 @@ A training run is successful when:
 
 <file_locations>
 **Core references:**
-- `references/reward-design.md` - Reward function patterns
-- `references/domain-examples.md` - Voice AI, Sales Agent examples
-- `references/hyperparameters.md` - GRPOConfig reference
-- `references/troubleshooting.md` - Common fixes
+- `reference/reward-design.md` - Reward function patterns
+- `reference/domain-examples.md` - Voice AI, Sales Agent examples
+- `reference/hyperparameters.md` - GRPOConfig reference
+- `reference/troubleshooting.md` - Common fixes
 
 **New feature references:**
-- `references/fp8-training.md` - FP8 setup, VRAM savings
-- `references/deployment.md` - Docker, vLLM, LoRA hot-swap, SGLang
-- `references/export-formats.md` - GGUF, Ollama, LM Studio, Dynamic 2.0
-- `references/advanced-training.md` - 500K context, packing, checkpoints
-- `references/vision-training.md` - VLM fine-tuning
-- `references/mobile-deployment.md` - QAT, ExecuTorch, iOS/Android
+- `reference/fp8-training.md` - FP8 setup, VRAM savings
+- `reference/deployment.md` - Docker, vLLM, LoRA hot-swap, SGLang
+- `reference/export-formats.md` - GGUF, Ollama, LM Studio, Dynamic 2.0
+- `reference/advanced-training.md` - 500K context, packing, checkpoints
+- `reference/vision-training.md` - VLM fine-tuning
+- `reference/mobile-deployment.md` - QAT, ExecuTorch, iOS/Android
 
 **Code examples:** `reference/grpo/`, `reference/sft/`
 </file_locations>
@@ -249,7 +249,7 @@ reward_funcs = [
 # Total range: -0.3 to +2.8
 ```
 
-> **For domain-specific rewards:** See `references/domain-examples.md` for Voice AI, Sales Agent, and Support patterns.
+> **For domain-specific rewards:** See `reference/domain-examples.md` for Voice AI, Sales Agent, and Support patterns.
 </reward_functions>
 
 <prompt_format>
@@ -361,27 +361,27 @@ ollama run my-model "Solve: 15 + 27 = ?"
 → Reference: `reference/sft/sales_extractor_training.py`
 
 **Reward function design:** → 4 patterns (correctness, format, quality, constraints)
-→ Reference: `references/reward-design.md`, `references/domain-examples.md`
+→ Reference: `reference/reward-design.md`, `reference/domain-examples.md`
 
 **FP8 training:** → 60% VRAM savings, env vars, pre-quantized models
-→ Reference: `references/fp8-training.md`
+→ Reference: `reference/fp8-training.md`
 
 **Docker setup:** → Official image, volumes, Jupyter/SSH
-→ Reference: `references/deployment.md`
+→ Reference: `reference/deployment.md`
 
 **Vision fine-tuning:** → FastVisionModel, VLM data format
-→ Reference: `references/vision-training.md`
+→ Reference: `reference/vision-training.md`
 
 **Mobile deployment:** → QAT, ExecuTorch, iOS/Android
-→ Reference: `references/mobile-deployment.md`
+→ Reference: `reference/mobile-deployment.md`
 
 **Long context / packing:** → 500K context, 2-5x speedup
-→ Reference: `references/advanced-training.md`
+→ Reference: `reference/advanced-training.md`
 
 **Export formats:** → GGUF methods, Ollama, vLLM, SGLang
-→ Reference: `references/export-formats.md`
+→ Reference: `reference/export-formats.md`
 
-**Training issues:** → `references/troubleshooting.md`
+**Training issues:** → `reference/troubleshooting.md`
 </routing>
 
 <troubleshooting_quick>
@@ -395,7 +395,7 @@ ollama run my-model "Solve: 15 + 27 = ?"
 | Out of memory | Reduce max_completion_length, num_generations=2 |
 | No reasoning appearing | Train 500+ steps, use model >= 1.5B |
 
-> **For detailed troubleshooting:** See `references/troubleshooting.md`
+> **For detailed troubleshooting:** See `reference/troubleshooting.md`
 </troubleshooting_quick>
 
 <training_checklist>
@@ -462,5 +462,5 @@ def speakable_reward(completions, **kwargs):
 reward_funcs = [correctness_reward, brevity_reward, speakable_reward]
 ```
 
-3. See `references/domain-examples.md` for complete Voice AI reward patterns.
+3. See `reference/domain-examples.md` for complete Voice AI reward patterns.
 </example_session>

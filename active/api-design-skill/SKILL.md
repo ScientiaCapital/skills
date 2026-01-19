@@ -1,5 +1,5 @@
 ---
-name: "api-design-skill"
+name: "api-design"
 description: "REST/GraphQL API design patterns - resource naming, HTTP methods, error handling, pagination, versioning. Use when: design API, REST endpoints, GraphQL schema, error responses, pagination, rate limiting, API documentation."
 ---
 
@@ -8,6 +8,28 @@ Comprehensive API design skill covering RESTful conventions, error handling, pag
 
 Good API design makes the right thing easy and the wrong thing hard. This skill helps you create APIs that are a pleasure to use and maintain.
 </objective>
+
+<quick_start>
+**Resource naming:** Nouns, plural, lowercase, hyphenated (`/users`, `/blog-posts`)
+
+**HTTP methods:** GET (read), POST (create), PUT (replace), PATCH (update), DELETE (remove)
+
+**Status codes:** 200 OK, 201 Created, 204 No Content, 400 Bad Request, 401 Unauthorized, 403 Forbidden, 404 Not Found, 429 Rate Limited
+
+**Pagination:** Prefer cursor-based for real-time data; use `?limit=20&cursor=xxx`
+
+**Versioning:** URL path (`/api/v1/`) is clearest approach
+</quick_start>
+
+<success_criteria>
+API design is successful when:
+- Resources use plural nouns with consistent naming
+- HTTP methods match semantics (GET=read, POST=create, etc.)
+- Error responses follow consistent format with code, message, details, requestId
+- Pagination implemented (cursor or offset based)
+- Rate limiting headers included (X-RateLimit-Limit, Remaining, Reset)
+- Versioning strategy defined before breaking changes needed
+</success_criteria>
 
 <core_principles>
 ## API Design Principles
@@ -486,37 +508,8 @@ For detailed patterns, load the appropriate reference:
 | Pagination | `reference/pagination.md` | List endpoints |
 | Versioning | `reference/versioning.md` | API evolution |
 | Documentation | `reference/documentation.md` | OpenAPI, docs |
+| Checklist | `reference/checklist.md` | Pre-launch validation |
 
 **To load:** Ask for the specific topic or check if context suggests it.
 </references>
 
-<checklist>
-## API Design Checklist
-
-### Endpoints
-- [ ] Resource names are plural nouns
-- [ ] Consistent naming convention (kebab-case)
-- [ ] Appropriate HTTP methods
-- [ ] Correct status codes
-
-### Responses
-- [ ] Consistent response format
-- [ ] Consistent error format
-- [ ] Includes request ID for debugging
-
-### Pagination
-- [ ] List endpoints are paginated
-- [ ] Cursor-based for real-time data
-- [ ] Includes hasMore/total indicators
-
-### Security
-- [ ] Authentication required where needed
-- [ ] Rate limiting implemented
-- [ ] Input validation on all endpoints
-- [ ] CORS configured correctly
-
-### Documentation
-- [ ] OpenAPI spec exists
-- [ ] Examples for all endpoints
-- [ ] Error codes documented
-</checklist>

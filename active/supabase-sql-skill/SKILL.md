@@ -3,8 +3,37 @@ name: "supabase-sql"
 description: "Clean and format SQL migrations for Supabase - idempotency, RLS policies, formatting, schema fixes. Use when: fix this SQL, clean migration, RLS policy, Supabase schema, format postgres, prepare for SQL Editor, idempotent migration."
 ---
 
-# Supabase SQL Cleaner
+<objective>
+Clean and format SQL migrations for direct paste into Supabase SQL Editor. Ensures idempotency, proper RLS policies (especially service role patterns), standardized formatting, and dependency documentation.
+</objective>
 
+<quick_start>
+**Clean any SQL migration:**
+
+1. Fix typos (`- ` → `-- ` for comments)
+2. Add idempotency (`IF NOT EXISTS`, `DROP ... IF EXISTS`)
+3. Fix RLS policies (service role uses `TO service_role`, not JWT checks)
+4. Remove dead code (unused enums)
+5. Standardize casing (`NOW()`, `TIMESTAMPTZ`)
+6. Add dependencies comment at end
+
+```sql
+DROP POLICY IF EXISTS "Policy name" ON table_name;
+CREATE POLICY "Policy name" ON table_name ...
+```
+</quick_start>
+
+<success_criteria>
+SQL cleanup is successful when:
+- All policies and triggers use `DROP ... IF EXISTS` before `CREATE`
+- Service role policies use `TO service_role` (not JWT checks)
+- Indexes use `IF NOT EXISTS`
+- No unused enums remain
+- Dependencies listed at end of migration
+- SQL runs without errors in Supabase SQL Editor
+</success_criteria>
+
+<core_patterns>
 Clean SQL migrations for direct paste into Supabase SQL Editor.
 
 ## Cleanup Checklist

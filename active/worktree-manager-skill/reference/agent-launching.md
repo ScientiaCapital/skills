@@ -5,13 +5,13 @@
 **CRITICAL**: These settings MUST be used when launching agents in worktrees:
 
 - **Terminal**: Ghostty (ALWAYS use Ghostty)
-- **Model**: Opus 4.5 (`claude-opus-4-5-20250514`)
+- **Model**: Opus 4.5 (`claude-opus-4-5-20251101` or shorthand `opus`)
 - **Flags**: `--dangerously-skip-permissions` (required for autonomous operation)
 
 ## Standard Launch Command
 
 ```bash
-ghostty -e "cd {worktree_path} && claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions"
+ghostty -e "cd {worktree_path} && claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions"
 ```
 
 ## Terminal-Specific Commands
@@ -24,7 +24,7 @@ TEMP_SCRIPT=$(mktemp /tmp/worktree-launch.XXXXXX.sh)
 cat > "$TEMP_SCRIPT" << SCRIPT
 #!/bin/bash
 cd '$WORKTREE_PATH'
-exec claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions
+exec claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions
 SCRIPT
 chmod +x "$TEMP_SCRIPT"
 open -na "Ghostty.app" --args -e "$TEMP_SCRIPT"
@@ -33,21 +33,21 @@ open -na "Ghostty.app" --args -e "$TEMP_SCRIPT"
 ### macOS Terminal.app
 
 ```bash
-osascript -e 'tell application "Terminal" to do script "cd '"$WORKTREE_PATH"' && claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions"'
+osascript -e 'tell application "Terminal" to do script "cd '"$WORKTREE_PATH"' && claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions"'
 ```
 
 ### iTerm2
 
 ```bash
 osascript -e 'tell application "iTerm2" to create window with default profile' \
-  -e 'tell application "iTerm2" to tell current session of current window to write text "cd '"$WORKTREE_PATH"' && claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions"'
+  -e 'tell application "iTerm2" to tell current session of current window to write text "cd '"$WORKTREE_PATH"' && claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions"'
 ```
 
 ### tmux
 
 ```bash
 tmux new-session -d -s "wt-$PROJECT-$BRANCH_SLUG" -c "$WORKTREE_PATH" \
-  "bash -c 'claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions'"
+  "bash -c 'claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions'"
 ```
 
 ## WORKTREE_TASK.md Auto-Loading

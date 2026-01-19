@@ -1,10 +1,37 @@
 ---
 name: "content-marketing"
-description: "B2B content marketing strategies - thought leadership, SEO, LinkedIn, blog posts, case studies, whitepapers. Use when: content strategy, blog post, LinkedIn post, thought leadership, SEO, case study, whitepaper, content calendar, demand gen content, video script."
+description: "B2B content marketing - thought leadership, SEO, LinkedIn, blog posts, case studies, and video scripts. Use when creating content strategy, writing posts, or building demand gen assets."
 ---
 
-# Content Marketing Skill
+<objective>
+Enable effective B2B content marketing for demand generation and thought leadership. Covers content strategy (pillars, calendars), LinkedIn optimization, SEO blog writing, case studies, video scripts, and content repurposing across platforms.
+</objective>
 
+<quick_start>
+**Content types by funnel stage:**
+| Content | Stage | Effort |
+|---------|-------|--------|
+| LinkedIn post | Top | Low |
+| Blog post | Top | Low |
+| Case study | Mid | Medium |
+| Whitepaper | Mid | High |
+
+**LinkedIn formula:** Hook (1 line) + Story (3-5 lines) + Lesson (2-3 lines) + CTA
+
+**Blog SEO:** Primary keyword in title, H1, first 100 words, URL; 1,500-2,500 words
+</quick_start>
+
+<success_criteria>
+Content is successful when:
+- Maps to one of 3-5 content pillars
+- LinkedIn posts follow hook-story-lesson structure
+- Blog posts hit SEO checklist (keyword in title, H1, URL, first 100 words)
+- Case studies include quantified results (metrics, not vague claims)
+- Video scripts have clear hook in first 15 seconds
+- Content repurposed: 1 long-form → multiple formats (LinkedIn, Twitter, email)
+</success_criteria>
+
+<core_content>
 B2B content strategy and creation for demand generation and thought leadership.
 
 ## Quick Reference

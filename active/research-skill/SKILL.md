@@ -1,10 +1,40 @@
 ---
 name: "research"
-description: "Market intelligence, competitive analysis, technical evaluations, API comparisons, and technology decisions. Use when: research company, analyze competitors, evaluate framework, compare tools, should we use X, LLM provider comparison, API assessment, market opportunities, tech stack decision."
+description: "Market intelligence, competitive analysis, technical evaluations, and technology decisions. Use when researching companies, analyzing competitors, evaluating frameworks, or making tech stack decisions."
 ---
 
-# Research Skill
+<objective>
+Comprehensive research framework combining market intelligence (company profiles, competitive analysis, tech stack discovery) and technical evaluation (framework comparisons, LLM selection, API assessment). Produces structured reports with confidence scores and actionable recommendations.
+</objective>
 
+<quick_start>
+**Market research:**
+1. Basic discovery: Website, LinkedIn, Google News
+2. Tech stack: Job postings, integrations page
+3. Pain signals: Reviews, social mentions
+4. Decision makers: LinkedIn, about page
+
+**Technical research:**
+1. Define: Problem, requirements, constraints
+2. Discover: GitHub, HuggingFace, Context7 docs
+3. Evaluate: Apply framework checklist, test minimal example
+4. Decide: Build vs buy, document rationale
+
+**Output:** Research report with question, answer, confidence, sources
+</quick_start>
+
+<success_criteria>
+Research is successful when:
+- Question clearly defined with constraints documented
+- Multiple sources consulted (not just one)
+- Confidence level assigned (high/medium/low) with rationale
+- Recommendations are specific and actionable
+- Decision matrix used for multi-option comparisons
+- NO OPENAI constraint respected for technical research
+- Sources documented with access dates
+</success_criteria>
+
+<core_content>
 Comprehensive research framework combining market intelligence and technical evaluation.
 
 ## Quick Reference

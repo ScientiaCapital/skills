@@ -434,6 +434,17 @@ Total:             Sum of above (max 100)
 
 </example_session>
 
+<success_criteria>
+Canvas is successful when:
+- All 9 building blocks are populated with specific, actionable content
+- Customer segments are clearly defined with quantified market size
+- Value propositions address real problems with clear differentiation
+- Revenue streams match customer willingness to pay
+- Cost structure supports sustainable unit economics (LTV:CAC > 3:1)
+- Canvas Viability Score calculated (target: 60+/100)
+- Validation checklist completed for each block
+</success_criteria>
+
 <activation_triggers>
 **This skill activates for:**
 - "business model canvas"

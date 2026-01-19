@@ -1,10 +1,38 @@
 ---
 name: "trading-signals"
-description: "Technical analysis patterns - Elliott Wave, Wyckoff, Fibonacci, Markov Regime, Turtle Trading, pattern recognition, multi-LLM consensus. Use when: analyze chart, fibonacci levels, elliott wave, wyckoff analysis, trading signals, confluence detection, technical analysis."
+description: "Technical analysis patterns - Elliott Wave, Wyckoff, Fibonacci, Markov Regime, and Turtle Trading with confluence detection. Use when analyzing charts, identifying trading signals, or calculating technical levels."
 ---
 
-# Trading Signals Skill
+<objective>
+Provide standardized technical analysis patterns for trading projects, combining Elliott Wave, Wyckoff, Fibonacci, Markov Regime, and Turtle Trading methodologies. Enables confluence detection through regime-weighted methodology fusion and cost-effective multi-LLM consensus.
+</objective>
 
+<quick_start>
+**Confluence analysis (methodologies agree = high-probability setup):**
+```python
+score = sum(signal.strength * weights[signal.method] for signal in signals)
+action = 'BUY' if score >= 0.7 else 'WAIT'
+```
+
+**Score interpretation:**
+- 0.7-1.0: High conviction entry
+- 0.4-0.7: Wait for more confluence
+- 0.0-0.4: No trade
+
+**Cost-effective routing:** DeepSeek-V3 for pattern detection → Claude Sonnet for critical decisions
+</quick_start>
+
+<success_criteria>
+Analysis is successful when:
+- Multiple methodologies provide signals (not just one)
+- Regime identified (trending/ranging/volatile) before analysis
+- Confluence score calculated with regime-weighted methodology fusion
+- Cost-optimized: bulk processing on DeepSeek, critical decisions on Claude
+- Clear action (BUY/SELL/WAIT) with supporting rationale
+- NO OPENAI used in model routing
+</success_criteria>
+
+<core_patterns>
 Standardized patterns for technical analysis across trading projects.
 
 ## Quick Reference

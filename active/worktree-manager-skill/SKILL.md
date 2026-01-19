@@ -1,6 +1,6 @@
 ---
 name: "worktree-manager"
-description: "Parallel development with git worktrees and Claude Code agents. Ghostty terminal launching, port allocation, global registry. Use when: create worktree, spin up worktrees, parallel development, worktree status, cleanup worktrees, launch agent in worktree."
+description: "Parallel development with git worktrees and Claude Code agents. Handles Ghostty terminal launching, port allocation, and global registry. Use when creating worktrees, managing parallel development, or launching agents in isolated workspaces."
 ---
 
 <objective>
@@ -116,7 +116,7 @@ Branch names are slugified for filesystem safety:
 - **Per worktree**: 2 ports allocated (for API + frontend patterns)
 - **Globally unique**: Ports tracked to avoid conflicts across projects
 
-**See:** `references/port-allocation.md` for detailed operations.
+**See:** `reference/port-allocation.md` for detailed operations.
 
 ### Required Defaults
 
@@ -125,12 +125,12 @@ Branch names are slugified for filesystem safety:
 | Setting | Value | Reason |
 |---------|-------|--------|
 | Terminal | Ghostty | Required terminal for agent launching |
-| Model | `claude-opus-4-5-20250514` | Most capable for autonomous work |
+| Model | `claude-opus-4-5-20251101` | Most capable for autonomous work |
 | Flags | `--dangerously-skip-permissions` | Required for autonomous file ops |
 
 **Launch command pattern:**
 ```bash
-ghostty -e "cd {worktree_path} && claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions"
+ghostty -e "cd {worktree_path} && claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions"
 ```
 
 </core_concepts>
@@ -146,8 +146,8 @@ Location: `~/.claude/skills/worktree-manager/config.json`
   "terminal": "ghostty",
   "shell": "zsh",
   "defaultModel": "opus",
-  "modelId": "claude-opus-4-5-20250514",
-  "claudeCommand": "claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions",
+  "modelId": "claude-opus-4-5-20251101",
+  "claudeCommand": "claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions",
   "portPool": { "start": 8100, "end": 8199 },
   "portsPerWorktree": 2,
   "worktreeBase": "~/tmp/worktrees",
@@ -202,7 +202,7 @@ For EACH branch (can run in parallel):
    Update ~/.claude/worktree-registry.json with entry
 
 9. LAUNCH AGENT
-   ghostty -e "cd $WORKTREE_PATH && claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions"
+   ghostty -e "cd $WORKTREE_PATH && claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions"
 
 AFTER ALL COMPLETE:
 - Report summary table to user
@@ -223,7 +223,7 @@ cat ~/.claude/worktree-registry.json | jq -r '.worktrees[] | "\(.project)\t\(.br
 
 ### Cleanup Worktree
 
-**See:** `references/cleanup-operations.md` for full cleanup procedure.
+**See:** `reference/cleanup-operations.md` for full cleanup procedure.
 
 **Quick cleanup:**
 ```bash
@@ -240,12 +240,13 @@ For detailed operations, see:
 
 | Topic | File |
 |-------|------|
-| Registry operations | `references/registry-operations.md` |
-| Port allocation | `references/port-allocation.md` |
-| Agent launching | `references/agent-launching.md` |
-| Script reference | `references/script-reference.md` |
-| Cleanup operations | `references/cleanup-operations.md` |
-| Troubleshooting | `references/troubleshooting.md` |
+| Registry operations | `reference/registry-operations.md` |
+| Port allocation | `reference/port-allocation.md` |
+| Agent launching | `reference/agent-launching.md` |
+| **System notifications** | `reference/system-notifications.md` |
+| Script reference | `reference/script-reference.md` |
+| Cleanup operations | `reference/cleanup-operations.md` |
+| Troubleshooting | `reference/troubleshooting.md` |
 
 </routing>
 
@@ -289,7 +290,7 @@ For detailed operations, see:
 7. Register both in `~/.claude/worktree-registry.json`
 8. Launch agents:
    ```bash
-   ghostty -e "cd ~/tmp/worktrees/.../feature-dark-mode && claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions"
+   ghostty -e "cd ~/tmp/worktrees/.../feature-dark-mode && claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions"
    ```
 9. Report:
    ```

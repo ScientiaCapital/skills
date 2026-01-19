@@ -3,11 +3,36 @@ name: "workflow-orchestrator"
 description: "Project workflow system - cost tracking, parallel execution, security gates, agent orchestration. Use when: start day, begin session, status check, new feature, build, implement, end day, wrap up, debug, investigate, research, evaluate."
 ---
 
-# Workflow Orchestrator Skill v2.0
+<objective>
+Universal project workflow system providing cost tracking, parallel execution via git worktrees, security gates, and intelligent agent orchestration. Manages complete development lifecycle from session start to end-of-day with mandatory security sweeps and context preservation.
+</objective>
 
-Universal project workflow system with cost tracking, parallel execution, security gates, and intelligent agent orchestration.
+<quick_start>
+**Start session:**
+```bash
+pwd && git status && git log --oneline -5
+cat PROJECT_CONTEXT.md 2>/dev/null
+```
 
-## Triggers
+**End session:**
+1. Run security sweep: `gitleaks detect --source .`
+2. Update `PROJECT_CONTEXT.md` with completed/in-progress
+3. Log costs to `costs/daily-YYYY-MM-DD.json`
+
+**Feature development:** Plan → DB/Schema → Parallel implementation → Security gate → Ship
+</quick_start>
+
+<success_criteria>
+Workflow is successful when:
+- Context scan completed at session start (pwd, git status, PROJECT_CONTEXT.md)
+- Security sweep passes before any commits (gitleaks, secrets check, audit)
+- Cost tracking updated (daily.json, mtd.json)
+- PROJECT_CONTEXT.md updated at session end
+- Worktrees cleaned up after merge
+- All security gates passed before shipping
+</success_criteria>
+
+<triggers>
 
 - **Session Management:** "start day", "begin session", "what's the status", "end day", "wrap up", "done for today"
 - **Feature Development:** "new feature", "build", "implement"  

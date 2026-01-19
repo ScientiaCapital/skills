@@ -3,6 +3,27 @@ name: "planning-prompts"
 description: "Comprehensive skill for project planning and prompt engineering. Covers hierarchical plans (briefs, roadmaps, phases), Claude-to-Claude meta-prompts, and multi-stage workflows. Use when: planning, prompt creation, agentic pipeline work, project roadmap, meta-prompts, research to implement workflow."
 ---
 
+<objective>
+Enable effective project planning and Claude-to-Claude meta-prompting for solo developers. Creates executable plans (PLAN.md files that ARE prompts), hierarchical planning structures (Brief → Roadmap → Phase), and multi-stage research-plan-implement workflows.
+</objective>
+
+<quick_start>
+**Start a new project:**
+```bash
+# Claude creates planning structure
+mkdir -p .planning/phases
+# Creates: BRIEF.md, ROADMAP.md, phase plans
+```
+
+**Invoke via routing:**
+- "brief" / "new project" → Create BRIEF.md
+- "roadmap" / "phases" → Create ROADMAP.md
+- "plan phase" / "next phase" → Create phase PLAN.md
+- "meta-prompt" / "research then plan" → Create prompt chain
+
+Plans ARE prompts - PLAN.md is directly executable by Claude.
+</quick_start>
+
 <essential_principles>
 
 <principle name="solo_developer_plus_claude">

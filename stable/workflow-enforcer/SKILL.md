@@ -7,10 +7,35 @@ description: |
   Triggers: automatic on all sessions, "use the right agent", "follow workflow".
 ---
 
-# Workflow Enforcement
+<objective>
+Enforce workflow discipline across all projects by ensuring Claude checks for specialized agents before responding, announces skill/agent usage, and creates TodoWrite todos for multi-step tasks. This skill activates automatically on every session to maintain consistent quality and tool utilization.
+</objective>
 
-## Mandatory Protocol
+<quick_start>
+**Before responding to ANY request:**
 
+1. **Check for agent**: Is there a specialized agent for this task?
+2. **Announce**: "I'm using [agent] to [action]"
+3. **Create todos**: Use TodoWrite for multi-step work
+4. **Track**: Mark `in_progress` → `completed`
+
+| Request | Agent |
+|---------|-------|
+| Fix bug | `debugging-toolkit:debugger` |
+| Review code | `code-documentation:code-reviewer` |
+| Write tests | `unit-testing:test-automator` |
+</quick_start>
+
+<success_criteria>
+Workflow enforcement is successful when:
+- Specialized agent identified and used for every applicable task
+- Agent usage announced before starting work
+- TodoWrite used for all multi-step tasks (3+ steps)
+- Progress tracked with in_progress and completed statuses
+- No rationalizations for skipping agents ("it's simple", "just a quick fix")
+</success_criteria>
+
+<mandatory_protocol>
 Before responding to ANY user request, complete this checklist:
 
 1. **Check for specialized agent** - Is there an agent for this task type?
@@ -89,3 +114,4 @@ If you think any of these, STOP and use the appropriate agent:
 - This skill applies to EVERY session, EVERY project, EVERY task
 - No exceptions, no rationalizations, no shortcuts
 - When in doubt, check `reference/agents-catalog.md`
+</mandatory_protocol>

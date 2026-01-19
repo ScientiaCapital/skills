@@ -1,5 +1,5 @@
 ---
-name: project-context-skill
+name: "project-context"
 description: |
   Maintains project context and progress tracking across Claude sessions.
   Use at session start to load context, on session end to save progress.
@@ -7,8 +7,30 @@ description: |
   "switch to [project]", "done for today". Works in both Claude Code and Claude Desktop.
 ---
 
-# Project Context Loader
+<objective>
+Maintain project context and progress tracking across Claude sessions. Enables seamless session continuity by loading context at start and saving progress at end.
+</objective>
 
+<quick_start>
+**Session start:** Load `<project-root>/.claude/PROJECT_CONTEXT.md`, verify against `git status`
+
+**Session end:** Update context file with completed TODOs, clear previous session's Done list
+
+**Context file location:** `<project-root>/.claude/PROJECT_CONTEXT.md`
+
+**Triggers:** "load context", "save context", "done for today", "switch to [project]"
+</quick_start>
+
+<success_criteria>
+Context management is successful when:
+- Project detected from pwd (Claude Code) or user input (Claude Desktop)
+- Context file matches current project (header verified against folder name)
+- Git state verified against context (branch, recent commits)
+- Done list cleared each new session (prevents accumulation)
+- Context saved before session ends
+</success_criteria>
+
+<core_content>
 ## MANDATORY: Project Detection (Run First)
 
 Before ANY other action, identify which project the user is in:
@@ -142,3 +164,4 @@ See `reference/template.md` for full template.
 
 - `reference/template.md` - Full context file template with examples
 - `reference/projects-list.md` - Tim's projects list for Claude Desktop
+</core_content>

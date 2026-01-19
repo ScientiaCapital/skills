@@ -53,7 +53,7 @@ Opens a new terminal window with Claude Code agent.
 
 **Default behavior:**
 - Opens Ghostty terminal (configurable in config.json)
-- Runs `claude --model claude-opus-4-5-20250514 --dangerously-skip-permissions`
+- Runs `claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions`
 - Changes to worktree directory first
 
 ## status.sh

@@ -92,7 +92,7 @@ Select:
 When domain selected, READ all references from that skill:
 
 ```bash
-cat ~/.claude/skills/expertise/[domain]/references/*.md 2>/dev/null
+cat ~/.claude/skills/expertise/[domain]/reference/*.md 2>/dev/null
 ```
 
 This loads comprehensive domain knowledge BEFORE investigation:
@@ -154,7 +154,7 @@ Before proposing any solution:
 - Check official docs for intended behavior vs what you observe
 - Look for known issues, breaking changes, or version-specific quirks
 
-See [references/when-to-research.md](references/when-to-research.md) for detailed guidance on research strategy.
+See [reference/when-to-research.md](reference/when-to-research.md) for detailed guidance on research strategy.
 
 </evidence_gathering>
 
@@ -175,7 +175,7 @@ For each hypothesis:
 - Design a minimal test
 - Execute and document results
 
-See [references/hypothesis-testing.md](references/hypothesis-testing.md) for scientific method application.
+See [reference/hypothesis-testing.md](reference/hypothesis-testing.md) for scientific method application.
 
 **C. Eliminate or Confirm**
 
@@ -206,7 +206,7 @@ Don't move forward until you can answer:
 - Run relevant tests if they exist
 - Check for regressions in related functionality
 
-See [references/verification-patterns.md](references/verification-patterns.md) for comprehensive verification approaches.
+See [reference/verification-patterns.md](reference/verification-patterns.md) for comprehensive verification approaches.
 
 </solution_development>
 
@@ -276,32 +276,32 @@ If you can't answer "yes" to all of these, keep investigating.
 
 For deeper topics, see reference files:
 
-**Debugging mindset**: [references/debugging-mindset.md](references/debugging-mindset.md)
+**Debugging mindset**: [reference/debugging-mindset.md](reference/debugging-mindset.md)
 - First principles thinking applied to debugging
 - Cognitive biases that lead to bad fixes
 - The discipline of systematic investigation
 - When to stop and restart with fresh assumptions
 
-**Investigation techniques**: [references/investigation-techniques.md](references/investigation-techniques.md)
+**Investigation techniques**: [reference/investigation-techniques.md](reference/investigation-techniques.md)
 - Binary search / divide and conquer
 - Rubber duck debugging
 - Minimal reproduction
 - Working backwards from desired state
 - Adding observability before changing code
 
-**Hypothesis testing**: [references/hypothesis-testing.md](references/hypothesis-testing.md)
+**Hypothesis testing**: [reference/hypothesis-testing.md](reference/hypothesis-testing.md)
 - Forming falsifiable hypotheses
 - Designing experiments that prove/disprove
 - What makes evidence strong vs weak
 - Recovering from wrong hypotheses gracefully
 
-**Verification patterns**: [references/verification-patterns.md](references/verification-patterns.md)
+**Verification patterns**: [reference/verification-patterns.md](reference/verification-patterns.md)
 - Definition of "verified" (not just "it ran")
 - Testing reproduction steps
 - Regression testing adjacent functionality
 - When to write tests before fixing
 
-**Research strategy**: [references/when-to-research.md](references/when-to-research.md)
+**Research strategy**: [reference/when-to-research.md](reference/when-to-research.md)
 - Signals that you need external knowledge
 - What to search for vs what to reason about
 - Balancing research time vs experimentation

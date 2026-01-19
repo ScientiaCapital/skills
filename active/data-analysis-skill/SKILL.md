@@ -1,10 +1,38 @@
 ---
 name: "data-analysis"
-description: "Executive-grade data analysis with pandas/polars and McKinsey-quality visualizations. Use when: analyze data, build dashboard, create charts, investor presentation, SaaS metrics, cohort analysis, visualize, pandas, streamlit, executive summary."
+description: "Executive-grade data analysis with pandas/polars and McKinsey-quality visualizations. Use when analyzing data, building dashboards, creating investor presentations, or calculating SaaS metrics."
 ---
 
-# Data Analysis Skill
+<objective>
+Enable executive-grade data analysis for VC, PE, and C-suite presentations. Covers data ingestion from any format, SaaS metrics calculations (MRR, LTV, CAC, churn), cohort retention analysis, McKinsey-quality visualizations with Plotly, and Streamlit dashboards.
+</objective>
 
+<quick_start>
+**Universal data loader:**
+```python
+df = load_data("file.csv")  # Supports CSV, Excel, JSON, Parquet, PDF, PPTX
+```
+
+**SaaS metrics:**
+```python
+metrics = calculate_saas_metrics(df)  # MRR, ARR, LTV, CAC, churn
+retention = cohort_retention_analysis(df)  # Retention matrix
+```
+
+**McKinsey-style charts:** Action titles ("Q4 Revenue Exceeded Target by 23%"), not descriptive titles
+</quick_start>
+
+<success_criteria>
+Analysis is successful when:
+- Data loaded and cleaned (dropna, dedup, type conversion)
+- Metrics calculated correctly (MRR, ARR, LTV:CAC, churn, cohort retention)
+- Charts follow McKinsey principles: action titles, data-ink ratio >80%, one message per chart
+- Executive colors used (#003366 primary, #2E7D32 positive, #C62828 negative)
+- Streamlit dashboard runs without errors
+- NO OPENAI: Use Claude for narrative generation if needed
+</success_criteria>
+
+<core_content>
 Executive-grade data analysis for VC, PE, C-suite presentations using pandas, polars, Plotly, Altair, and Streamlit.
 
 ## Quick Reference

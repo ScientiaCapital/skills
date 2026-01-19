@@ -464,6 +464,16 @@ Risk dashboard          0         0            4 (Create)
 
 </example_session>
 
+<success_criteria>
+Analysis is successful when:
+- Strategy Canvas clearly shows divergent value curve from competitors
+- ERRC Grid identifies at least 2 factors per quadrant
+- Six Paths Framework exploration reveals 2+ actionable opportunities
+- Blue Ocean Index score calculated with supporting rationale
+- Compelling tagline captures the strategy in one phrase
+- Three tiers of noncustomers identified with targeting approach
+</success_criteria>
+
 <activation_triggers>
 **This skill activates for:**
 - "blue ocean strategy"

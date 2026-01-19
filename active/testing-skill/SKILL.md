@@ -1,5 +1,5 @@
 ---
-name: "testing-skill"
+name: "testing"
 description: "TDD patterns, test writing strategies, coverage guidance, mocking patterns. Use when: write tests, TDD, test coverage, unit test, integration test, E2E test, mocking, test organization, pytest, vitest, jest."
 ---
 
@@ -8,6 +8,37 @@ Comprehensive testing skill covering TDD workflow, test pyramid strategy, mockin
 
 This skill emphasizes writing tests that provide confidence without becoming maintenance burdens. Tests should be fast, reliable, and focused on behavior rather than implementation details.
 </objective>
+
+<quick_start>
+**TDD Red-Green-Refactor cycle:**
+
+1. **RED**: Write a failing test first
+   ```typescript
+   test('adds numbers', () => {
+     expect(add(1, 2)).toBe(3);  // Fails - add() doesn't exist
+   });
+   ```
+
+2. **GREEN**: Write minimum code to pass
+   ```typescript
+   const add = (a, b) => a + b;  // Test passes
+   ```
+
+3. **REFACTOR**: Clean up while tests stay green
+
+**Test pyramid**: 70% unit, 25% integration, 5% E2E
+</quick_start>
+
+<success_criteria>
+Testing is successful when:
+- TDD cycle followed: test written before implementation code
+- Test pyramid balanced: ~70% unit, ~25% integration, ~5% E2E
+- Tests are independent and can run in any order
+- No flaky tests (run 3x to verify reliability)
+- Coverage meets targets: 70-80% lines, 100% critical paths
+- Test names describe behavior (what + when + expected result)
+- Mocks only used for external dependencies, not own code
+</success_criteria>
 
 <core_principles>
 ## The Testing Mindset

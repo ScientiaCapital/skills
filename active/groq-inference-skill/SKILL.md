@@ -3,8 +3,42 @@ name: "groq-inference"
 description: "Fast LLM inference with Groq API - chat, vision, audio STT/TTS, tool use. Use when: groq, fast inference, low latency, whisper, PlayAI TTS, Llama, vision API, tool calling, voice agents, real-time AI."
 ---
 
-# GROQ Inference Skill
+<objective>
+Enable ultra-fast LLM inference (10-100x faster than standard providers) using GROQ API for real-time applications including chat, vision, audio (STT/TTS), tool use, and reasoning models. Critical for voice agents and low-latency AI.
+</objective>
 
+<quick_start>
+**Basic chat with GROQ:**
+```python
+from groq import Groq
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
+
+response = client.chat.completions.create(
+    model="llama-3.3-70b-versatile",  # Best all-around
+    messages=[{"role": "user", "content": prompt}],
+)
+```
+
+**Model selection:**
+| Use Case | Model |
+|----------|-------|
+| General chat | `llama-3.3-70b-versatile` |
+| Vision/OCR | `meta-llama/llama-4-scout-17b-16e-instruct` |
+| STT | `whisper-large-v3` (GROQ-hosted, NOT OpenAI) |
+| TTS | `playai-tts` |
+</quick_start>
+
+<success_criteria>
+GROQ integration is successful when:
+- Correct model selected for use case (see model table)
+- API key in environment variable (`GROQ_API_KEY`)
+- Retry logic with tenacity for rate limits
+- Streaming enabled for real-time applications
+- Async patterns used for parallel queries
+- NOT using OpenAI (constraint: NO OPENAI)
+</success_criteria>
+
+<core_content>
 Ultra-fast LLM inference for real-time applications. GROQ delivers 10-100x faster inference than standard providers.
 
 ## Quick Reference: Model Selection

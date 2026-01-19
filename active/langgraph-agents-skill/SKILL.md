@@ -1,10 +1,45 @@
 ---
 name: "langgraph-agents"
-description: "Multi-agent systems with LangGraph - supervisor/swarm patterns, state coordination, multi-provider routing. Use when: build LangGraph agent, multi-agent workflow, supervisor pattern, agent orchestration, StateGraph, coordinate multiple agents, agentic workflow. Uses Claude, DeepSeek, Gemini (no OpenAI)."
+description: "Multi-agent systems with LangGraph - supervisor/swarm patterns, state coordination, multi-provider routing. Use when building multi-agent workflows, coordinating agents, or need cost-optimized orchestration. Uses Claude, DeepSeek, Gemini (no OpenAI)."
 ---
 
-# LangGraph Multi-Agent Systems
+<objective>
+Build production-grade multi-agent systems with LangGraph using supervisor, swarm, or master patterns. Enables cost-optimized orchestration with multi-provider routing (Claude, DeepSeek, Gemini - NO OpenAI), proper state management, and scalable agent coordination.
+</objective>
 
+<quick_start>
+**State schema (foundation):**
+```python
+from typing import TypedDict, Annotated
+from langgraph.graph import add_messages
+
+class AgentState(TypedDict, total=False):
+    messages: Annotated[list, add_messages]  # Auto-merge
+    next_agent: str  # For handoffs
+```
+
+**Pattern selection:**
+| Pattern | When | Agents |
+|---------|------|--------|
+| Supervisor | Clear hierarchy | 3-10 |
+| Swarm | Peer collaboration | 5-15 |
+| Master | Learning systems | 10-30+ |
+
+**Multi-provider:** Use `lang-core` for auto-selection by cost/quality/speed
+</quick_start>
+
+<success_criteria>
+Multi-agent system is successful when:
+- State uses `Annotated[..., add_messages]` for proper message merging
+- Termination conditions prevent infinite loops
+- Routing uses conditional edges (not hardcoded paths)
+- Cost optimization: simple tasks → cheaper models (DeepSeek)
+- Complex reasoning → quality models (Claude)
+- NO OpenAI used anywhere
+- Checkpointers enabled for context preservation
+</success_criteria>
+
+<core_content>
 Production-tested patterns for building scalable, cost-optimized multi-agent systems with LangGraph and LangChain.
 
 ## When to Use This Skill
