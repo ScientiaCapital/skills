@@ -2,6 +2,138 @@
 
 Advanced patterns for memory persistence, context management, and state optimization in multi-agent workflows.
 
+## Three Types of Context
+
+Understanding when and where to inject context is critical for agent performance.
+
+### 1. Model Context (System Prompts)
+
+Information the LLM sees in its system message:
+
+```python
+from langchain_anthropic import ChatAnthropic
+from langchain_core.prompts import ChatPromptTemplate
+
+# Static system prompt
+static_prompt = ChatPromptTemplate.from_messages([
+    ("system", """You are a senior software engineer.
+    - Follow best practices
+    - Write clean, testable code
+    - Explain your reasoning"""),
+    ("placeholder", "{messages}")
+])
+
+# Dynamic system prompt based on state
+def get_dynamic_prompt(state: State) -> ChatPromptTemplate:
+    user_expertise = state.get("user_expertise", "beginner")
+
+    expertise_context = {
+        "beginner": "Explain concepts simply. Provide examples.",
+        "intermediate": "Be concise. Assume basic knowledge.",
+        "expert": "Skip basics. Focus on edge cases and optimization."
+    }
+
+    return ChatPromptTemplate.from_messages([
+        ("system", f"""You are a coding assistant.
+        User expertise: {user_expertise}
+        {expertise_context[user_expertise]}"""),
+        ("placeholder", "{messages}")
+    ])
+```
+
+### 2. Tool Context (Tool Descriptions & Results)
+
+Information embedded in tool definitions and returned results:
+
+```python
+from langchain_core.tools import tool
+
+# Context in tool description
+@tool
+def search_codebase(query: str) -> str:
+    """Search the codebase for relevant code.
+
+    IMPORTANT: This searches the CURRENT project only.
+    - Use specific function/class names when known
+    - Use file extensions to narrow scope: "*.py", "*.ts"
+    - Returns max 10 results sorted by relevance
+
+    Args:
+        query: Search query (supports regex)
+    """
+    # Implementation
+    pass
+
+# Context in tool results
+@tool
+def get_user_profile(user_id: str) -> dict:
+    """Get user profile information."""
+    profile = db.get_user(user_id)
+
+    # Inject context into result
+    return {
+        "profile": profile,
+        "_context": {
+            "data_freshness": "real-time",
+            "editable_fields": ["name", "email", "preferences"],
+            "read_only_fields": ["id", "created_at", "subscription_tier"]
+        }
+    }
+```
+
+### 3. Life-cycle Context (State Evolution)
+
+Information that flows through the workflow and evolves:
+
+```python
+class AgentState(TypedDict, total=False):
+    messages: Annotated[list, add_messages]
+
+    # Life-cycle context
+    workflow_phase: str  # "research" | "planning" | "execution" | "review"
+    decisions_made: list[dict]  # Track key decisions
+    constraints_discovered: list[str]  # Accumulate constraints
+    progress: dict  # {"completed": 3, "total": 10}
+
+def update_lifecycle_context(state: State) -> State:
+    """Update life-cycle context as workflow progresses."""
+    return {
+        "workflow_phase": determine_phase(state),
+        "decisions_made": state["decisions_made"] + [current_decision],
+        "progress": calculate_progress(state)
+    }
+```
+
+### Context Injection Patterns
+
+```python
+def create_context_aware_node(node_name: str):
+    """Factory for nodes that inject appropriate context."""
+
+    def node(state: State) -> dict:
+        # Model context - system prompt
+        system_prompt = get_dynamic_prompt(state, node_name)
+
+        # Tool context - filter to relevant tools
+        relevant_tools = filter_tools_for_phase(state["workflow_phase"])
+
+        # Life-cycle context - what's happened so far
+        context_summary = summarize_lifecycle(state)
+
+        # Combine into prompt
+        full_prompt = f"""{system_prompt}
+
+        Current phase: {state['workflow_phase']}
+        Previous decisions: {context_summary}
+        """
+
+        # Execute with full context
+        response = model.invoke(full_prompt, tools=relevant_tools)
+        return {"messages": [response]}
+
+    return node
+```
+
 ## Memory Persistence Patterns
 
 ### Importance-Based Retention

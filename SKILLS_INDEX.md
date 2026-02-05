@@ -304,8 +304,14 @@ Multi-agent systems with LangGraph. NO OPENAI.
 | Supervisor | Centralized routing |
 | Swarm | Peer-to-peer handoffs |
 | Master Orchestrator | Complex workflows |
+| Functional API | Simpler decorator-based workflows |
+| Deep Agents | Production framework with backends |
+| HITL/Interrupts | Human approval gates |
+| MCP Integration | Standardized tool protocols |
 
-**Triggers:** "LangGraph agent", "multi-agent", "supervisor pattern"
+**Reference Files (10):** state-schemas, orchestration-patterns, context-engineering, cost-optimization, base-agent-architecture, tools-organization, functional-api, deep-agents, mcp-integration, streaming-patterns
+
+**Triggers:** "LangGraph agent", "multi-agent", "supervisor pattern", "functional API", "deep agents", "MCP tools", "human in the loop"
 
 ---
 

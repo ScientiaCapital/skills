@@ -148,3 +148,145 @@ class AgentState(TypedDict):
 ```
 
 **Use when**: State validation is critical (financial, compliance).
+
+## Multiple State Schemas Pattern
+
+Use different schemas for different graph sections:
+
+### Input/Output Schemas
+
+```python
+class InputState(TypedDict):
+    """What the graph accepts from external callers."""
+    query: str
+    user_id: str
+
+class OutputState(TypedDict):
+    """What the graph returns to callers."""
+    response: str
+    confidence: float
+
+class InternalState(TypedDict, total=False):
+    """Full internal state - not exposed externally."""
+    query: str
+    user_id: str
+    response: str
+    confidence: float
+    intermediate_results: list[str]
+    agent_reasoning: str
+
+# Build graph with schema separation
+workflow = StateGraph(InternalState, input=InputState, output=OutputState)
+```
+
+### Private Node State
+
+```python
+from langgraph.graph import StateGraph
+from typing_extensions import TypedDict
+
+class OverallState(TypedDict):
+    messages: Annotated[list, add_messages]
+    final_answer: str
+
+class ResearchPrivateState(TypedDict):
+    """Only visible to research node, not in main state."""
+    search_queries: list[str]
+    raw_results: list[dict]
+    filtered_count: int
+
+def research_node(state: OverallState) -> dict:
+    # Use private state internally
+    private: ResearchPrivateState = {
+        "search_queries": generate_queries(state),
+        "raw_results": [],
+        "filtered_count": 0
+    }
+
+    for query in private["search_queries"]:
+        results = search(query)
+        private["raw_results"].extend(results)
+
+    # Only return what should update main state
+    return {"messages": [summarize(private["raw_results"])]}
+```
+
+## Runtime Context Pattern
+
+### Accessing Config in Nodes
+
+```python
+from langgraph.config import get_config
+
+def configurable_node(state: State) -> dict:
+    """Access runtime configuration."""
+    config = get_config()
+
+    # Access thread ID
+    thread_id = config.get("configurable", {}).get("thread_id")
+
+    # Access custom config
+    user_tier = config.get("configurable", {}).get("user_tier", "free")
+
+    if user_tier == "premium":
+        # Use better model, more tokens, etc.
+        pass
+
+    return {"processed": True}
+
+# Pass config at runtime
+result = graph.invoke(
+    {"query": "Hello"},
+    config={
+        "configurable": {
+            "thread_id": "user_123_session_456",
+            "user_tier": "premium",
+            "max_tokens": 4096
+        }
+    }
+)
+```
+
+### Recursion Limit Management
+
+```python
+# Set recursion limit to prevent infinite loops
+result = graph.invoke(
+    inputs,
+    config={"recursion_limit": 25}  # Default is 25
+)
+
+# Handle recursion limit reached
+from langgraph.errors import GraphRecursionError
+
+try:
+    result = graph.invoke(inputs, config={"recursion_limit": 10})
+except GraphRecursionError:
+    # Gracefully handle max depth reached
+    return {"error": "Workflow exceeded maximum steps"}
+```
+
+### Thread-Scoped State
+
+```python
+from langgraph.checkpoint.memory import MemorySaver
+
+checkpointer = MemorySaver()
+
+# Each thread_id maintains separate state
+result_a = graph.invoke(
+    {"messages": [{"role": "user", "content": "Start project A"}]},
+    config={"configurable": {"thread_id": "project_a"}}
+)
+
+result_b = graph.invoke(
+    {"messages": [{"role": "user", "content": "Start project B"}]},
+    config={"configurable": {"thread_id": "project_b"}}
+)
+
+# Resume project A later
+result_a_continued = graph.invoke(
+    {"messages": [{"role": "user", "content": "Continue"}]},
+    config={"configurable": {"thread_id": "project_a"}}
+)
+```

@@ -211,3 +211,141 @@ master = MasterOrchestrator({
 ```
 
 Choose the simplest pattern that meets your requirements. Start with Supervisor, graduate to Swarm for peer coordination, use Master Orchestrator only when custom routing logic is essential.
+
+---
+
+## 4. Human-in-the-Loop (HITL) Pattern
+
+**When to use**: Approval workflows, dangerous operations, compliance gates.
+
+**Best for**: Deployment approvals, financial transactions, content moderation.
+
+### Interrupt-Based HITL
+
+```python
+from langgraph.types import interrupt, Command
+from typing import Literal
+
+def approval_node(state: State) -> Command[Literal["proceed", "cancel"]]:
+    """Pause execution for human approval."""
+    approval = interrupt({
+        "question": "Approve this action?",
+        "details": state["pending_action"],
+        "options": ["approve", "reject"]
+    })
+
+    if approval == "approve":
+        return Command(goto="proceed")
+    return Command(goto="cancel")
+
+# Build graph with approval gate
+workflow = StateGraph(State)
+workflow.add_node("prepare", prepare_action)
+workflow.add_node("approval", approval_node)
+workflow.add_node("proceed", execute_action)
+workflow.add_node("cancel", cancel_action)
+
+workflow.add_edge("prepare", "approval")
+# Conditional edges handled by Command return
+```
+
+### Resuming After Interrupt
+
+```python
+from langgraph.types import Command
+
+# First invocation - pauses at interrupt
+result = graph.invoke(
+    {"messages": [{"role": "user", "content": "Deploy to production"}]},
+    config={"configurable": {"thread_id": "deploy_123"}}
+)
+# result contains interrupt details
+
+# Human reviews and approves...
+
+# Resume with approval
+final_result = graph.invoke(
+    Command(resume="approve"),
+    config={"configurable": {"thread_id": "deploy_123"}}
+)
+```
+
+### Multiple Approval Gates
+
+```python
+def multi_gate_workflow(state: State) -> dict:
+    # Gate 1: Manager approval
+    manager_approval = interrupt({
+        "gate": "manager",
+        "question": "Manager approval required"
+    })
+
+    if manager_approval != "approve":
+        return {"status": "rejected_by_manager"}
+
+    # Gate 2: Compliance check
+    compliance_approval = interrupt({
+        "gate": "compliance",
+        "question": "Compliance review required"
+    })
+
+    if compliance_approval != "approve":
+        return {"status": "rejected_by_compliance"}
+
+    return {"status": "fully_approved"}
+```
+
+### Command Pattern for Combined Updates
+
+```python
+from langgraph.types import Command
+
+def routing_node(state: State) -> Command[Literal["agent_a", "agent_b", END]]:
+    """Update state AND route in single return."""
+    if state["task_type"] == "research":
+        return Command(
+            update={"assigned_to": "agent_a", "started_at": datetime.now()},
+            goto="agent_a"
+        )
+    elif state["task_type"] == "writing":
+        return Command(
+            update={"assigned_to": "agent_b"},
+            goto="agent_b"
+        )
+    else:
+        return Command(goto=END)
+```
+
+---
+
+## 5. Map-Reduce with Send Pattern
+
+**When to use**: Parallel processing of multiple items, fan-out/fan-in workflows.
+
+```python
+from langgraph.types import Send
+
+def fan_out_node(state: State) -> list[Send]:
+    """Send each item to be processed in parallel."""
+    return [
+        Send("process_item", {"item": item, "index": i})
+        for i, item in enumerate(state["items"])
+    ]
+
+def process_item(state: dict) -> dict:
+    """Process a single item."""
+    return {"result": f"Processed: {state['item']}"}
+
+def reduce_node(state: State) -> dict:
+    """Aggregate results from parallel processing."""
+    return {"final_results": state["results"]}
+
+# Build map-reduce graph
+workflow = StateGraph(State)
+workflow.add_node("fan_out", fan_out_node)
+workflow.add_node("process_item", process_item)
+workflow.add_node("reduce", reduce_node)
+
+workflow.add_conditional_edges("fan_out", lambda _: "process_item")
+workflow.add_edge("process_item", "reduce")
+```

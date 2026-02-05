@@ -25,6 +25,8 @@ class AgentState(TypedDict, total=False):
 | Swarm | Peer collaboration | 5-15 |
 | Master | Learning systems | 10-30+ |
 
+**API choice:** Graph API (explicit nodes/edges) vs Functional API (`@entrypoint`/`@task` decorators)
+
 **Multi-provider:** Use `lang-core` for auto-selection by cost/quality/speed
 </quick_start>
 
@@ -32,11 +34,13 @@ class AgentState(TypedDict, total=False):
 Multi-agent system is successful when:
 - State uses `Annotated[..., add_messages]` for proper message merging
 - Termination conditions prevent infinite loops
-- Routing uses conditional edges (not hardcoded paths)
+- Routing uses conditional edges (not hardcoded paths) OR Functional API tasks
 - Cost optimization: simple tasks → cheaper models (DeepSeek)
 - Complex reasoning → quality models (Claude)
 - NO OpenAI used anywhere
 - Checkpointers enabled for context preservation
+- Human-in-the-loop: interrupt() for approval workflows
+- MCP tools standardized via MultiServerMCPClient when appropriate
 </success_criteria>
 
 <core_content>
@@ -128,14 +132,64 @@ workflow.add_conditional_edges("agent_a", route_to_next, {
 })
 ```
 
+### 6. Functional API (Alternative to Graph)
+```python
+from langgraph.func import entrypoint, task
+from langgraph.checkpoint.memory import InMemorySaver
+
+@task
+def research(query: str) -> str:
+    return f"Results for: {query}"
+
+@entrypoint(checkpointer=InMemorySaver())
+def workflow(query: str) -> dict:
+    result = research(query).result()
+    return {"output": result}
+```
+**When to use**: Simpler workflows, familiar decorator pattern, less boilerplate.
+**Deep dive:** `reference/functional-api.md`
+
+### 7. MCP Tool Integration
+```python
+from langchain_mcp_adapters import MultiServerMCPClient
+
+client = MultiServerMCPClient()
+client.add_server("tools", "stdio", command="python", args=["./mcp_server.py"])
+tools = client.get_langchain_tools()
+agent = create_react_agent(model, tools=tools)
+```
+**Deep dive:** `reference/mcp-integration.md`
+
+### 8. Deep Agents Framework (Production)
+```python
+from deep_agents import create_deep_agent
+from deep_agents.backends import CompositeBackend, StateBackend, StoreBackend
+
+backend = CompositeBackend({
+    "/workspace/": StateBackend(),      # Ephemeral
+    "/memories/": StoreBackend()        # Persistent
+})
+agent = create_deep_agent(
+    model=ChatAnthropic(model="claude-opus-4-5-20251101"),
+    backend=backend,
+    interrupt_on=["deploy", "delete"],
+    skills_dirs=["./skills/"]
+)
+```
+**Deep dive:** `reference/deep-agents.md`
+
 ## Reference Files (Deep Dives)
 
 - **`reference/state-schemas.md`** - TypedDict, Annotated reducers, multi-level state
 - **`reference/base-agent-architecture.md`** - Multi-provider setup, agent templates
 - **`reference/tools-organization.md`** - Modular tool design, testing patterns
-- **`reference/orchestration-patterns.md`** - Supervisor vs swarm vs master (decision matrix)
-- **`reference/context-engineering.md`** - Memory compaction, just-in-time loading
+- **`reference/orchestration-patterns.md`** - Supervisor vs swarm vs master, HITL/interrupts
+- **`reference/context-engineering.md`** - Three context types, memory compaction, dynamic prompts
 - **`reference/cost-optimization.md`** - Provider routing, caching, token budgets
+- **`reference/functional-api.md`** - @entrypoint/@task decorators, when to use vs Graph API
+- **`reference/mcp-integration.md`** - MultiServerMCPClient, tool composition
+- **`reference/deep-agents.md`** - Harness pattern, backends, skills integration
+- **`reference/streaming-patterns.md`** - 5 streaming modes, custom streaming
 
 ## Common Pitfalls
 
