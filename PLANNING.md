@@ -8,15 +8,27 @@
 
 ## Active Work
 
-### Doc Hygiene + YAML Fixes (COMPLETED)
+### langgraph-agents-skill Polish (COMPLETED 2026-02-05)
 
 | Task | Status |
 |------|--------|
-| Update PROJECT_CONTEXT.md | ✅ complete |
-| Update PLANNING.md | ✅ complete |
-| Create skill activation test matrix | ✅ complete |
-| Fix stable skill YAML frontmatter | ✅ complete |
-| Update skill count 25→26 | ✅ complete |
+| Add Functional API reference | ✅ complete |
+| Add Deep Agents reference | ✅ complete |
+| Add MCP Integration reference | ✅ complete |
+| Add Streaming Patterns reference | ✅ complete |
+| Update orchestration-patterns with HITL | ✅ complete |
+| Update state-schemas with runtime context | ✅ complete |
+| Update context-engineering with 3 context types | ✅ complete |
+| Update SKILL.md with new patterns | ✅ complete |
+| Test skill activation | ✅ complete |
+
+### git-workflow-skill (COMPLETED 2026-02-05)
+
+| Task | Status |
+|------|--------|
+| Create SKILL.md | ✅ complete |
+| Create commit-examples reference | ✅ complete |
+| Test skill activation | ✅ complete |
 
 ---
 
@@ -38,8 +50,8 @@ Boris Cherny workflow integration, .env handling, model selection.
 
 ## Next Up (From Backlog P1)
 
-- [ ] Test each skill activation with trigger phrases
-- [ ] Triage backlog skill ideas (git-workflow, api-testing, docker-compose)
+- [ ] Test remaining skill activations with trigger phrases
+- [ ] Triage backlog skill ideas (api-testing, docker-compose)
 - [ ] Create skill dependency graph
 - [ ] Document worktree workflow in README
 

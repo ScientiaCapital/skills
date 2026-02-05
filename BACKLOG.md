@@ -39,7 +39,7 @@
 
 _Add new skill ideas here for triage_
 
-- [ ] git-workflow-skill (conventional commits, PR templates)
+- [x] git-workflow-skill (conventional commits, PR templates) ✅ DONE 2026-02-05
 - [ ] api-testing-skill (Postman/Bruno patterns)
 - [ ] docker-compose-skill (local dev environments)
 
