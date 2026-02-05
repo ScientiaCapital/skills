@@ -1,7 +1,7 @@
 # Skills Index
 
-> Last updated: 2026-01-09
-> Total skills: 25 (2 stable, 23 active)
+> Last updated: 2026-02-05
+> Total skills: 26 (2 stable, 24 active)
 
 ## Architecture
 
@@ -519,7 +519,7 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ```
 skills/
-├── active/                    # 23 active skills
+├── active/                    # 24 active skills
 │   ├── api-design-skill/
 │   ├── blue-ocean-strategy-skill/
 │   ├── business-model-canvas-skill/

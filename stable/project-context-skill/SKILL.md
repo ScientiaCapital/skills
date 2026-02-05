@@ -1,10 +1,6 @@
 ---
 name: "project-context"
-description: |
-  Maintains project context and progress tracking across Claude sessions.
-  Use at session start to load context, on session end to save progress.
-  Triggers: "load project context", "save context", "end session", "what was I working on",
-  "switch to [project]", "done for today". Works in both Claude Code and Claude Desktop.
+description: "Maintains project context and progress tracking across Claude sessions. Use at session start to load context, on session end to save progress. Triggers: load project context, save context, end session, what was I working on, switch to project, done for today."
 ---
 
 <objective>

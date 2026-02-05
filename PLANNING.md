@@ -1,50 +1,47 @@
 # Skills Library Planning
 
-**Current Sprint:** Workflow Orchestrator Skill
-**Date:** 2025-12-26
+**Current Sprint:** Doc Hygiene + Skill Testing
+**Date:** 2026-02-05
 **Constraint:** M1 8GB RAM - max 2-3 parallel agents
 
 ---
 
 ## Active Work
 
-### Workflow Orchestrator Skill v2.0 (IN PROGRESS)
+### Doc Hygiene + YAML Fixes (COMPLETED)
 
 | Task | Status |
 |------|--------|
-| Update PLANNING.md and archive completed work | in_progress |
-| Clean up Backlog.md | pending |
-| Create workflow-orchestrator-skill folder | pending |
-| Write SKILL.md with YAML frontmatter | pending |
-| Create 8 reference/*.md files | pending |
-| Create 4 template files | pending |
-| Update SKILLS_INDEX.md | pending |
-| Package as .skill zip | pending |
-| Update deploy.sh for symlinks | pending |
-| Test and commit | pending |
+| Update PROJECT_CONTEXT.md | ✅ complete |
+| Update PLANNING.md | ✅ complete |
+| Create skill activation test matrix | ✅ complete |
+| Fix stable skill YAML frontmatter | ✅ complete |
+| Update skill count 25→26 | ✅ complete |
 
-### Worktree-Manager .env Enhancement (COMPLETED 2025-12-24)
+---
 
-| Task | Status |
-|------|--------|
-| Update SKILL.md env copy logic | complete |
-| Update config.json envFilePriority | complete |
-| Update templates/worktree.json | complete |
-| Add safety warning | complete |
-| Add model selection (opus/sonnet/haiku) | complete |
-| Regenerate dist/ zip | complete |
-| Update global skill | complete |
-| Git commit & push | complete |
-| Security audit | complete |
+## Completed Work
+
+### Workflow Orchestrator Skill v2.0 (COMPLETED 2026-01-23)
+Full workflow orchestration system with cost tracking, model routing, and 70+ agent catalog.
+
+### Spec Compliance Audit (COMPLETED 2026-01-23)
+All 25 skills now comply with Anthropic YAML specification.
+
+### Testing/Security/API Skills (COMPLETED 2026-01-23)
+Added testing-skill, security-skill, and api-design-skill to Dev Tools category.
+
+### Worktree-Manager Enhancements (COMPLETED 2025-12-24)
+Boris Cherny workflow integration, .env handling, model selection.
 
 ---
 
 ## Next Up (From Backlog P1)
 
 - [ ] Test each skill activation with trigger phrases
-- [ ] Add reference/ folders for complex skills
-- [ ] Document worktree workflow in README
+- [ ] Triage backlog skill ideas (git-workflow, api-testing, docker-compose)
 - [ ] Create skill dependency graph
+- [ ] Document worktree workflow in README
 
 ---
 
