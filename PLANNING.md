@@ -60,6 +60,20 @@
 | Update SKILLS_INDEX.md | ✅ complete |
 | Create dist zip | ✅ complete |
 
+### docker-compose-skill (COMPLETED 2026-02-05)
+
+| Task | Status |
+|------|--------|
+| Create SKILL.md | ✅ complete |
+| Create compose-patterns reference | ✅ complete |
+| Create services reference | ✅ complete |
+| Create networking reference | ✅ complete |
+| Create dev-workflow reference | ✅ complete |
+| Create config.json | ✅ complete |
+| Update SKILLS_INDEX.md | ✅ complete |
+| Update README with worktree docs | ✅ complete |
+| Create dist zip | ✅ complete |
+
 ---
 
 ## Completed Work
