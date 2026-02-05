@@ -30,6 +30,20 @@
 | Create commit-examples reference | ✅ complete |
 | Test skill activation | ✅ complete |
 
+### api-testing-skill (COMPLETED 2026-02-05)
+
+| Task | Status |
+|------|--------|
+| Create SKILL.md | ✅ complete |
+| Create postman-patterns reference | ✅ complete |
+| Create bruno-patterns reference | ✅ complete |
+| Create test-design reference | ✅ complete |
+| Create data-management reference | ✅ complete |
+| Create ci-integration reference | ✅ complete |
+| Update SKILLS_INDEX.md | ✅ complete |
+| Deploy and test activation | ✅ complete |
+| Update SKILL_TEST_MATRIX.md | ✅ complete |
+
 ---
 
 ## Completed Work
@@ -50,8 +64,9 @@ Boris Cherny workflow integration, .env handling, model selection.
 
 ## Next Up (From Backlog P1)
 
-- [ ] Test remaining skill activations with trigger phrases
-- [ ] Triage backlog skill ideas (api-testing, docker-compose)
+- [x] Test remaining skill activations ✅ 28/28 passing
+- [x] Triage backlog api-testing-skill ✅ CREATED
+- [ ] Triage backlog docker-compose-skill
 - [ ] Create skill dependency graph
 - [ ] Document worktree workflow in README
 

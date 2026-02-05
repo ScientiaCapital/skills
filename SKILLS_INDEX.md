@@ -1,7 +1,7 @@
 # Skills Index
 
 > Last updated: 2026-02-05
-> Total skills: 27 (2 stable, 25 active)
+> Total skills: 28 (2 stable, 26 active)
 
 ## Architecture
 
@@ -24,6 +24,7 @@
 | Write tests, TDD, test coverage | [testing](#testing-skill) | Dev Tools |
 | Design REST/GraphQL APIs | [api-design](#api-design-skill) | Dev Tools |
 | Auth, secrets, OWASP, security audit | [security](#security-skill) | Dev Tools |
+| Test APIs with Postman/Bruno | [api-testing](#api-testing-skill) | Dev Tools |
 | Fine-tune LLMs with GRPO/SFT | [unsloth-training](#unsloth-training-skill) | Infrastructure |
 | Build multi-agent LangGraph systems | [langgraph-agents](#langgraph-agents-skill) | Infrastructure |
 | Deploy to RunPod GPU serverless | [runpod-deployment](#runpod-deployment-skill) | Infrastructure |
@@ -234,6 +235,28 @@ Application security patterns for web applications.
 - XSS: React auto-escapes, use CSP headers
 
 **Triggers:** "auth", "JWT", "secrets", "API keys", "SQL injection", "XSS", "CSRF", "RLS", "security audit"
+
+---
+
+#### api-testing-skill
+**Location:** `active/api-testing-skill/`
+
+Tool-based API testing with Postman and Bruno. Covers collections, environments, test assertions, and CI/CD integration.
+
+**Reference Files (5):**
+- `reference/postman-patterns.md` - Collections, scripting, monitors
+- `reference/bruno-patterns.md` - .bru files, git-native workflow
+- `reference/test-design.md` - Coverage strategies, edge cases
+- `reference/data-management.md` - Fixtures, dynamic data, cleanup
+- `reference/ci-integration.md` - Newman, GitHub Actions, reporting
+
+**Key Patterns:**
+- Postman: Cloud sync, mock servers, team collaboration
+- Bruno: Git-native .bru files, open source, offline-first
+- Test assertions for status, body, schema, headers
+- Environment management for local/staging/production
+
+**Triggers:** "postman", "bruno", "API testing", "test API endpoint", "API collection", "endpoint validation"
 
 ---
 
@@ -544,8 +567,9 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ```
 skills/
-├── active/                    # 24 active skills
+├── active/                    # 26 active skills
 │   ├── api-design-skill/
+│   ├── api-testing-skill/
 │   ├── blue-ocean-strategy-skill/
 │   ├── business-model-canvas-skill/
 │   ├── content-marketing-skill/
