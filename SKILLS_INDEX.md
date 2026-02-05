@@ -1,7 +1,7 @@
 # Skills Index
 
 > Last updated: 2026-02-05
-> Total skills: 26 (2 stable, 24 active)
+> Total skills: 27 (2 stable, 25 active)
 
 ## Architecture
 
@@ -20,6 +20,7 @@
 | Systematic expert debugging | [debug-like-expert](#debug-like-expert-skill) | Dev Tools |
 | Create project plans, meta-prompts | [planning-prompts](#planning-prompts-skill) | Dev Tools |
 | Manage git worktrees for parallel dev | [worktree-manager](#worktree-manager-skill) | Dev Tools |
+| Conventional commits, PR templates | [git-workflow](#git-workflow-skill) | Dev Tools |
 | Write tests, TDD, test coverage | [testing](#testing-skill) | Dev Tools |
 | Design REST/GraphQL APIs | [api-design](#api-design-skill) | Dev Tools |
 | Auth, secrets, OWASP, security audit | [security](#security-skill) | Dev Tools |
@@ -150,6 +151,24 @@ Git worktree automation for parallel development with Claude agents.
 **Features:** Ghostty terminal, 3 concurrent worktrees, M1/8GB optimized
 
 **Triggers:** "create worktree", "parallel development", "cleanup worktrees"
+
+---
+
+#### git-workflow-skill
+**Location:** `active/git-workflow-skill/`
+
+Git workflow conventions: conventional commits, semantic branch naming, PR templates, and merge strategies.
+
+**Key Patterns:**
+- Conventional commits (feat/fix/docs/etc.)
+- Branch naming: `<type>/<ticket>-<description>`
+- PR templates with checklist
+- Squash merge for features, merge commit for releases
+
+**Reference Files:**
+- `reference/commit-examples.md` - Detailed commit message examples
+
+**Triggers:** "commit", "PR", "branch naming", "git workflow", "conventional commits"
 
 ---
 
@@ -528,6 +547,7 @@ skills/
 │   ├── data-analysis-skill/
 │   ├── debug-like-expert-skill/
 │   ├── extension-authoring-skill/
+│   ├── git-workflow-skill/
 │   ├── groq-inference-skill/
 │   ├── gtm-pricing-skill/
 │   ├── langgraph-agents-skill/
