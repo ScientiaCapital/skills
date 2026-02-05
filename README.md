@@ -96,6 +96,38 @@ mkdir active/my-new-skill/reference/
 
 See [SKILLS_INDEX.md](./SKILLS_INDEX.md) for detailed documentation.
 
+## Worktree Workflow
+
+This library uses git worktrees for parallel development. The `worktree-manager` skill automates this.
+
+### Quick Commands
+
+```bash
+# Create worktree with agent
+/worktree create feature/auth
+
+# Check status
+/worktree status
+
+# Cleanup merged
+/worktree cleanup feature/auth
+```
+
+### How It Works
+
+1. Worktrees stored at `~/tmp/worktrees/[project]/[branch-slug]`
+2. Ports allocated from pool (8100-8199)
+3. Global registry at `~/.claude/worktree-registry.json`
+4. Each worktree gets isolated Claude agent
+
+### Constraints
+
+- **Max 3 concurrent** on M1 8GB
+- Weekly cleanup recommended
+- Run `wt-audit` before creating new worktrees
+
+See `active/worktree-manager-skill/` for full documentation.
+
 ## Principles
 
 - **NO OpenAI** - Uses Claude, GROQ, Deepgram, Cartesia

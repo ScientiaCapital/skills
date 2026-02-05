@@ -1,7 +1,7 @@
 # Skills Index
 
 > Last updated: 2026-02-05
-> Total skills: 29 (2 stable, 27 active)
+> Total skills: 30 (2 stable, 28 active)
 
 ## Architecture
 
@@ -25,6 +25,7 @@
 | Design REST/GraphQL APIs | [api-design](#api-design-skill) | Dev Tools |
 | Auth, secrets, OWASP, security audit | [security](#security-skill) | Dev Tools |
 | Test APIs with Postman/Bruno | [api-testing](#api-testing-skill) | Dev Tools |
+| Local dev with Docker Compose | [docker-compose](#docker-compose-skill) | Dev Tools |
 | Fine-tune LLMs with GRPO/SFT | [unsloth-training](#unsloth-training-skill) | Infrastructure |
 | Build multi-agent LangGraph systems | [langgraph-agents](#langgraph-agents-skill) | Infrastructure |
 | Deploy to RunPod GPU serverless | [runpod-deployment](#runpod-deployment-skill) | Infrastructure |
@@ -258,6 +259,29 @@ Tool-based API testing with Postman and Bruno. Covers collections, environments,
 - Environment management for local/staging/production
 
 **Triggers:** "postman", "bruno", "API testing", "test API endpoint", "API collection", "endpoint validation"
+
+---
+
+#### docker-compose-skill
+**Location:** `active/docker-compose-skill/`
+
+Local development environments using Docker Compose for multi-service setups.
+
+**Reference Files (4):**
+- `reference/compose-patterns.md` - Service definitions, health checks, profiles
+- `reference/services.md` - Database, cache, queue, search services
+- `reference/networking.md` - Ports, networks, volumes
+- `reference/dev-workflow.md` - Commands for logs, exec, rebuild
+
+**Quick Services:**
+| Service | Image | Port |
+|---------|-------|------|
+| PostgreSQL | `postgres:16-alpine` | 5432 |
+| Redis | `redis:7-alpine` | 6379 |
+| MongoDB | `mongo:7` | 27017 |
+| MySQL | `mysql:8` | 3306 |
+
+**Triggers:** "docker compose", "local dev", "postgres container", "redis local", "dev environment"
 
 ---
 
@@ -594,9 +618,10 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ```
 skills/
-├── active/                    # 27 active skills
+├── active/                    # 28 active skills
 │   ├── api-design-skill/
 │   ├── api-testing-skill/
+│   ├── docker-compose-skill/
 │   ├── blue-ocean-strategy-skill/
 │   ├── business-model-canvas-skill/
 │   ├── content-marketing-skill/

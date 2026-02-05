@@ -2,8 +2,8 @@
 
 ## P1: Current Priority
 
-- [x] Test each skill activation with trigger phrases ✅ 29/29 passing
-- [ ] Document worktree workflow in README
+- [x] Test each skill activation with trigger phrases ✅ 30/30 passing
+- [x] Document worktree workflow in README ✅ DONE 2026-02-05
 - [ ] Create skill dependency graph
 - [x] Deploy skills globally with symlinks ✅ Done
 
@@ -42,7 +42,7 @@ _Add new skill ideas here for triage_
 - [x] git-workflow-skill (conventional commits, PR templates) ✅ DONE 2026-02-05
 - [x] api-testing-skill (Postman/Bruno patterns) ✅ DONE 2026-02-05
 - [x] openrouter-skill (Chinese LLMs via OpenRouter) ✅ DONE 2026-02-05
-- [ ] docker-compose-skill (local dev environments)
+- [x] docker-compose-skill (local dev environments) ✅ DONE 2026-02-05
 
 ---
 

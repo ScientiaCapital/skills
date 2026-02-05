@@ -1,0 +1,23 @@
+{
+  "defaultPostgresVersion": "16-alpine",
+  "defaultRedisVersion": "7-alpine",
+  "defaultMongoVersion": "7",
+  "defaultMySQLVersion": "8",
+  "defaultPorts": {
+    "postgres": 5432,
+    "redis": 6379,
+    "mongodb": 27017,
+    "mysql": 3306,
+    "rabbitmq": 5672,
+    "rabbitmq-management": 15672,
+    "elasticsearch": 9200,
+    "meilisearch": 7700,
+    "minio": 9000,
+    "minio-console": 9001
+  },
+  "healthCheckDefaults": {
+    "interval": "5s",
+    "timeout": "5s",
+    "retries": 5
+  }
+}
