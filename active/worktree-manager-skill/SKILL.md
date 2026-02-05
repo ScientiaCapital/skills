@@ -18,7 +18,7 @@ Claude will:
 2. Create worktree at `~/tmp/worktrees/[project]/feature-auth`
 3. Install dependencies
 4. Create WORKTREE_TASK.md for the agent
-5. Launch Ghostty terminal with Claude Opus 4.5 agent
+5. Launch terminal with Claude Opus 4.5 agent
 </quick_start>
 
 <success_criteria>
@@ -26,7 +26,7 @@ A worktree setup is successful when:
 - Worktree created at `~/tmp/worktrees/[project]/[branch-slug]`
 - Ports allocated and registered globally
 - Dependencies installed
-- Agent launched in Ghostty terminal
+- Agent launched in terminal (Ghostty/iTerm2/tmux)
 - Entry added to `~/.claude/worktree-registry.json`
 </success_criteria>
 
@@ -124,13 +124,17 @@ Branch names are slugified for filesystem safety:
 
 | Setting | Value | Reason |
 |---------|-------|--------|
-| Terminal | Ghostty | Required terminal for agent launching |
-| Model | `claude-opus-4-5-20251101` | Most capable for autonomous work |
+| Terminal | Ghostty or iTerm2 | Auto-detected, configurable in config.json |
+| Model | `--model opus` | Opus 4.5 alias (most capable) |
 | Flags | `--dangerously-skip-permissions` | Required for autonomous file ops |
 
 **Launch command pattern:**
 ```bash
-ghostty -e "cd {worktree_path} && claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions"
+# Recommended (short form)
+claude --model opus --dangerously-skip-permissions
+
+# Or pin to specific version
+claude --model opus --dangerously-skip-permissions
 ```
 
 </core_concepts>
@@ -144,10 +148,11 @@ Location: `~/.claude/skills/worktree-manager/config.json`
 ```json
 {
   "terminal": "ghostty",
+  "terminalPreference": "auto",
+  "enableNumberedTabs": true,
   "shell": "zsh",
   "defaultModel": "opus",
-  "modelId": "claude-opus-4-5-20251101",
-  "claudeCommand": "claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions",
+  "claudeCommand": "claude --model opus --dangerously-skip-permissions",
   "portPool": { "start": 8100, "end": 8199 },
   "portsPerWorktree": 2,
   "worktreeBase": "~/tmp/worktrees",
@@ -202,7 +207,7 @@ For EACH branch (can run in parallel):
    Update ~/.claude/worktree-registry.json with entry
 
 9. LAUNCH AGENT
-   ghostty -e "cd $WORKTREE_PATH && claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions"
+   ghostty -e "cd $WORKTREE_PATH && claude --model opus --dangerously-skip-permissions"
 
 AFTER ALL COMPLETE:
 - Report summary table to user
@@ -290,7 +295,7 @@ For detailed operations, see:
 7. Register both in `~/.claude/worktree-registry.json`
 8. Launch agents:
    ```bash
-   ghostty -e "cd ~/tmp/worktrees/.../feature-dark-mode && claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions"
+   ghostty -e "cd ~/tmp/worktrees/.../feature-dark-mode && claude --model opus --dangerously-skip-permissions"
    ```
 9. Report:
    ```

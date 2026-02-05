@@ -1,5 +1,7 @@
 {
   "terminal": "ghostty",
+  "terminalPreference": "auto",
+  "enableNumberedTabs": true,
   "shell": "zsh",
   "defaultModel": "opus",
   "claudeCommand": "claude --model opus --dangerously-skip-permissions",

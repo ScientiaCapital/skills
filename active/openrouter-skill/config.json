@@ -1,0 +1,24 @@
+{
+  "defaultModel": "deepseek/deepseek-chat",
+  "visionModel": "qwen/qwen-2-vl-72b-instruct",
+  "fastModel": "qwen/qwen-2.5-7b-instruct",
+  "reasoningModel": "qwen/qwq-32b",
+  "codeModel": "deepseek/deepseek-coder",
+  "longContextModel": "moonshot/moonshot-v1-128k",
+  "autoModel": "openrouter/auto",
+  "dailyBudget": 10.0,
+  "enableCaching": true,
+  "fallbackEnabled": true,
+  "headers": {
+    "HTTP-Referer": "${APP_URL}",
+    "X-Title": "${APP_NAME}"
+  },
+  "observability": {
+    "provider": "langfuse",
+    "enabled": false
+  },
+  "providerPreferences": {
+    "allow_fallbacks": true,
+    "require_parameters": false
+  }
+}

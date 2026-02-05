@@ -44,6 +44,22 @@
 | Deploy and test activation | ✅ complete |
 | Update SKILL_TEST_MATRIX.md | ✅ complete |
 
+### openrouter-skill (COMPLETED 2026-02-05)
+
+| Task | Status |
+|------|--------|
+| Create SKILL.md | ✅ complete |
+| Create models-catalog reference | ✅ complete |
+| Create routing-strategies reference | ✅ complete |
+| Create langchain-integration reference | ✅ complete |
+| Create cost-optimization reference | ✅ complete |
+| Create tool-calling reference | ✅ complete |
+| Create multimodal reference | ✅ complete |
+| Create observability reference | ✅ complete |
+| Create config.json | ✅ complete |
+| Update SKILLS_INDEX.md | ✅ complete |
+| Create dist zip | ✅ complete |
+
 ---
 
 ## Completed Work
@@ -64,8 +80,9 @@ Boris Cherny workflow integration, .env handling, model selection.
 
 ## Next Up (From Backlog P1)
 
-- [x] Test remaining skill activations ✅ 28/28 passing
+- [x] Test remaining skill activations ✅ 29/29 passing
 - [x] Triage backlog api-testing-skill ✅ CREATED
+- [x] Create openrouter-skill ✅ CREATED
 - [ ] Triage backlog docker-compose-skill
 - [ ] Create skill dependency graph
 - [ ] Document worktree workflow in README

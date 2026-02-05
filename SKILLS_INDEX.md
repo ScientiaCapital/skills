@@ -1,7 +1,7 @@
 # Skills Index
 
 > Last updated: 2026-02-05
-> Total skills: 28 (2 stable, 26 active)
+> Total skills: 29 (2 stable, 27 active)
 
 ## Architecture
 
@@ -29,6 +29,7 @@
 | Build multi-agent LangGraph systems | [langgraph-agents](#langgraph-agents-skill) | Infrastructure |
 | Deploy to RunPod GPU serverless | [runpod-deployment](#runpod-deployment-skill) | Infrastructure |
 | Fast GROQ API inference | [groq-inference](#groq-inference-skill) | Infrastructure |
+| Route to Chinese LLMs via OpenRouter | [openrouter](#openrouter-skill) | Infrastructure |
 | Build voice AI agents | [voice-ai](#voice-ai-skill) | Infrastructure |
 | Clean Supabase SQL migrations | [supabase-sql](#supabase-sql-skill) | Infrastructure |
 | Stripe payments + webhooks | [stripe-stack](#stripe-stack-skill) | Infrastructure |
@@ -317,6 +318,32 @@ Ultra-fast LLM inference with GROQ API. Chat, vision, audio, tool use.
 
 ---
 
+#### openrouter-skill
+**Location:** `active/openrouter-skill/`
+
+Orchestrate Chinese LLMs (DeepSeek, Qwen, Yi, Moonshot) through OpenRouter's unified API with LangChain/LangGraph integration.
+
+| Model | Best For | Cost ($/1M) |
+|-------|----------|-------------|
+| deepseek-chat | General reasoning | $0.27/$1.10 |
+| deepseek-coder | Code generation | $0.14/$0.28 |
+| qwen-2-vl-72b | Vision, charts | $0.40/$0.40 |
+| qwen-2.5-7b | Fast, cheap tasks | $0.09/$0.09 |
+| qwq-32b | Deep reasoning | $0.15/$0.40 |
+
+**Reference Files (7):**
+- `reference/models-catalog.md` - Complete model listing with capabilities
+- `reference/routing-strategies.md` - Auto, provider, and custom routing
+- `reference/langchain-integration.md` - LangChain/LangGraph patterns
+- `reference/cost-optimization.md` - Budget management and caching
+- `reference/tool-calling.md` - Function calling patterns
+- `reference/multimodal.md` - Vision, PDF, audio support
+- `reference/observability.md` - Monitoring and tracing
+
+**Triggers:** "openrouter", "chinese llm", "deepseek", "qwen", "moonshot", "model routing", "auto router"
+
+---
+
 #### langgraph-agents-skill
 **Location:** `active/langgraph-agents-skill/`
 
@@ -567,7 +594,7 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ```
 skills/
-├── active/                    # 26 active skills
+├── active/                    # 27 active skills
 │   ├── api-design-skill/
 │   ├── api-testing-skill/
 │   ├── blue-ocean-strategy-skill/
@@ -581,6 +608,7 @@ skills/
 │   ├── groq-inference-skill/
 │   ├── gtm-pricing-skill/
 │   ├── langgraph-agents-skill/
+│   ├── openrouter-skill/
 │   ├── planning-prompts-skill/
 │   ├── research-skill/
 │   ├── runpod-deployment-skill/
