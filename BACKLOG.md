@@ -4,7 +4,7 @@
 
 - [x] Test each skill activation with trigger phrases ✅ 30/30 passing
 - [x] Document worktree workflow in README ✅ DONE 2026-02-05
-- [ ] Create skill dependency graph
+- [x] Create skill dependency graph ✅ DONE 2026-02-05 (DEPENDENCY_GRAPH.md)
 - [x] Deploy skills globally with symlinks ✅ Done
 
 ---

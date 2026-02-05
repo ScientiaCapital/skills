@@ -94,12 +94,12 @@ Boris Cherny workflow integration, .env handling, model selection.
 
 ## Next Up (From Backlog P1)
 
-- [x] Test remaining skill activations ✅ 29/29 passing
+- [x] Test remaining skill activations ✅ 30/30 passing
 - [x] Triage backlog api-testing-skill ✅ CREATED
 - [x] Create openrouter-skill ✅ CREATED
 - [x] Create docker-compose-skill ✅ DONE 2026-02-05
 - [x] Document worktree workflow in README ✅ DONE 2026-02-05
-- [ ] Create skill dependency graph
+- [x] Create skill dependency graph ✅ DONE 2026-02-05 (DEPENDENCY_GRAPH.md)
 
 ---
 
