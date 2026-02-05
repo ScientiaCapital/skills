@@ -55,16 +55,19 @@ A curated collection of 19 Claude Code skills for software development, business
 
 ```
 skills/
-├── active/           # 17 skills in development
-├── stable/           # 2 battle-tested skills
-├── dist/             # Zip files for Claude Desktop
+├── active/              # 28 skills in development
+├── stable/              # 2 battle-tested skills
+├── dist/                # Zip files for Claude Desktop
 ├── scripts/
-│   ├── deploy.sh     # Deploy to ~/.claude/skills/
+│   ├── deploy.sh        # Deploy to ~/.claude/skills/
 │   └── rebuild-zips.sh
-├── templates/        # Skill starter templates
-├── SKILLS_INDEX.md   # Detailed skill documentation
-└── README.md         # This file
+├── templates/           # Skill starter templates
+├── DEPENDENCY_GRAPH.md  # Visual skill relationships
+├── SKILLS_INDEX.md      # Detailed skill documentation
+└── README.md            # This file
 ```
+
+See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for how skills connect and common workflow chains.
 
 ## Scripts
 

@@ -2,6 +2,7 @@
 
 > Last updated: 2026-02-05
 > Total skills: 30 (2 stable, 28 active)
+> See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
 
 ## Architecture
 
