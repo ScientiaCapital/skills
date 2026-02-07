@@ -1,6 +1,6 @@
 # Skills Library Planning
 
-**Current Sprint:** Agent Teams Skill Development
+**Current Sprint:** Skill Polish + Maintenance
 **Date:** 2026-02-07
 **Constraint:** M1 8GB RAM - max 2-3 parallel agents
 
@@ -8,23 +8,27 @@
 
 ## Active Work
 
-### agent-teams-skill (IN PROGRESS)
+### Skill Polish Session (COMPLETED 2026-02-07)
 
 | Task | Status |
 |------|--------|
-| Create SKILL.md (objective, quick_start, workflows, etc.) | ✅ complete |
-| Create config.json | ✅ complete |
-| Create reference/context-engineering.md | ✅ complete |
-| Create reference/worktree-integration.md | ✅ complete |
-| Create reference/prompt-templates.md | ✅ complete |
-| Update SKILLS_INDEX.md | ✅ complete |
-| Update DEPENDENCY_GRAPH.md | ✅ complete |
-| Deploy and test activation | ✅ complete |
-| Git commit | ✅ complete |
+| Polish worktree-manager: .claude/ dir propagation, hooks, permissions | ✅ complete |
+| Polish agent-teams: CLAUDE.md inheritance, @claude bot, plan mode | ✅ complete |
+| Update SKILL_TEST_MATRIX.md: 28 → 31 skills | ✅ complete |
+| Deploy + rebuild zips (31/31) | ✅ complete |
 
 ---
 
 ## Completed Work
+
+### agent-teams-skill (COMPLETED 2026-02-07)
+
+| Task | Status |
+|------|--------|
+| Create SKILL.md + config.json + 3 reference files | ✅ complete |
+| Update SKILLS_INDEX.md + DEPENDENCY_GRAPH.md | ✅ complete |
+| Deploy, test activation, git commit | ✅ complete |
+| Polish: .claude/ propagation, CLAUDE.md inheritance, @claude bot | ✅ complete |
 
 ### langgraph-agents-skill Polish (COMPLETED 2026-02-05)
 

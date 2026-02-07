@@ -2,11 +2,13 @@
 
 ## P1: Current Priority
 
-- [x] Test each skill activation with trigger phrases ✅ 30/30 passing
+- [x] Test each skill activation with trigger phrases ✅ 31/31 passing
 - [x] Document worktree workflow in README ✅ DONE 2026-02-05
 - [x] Create skill dependency graph ✅ DONE 2026-02-05 (DEPENDENCY_GRAPH.md)
 - [x] Deploy skills globally with symlinks ✅ Done
-- [x] Create agent-teams-skill ✅ IN PROGRESS 2026-02-07
+- [x] Create agent-teams-skill ✅ DONE 2026-02-07
+- [x] Polish worktree-manager + agent-teams (.claude/ patterns) ✅ DONE 2026-02-07
+- [x] Update SKILL_TEST_MATRIX.md 28→31 ✅ DONE 2026-02-07
 
 ---
 

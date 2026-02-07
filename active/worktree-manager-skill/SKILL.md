@@ -79,6 +79,7 @@ Available ports:
 | `~/.claude/skills/worktree-manager/config.json` | **Skill config** - terminal, shell, port range settings |
 | `~/.claude/skills/worktree-manager/scripts/` | **Helper scripts** - optional, can do everything manually |
 | `~/tmp/worktrees/` | **Worktree storage** - all worktrees live here |
+| `.claude/` (per-project) | **Project config** - CLAUDE.md, hooks, permissions, custom agents |
 | `.claude/worktree.json` (per-project) | **Project config** - optional custom settings |
 | `WORKTREE_TASK.md` (per-worktree) | **Auto-loaded task prompt** - agent reads on startup |
 
@@ -130,11 +131,11 @@ Branch names are slugified for filesystem safety:
 
 **Launch command pattern:**
 ```bash
-# Recommended (short form)
+# Recommended: agent inherits .claude/ config (CLAUDE.md, hooks, permissions)
 claude --model opus --dangerously-skip-permissions
 
-# Or pin to specific version
-claude --model opus --dangerously-skip-permissions
+# Or with explicit permission allowlist (safer, from .claude/settings.json):
+claude --model opus --allowedTools "Bash(npm test),Bash(npm run build),Edit,Write,Read,Glob,Grep"
 ```
 
 </core_concepts>
@@ -156,9 +157,47 @@ Location: `~/.claude/skills/worktree-manager/config.json`
   "portPool": { "start": 8100, "end": 8199 },
   "portsPerWorktree": 2,
   "worktreeBase": "~/tmp/worktrees",
-  "defaultCopyDirs": [".agents"],
+  "defaultCopyDirs": [".claude"],
   "envFilePriority": [".env.local", ".env", ".env.example"],
   "autoCleanupOnMerge": true
+}
+```
+
+### .claude/ Directory Propagation
+
+When creating worktrees, the entire `.claude/` directory is copied so agents inherit project-level config:
+
+```
+.claude/
+├── CLAUDE.md              # Project instructions (auto-loaded by Claude Code)
+├── settings.json          # Hooks and permissions
+│   ├── hooks.PostToolUse  # Auto-format on Write|Edit (e.g., "bun run format || true")
+│   └── permissions.allow  # Whitelisted bash commands for agents
+├── agents/                # Custom subagent definitions
+│   ├── build-validator.md # Validates builds pass
+│   ├── code-architect.md  # Plans implementation
+│   ├── code-simplifier.md # Refactors for clarity
+│   └── verify-app.md      # End-to-end verification
+└── PROJECT_CONTEXT.md     # Session continuity (project-context-skill)
+```
+
+**Why this matters:**
+- **CLAUDE.md**: Agent reads project conventions, dev commands, tech stack
+- **Hooks**: Auto-formatting runs after every Write/Edit, keeping code consistent across agents
+- **Permissions**: Agents can run pre-approved commands without prompting (e.g., `npm test`, `bun run build`)
+- **Custom agents**: Agents can dispatch subagents (e.g., `verify-app.md` for end-to-end checks)
+
+**Hook example (settings.json):**
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [{ "type": "command", "command": "bun run format || true" }]
+      }
+    ]
+  }
 }
 ```
 
@@ -190,8 +229,8 @@ For EACH branch (can run in parallel):
    mkdir -p ~/tmp/worktrees/$PROJECT
    git worktree add $WORKTREE_PATH -b $BRANCH
 
-4. COPY UNCOMMITTED RESOURCES
-   cp -r .agents $WORKTREE_PATH/ 2>/dev/null || true
+4. COPY PROJECT CONFIG (.claude/ directory)
+   cp -r .claude $WORKTREE_PATH/ 2>/dev/null || true
    Copy .env.local or .env as appropriate
 
 5. CREATE WORKTREE_TASK.md
@@ -290,7 +329,7 @@ For detailed operations, see:
    git worktree add ~/tmp/worktrees/obsidian-ai-agent/feature-dark-mode -b feature/dark-mode
    git worktree add ~/tmp/worktrees/obsidian-ai-agent/fix-login-bug -b fix/login-bug
    ```
-5. Copy .agents/ and .env to each
+5. Copy .claude/ and .env to each
 6. Install deps: `(cd <path> && uv sync)`
 7. Register both in `~/.claude/worktree-registry.json`
 8. Launch agents:

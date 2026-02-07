@@ -43,6 +43,8 @@ A team session is successful when:
 
 **Required skill:** [worktree-manager](../worktree-manager-skill/SKILL.md) — agent-teams delegates ALL worktree creation, port allocation, and terminal launching to worktree-manager. Install it first.
 
+**Recommended:** Project has a `.claude/` directory with CLAUDE.md (dev commands, conventions). If the project also has `.claude/agents/` with custom subagents or `.claude/settings.json` with hooks/permissions, these are automatically propagated to each agent's worktree.
+
 **Environment check:**
 ```bash
 # Agent teams config
@@ -157,6 +159,9 @@ Each agent is a **completely separate Claude session**. Agents:
 | `WORKTREE_TASK.md` | Agent's assignment + context | Team lead | Agent |
 | `CONTRACT.md` | Shared API/interface definitions | Team lead | All agents |
 | `.agent-status` | Agent self-reports progress | Agent | Team lead |
+| `.claude/CLAUDE.md` | Project conventions, dev commands | Project | Agent (auto-loaded) |
+| `.claude/settings.json` | Hooks (auto-format), permissions | Project | Agent (auto-loaded) |
+| `.claude/agents/*.md` | Custom subagent definitions | Project | Agent (on dispatch) |
 | Git commits | Work product | Agent | Team lead at merge |
 
 </architecture>
@@ -235,6 +240,12 @@ STEP 3: CREATE WORKTREES
 Use worktree-manager to create each worktree:
   → "create worktree feature/auth-api"
   → "create worktree feature/auth-ui"
+
+worktree-manager automatically copies .claude/ directory to each worktree.
+This gives each agent:
+  • CLAUDE.md — project conventions, dev commands, tech stack
+  • .claude/settings.json — PostToolUse hooks (auto-format), permissions
+  • .claude/agents/ — custom subagents (build-validator, verify-app, etc.)
 
 STEP 4: WRITE TASK FILES
 ─────────────────────────
@@ -325,6 +336,43 @@ git merge feature/auth-ui --no-ff -m "feat(auth): UI components"
 npm test
 ```
 
+### 5. Async Handoff with @claude Bot
+
+For longer-running agent work, use GitHub's `@claude` bot integration:
+
+1. Agent creates PR from worktree branch
+2. Add `@claude` comment on PR with instructions
+3. Claude bot works asynchronously on the PR
+4. You get notified when work is complete
+
+**Use when:**
+- Agent task will take >30 minutes
+- You want to step away from the terminal
+- Task involves iterative PR feedback cycles
+
+**Workflow:**
+```bash
+# Agent pushes branch and creates PR
+gh pr create --title "feat(auth): API endpoints" --body "API implementation"
+
+# You (or the agent) tags @claude on the PR
+# @claude "Review this implementation and fix any test failures"
+
+# Claude bot works asynchronously, commits to the branch
+# You monitor at https://github.com/<org>/<repo>/pulls
+```
+
+### 6. Plan Mode for Complex Decomposition
+
+For non-trivial task decomposition, use Claude Code's plan mode:
+
+```
+"Enter plan mode and design the team decomposition for [feature].
+Identify file boundaries, contracts, and merge order before spawning agents."
+```
+
+Plan mode lets you explore the codebase (read-only) and design the team structure before committing to any worktree creation. This prevents wasted effort from bad decomposition.
+
 </workflows>
 
 <use_cases>
@@ -371,6 +419,35 @@ Agent 1 refactors code. Agent 2 reviews the refactored code and writes improveme
 3. **Front-load instructions** — Put the most important information (task, contract, boundaries) at the TOP of WORKTREE_TASK.md. Agents read top-down and may deprioritize content at the bottom.
 
 4. **Keep agent tasks to <50 words** — If you can't describe an agent's task concisely, it's too complex. Break it down further.
+
+### Project Config Inheritance
+
+Each agent inherits the project's `.claude/` directory, which ensures consistency:
+
+**CLAUDE.md inheritance** — Agents auto-load the project's CLAUDE.md on startup, giving them:
+- Dev commands (`npm test`, `bun run build`, etc.)
+- Code style conventions
+- Tech stack context
+- File structure documentation
+
+**PostToolUse hooks** — If the project uses auto-formatting hooks (e.g., `bun run format || true` after Write/Edit), every agent runs them too. This prevents style conflicts at merge time.
+
+**Permissions model** — Two approaches for agent safety:
+```bash
+# Option A: Skip all permissions (faster, less safe)
+claude --model opus --dangerously-skip-permissions
+
+# Option B: Explicit allowlist (safer, from .claude/settings.json)
+claude --model opus --allowedTools "Bash(npm test),Bash(npm run build),Edit,Write,Read"
+```
+
+**Custom subagents** — If the project has `.claude/agents/` (e.g., `verify-app.md`, `build-validator.md`), agents can dispatch them for verification steps:
+```markdown
+## Verification
+1. Run tests: `npm test`
+2. Run build validator: dispatch `.claude/agents/build-validator.md`
+3. Run verify-app: dispatch `.claude/agents/verify-app.md`
+```
 
 ### Session Harness Patterns
 

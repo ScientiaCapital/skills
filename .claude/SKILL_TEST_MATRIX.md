@@ -1,8 +1,8 @@
 # Skill Activation Test Matrix
 
-**Date:** 2026-02-05
-**Total Skills:** 28 (2 stable, 26 active)
-**Status:** ✅ All 28/28 activation tests passing
+**Date:** 2026-02-07
+**Total Skills:** 31 (2 stable, 29 active)
+**Status:** ✅ All 31/31 activation tests passing
 
 ## Test Protocol
 
@@ -24,7 +24,7 @@ For each skill:
 
 ---
 
-## Dev Tools (9)
+## Dev Tools (11)
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
@@ -36,21 +36,24 @@ For each skill:
 | 9 | testing | "write tests" | ✅ | ✅ | |
 | 10 | api-design | "design API" | ✅ | ✅ | |
 | 11 | security | "security audit" | ✅ | ✅ | |
-| 12 | api-testing | "postman" / "bruno" / "API testing" | ✅ | ✅ | NEW |
+| 12 | api-testing | "postman" / "bruno" / "API testing" | ✅ | ✅ | |
+| 13 | docker-compose | "docker compose" / "local dev env" | ✅ | ✅ | NEW |
+| 14 | agent-teams | "set up agent team" / "parallel development" | ✅ | ✅ | NEW |
 
 ---
 
-## Infrastructure (7)
+## Infrastructure (8)
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 13 | unsloth-training | "train with GRPO" | ✅ | ✅ | |
-| 14 | langgraph-agents | "LangGraph agent" | ✅ | ✅ | |
-| 15 | runpod-deployment | "deploy to RunPod" | ✅ | ✅ | |
-| 16 | groq-inference | "groq" | ✅ | ✅ | |
-| 17 | voice-ai | "voice agent" | ✅ | ✅ | |
-| 18 | supabase-sql | "fix SQL" | ✅ | ✅ | |
-| 19 | stripe-stack | "stripe" | ✅ | ✅ | |
+| 15 | unsloth-training | "train with GRPO" | ✅ | ✅ | |
+| 16 | langgraph-agents | "LangGraph agent" | ✅ | ✅ | |
+| 17 | runpod-deployment | "deploy to RunPod" | ✅ | ✅ | |
+| 18 | groq-inference | "groq" | ✅ | ✅ | |
+| 19 | openrouter | "OpenRouter" / "DeepSeek" / "Chinese LLM" | ✅ | ✅ | NEW |
+| 20 | voice-ai | "voice agent" | ✅ | ✅ | |
+| 21 | supabase-sql | "fix SQL" | ✅ | ✅ | |
+| 22 | stripe-stack | "stripe" | ✅ | ✅ | |
 
 ---
 
@@ -58,13 +61,13 @@ For each skill:
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 20 | crm-integration | "Close CRM" | ✅ | ✅ | |
-| 21 | gtm-pricing | "GTM strategy" | ✅ | ✅ | |
-| 22 | research | "research company" | ✅ | ✅ | |
-| 23 | sales-revenue | "cold email" | ✅ | ✅ | |
-| 24 | content-marketing | "content strategy" | ✅ | ✅ | |
-| 25 | data-analysis | "analyze data" | ✅ | ✅ | |
-| 26 | trading-signals | "fibonacci levels" | ✅ | ✅ | |
+| 23 | crm-integration | "Close CRM" | ✅ | ✅ | |
+| 24 | gtm-pricing | "GTM strategy" | ✅ | ✅ | |
+| 25 | research | "research company" | ✅ | ✅ | |
+| 26 | sales-revenue | "cold email" | ✅ | ✅ | |
+| 27 | content-marketing | "content strategy" | ✅ | ✅ | |
+| 28 | data-analysis | "analyze data" | ✅ | ✅ | |
+| 29 | trading-signals | "fibonacci levels" | ✅ | ✅ | |
 
 ---
 
@@ -72,8 +75,8 @@ For each skill:
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 27 | business-model-canvas | "business model canvas" | ✅ | ✅ | |
-| 28 | blue-ocean-strategy | "blue ocean" | ✅ | ✅ | |
+| 30 | business-model-canvas | "business model canvas" | ✅ | ✅ | |
+| 31 | blue-ocean-strategy | "blue ocean" | ✅ | ✅ | |
 
 ---
 
@@ -82,22 +85,23 @@ For each skill:
 | Category | Count | YAML Pass | Activation Pass |
 |----------|-------|-----------|-----------------|
 | Core | 3 | 3/3 | 3/3 |
-| Dev Tools | 9 | 9/9 | 9/9 |
-| Infrastructure | 7 | 7/7 | 7/7 |
+| Dev Tools | 11 | 11/11 | 11/11 |
+| Infrastructure | 8 | 8/8 | 8/8 |
 | Business | 7 | 7/7 | 7/7 |
 | Strategy | 2 | 2/2 | 2/2 |
-| **Total** | **28** | **28/28** | **28/28** |
+| **Total** | **31** | **31/31** | **31/31** |
 
 ---
 
-## Changes This Session
+## Changes This Session (2026-02-07)
 
 | Skill | Action | Notes |
 |-------|--------|-------|
-| project-context (stable) | YAML fix | Multiline `\|` → single-line quoted |
-| workflow-enforcer (stable) | YAML fix | Added quotes, single-line description |
-| git-workflow (NEW) | Created | Conventional commits, PR templates, branch naming |
-| api-testing (NEW) | Created | Postman/Bruno patterns, test design, CI integration |
+| openrouter (NEW) | Created | Chinese LLMs via OpenRouter, LangChain integration |
+| docker-compose (NEW) | Created | Local dev environments, multi-service setups |
+| agent-teams (NEW) | Created | Parallel Claude Code session orchestration |
+| worktree-manager | Polished | .claude/ dir propagation, hooks, permissions |
+| agent-teams | Polished | CLAUDE.md inheritance, @claude bot, plan mode |
 
 ---
 
@@ -106,7 +110,7 @@ For each skill:
 ```bash
 # Verify skill count
 ls -d active/*-skill stable/*-skill stable/workflow-enforcer 2>/dev/null | wc -l
-# Expected: 28
+# Expected: 31
 
 # Check YAML frontmatter (first 5 lines of each SKILL.md)
 for dir in active/*-skill stable/*-skill stable/workflow-enforcer; do
