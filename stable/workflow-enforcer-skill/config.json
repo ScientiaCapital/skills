@@ -1,5 +1,5 @@
 {
-  "name": "workflow-enforcer",
+  "name": "workflow-enforcer-skill",
   "version": "1.0.0",
   "category": "Core",
   "description": "Enforces workflow discipline: skill checks, TaskCreate for multi-step work, agent announcements",

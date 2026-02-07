@@ -5,7 +5,7 @@
   "description": "Full-day workflow orchestration with cost tracking, model routing, and team coordination",
   "requires": [],
   "depends_on": [
-    "workflow-enforcer",
+    "workflow-enforcer-skill",
     "project-context-skill"
   ],
   "integrates_with": [

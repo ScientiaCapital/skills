@@ -37,7 +37,7 @@ Production-ready skills library with **38 skills** (2 stable, 36 active). All sk
 - Dependency graph current (DEPENDENCY_GRAPH.md)
 
 ### Known Tech Debt
-- `workflow-enforcer` lacks `-skill` suffix (naming inconsistency)
+None
 
 ## Blockers
 None

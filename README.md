@@ -22,7 +22,7 @@
 | **cost-metering** | API cost tracking, budget alerts, optimization |
 | **portfolio-artifact** | Engineering metrics capture, report templates |
 | **project-context** | Session continuity across conversations |
-| **workflow-enforcer** | Automatic agent routing + discipline enforcement |
+| **workflow-enforcer-skill** | Automatic agent routing + discipline enforcement |
 
 ### Dev Tools (13)
 | Skill | What It Does |

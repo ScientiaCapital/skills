@@ -18,7 +18,7 @@ For each skill:
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 1 | workflow-enforcer | "follow workflow" | ✅ | ✅ | Stable |
+| 1 | workflow-enforcer-skill | "follow workflow" | ✅ | ✅ | Stable |
 | 2 | project-context | "load project context" | ✅ | ✅ | Stable |
 | 3 | workflow-orchestrator | "start day" | ✅ | ✅ | Active |
 | 4 | cost-metering | "cost check" / "budget status" | ✅ | ✅ | NEW |
@@ -117,11 +117,11 @@ For each skill:
 
 ```bash
 # Verify skill count
-ls -d active/*-skill stable/*-skill stable/workflow-enforcer 2>/dev/null | wc -l
+ls -d active/*-skill stable/*-skill 2>/dev/null | wc -l
 # Expected: 37
 
 # Check YAML frontmatter (first 5 lines of each SKILL.md)
-for dir in active/*-skill stable/*-skill stable/workflow-enforcer; do
+for dir in active/*-skill stable/*-skill; do
   echo "=== $(basename $dir) ===" && head -5 "$dir/SKILL.md"
 done
 ```

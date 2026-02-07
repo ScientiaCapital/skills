@@ -29,7 +29,7 @@
 |-------|----------|----------|
 | workflow-orchestrator | Core | "start day", "end day" |
 | project-context | Core | "load context", "save context" |
-| workflow-enforcer | Core | Automatic |
+| workflow-enforcer-skill | Core | Automatic |
 | extension-authoring | Dev Tools | "create skill", "create hook" |
 | debug-like-expert | Dev Tools | "debug systematically" |
 | planning-prompts | Dev Tools | "create plan", "meta-prompt" |

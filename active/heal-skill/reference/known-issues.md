@@ -152,10 +152,6 @@ Skills using legacy key names from before the schema was standardized:
 
 | Skill | Issue |
 |-------|-------|
-| workflow-enforcer | Missing `-skill` suffix |
-
-**Impact:** Directory listing and glob patterns like `*-skill` miss this skill.
-
-**Check:** C6
+No known naming issues. All skills follow the `-skill` suffix convention.
 
 **Note:** This is tracked as known tech debt. Renaming would require updating all references across the library.

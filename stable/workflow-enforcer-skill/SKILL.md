@@ -1,5 +1,5 @@
 ---
-name: "workflow-enforcer"
+name: "workflow-enforcer-skill"
 description: "Enforces workflow discipline across ALL projects. Ensures Claude checks for specialized agents before responding, announces skill/agent usage, and creates TodoWrite todos for multi-step tasks. Triggers: automatic on all sessions, use the right agent, follow workflow."
 ---
 

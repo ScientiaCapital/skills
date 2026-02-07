@@ -165,7 +165,7 @@ Complete reference for all 16 diagnostic checks used by heal-skill.
 - **Rule:** Skill directory name should end with `-skill`
 - **Detection:** Check if directory basename ends with `-skill`
 - **Auto-fix:** Warning only — renaming directories has cascading effects on references
-- **Known issue:** `workflow-enforcer` is the only skill that doesn't follow this convention
+- **Known issue:** None — all skills now follow the `-skill` suffix convention
 
 ---
 

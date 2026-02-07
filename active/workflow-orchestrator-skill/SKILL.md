@@ -161,7 +161,7 @@ Create `RESEARCH.md` → `FINDINGS.md` with:
 ### Phase 0: PLAN
 ```markdown
 1. Create BRIEF.md with scope
-2. Map to agents (use workflow-enforcer 70+ catalog)
+2. Map to agents (use workflow-enforcer-skill 70+ catalog)
 3. Identify parallelization opportunities
 4. Create TodoWrite todos
 5. Cost estimate

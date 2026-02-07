@@ -7,7 +7,7 @@
   "depends_on": [],
   "integrates_with": [
     "workflow-orchestrator-skill",
-    "workflow-enforcer"
+    "workflow-enforcer-skill"
   ],
   "activation_triggers": [
     "load project context",

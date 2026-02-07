@@ -147,7 +147,7 @@ Skills load in layers to minimize context usage:
 
 | Layer | Skills | When Loaded |
 |-------|--------|-------------|
-| **L0** | workflow-enforcer | Always (session start) |
+| **L0** | workflow-enforcer-skill | Always (session start) |
 | **L1** | project-context | After working directory detected |
 | **L2** | workflow-orchestrator | On "start day" or session init |
 | **L3** | All others | On trigger match (lazy loading) |
@@ -185,7 +185,7 @@ Common sequences of skills used together:
 
 ### Session Lifecycle
 ```
-workflow-enforcer → project-context → workflow-orchestrator
+workflow-enforcer-skill → project-context → workflow-orchestrator
 ```
 
 ### Feature Development
