@@ -6,15 +6,16 @@ All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 
 ---
 
-## P2: In Progress (This Sprint)
+## P2: Recently Completed
 
-- [ ] subagent-teams-skill (in-session Task tool orchestration)
-- [ ] agent-capability-matrix-skill (task → agent routing)
-- [ ] cost-metering-skill (API cost tracking + budgets)
-- [ ] portfolio-artifact-skill (GTME metrics extraction)
-- [ ] miro-skill (Miro board interaction via MCP)
-- [ ] Workflow-orchestrator polish (cost gate, progress rendering)
-- [ ] Global hooks (PostToolUse formatting)
+- [x] subagent-teams-skill (in-session Task tool orchestration)
+- [x] agent-capability-matrix-skill (task → agent routing)
+- [x] cost-metering-skill (API cost tracking + budgets)
+- [x] portfolio-artifact-skill (GTME metrics extraction)
+- [x] miro-skill (Miro board interaction via MCP)
+- [x] hubspot-revops-skill (HubSpot SQL analytics, lead scoring, pipeline forecasting)
+- [x] Workflow-orchestrator polish (cost gate, progress rendering)
+- [x] Global hooks (PostToolUse formatting)
 
 ---
 

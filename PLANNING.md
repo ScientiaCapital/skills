@@ -1,6 +1,6 @@
 # Skills Library Planning
 
-**Current Sprint:** Skills Library Upgrade (31 → 36)
+**Current Sprint:** hubspot-revops-skill (#37)
 **Date:** 2026-02-07
 **Constraint:** M1 8GB RAM - max 2-3 parallel agents
 
@@ -8,17 +8,21 @@
 
 ## Active Work
 
-### Full Library Upgrade (IN PROGRESS)
+### hubspot-revops-skill (COMPLETE)
 
 | Task | Status |
 |------|--------|
-| Phase 0: Doc cleanup (README, CLAUDE.md, SETUP, ARCHIVE) | ✅ complete |
-| Phase 1: Global hooks (~/.claude/settings.json) | 🔄 in progress |
-| Phase 2: Workflow-orchestrator polish | ⏳ pending |
-| Phase 3: 4 new skills (subagent-teams, agent-capability-matrix, cost-metering, portfolio-artifact) | ⏳ pending |
-| Phase 4: miro-skill | ⏳ pending |
-| Phase 5: Metadata updates (INDEX, DEP_GRAPH, TEST_MATRIX → 36) | ⏳ pending |
-| Phase 6: Deploy + test + commit | ⏳ pending |
+| Create SKILL.md + config.json | ✅ complete |
+| Create reference/api-guide.md | ✅ complete |
+| Create reference/sql-analytics.md | ✅ complete |
+| Create reference/enrichment-pipelines.md | ✅ complete |
+| Create reference/architecture.md | ✅ complete |
+| Update metadata (README, INDEX, DEP_GRAPH, TEST_MATRIX → 37) | ✅ complete |
+| Deploy + test + commit | ✅ complete |
+
+### Previous Sprint: Full Library Upgrade (31 → 36) — COMPLETE
+
+All phases delivered. See [ARCHIVE.md](./ARCHIVE.md).
 
 ---
 

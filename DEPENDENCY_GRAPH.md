@@ -1,7 +1,7 @@
 # Skill Dependency Graph
 
 > Last validated: 2026-02-07
-> Total skills: 36
+> Total skills: 37
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -70,6 +70,7 @@ graph TB
         GTP[gtm-pricing]
         SR[sales-revenue]
         CRM[crm-integration]
+        HR[hubspot-revops]
         CM[content-marketing]
         DA[data-analysis]
         TRD[trading-signals]
@@ -78,6 +79,8 @@ graph TB
         RES --> GTP
         GTP --> SR
         SR --> CRM
+        SR --> HR
+        CRM --> HR
     end
 
     subgraph Strategy["Strategy (Business Design)"]
@@ -101,6 +104,7 @@ graph TB
     MIRO -.-> BMC
     MIRO -.-> BOS
     MIRO -.-> GTP
+    DA -.-> HR
 ```
 
 ### Legend
@@ -119,7 +123,7 @@ graph TB
 | **Core** | workflow-enforcer, project-context, workflow-orchestrator, cost-metering, portfolio-artifact | Session lifecycle management |
 | **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
-| **Business** | gtm-pricing, research, sales-revenue, crm-integration, content-marketing, data-analysis, trading-signals, miro | GTM & revenue operations |
+| **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro | GTM & revenue operations |
 | **Strategy** | business-model-canvas, blue-ocean-strategy | Business model design |
 
 ### Count by Cluster
@@ -129,9 +133,9 @@ graph TB
 | Core | 5 |
 | Dev Tools | 13 |
 | Infrastructure | 8 |
-| Business | 8 |
+| Business | 9 |
 | Strategy | 2 |
-| **Total** | **36** |
+| **Total** | **37** |
 
 ---
 
@@ -167,7 +171,7 @@ Skills that share common technology stacks:
 | **LLM Stack** | langgraph-agents, openrouter, groq-inference, voice-ai, trading-signals | Claude, DeepSeek, Qwen, GROQ, Llama |
 | **Database** | supabase-sql, security, stripe-stack | Supabase, PostgreSQL, RLS |
 | **Testing** | testing, api-testing, security | Vitest, Jest, Postman, Bruno |
-| **GTM/Sales** | gtm-pricing, sales-revenue, crm-integration, research | Close CRM, MEDDIC, BANT |
+| **GTM/Sales** | gtm-pricing, sales-revenue, crm-integration, hubspot-revops, research | Close CRM, HubSpot, MEDDIC, BANT |
 | **Deployment** | runpod-deployment, unsloth-training, docker-compose | RunPod, Docker, GPU serverless |
 | **Voice** | voice-ai, groq-inference | Deepgram, Cartesia, Twilio |
 
@@ -194,7 +198,7 @@ unsloth-training → runpod-deployment → [groq-inference | openrouter]
 
 ### Sales Pipeline
 ```
-research → gtm-pricing → sales-revenue → crm-integration
+research → gtm-pricing → sales-revenue → crm-integration → hubspot-revops
 ```
 
 ### API Development
@@ -250,6 +254,10 @@ The orchestrator routes to 13+ skills based on task type:
 | miro | business-model-canvas | Canvas visualization |
 | miro | blue-ocean-strategy | Strategy Canvas on Miro |
 | miro | gtm-pricing | Pricing matrix boards |
+| hubspot-revops | crm-integration | Base CRUD patterns |
+| hubspot-revops | sales-revenue | Pipeline metrics, MEDDIC context |
+| hubspot-revops | data-analysis | Visualization patterns |
+| hubspot-revops | cost-metering | Enrichment cost tracking |
 
 ### Implicit Chains (Common Usage)
 
@@ -301,7 +309,7 @@ grep -l "DEPENDENCY_GRAPH" *.md
 ### Last Validated
 
 - **Date:** 2026-02-07
-- **Skill Count:** 36 (2 stable, 34 active)
+- **Skill Count:** 37 (2 stable, 35 active)
 - **Mermaid:** Renders correctly
 - **Cross-links:** SKILLS_INDEX.md, README.md
 

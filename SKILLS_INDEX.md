@@ -1,7 +1,7 @@
 # Skills Index
 
 > Last updated: 2026-02-07
-> Total skills: 36 (2 stable, 34 active)
+> Total skills: 37 (2 stable, 35 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
 
 ## Architecture
@@ -46,6 +46,7 @@
 | Executive data analysis, dashboards | [data-analysis](#data-analysis-skill) | Business |
 | Trading signals, technical analysis | [trading-signals](#trading-signals-skill) | Business |
 | Create visual Miro boards | [miro](#miro-skill) | Business |
+| HubSpot SQL analytics, lead scoring, forecasting | [hubspot-revops](#hubspot-revops-skill) | Business |
 | Design business models (9 blocks) | [business-model-canvas](#business-model-canvas-skill) | Strategy |
 | Blue ocean market differentiation | [blue-ocean-strategy](#blue-ocean-strategy-skill) | Strategy |
 | Track and manage API costs | [cost-metering](#cost-metering-skill) | Core |
@@ -697,6 +698,39 @@ Visual collaboration boards for strategy, architecture, and sprint planning via 
 
 ---
 
+#### hubspot-revops-skill
+**Location:** `active/hubspot-revops-skill/`
+
+Revenue analytics infrastructure on HubSpot API + SQL data warehouse. Bridges CRM data → analytics → intelligence products.
+
+**Key Features:**
+- SQL warehouse query templates (ICP, pipeline velocity, competitive, forecast)
+- ML lead scoring with GradientBoostingClassifier
+- Clay MCP → HubSpot enrichment writeback
+- Competitive intelligence extraction and alerting
+
+**Depends on:** crm-integration-skill (base CRUD patterns)
+
+**Use Cases:**
+
+| # | Use Case | Output |
+|---|----------|--------|
+| 1 | ICP Validation | Segment conversion rates |
+| 2 | Lead Scoring | Win probability per lead (ML) |
+| 3 | Competitive Intel | Win/loss matrix by competitor |
+| 4 | Activity Analysis | Activity→outcome correlation |
+| 5 | Pipeline Forecast | Weighted revenue forecast |
+
+**Reference Files (4):**
+- `reference/api-guide.md` - HubSpot API auth, SDK, CRUD, batch operations
+- `reference/sql-analytics.md` - SQL templates for 5 use cases + dialect notes
+- `reference/enrichment-pipelines.md` - Clay writeback, ML scoring, automation
+- `reference/architecture.md` - System diagram, deployment options, cost tiers
+
+**Triggers:** "hubspot analytics", "revops dashboard", "lead scoring", "pipeline forecast", "ICP analysis", "hubspot SQL"
+
+---
+
 ### Strategy
 
 #### business-model-canvas-skill
@@ -756,7 +790,7 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ```
 skills/
-├── active/                    # 34 active skills
+├── active/                    # 35 active skills
 │   ├── agent-capability-matrix-skill/
 │   ├── agent-teams-skill/
 │   ├── api-design-skill/
@@ -773,6 +807,7 @@ skills/
 │   ├── git-workflow-skill/
 │   ├── groq-inference-skill/
 │   ├── gtm-pricing-skill/
+│   ├── hubspot-revops-skill/
 │   ├── langgraph-agents-skill/
 │   ├── miro-skill/
 │   ├── openrouter-skill/

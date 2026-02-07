@@ -1,0 +1,25 @@
+{
+  "name": "hubspot-revops-skill",
+  "version": "1.0.0",
+  "category": "Business",
+  "description": "HubSpot revenue analytics — SQL warehouse queries, API enrichment, lead scoring, pipeline forecasting, competitive intelligence",
+  "requires": ["hubspot-private-app", "sql-warehouse-access"],
+  "depends_on": ["crm-integration-skill"],
+  "integrates_with": [
+    "data-analysis-skill",
+    "sales-revenue-skill",
+    "research-skill",
+    "cost-metering-skill"
+  ],
+  "activation_triggers": [
+    "hubspot analytics",
+    "revops dashboard",
+    "lead scoring",
+    "pipeline forecast",
+    "ICP analysis",
+    "hubspot SQL",
+    "hubspot warehouse",
+    "revenue analytics hubspot",
+    "competitive intelligence hubspot"
+  ]
+}

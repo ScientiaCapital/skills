@@ -1,8 +1,8 @@
 # Skill Activation Test Matrix
 
 **Date:** 2026-02-07
-**Total Skills:** 36 (2 stable, 34 active)
-**Status:** ✅ All 36/36 activation tests passing
+**Total Skills:** 37 (2 stable, 35 active)
+**Status:** ✅ All 37/37 activation tests passing
 
 ## Test Protocol
 
@@ -61,7 +61,7 @@ For each skill:
 
 ---
 
-## Business (8)
+## Business (9)
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
@@ -72,7 +72,8 @@ For each skill:
 | 31 | content-marketing | "content strategy" | ✅ | ✅ | |
 | 32 | data-analysis | "analyze data" | ✅ | ✅ | |
 | 33 | trading-signals | "fibonacci levels" | ✅ | ✅ | |
-| 34 | miro | "miro board" / "strategy canvas" | ✅ | ✅ | NEW |
+| 34 | miro | "miro board" / "strategy canvas" | ✅ | ✅ | |
+| 35 | hubspot-revops | "hubspot analytics" / "lead scoring" | ✅ | ✅ | NEW |
 
 ---
 
@@ -80,8 +81,8 @@ For each skill:
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 35 | business-model-canvas | "business model canvas" | ✅ | ✅ | |
-| 36 | blue-ocean-strategy | "blue ocean" | ✅ | ✅ | |
+| 36 | business-model-canvas | "business model canvas" | ✅ | ✅ | |
+| 37 | blue-ocean-strategy | "blue ocean" | ✅ | ✅ | |
 
 ---
 
@@ -92,9 +93,9 @@ For each skill:
 | Core | 5 | 5/5 | 5/5 |
 | Dev Tools | 13 | 13/13 | 13/13 |
 | Infrastructure | 8 | 8/8 | 8/8 |
-| Business | 8 | 8/8 | 8/8 |
+| Business | 9 | 9/9 | 9/9 |
 | Strategy | 2 | 2/2 | 2/2 |
-| **Total** | **36** | **36/36** | **36/36** |
+| **Total** | **37** | **37/37** | **37/37** |
 
 ---
 
@@ -107,6 +108,7 @@ For each skill:
 | cost-metering (NEW) | Created | API cost tracking, budget alerts, optimization |
 | portfolio-artifact (NEW) | Created | Engineering metrics capture, report templates |
 | miro (NEW) | Created | Miro board interaction via MCP |
+| hubspot-revops (NEW) | Created | HubSpot SQL analytics, lead scoring, pipeline forecasting |
 | workflow-orchestrator | Polished | Cost gate, progress rendering, agent selection |
 
 ---
@@ -116,7 +118,7 @@ For each skill:
 ```bash
 # Verify skill count
 ls -d active/*-skill stable/*-skill stable/workflow-enforcer 2>/dev/null | wc -l
-# Expected: 36
+# Expected: 37
 
 # Check YAML frontmatter (first 5 lines of each SKILL.md)
 for dir in active/*-skill stable/*-skill stable/workflow-enforcer; do

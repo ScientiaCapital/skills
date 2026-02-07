@@ -1,6 +1,6 @@
 # Skills Library
 
-36 production-ready Claude Code skills. AI-native engineering, GTM, and business ops.
+37 production-ready Claude Code skills. AI-native engineering, GTM, and business ops.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@
 ./scripts/deploy.sh
 ```
 
-## Skills (36)
+## Skills (37)
 
 ### Core (5)
 | Skill | What It Does |
@@ -53,13 +53,14 @@
 | **supabase-sql** | Clean SQL migrations for Supabase |
 | **stripe-stack** | Stripe payments + webhooks for Next.js |
 
-### Business (8)
+### Business (9)
 | Skill | What It Does |
 |-------|-------------|
 | **gtm-pricing** | GTM strategy, pricing, opportunity evaluation |
 | **research** | Market and technical research |
 | **sales-revenue** | Sales outreach, discovery, RevOps |
 | **crm-integration** | Close CRM, HubSpot, Salesforce |
+| **hubspot-revops** | HubSpot SQL analytics, lead scoring, pipeline forecasting |
 | **content-marketing** | B2B content strategy |
 | **data-analysis** | Executive data analysis and dashboards |
 | **trading-signals** | Technical analysis for trading systems |
@@ -75,7 +76,7 @@
 
 ```
 skills/
-├── active/              # 34 trigger-activated skills
+├── active/              # 35 trigger-activated skills
 ├── stable/              # 2 always-loaded core skills
 ├── dist/                # Zip files for Claude Desktop
 ├── scripts/
