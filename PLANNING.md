@@ -2,7 +2,7 @@
 
 **Current Sprint:** Config.json Backfill + Version Tracking
 **Date:** 2026-02-07
-**Constraint:** M1 8GB RAM - max 2-3 parallel agents
+**Constraint:** M4 24GB RAM - max 5-6 parallel agents
 
 ---
 
@@ -52,7 +52,7 @@ All phases delivered. See [ARCHIVE.md](./ARCHIVE.md).
 
 **Before new worktrees:**
 - Check memory: `wt-memory`
-- Max 4 concurrent (8GB M1, warning at 5GB)
+- Max 6 concurrent (24GB M4)
 
 ---
 

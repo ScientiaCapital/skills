@@ -41,7 +41,7 @@ All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 
 **Before new worktrees:**
 - Check memory: `wt-memory`
-- Max 4 concurrent (8GB M1, warning at 5GB)
+- Max 6 concurrent (24GB M4)
 
 ---
 
