@@ -43,6 +43,17 @@ Workflow is successful when:
 
 ## START DAY
 
+### Pre-Flight Checks
+```bash
+# Git clean?
+git status --short | head -5
+# Deps installed?
+[ -f package.json ] && [ ! -d node_modules ] && echo "⚠️ Run npm install"
+[ -f requirements.txt ] && [ ! -d .venv ] && echo "⚠️ Run pip install"
+# Env exists?
+[ -f .env.example ] && [ ! -f .env ] && echo "⚠️ Copy .env.example to .env"
+```
+
 ### Context Scan (Mandatory)
 ```bash
 # Detect project
@@ -106,7 +117,7 @@ cat costs/mtd.json 2>/dev/null | jq '.total'
 ### Scan Existing Solutions
 ```bash
 # Check MCP cookbook first
-ls /Users/tmkipper/Desktop/tk_projects/mcp-server-cookbook/ 2>/dev/null
+ls /Users/tmk/Desktop/tk_projects/mcp-server-cookbook/ 2>/dev/null
 
 # Check your repos
 find ~/tk_projects -name "*.md" -exec grep -l "[search_term]" {} \; 2>/dev/null | head -20
@@ -368,10 +379,25 @@ EOF
 jq '.total += 0.47' costs/mtd.json > tmp && mv tmp costs/mtd.json
 ```
 
+### Portfolio Metrics Capture
+```bash
+# Lines shipped today
+git diff --stat $(git log --since="today 00:00" --format="%H" | tail -1)..HEAD 2>/dev/null
+
+# Session summary
+echo '{"date":"'$(date +%Y-%m-%d)'","commits":'$(git log --since="today 00:00" --oneline | wc -l | tr -d ' ')',"files_changed":'$(git diff --stat $(git log --since="today 00:00" --format="%H" | tail -1)..HEAD 2>/dev/null | tail -1 | grep -oE '[0-9]+ file' | grep -oE '[0-9]+' || echo 0)'}' >> ~/.claude/portfolio/daily-metrics.jsonl
+```
+
+### Learning Capture
+Add to PROJECT_CONTEXT.md or CLAUDE.md:
+- Patterns discovered (reusable approaches)
+- Mistakes made (avoid next time)
+- Tools discovered (new MCP servers, agents, commands)
+
 ### Worktree Cleanup
 ```bash
 # Check for orphans
-git worktree list --porcelain | grep -E "^worktree" 
+git worktree list --porcelain | grep -E "^worktree"
 
 # Merge completed work
 for wt in $(git worktree list | grep -v "bare\|main" | awk '{print $1}'); do
@@ -497,6 +523,129 @@ project/
 │   └── mtd.json
 └── src/
 ```
+
+---
+
+## COST GATE
+
+### Pre-Flight Budget Check
+
+Run before ANY resource-intensive workflow (feature builds, research sprints, parallel agents):
+
+```bash
+# Read or initialize daily cost tracker
+COST_FILE=~/.claude/daily-cost.json
+if [ ! -f "$COST_FILE" ]; then
+  echo '{"date":"'$(date +%Y-%m-%d)'","spent":0,"budget_monthly":100}' > "$COST_FILE"
+fi
+
+# Check budget status
+SPENT=$(jq '.spent' "$COST_FILE")
+BUDGET=$(jq '.budget_monthly' "$COST_FILE")
+PCT=$(echo "scale=0; $SPENT * 100 / $BUDGET" | bc)
+echo "MTD: \$$SPENT / \$$BUDGET ($PCT%)"
+```
+
+### Threshold Actions
+
+| % of Budget | Action |
+|-------------|--------|
+| < 50% | Proceed normally |
+| 50-80% | Display cost warning, suggest model downgrade |
+| 80-95% | **WARN** — Ask user before proceeding |
+| > 95% | **BLOCK** — Require explicit override |
+
+### Model Cost Reference
+
+| Model | Input/1M | Output/1M | Use When |
+|-------|----------|-----------|----------|
+| Claude Opus | $15.00 | $75.00 | Complex architecture decisions |
+| Claude Sonnet | $3.00 | $15.00 | Code generation, reasoning |
+| Claude Haiku | $0.25 | $1.25 | Search, classification, simple tasks |
+| DeepSeek V3 | $0.27 | $1.10 | Bulk processing, 90% savings |
+
+### Cost Tracking Per Operation
+
+After each workflow phase, log:
+```bash
+echo '{"phase":"feature-build","model":"sonnet","est_tokens":50000,"est_cost":0.15,"ts":"'$(date -Iseconds)'"}' >> ~/.claude/cost-log.jsonl
+```
+
+---
+
+## PROGRESS RENDERING
+
+### Hierarchical Tree (for multi-phase workflows)
+```
+┌─ Feature Build: auth-system ──────────────────┐
+│  Phase 1: Planning          [████████████] ✅  │
+│  Phase 2: Implementation    [████████░░░░] 67% │
+│  Phase 3: Testing           [░░░░░░░░░░░░] ⏳  │
+└───────────────────────────────────────────────┘
+```
+
+### Status Block (for session overview)
+```
+📊 Cost: $2.40 today | $38.20 MTD | Budget: $100/mo
+🔄 Active: 2 worktrees | 1 agent running
+✅ Completed: 3/5 phases | 12 files changed
+```
+
+### Compact Table (for sprint tracking)
+```markdown
+| Phase | Status | Duration | Notes |
+|-------|--------|----------|-------|
+| Plan | ✅ | 2m | Architecture approved |
+| Build | 🔄 67% | 8m | 2/3 components done |
+| Test | ⏳ | — | Blocked on build |
+```
+
+Use the format that best fits the context. Hierarchical for long builds, status block for quick checks, compact table for sprint reviews.
+
+---
+
+## AGENT SELECTION
+
+### Decision Logic
+
+When routing a task to an agent:
+
+1. **Identify task type** — debug, review, build, explore, research
+2. **Check capability matrix** — see `/agent-capability-matrix-skill`
+3. **Select model tier** — haiku for search/classify, sonnet for code, opus for architecture
+4. **Check budget** — run cost gate before expensive operations
+
+### Quick Selection Table
+
+| Task Type | Primary Agent | Fallback | Model |
+|-----------|--------------|----------|-------|
+| Debug | debug-like-expert | general-purpose | sonnet |
+| Code Review | code-reviewer | feature-dev:code-reviewer | haiku |
+| Architecture | Plan agent | code-architect | opus |
+| Security | security-skill | general-purpose | sonnet |
+| Testing | testing-skill | general-purpose | sonnet |
+| Explore | Explore agent | Grep/Glob direct | haiku |
+| Research | research-skill | WebSearch | sonnet |
+| Parallel Build | agent-teams | worktree-manager | sonnet |
+
+### Failure Recovery
+
+If an agent fails or returns poor results:
+1. Try the fallback agent from the table above
+2. If fallback fails, escalate to a higher model tier
+3. If still failing, checkpoint current state and ask user
+
+---
+
+## CLAUDE CODE COMMANDS
+
+| Command | Workflow |
+|---------|----------|
+| `/start-day` | Start Day protocol — context scan, cost status |
+| `/build-feature <name>` | Feature Development — plan → build → test → ship |
+| `/end-day` | End Day protocol — security sweep, context save |
+| `/quick-fix <issue>` | Targeted debug flow — evidence → hypothesis → fix |
+| `/cost-check` | Display daily/MTD spend and budget status |
 
 ---
 
