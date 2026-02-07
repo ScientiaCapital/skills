@@ -1,0 +1,20 @@
+{
+  "name": "testing",
+  "version": "1.0.0",
+  "category": "Dev Tools",
+  "description": "Comprehensive testing: TDD workflow, test pyramid, mocking patterns, coverage strategies",
+  "requires": ["vitest-or-jest"],
+  "depends_on": [],
+  "integrates_with": [
+    "api-testing-skill",
+    "workflow-orchestrator-skill"
+  ],
+  "activation_triggers": [
+    "write tests",
+    "TDD",
+    "test coverage",
+    "unit test",
+    "integration test",
+    "mocking"
+  ]
+}

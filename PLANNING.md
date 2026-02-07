@@ -1,6 +1,6 @@
 # Skills Library Planning
 
-**Current Sprint:** hubspot-revops-skill (#37)
+**Current Sprint:** Config.json Backfill + Version Tracking
 **Date:** 2026-02-07
 **Constraint:** M1 8GB RAM - max 2-3 parallel agents
 
@@ -8,17 +8,22 @@
 
 ## Active Work
 
-### hubspot-revops-skill (COMPLETE)
+### Config.json Backfill + Version Tracking (COMPLETE)
 
 | Task | Status |
 |------|--------|
-| Create SKILL.md + config.json | ✅ complete |
-| Create reference/api-guide.md | ✅ complete |
-| Create reference/sql-analytics.md | ✅ complete |
-| Create reference/enrichment-pipelines.md | ✅ complete |
-| Create reference/architecture.md | ✅ complete |
-| Update metadata (README, INDEX, DEP_GRAPH, TEST_MATRIX → 37) | ✅ complete |
-| Deploy + test + commit | ✅ complete |
+| Push unpushed commit | ✅ complete |
+| Update 3 existing configs (docker-compose, openrouter, worktree-manager) | ✅ complete |
+| Create 27 new config.json files | ✅ complete |
+| Verify all 37 have version field | ✅ complete |
+| Update metadata docs | ✅ complete |
+| Commit + verify | ✅ complete |
+
+**Result:** 100% config.json coverage (37/37) with standardized schema + `version: "1.0.0"`.
+
+### Previous Sprint: hubspot-revops-skill (#37) — COMPLETE
+
+All tasks delivered. See [ARCHIVE.md](./ARCHIVE.md).
 
 ### Previous Sprint: Full Library Upgrade (31 → 36) — COMPLETE
 
@@ -28,7 +33,6 @@ All phases delivered. See [ARCHIVE.md](./ARCHIVE.md).
 
 ## Next Up
 
-- [ ] Skill version tracking
 - [ ] Auto-healing for broken skills (/heal-skill)
 - [ ] Skill usage analytics
 - [ ] Integration tests for skill activation

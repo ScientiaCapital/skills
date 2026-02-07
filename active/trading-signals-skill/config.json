@@ -1,0 +1,19 @@
+{
+  "name": "trading-signals",
+  "version": "1.0.0",
+  "category": "Business",
+  "description": "Technical analysis for quantitative trading: Elliott Wave, Turtle, Fibonacci, Wyckoff, Markov",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "openrouter-skill",
+    "groq-inference-skill"
+  ],
+  "activation_triggers": [
+    "fibonacci levels",
+    "elliott wave",
+    "wyckoff",
+    "trading signals",
+    "turtle trading"
+  ]
+}

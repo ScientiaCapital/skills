@@ -1,0 +1,21 @@
+{
+  "name": "langgraph-agents",
+  "version": "1.0.0",
+  "category": "Infrastructure",
+  "description": "Multi-agent systems with LangGraph: supervisor, swarm, functional API, MCP integration",
+  "requires": ["langchain", "langgraph"],
+  "depends_on": [],
+  "integrates_with": [
+    "openrouter-skill",
+    "groq-inference-skill",
+    "workflow-orchestrator-skill"
+  ],
+  "activation_triggers": [
+    "LangGraph agent",
+    "multi-agent",
+    "supervisor pattern",
+    "functional API",
+    "deep agents",
+    "MCP tools"
+  ]
+}

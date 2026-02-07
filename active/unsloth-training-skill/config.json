@@ -1,0 +1,18 @@
+{
+  "name": "unsloth-training",
+  "version": "1.0.0",
+  "category": "Infrastructure",
+  "description": "Fine-tune LLMs with Unsloth using GRPO reinforcement learning or SFT",
+  "requires": ["unsloth", "gpu-runtime"],
+  "depends_on": [],
+  "integrates_with": [
+    "runpod-deployment-skill"
+  ],
+  "activation_triggers": [
+    "train with GRPO",
+    "fine-tune model",
+    "SFT training",
+    "Unsloth",
+    "export to GGUF"
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "name": "workflow-orchestrator",
+  "version": "1.0.0",
+  "category": "Core",
+  "description": "Full-day workflow orchestration with cost tracking, model routing, and team coordination",
+  "requires": [],
+  "depends_on": [
+    "workflow-enforcer",
+    "project-context-skill"
+  ],
+  "integrates_with": [
+    "cost-metering-skill",
+    "portfolio-artifact-skill",
+    "agent-capability-matrix-skill"
+  ],
+  "activation_triggers": [
+    "start day",
+    "end day",
+    "orchestrate workflow",
+    "track costs",
+    "route agent"
+  ]
+}

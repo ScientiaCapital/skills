@@ -1,0 +1,19 @@
+{
+  "name": "git-workflow",
+  "version": "1.0.0",
+  "category": "Dev Tools",
+  "description": "Git workflow conventions: conventional commits, branch naming, PR templates, merge strategies",
+  "requires": ["git"],
+  "depends_on": [],
+  "integrates_with": [
+    "worktree-manager-skill",
+    "workflow-orchestrator-skill"
+  ],
+  "activation_triggers": [
+    "commit",
+    "PR",
+    "branch naming",
+    "git workflow",
+    "conventional commits"
+  ]
+}

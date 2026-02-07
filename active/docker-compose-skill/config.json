@@ -1,4 +1,7 @@
 {
+  "name": "docker-compose",
+  "version": "1.0.0",
+  "category": "Dev Tools",
   "defaultPostgresVersion": "16-alpine",
   "defaultRedisVersion": "7-alpine",
   "defaultMongoVersion": "7",

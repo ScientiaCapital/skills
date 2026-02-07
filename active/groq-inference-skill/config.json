@@ -1,0 +1,20 @@
+{
+  "name": "groq-inference",
+  "version": "1.0.0",
+  "category": "Infrastructure",
+  "description": "Ultra-fast LLM inference with GROQ API: chat, vision, audio, tool use",
+  "requires": ["groq-api-key"],
+  "depends_on": [],
+  "integrates_with": [
+    "voice-ai-skill",
+    "langgraph-agents-skill",
+    "trading-signals-skill"
+  ],
+  "activation_triggers": [
+    "groq",
+    "fast inference",
+    "whisper",
+    "compound beta",
+    "GROQ API"
+  ]
+}

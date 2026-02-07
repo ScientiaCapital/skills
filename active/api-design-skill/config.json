@@ -1,0 +1,20 @@
+{
+  "name": "api-design",
+  "version": "1.0.0",
+  "category": "Dev Tools",
+  "description": "REST and GraphQL API design patterns for consistent, maintainable APIs",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "api-testing-skill",
+    "workflow-orchestrator-skill"
+  ],
+  "activation_triggers": [
+    "design API",
+    "REST endpoints",
+    "error responses",
+    "pagination",
+    "API versioning",
+    "GraphQL schema"
+  ]
+}

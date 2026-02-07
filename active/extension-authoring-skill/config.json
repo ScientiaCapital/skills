@@ -1,0 +1,19 @@
+{
+  "name": "extension-authoring",
+  "version": "1.0.0",
+  "category": "Dev Tools",
+  "description": "Comprehensive guide for authoring Claude Code extensions: skills, hooks, commands, subagents",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "subagent-teams-skill",
+    "agent-teams-skill"
+  ],
+  "activation_triggers": [
+    "create skill",
+    "create hook",
+    "slash command",
+    "subagent",
+    "SKILL.md authoring"
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "name": "project-context",
+  "version": "1.0.0",
+  "category": "Core",
+  "description": "Maintains project context and progress tracking across Claude sessions",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "workflow-orchestrator-skill",
+    "workflow-enforcer"
+  ],
+  "activation_triggers": [
+    "load project context",
+    "save context",
+    "end session",
+    "project status"
+  ]
+}

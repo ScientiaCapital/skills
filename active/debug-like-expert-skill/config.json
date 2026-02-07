@@ -1,0 +1,17 @@
+{
+  "name": "debug-like-expert",
+  "version": "1.0.0",
+  "category": "Dev Tools",
+  "description": "Systematic debugging with evidence gathering and hypothesis testing",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "workflow-orchestrator-skill"
+  ],
+  "activation_triggers": [
+    "debug systematically",
+    "root cause analysis",
+    "expert debugging",
+    "observe hypothesize test"
+  ]
+}

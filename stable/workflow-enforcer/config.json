@@ -1,0 +1,15 @@
+{
+  "name": "workflow-enforcer",
+  "version": "1.0.0",
+  "category": "Core",
+  "description": "Enforces workflow discipline: skill checks, TaskCreate for multi-step work, agent announcements",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "workflow-orchestrator-skill",
+    "project-context-skill"
+  ],
+  "activation_triggers": [
+    "automatic on all sessions"
+  ]
+}

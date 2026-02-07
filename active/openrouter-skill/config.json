@@ -1,4 +1,7 @@
 {
+  "name": "openrouter",
+  "version": "1.0.0",
+  "category": "Infrastructure",
   "defaultModel": "deepseek/deepseek-chat",
   "visionModel": "qwen/qwen-2-vl-72b-instruct",
   "fastModel": "qwen/qwen-2.5-7b-instruct",

@@ -1,4 +1,7 @@
 {
+  "name": "worktree-manager",
+  "version": "1.0.0",
+  "category": "Dev Tools",
   "terminal": "ghostty",
   "terminalPreference": "auto",
   "enableNumberedTabs": true,

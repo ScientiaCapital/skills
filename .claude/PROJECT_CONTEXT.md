@@ -3,22 +3,19 @@
 **Branch**: main | **Updated**: 2026-02-07
 
 ## Status
-Production-ready skills library with **37 skills** (2 stable, 35 active). All skills comply with Anthropic YAML specification. All P1 tasks complete. Library fully documented with dependency graph. All commits pushed to origin.
+Production-ready skills library with **37 skills** (2 stable, 35 active). All skills comply with Anthropic YAML specification. All P1 tasks complete. Library fully documented with dependency graph. **100% config.json coverage** with version tracking. All commits pushed to origin.
 
 ## Today's Session (2026-02-07)
 
 ### Focus
-- API-Awareness Upgrade sprint: propagate TaskCreate/Teams API across 6 orchestration skills
+- Config.json backfill + version tracking: 100% coverage across all 37 skills
 
 ### Done (This Session)
-- [x] Review + stage subagent-teams-skill diff (+137/-37: TaskCreate, TeamCreate, SendMessage)
-- [x] Update agent-teams-skill: Native Teams API alternative section, cross-ref, limitations update
-- [x] Update workflow-orchestrator-skill: TaskCreate progress rendering, activeForm pattern
-- [x] Update agent-capability-matrix-skill: Progress tracking + Team coordination rows, model tier
-- [x] Update workflow-enforcer: TaskCreate alongside TodoWrite in multi-step protocol
-- [x] Update cost-metering-skill: TaskCreate/TeamCreate as zero-cost tools in integration table
-- [x] Update SKILLS_INDEX.md: descriptions for all 6 modified skills
-- [x] Update PROJECT_CONTEXT.md
+- [x] Push unpushed commit (8562d90 API-awareness upgrade)
+- [x] Add name/version/category to 3 existing configs (docker-compose, openrouter, worktree-manager)
+- [x] Create 27 new config.json files using standardized metadata+integration schema
+- [x] Verify all 37 configs valid JSON with version field
+- [x] Update SKILLS_INDEX.md, PLANNING.md, PROJECT_CONTEXT.md
 
 ## Current State
 
@@ -39,7 +36,6 @@ Production-ready skills library with **37 skills** (2 stable, 35 active). All sk
 - Dependency graph current (DEPENDENCY_GRAPH.md)
 
 ### Known Tech Debt
-- 26/37 skills missing config.json (legacy, non-blocking)
 - `workflow-enforcer` lacks `-skill` suffix (naming inconsistency)
 
 ## Blockers
@@ -48,11 +44,9 @@ None
 ## Next Tasks
 | Priority | Task | Notes |
 |----------|------|-------|
-| P3 | Skill version tracking | Add version field to config.json |
 | P3 | Auto-healing for broken skills | /heal-skill command |
 | P3 | Skill usage analytics | Track activation patterns |
 | P3 | Integration tests for skill activation | Automated validation |
-| P3 | Backfill config.json for 26 legacy skills | Standardize metadata |
 
 ## Recent Commits
 ```

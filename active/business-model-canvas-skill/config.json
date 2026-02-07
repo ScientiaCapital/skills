@@ -1,0 +1,18 @@
+{
+  "name": "business-model-canvas",
+  "version": "1.0.0",
+  "category": "Strategy",
+  "description": "Business model design using Osterwalder's 9 building blocks framework",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "miro-skill"
+  ],
+  "activation_triggers": [
+    "business model canvas",
+    "value proposition",
+    "customer segments",
+    "revenue model",
+    "startup canvas"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "sales-revenue",
+  "version": "1.0.0",
+  "category": "Business",
+  "description": "B2B sales outreach, discovery calls, and revenue operations with MEDDIC/SPIN",
+  "requires": [],
+  "depends_on": [
+    "gtm-pricing-skill"
+  ],
+  "integrates_with": [
+    "crm-integration-skill",
+    "hubspot-revops-skill"
+  ],
+  "activation_triggers": [
+    "cold email",
+    "discovery call",
+    "pipeline analysis",
+    "MEDDIC",
+    "sales outreach"
+  ]
+}

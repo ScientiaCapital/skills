@@ -1,0 +1,17 @@
+{
+  "name": "data-analysis",
+  "version": "1.0.0",
+  "category": "Business",
+  "description": "Executive-grade data analysis for VC, PE, angels, and founders",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "hubspot-revops-skill"
+  ],
+  "activation_triggers": [
+    "analyze data",
+    "dashboard",
+    "investor presentation",
+    "SaaS metrics"
+  ]
+}

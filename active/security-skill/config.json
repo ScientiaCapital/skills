@@ -1,0 +1,20 @@
+{
+  "name": "security",
+  "version": "1.0.0",
+  "category": "Dev Tools",
+  "description": "Application security patterns: auth, secrets, OWASP top 10, input validation, RLS",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "supabase-sql-skill",
+    "workflow-orchestrator-skill"
+  ],
+  "activation_triggers": [
+    "auth",
+    "JWT",
+    "secrets",
+    "SQL injection",
+    "XSS",
+    "security audit"
+  ]
+}

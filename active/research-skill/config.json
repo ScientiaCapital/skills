@@ -1,0 +1,18 @@
+{
+  "name": "research",
+  "version": "1.0.0",
+  "category": "Business",
+  "description": "Market and technical research framework for company profiles and competitive intel",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "gtm-pricing-skill",
+    "workflow-orchestrator-skill"
+  ],
+  "activation_triggers": [
+    "research company",
+    "competitive analysis",
+    "evaluate framework",
+    "market research"
+  ]
+}

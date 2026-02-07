@@ -1,0 +1,18 @@
+{
+  "name": "supabase-sql",
+  "version": "1.0.0",
+  "category": "Infrastructure",
+  "description": "Clean SQL migrations for Supabase: typo fixes, idempotency, RLS patterns",
+  "requires": ["supabase"],
+  "depends_on": [],
+  "integrates_with": [
+    "stripe-stack-skill",
+    "security-skill"
+  ],
+  "activation_triggers": [
+    "fix SQL",
+    "clean migration",
+    "RLS policy",
+    "Supabase SQL"
+  ]
+}

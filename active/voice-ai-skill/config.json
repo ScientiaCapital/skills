@@ -1,0 +1,19 @@
+{
+  "name": "voice-ai",
+  "version": "1.0.0",
+  "category": "Infrastructure",
+  "description": "Production voice AI agents with ultra-low latency (<500ms) using Deepgram, Cartesia, Twilio",
+  "requires": ["deepgram-api", "cartesia-api", "twilio"],
+  "depends_on": [],
+  "integrates_with": [
+    "groq-inference-skill"
+  ],
+  "activation_triggers": [
+    "voice agent",
+    "Twilio",
+    "Deepgram",
+    "Cartesia",
+    "STT",
+    "TTS"
+  ]
+}

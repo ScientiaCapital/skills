@@ -3,6 +3,7 @@
 > Last updated: 2026-02-07
 > Total skills: 37 (2 stable, 35 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
+> **100% config.json coverage** — All 37 skills have `config.json` with version tracking (v1.0.0)
 
 ## Architecture
 

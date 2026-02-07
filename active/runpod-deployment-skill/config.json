@@ -1,0 +1,17 @@
+{
+  "name": "runpod-deployment",
+  "version": "1.0.0",
+  "category": "Infrastructure",
+  "description": "Expert-level RunPod deployment patterns for GPU serverless workloads",
+  "requires": ["runpod-account", "github-actions"],
+  "depends_on": [],
+  "integrates_with": [
+    "unsloth-training-skill"
+  ],
+  "activation_triggers": [
+    "deploy to RunPod",
+    "GPU serverless",
+    "vLLM endpoint",
+    "scale to zero"
+  ]
+}
