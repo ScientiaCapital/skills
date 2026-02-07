@@ -2,19 +2,24 @@
 
 ## P1: Current Priority
 
-- [x] Test each skill activation with trigger phrases ✅ 31/31 passing
-- [x] Document worktree workflow in README ✅ DONE 2026-02-05
-- [x] Create skill dependency graph ✅ DONE 2026-02-05 (DEPENDENCY_GRAPH.md)
-- [x] Deploy skills globally with symlinks ✅ Done
-- [x] Create agent-teams-skill ✅ DONE 2026-02-07
-- [x] Polish worktree-manager + agent-teams (.claude/ patterns) ✅ DONE 2026-02-07
-- [x] Update SKILL_TEST_MATRIX.md 28→31 ✅ DONE 2026-02-07
+All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 
 ---
 
-## P2: Future Enhancements
+## P2: In Progress (This Sprint)
 
-- [ ] Create subagent-teams-skill (in-session Task tool orchestration)
+- [ ] subagent-teams-skill (in-session Task tool orchestration)
+- [ ] agent-capability-matrix-skill (task → agent routing)
+- [ ] cost-metering-skill (API cost tracking + budgets)
+- [ ] portfolio-artifact-skill (GTME metrics extraction)
+- [ ] miro-skill (Miro board interaction via MCP)
+- [ ] Workflow-orchestrator polish (cost gate, progress rendering)
+- [ ] Global hooks (PostToolUse formatting)
+
+---
+
+## P3: Future Enhancements
+
 - [ ] Skill version tracking
 - [ ] Auto-healing for broken skills (/heal-skill)
 - [ ] Skill usage analytics
@@ -36,19 +41,6 @@
 **Before new worktrees:**
 - Check memory: `wt-memory`
 - Max 4 concurrent (8GB M1, warning at 5GB)
-
----
-
-## Skill Ideas (Inbox)
-
-_Add new skill ideas here for triage_
-
-- [x] git-workflow-skill (conventional commits, PR templates) ✅ DONE 2026-02-05
-- [x] api-testing-skill (Postman/Bruno patterns) ✅ DONE 2026-02-05
-- [x] openrouter-skill (Chinese LLMs via OpenRouter) ✅ DONE 2026-02-05
-- [x] docker-compose-skill (local dev environments) ✅ DONE 2026-02-05
-- [x] agent-teams-skill (parallel Claude Code orchestration) ✅ 2026-02-07
-- [ ] subagent-teams-skill (in-session Task tool teams)
 
 ---
 

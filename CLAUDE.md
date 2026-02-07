@@ -13,11 +13,22 @@ When working in this folder, Claude should:
 
 ```
 skills/
-├── CLAUDE.md           # You're reading this
-├── SKILLS_INDEX.md     # Master index of all skills
-├── active/             # Skills being developed
-├── stable/             # Production-ready skills
-└── templates/          # Starter templates
+├── CLAUDE.md               # You're reading this
+├── README.md               # Quick start + skill catalog
+├── SKILLS_INDEX.md         # Detailed skill documentation
+├── DEPENDENCY_GRAPH.md     # Visual skill relationships
+├── PLANNING.md             # Current sprint
+├── BACKLOG.md              # Future work
+├── ARCHIVE.md              # Completed sprints
+├── active/                 # Trigger-activated skills
+├── stable/                 # Always-loaded core skills
+├── dist/                   # Zip files for Claude Desktop
+├── scripts/
+│   ├── deploy.sh           # Deploy to ~/.claude/skills/
+│   └── rebuild-zips.sh     # Rebuild dist/*.zip
+├── templates/              # Skill starter templates
+└── .claude/
+    └── SKILL_TEST_MATRIX.md  # Activation test results
 ```
 
 ## For Individual Projects
@@ -35,7 +46,7 @@ To use a skill in another project, either:
    - See `~/Desktop/tk_projects/skills/active/skill-name/SKILL.md`
    ```
 
-3. **Copy the .skill zip** directly into project
+3. **Copy the `.zip`** directly into project
 
 ## Available Skills
 
