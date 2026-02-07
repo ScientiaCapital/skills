@@ -1,0 +1,15 @@
+{
+  "name": "subagent-teams",
+  "version": "1.0.0",
+  "category": "Dev Tools",
+  "dependencies": ["extension-authoring-skill", "agent-teams-skill"],
+  "triggers": ["subagent team", "fan out", "parallel tasks", "Task tool team", "in-session agents"],
+  "model_defaults": {
+    "explore": "haiku",
+    "review": "haiku",
+    "build": "sonnet",
+    "architect": "opus"
+  },
+  "max_parallel_agents": 7,
+  "team_patterns": ["research", "implement", "review", "explore", "doc"]
+}

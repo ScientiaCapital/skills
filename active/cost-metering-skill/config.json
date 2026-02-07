@@ -1,0 +1,16 @@
+{
+  "name": "cost-metering",
+  "version": "1.0.0",
+  "category": "Core",
+  "dependencies": ["workflow-orchestrator-skill"],
+  "triggers": ["cost check", "budget status", "how much spent", "optimize costs"],
+  "budget_defaults": {
+    "monthly": 100,
+    "daily": 5,
+    "alert_info": 0.5,
+    "alert_warn": 0.8,
+    "alert_block": 0.95
+  },
+  "storage_path": "~/.claude/daily-cost.json",
+  "log_path": "~/.claude/cost-log.jsonl"
+}
