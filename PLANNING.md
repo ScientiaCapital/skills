@@ -20,7 +20,7 @@
 | Update SKILLS_INDEX.md | ✅ complete |
 | Update DEPENDENCY_GRAPH.md | ✅ complete |
 | Deploy and test activation | ✅ complete |
-| Git commit | ⬜ pending |
+| Git commit | ✅ complete |
 
 ---
 
