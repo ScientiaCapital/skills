@@ -62,7 +62,7 @@
 ### workflow-enforcer
 **Location:** `stable/workflow-enforcer/`
 
-Enforces workflow discipline across ALL projects. Ensures Claude checks for specialized agents, announces usage, and creates TodoWrite todos.
+Enforces workflow discipline across ALL projects. Ensures Claude checks for specialized agents, announces usage, and creates TaskCreate tasks (preferred) or TodoWrite todos for multi-step work.
 
 **Triggers:** Automatic on all sessions
 
@@ -88,6 +88,7 @@ Comprehensive workflow orchestration for full-day Claude sessions with cost trac
 
 **Key Features:**
 - **5 Workflow Phases:** START DAY → RESEARCH → FEATURE DEVELOPMENT → DEBUG → END DAY
+- **Native Progress:** TaskCreate/TaskUpdate for live UI spinners + phase sequencing
 - **Cost Optimization:** Intelligent model routing (Claude/DeepSeek/GROQ/Ollama) based on budget
 - **Parallel Execution:** Git worktree management with isolated environments
 - **70+ Agent Catalog:** Smart routing to specialized agents based on task type
@@ -123,6 +124,7 @@ Track and manage Claude API costs across sessions with budget alerts and optimiz
 - Daily/monthly budget tracking with alert thresholds (50%/80%/95%)
 - Cost optimization: model routing, context management, task batching
 - Integration with workflow-orchestrator cost gate
+- Zero-cost tools: TaskCreate/TaskUpdate, TeamCreate/SendMessage (local UI, not API calls)
 
 **Reference Files (2):**
 - `reference/cost-tracking-guide.md` - Data formats, tracking methods, reporting queries
@@ -334,7 +336,7 @@ Local development environments using Docker Compose for multi-service setups.
 #### agent-teams-skill
 **Location:** `active/agent-teams-skill/`
 
-Orchestrate teams of 2-3 parallel Claude Code sessions working on the same codebase. Handles task decomposition, agent coordination via WORKTREE_TASK.md, context isolation, and merge strategies.
+Orchestrate teams of 2-3 parallel Claude Code sessions working on the same codebase. Handles task decomposition, agent coordination via WORKTREE_TASK.md, context isolation, and merge strategies. Includes Native Teams API alternative (TeamCreate + SendMessage) for lightweight coordination.
 
 **Depends on:** worktree-manager-skill (infrastructure layer)
 
@@ -358,7 +360,7 @@ Orchestrate teams of 2-3 parallel Claude Code sessions working on the same codeb
 #### subagent-teams-skill
 **Location:** `active/subagent-teams-skill/`
 
-Orchestrate in-session Task tool subagents for parallel work without terminal overhead.
+Orchestrate in-session Task tool subagents for parallel work without terminal overhead. Documents TaskCreate/TaskUpdate for native progress rendering, TeamCreate + SendMessage for team coordination, and complete Task tool parameter reference.
 
 **Depends on:** extension-authoring-skill, agent-teams-skill
 
@@ -386,9 +388,9 @@ Orchestrate in-session Task tool subagents for parallel work without terminal ov
 Map task types to best agent, skill, fallback, and model tier. 70+ agents cataloged.
 
 **Key Features:**
-- Full task→agent mapping across 5 categories
+- Full task→agent mapping across 5 categories (includes progress tracking + team coordination)
 - Decision flowchart for agent selection
-- Model tier guide (Haiku→search, Sonnet→code, Opus→architecture)
+- Model tier guide (Haiku→search, Sonnet→code, Opus→architecture, TaskCreate→free)
 - Cost impact per strategy
 
 **Reference Files (2):**

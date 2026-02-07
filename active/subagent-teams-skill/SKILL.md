@@ -41,8 +41,75 @@ Launch 3 Explore agents in parallel:
 | Best for | Research, review, doc updates | Feature builds, conflicting file edits |
 | Max agents | 5-7 (context limit) | 2-3 (M1 8GB RAM limit) |
 | Duration | Minutes | Hours |
+| Coordination | TeamCreate + TaskList/TaskUpdate | WORKTREE_TASK.md + git branches |
 
 **Rule of thumb:** If agents will edit the same files → use agent-teams (worktree isolation). If agents read-only or edit different files → use subagent-teams (faster, lighter).
+
+---
+
+## Task Tool Parameters (Complete Reference)
+
+### Core Parameters
+
+```javascript
+{
+  subagent_type: "Explore" | "general-purpose" | "Plan" | ...,
+  model: "haiku" | "sonnet" | "opus",
+  prompt: "...",
+  description: "3-5 word summary",        // Required
+  run_in_background: true,                 // For parallel execution
+  team_name: "my-team",                    // Scope to a team's task list
+  name: "agent-1",                         // Name for team messaging
+  mode: "default"                          // Permission mode (see below)
+}
+```
+
+### Agent Frontmatter Fields (for .md agent files)
+
+| Field | Type | Purpose |
+|-------|------|---------|
+| `name` | string | Agent identifier |
+| `description` | string | What the agent does (shown in routing) |
+| `model` | string | Default model: haiku, sonnet, opus |
+| `tools` | list | Allowed tools (restrict agent capabilities) |
+| `disallowedTools` | list | Explicitly blocked tools |
+| `permissionMode` | string | `default`, `acceptEdits`, `dontAsk`, `plan` |
+| `mcpServers` | list | MCP servers available to the agent |
+| `hooks` | object | Event-driven automation (PostToolUse, etc.) |
+| `maxTurns` | number | Max API round-trips before stopping |
+| `skills` | list | Skills available to the agent |
+| `memory` | object | Persistent state: `scope: user\|project\|local` |
+
+### Permission Modes
+
+| Mode | Behavior |
+|------|----------|
+| `default` | Normal approval flow |
+| `acceptEdits` | Auto-approve file edits, prompt for Bash |
+| `dontAsk` | Auto-approve everything (use with trusted agents) |
+| `plan` | Agent must get plan approved before implementing |
+| `delegate` | Agent can only delegate to sub-agents |
+
+### Spawning Restrictions
+
+Restrict which subagents an agent can spawn using `Task(agent_type)` in the tools field:
+```yaml
+tools:
+  - Read
+  - Glob
+  - Task(Explore)        # Can only spawn Explore subagents
+  - Task(code-reviewer)  # Can also spawn code reviewers
+```
+
+### Model Selection Guide
+
+| Task | Model | Why |
+|------|-------|-----|
+| File search, pattern matching | haiku | Fast, cheap, sufficient |
+| Code review, bug finding | haiku | Pattern matching, not generation |
+| Code generation, refactoring | sonnet | Quality matters for code |
+| Architecture decisions | opus | Complex reasoning needed |
+| Documentation writing | sonnet | Needs context understanding |
 
 ---
 
@@ -108,28 +175,81 @@ Task 3 (general-purpose, haiku): "Update API docs"
 
 ---
 
-## Task Tool Parameters
+## Progress Rendering
+
+### Native Progress (TaskCreate/TaskUpdate)
+
+Use TaskCreate with `activeForm` for live UI spinners during execution:
 
 ```javascript
-// Key parameters for Task tool
-{
-  subagent_type: "Explore" | "general-purpose" | "Plan" | "code-reviewer" | ...,
-  model: "haiku" | "sonnet" | "opus",  // haiku for search, sonnet for code, opus for architecture
-  prompt: "...",                         // Clear, self-contained task description
-  run_in_background: true,              // For parallel execution
-  description: "3-5 word summary"       // Required
-}
+// Create tasks for each agent's work
+TaskCreate({ subject: "Search auth patterns", activeForm: "Searching auth patterns" })
+TaskCreate({ subject: "Search DB schema", activeForm: "Searching DB schema" })
+TaskCreate({ subject: "Search API endpoints", activeForm: "Searching API endpoints" })
+
+// Track status transitions
+TaskUpdate({ taskId: "1", status: "in_progress" })  // → shows spinner
+TaskUpdate({ taskId: "1", status: "completed" })     // → shows checkmark
 ```
 
-### Model Selection Guide
+### Task Dependencies (Sequential Phases)
 
-| Task | Model | Why |
-|------|-------|-----|
-| File search, pattern matching | haiku | Fast, cheap, sufficient |
-| Code review, bug finding | haiku | Pattern matching, not generation |
-| Code generation, refactoring | sonnet | Quality matters for code |
-| Architecture decisions | opus | Complex reasoning needed |
-| Documentation writing | sonnet | Needs context understanding |
+Use `addBlockedBy` to sequence phases:
+
+```javascript
+// Phase 1: Architecture (runs first)
+TaskCreate({ subject: "Design architecture" })  // → task #1
+
+// Phase 2: Implementation (blocked by Phase 1)
+TaskCreate({ subject: "Build backend" })   // → task #2
+TaskCreate({ subject: "Build frontend" })  // → task #3
+TaskUpdate({ taskId: "2", addBlockedBy: ["1"] })
+TaskUpdate({ taskId: "3", addBlockedBy: ["1"] })
+
+// Phase 3: Review (blocked by Phase 2)
+TaskCreate({ subject: "Code review" })  // → task #4
+TaskUpdate({ taskId: "4", addBlockedBy: ["2", "3"] })
+```
+
+### Summary Rendering (Markdown)
+
+After all agents complete, render a markdown summary:
+
+```
+## Research Complete: 3/3 agents finished
+
+| Agent | Scope | Findings | Time |
+|-------|-------|----------|------|
+| Auth search | src/auth/ | 12 files, JWT + session | 8s |
+| DB search | src/db/ | 8 tables, RLS policies | 5s |
+| API search | src/api/ | 15 endpoints, REST | 6s |
+
+### Key Insights
+- [Synthesized finding 1]
+- [Synthesized finding 2]
+```
+
+---
+
+## Team Coordination (Native Agent Teams API)
+
+For complex multi-agent work, use the native Teams API:
+
+```javascript
+// Create a team with shared task list
+TeamCreate({ team_name: "research-sprint" })
+
+// Spawn teammates into the team
+Task({ subagent_type: "Explore", team_name: "research-sprint", name: "searcher-1" })
+Task({ subagent_type: "Explore", team_name: "research-sprint", name: "searcher-2" })
+
+// Teammates coordinate via shared TaskList
+// Send messages between teammates
+SendMessage({ type: "message", recipient: "searcher-1", content: "Focus on auth/" })
+
+// Shutdown when done
+SendMessage({ type: "shutdown_request", recipient: "searcher-1" })
+```
 
 ---
 
@@ -155,26 +275,6 @@ Write code only — do not run tests.
 Review [FILE_PATH] for [CONCERN: security|performance|consistency].
 Report only HIGH confidence issues.
 Format: file:line — issue — suggestion
-```
-
----
-
-## Progress Display
-
-### During Execution
-```
-🔄 Subagent Team: Research Sprint
-├── Agent 1 (Explore): Searching auth patterns... ⏳
-├── Agent 2 (Explore): Searching DB schema... ✅ (found 12 matches)
-└── Agent 3 (Explore): Searching API endpoints... ✅ (found 8 matches)
-```
-
-### After Fan-In
-```
-📊 Research Complete: 3/3 agents finished
-├── Auth: 12 files, JWT + session patterns
-├── DB: 8 tables, RLS policies found
-└── API: 15 endpoints, REST conventions
 ```
 
 ---

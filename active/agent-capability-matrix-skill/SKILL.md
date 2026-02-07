@@ -85,6 +85,8 @@ Provide a comprehensive mapping from task types to the optimal agent, skill, mod
 | Session start/end | workflow-orchestrator skill | — | sonnet | Daily lifecycle |
 | Parallel worktree dev | agent-teams skill | worktree-manager skill | sonnet | Full isolation |
 | In-session parallel | subagent-teams skill | sequential execution | haiku-sonnet | Task tool |
+| Progress tracking | TaskCreate/TaskUpdate | TodoWrite | — | Native UI spinners |
+| Team coordination | TeamCreate + SendMessage | subagent-teams skill | haiku-sonnet | Shared task list |
 | Git workflow | git-workflow skill | general-purpose | haiku | Commits, PRs |
 | Skill authoring | extension-authoring skill | general-purpose | sonnet | Skills, hooks |
 | Project planning | planning-prompts skill | Plan agent | sonnet | Meta-prompts |
@@ -131,9 +133,13 @@ START: What do I need to do?
 | **Fast** | Haiku | $0.25 | Search, classify, review, simple tasks |
 | **Standard** | Sonnet | $3.00 | Code generation, reasoning, most tasks |
 | **Premium** | Opus | $15.00 | Architecture, complex decisions, planning |
+| **Free** | TaskCreate | $0 | Progress tracking (local UI, not an API call) |
 
 **Default to Sonnet** unless:
 - Task is search/classify → use Haiku (5x cheaper)
 - Task requires deep reasoning → use Opus (5x more capable)
+- Task is progress tracking → use TaskCreate with `activeForm` for live spinners (zero cost)
+
+**Cross-references:** [subagent-teams](../subagent-teams-skill/SKILL.md) for in-session parallel agents, [agent-teams](../agent-teams-skill/SKILL.md) for worktree-isolated parallel agents.
 
 **Deep dive:** See `reference/matrix-table.md`, `reference/selection-flowchart.md`

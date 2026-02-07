@@ -575,32 +575,50 @@ echo '{"phase":"feature-build","model":"sonnet","est_tokens":50000,"est_cost":0.
 
 ## PROGRESS RENDERING
 
-### Hierarchical Tree (for multi-phase workflows)
-```
-┌─ Feature Build: auth-system ──────────────────┐
-│  Phase 1: Planning          [████████████] ✅  │
-│  Phase 2: Implementation    [████████░░░░] 67% │
-│  Phase 3: Testing           [░░░░░░░░░░░░] ⏳  │
-└───────────────────────────────────────────────┘
+### Native Progress (TaskCreate/TaskUpdate) — Preferred
+
+Use TaskCreate with `activeForm` for live UI spinners during execution. This renders native checkmarks and progress indicators in Claude Code's UI:
+
+```javascript
+// Create tasks for each workflow phase
+TaskCreate({ subject: "Plan architecture", activeForm: "Planning architecture" })
+TaskCreate({ subject: "Build components", activeForm: "Building components" })
+TaskCreate({ subject: "Run security sweep", activeForm: "Running security sweep" })
+
+// Set dependencies for sequential phases
+TaskUpdate({ taskId: "2", addBlockedBy: ["1"] })  // Build waits for Plan
+TaskUpdate({ taskId: "3", addBlockedBy: ["2"] })  // Security waits for Build
+
+// Track progress transitions
+TaskUpdate({ taskId: "1", status: "in_progress" })  // → live spinner
+TaskUpdate({ taskId: "1", status: "completed" })     // → checkmark
 ```
 
-### Status Block (for session overview)
-```
-📊 Cost: $2.40 today | $38.20 MTD | Budget: $100/mo
-🔄 Active: 2 worktrees | 1 agent running
-✅ Completed: 3/5 phases | 12 files changed
-```
+**Key fields:**
+- `subject` — imperative title ("Run tests", "Build API")
+- `activeForm` — present continuous for spinner display ("Running tests", "Building API")
+- `addBlockedBy` — task IDs that must complete first (creates phase sequencing)
 
-### Compact Table (for sprint tracking)
+### Markdown Fallback (for summary output)
+
+For session overviews and sprint reviews, use markdown tables:
+
 ```markdown
 | Phase | Status | Duration | Notes |
 |-------|--------|----------|-------|
-| Plan | ✅ | 2m | Architecture approved |
-| Build | 🔄 67% | 8m | 2/3 components done |
-| Test | ⏳ | — | Blocked on build |
+| Plan | Done | 2m | Architecture approved |
+| Build | In Progress | 8m | 2/3 components done |
+| Test | Blocked | — | Blocked on build |
 ```
 
-Use the format that best fits the context. Hierarchical for long builds, status block for quick checks, compact table for sprint reviews.
+### Status Block (for quick checks)
+```
+Cost: $2.40 today | $38.20 MTD | Budget: $100/mo
+Active: 2 worktrees | 1 agent running
+Completed: 3/5 phases | 12 files changed
+```
+
+Use TaskCreate for live progress during execution. Use markdown tables for summaries. Use status blocks for quick checks.
 
 ---
 

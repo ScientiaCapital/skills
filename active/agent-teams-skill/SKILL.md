@@ -109,6 +109,8 @@ Can I describe each agent's task in <50 words?
   NO  → Break it down more, or do it sequentially
 ```
 
+**Lightweight alternative:** For tasks where agents DON'T need file isolation (different files, read-only, reviews), use [subagent-teams](../subagent-teams-skill/SKILL.md) instead. It uses Claude's native Task tool for in-session parallel agents — faster startup, no worktrees needed. See also the **Native Teams API** section below.
+
 </when_to_use>
 
 <architecture>
@@ -373,6 +375,38 @@ Identify file boundaries, contracts, and merge order before spawning agents."
 
 Plan mode lets you explore the codebase (read-only) and design the team structure before committing to any worktree creation. This prevents wasted effort from bad decomposition.
 
+### 7. Native Teams API Alternative
+
+For teams that don't need full worktree isolation, Claude Code provides native coordination APIs. These are ideal when agents work on different files or do read-only tasks:
+
+```javascript
+// Create a team with shared task list
+TeamCreate({ team_name: "feature-sprint" })
+
+// Track progress with native UI (live spinners + checkmarks)
+TaskCreate({ subject: "Build API endpoints", activeForm: "Building API endpoints" })
+TaskCreate({ subject: "Build UI components", activeForm: "Building UI components" })
+
+// Spawn teammates into the team
+Task({ subagent_type: "general-purpose", team_name: "feature-sprint", name: "api-builder", prompt: "..." })
+Task({ subagent_type: "general-purpose", team_name: "feature-sprint", name: "ui-builder", prompt: "..." })
+
+// Coordinate via messages (real-time, unlike worktree agents)
+SendMessage({ type: "message", recipient: "api-builder", content: "Contract updated: add status field" })
+
+// Shutdown when done
+SendMessage({ type: "shutdown_request", recipient: "api-builder" })
+SendMessage({ type: "shutdown_request", recipient: "ui-builder" })
+```
+
+**When to use native Teams API vs worktrees:**
+- Agents edit **different files** → Native Teams API (simpler, faster)
+- Agents edit **same files** → Worktrees (git isolation prevents conflicts)
+- Agents need **separate terminals / long-running processes** → Worktrees
+- Agents need **real-time messaging** → Native Teams API
+
+See [subagent-teams](../subagent-teams-skill/SKILL.md) for the complete Task tool reference and team patterns.
+
 </workflows>
 
 <use_cases>
@@ -508,7 +542,7 @@ Write this contract to a `CONTRACT.md` or shared type file that both agents can 
 - **Startup time** — Each agent takes 5-10s to initialize
 
 ### Coordination Limits
-- **No real-time communication** — Agents can't message each other
+- **No real-time communication** — Worktree agents can't message each other (but native Teams API agents can — see Workflow 7)
 - **File conflicts** — If two agents edit the same file, manual resolution needed
 - **No shared context** — Each agent starts fresh with only WORKTREE_TASK.md
 - **Sequential dependency** — If Agent 2 needs Agent 1's output, Agent 2 must wait

@@ -36,7 +36,7 @@ Before responding to ANY user request, complete this checklist:
 
 1. **Check for specialized agent** - Is there an agent for this task type?
 2. **Announce usage** - "I'm using [agent] to [action]"
-3. **Create todos** - Use TodoWrite for multi-step work
+3. **Create todos/tasks** - Use TaskCreate (preferred) or TodoWrite for multi-step work
 4. **Track progress** - Mark in_progress before starting, completed after finishing
 
 ## Quick Reference
@@ -77,13 +77,21 @@ Before starting work:
 - "I'm using debugging-toolkit:debugger to trace this authentication error"
 - "I'm using python-development:python-pro to refactor this async code"
 
-### Step 3: Create Todos
+### Step 3: Create Todos / Tasks
 
-For multi-step tasks:
+For multi-step tasks, use **TaskCreate** (preferred — renders live UI spinners) or **TodoWrite** (fallback):
+
+**TaskCreate (native progress UI):**
+1. Break work into specific items
+2. Use `TaskCreate({ subject: "...", activeForm: "..." })` for each item
+3. Use `TaskUpdate({ taskId, status: "in_progress" })` before starting → shows spinner
+4. Use `TaskUpdate({ taskId, status: "completed" })` after finishing → shows checkmark
+5. Use `addBlockedBy` for sequential dependencies between tasks
+
+**TodoWrite (simpler, text-based):**
 1. Break work into specific items
 2. Use TodoWrite to create the list
-3. Mark one as `in_progress` before starting
-4. Mark `completed` immediately after finishing
+3. Mark `in_progress` before starting, `completed` after finishing
 
 ### Step 4: Follow Agent Discipline
 

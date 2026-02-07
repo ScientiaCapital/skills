@@ -129,6 +129,8 @@ cat ~/.claude/cost-log.jsonl | jq -s '{
 | agent-capability-matrix | Includes model recommendations |
 | portfolio-artifact | Reports cost-per-feature metrics |
 | End Day protocol | Logs daily costs, updates MTD |
+| TaskCreate/TaskUpdate | Zero API cost — local UI tool for progress tracking |
+| TeamCreate/SendMessage | Zero API cost — local coordination (but spawned agents incur model costs) |
 
 ---
 

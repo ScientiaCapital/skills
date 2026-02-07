@@ -8,16 +8,17 @@ Production-ready skills library with **37 skills** (2 stable, 35 active). All sk
 ## Today's Session (2026-02-07)
 
 ### Focus
-- Morning standup + sprint planning
-- Commit + push hubspot-revops-skill (#37)
-- End-of-day audit + lockdown
+- API-Awareness Upgrade sprint: propagate TaskCreate/Teams API across 6 orchestration skills
 
 ### Done (This Session)
-- [x] Commit hubspot-revops-skill + 6 metadata files
-- [x] Push 5 commits to origin/main (now fully synced)
-- [x] Security sweep (secrets=0, CVEs=N/A) — PASS
-- [x] Quality gate (37/37 SKILL.md, index matches disk) — PASS
-- [x] Update PROJECT_CONTEXT.md to current state
+- [x] Review + stage subagent-teams-skill diff (+137/-37: TaskCreate, TeamCreate, SendMessage)
+- [x] Update agent-teams-skill: Native Teams API alternative section, cross-ref, limitations update
+- [x] Update workflow-orchestrator-skill: TaskCreate progress rendering, activeForm pattern
+- [x] Update agent-capability-matrix-skill: Progress tracking + Team coordination rows, model tier
+- [x] Update workflow-enforcer: TaskCreate alongside TodoWrite in multi-step protocol
+- [x] Update cost-metering-skill: TaskCreate/TeamCreate as zero-cost tools in integration table
+- [x] Update SKILLS_INDEX.md: descriptions for all 6 modified skills
+- [x] Update PROJECT_CONTEXT.md
 
 ## Current State
 
