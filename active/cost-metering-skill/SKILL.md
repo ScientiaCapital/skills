@@ -20,6 +20,14 @@ echo '{"date":"'$(date +%Y-%m-%d)'","spent":0,"budget_monthly":100,"budget_daily
 ```
 </quick_start>
 
+<success_criteria>
+- Daily cost tracking initialized at `~/.claude/daily-cost.json`
+- Budget alerts fire at 50% (info), 80% (warn), and 95% (block) thresholds
+- Model routing applied: Haiku for search/classify, Sonnet for code, DeepSeek for bulk
+- Cost-per-feature metric available via portfolio-artifact integration
+- Monthly spend stays within configured budget ($100/mo default)
+</success_criteria>
+
 <triggers>
 - "cost check", "budget status", "how much spent"
 - "optimize costs", "cost tracking", "budget alert"

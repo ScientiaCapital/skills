@@ -2,6 +2,7 @@
   "name": "worktree-manager",
   "version": "1.0.0",
   "category": "Dev Tools",
+  "activation_triggers": ["create worktree", "parallel development", "cleanup worktrees"],
   "terminal": "ghostty",
   "terminalPreference": "auto",
   "enableNumberedTabs": true,

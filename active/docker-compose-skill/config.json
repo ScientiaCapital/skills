@@ -2,6 +2,7 @@
   "name": "docker-compose",
   "version": "1.0.0",
   "category": "Dev Tools",
+  "activation_triggers": ["docker compose", "local dev", "postgres container", "redis local", "dev environment"],
   "defaultPostgresVersion": "16-alpine",
   "defaultRedisVersion": "7-alpine",
   "defaultMongoVersion": "7",

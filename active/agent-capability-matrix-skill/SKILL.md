@@ -15,6 +15,14 @@ Provide a comprehensive mapping from task types to the optimal agent, skill, mod
 4. Match model tier to task complexity
 </quick_start>
 
+<success_criteria>
+- Task routed to the correct primary agent on first attempt
+- Fallback agent identified if primary is unavailable or insufficient
+- Model tier matched to task complexity (Haiku for search, Sonnet for code, Opus for architecture)
+- Zero-cost tools (TaskCreate, TeamCreate) used for progress tracking instead of API calls
+- Agent selection justified by the matrix rather than ad-hoc guessing
+</success_criteria>
+
 <triggers>
 - "which agent", "route task", "agent for this", "best agent"
 - "capability matrix", "agent selection", "what tool should I use"

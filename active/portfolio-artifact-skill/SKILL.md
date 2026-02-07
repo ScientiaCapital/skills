@@ -21,6 +21,14 @@ cat ~/.claude/portfolio/daily-metrics.jsonl | jq -s 'map(select(.date >= "'$(dat
 ```
 </quick_start>
 
+<success_criteria>
+- Daily metrics captured automatically via End Day protocol (commits, features, fixes, cost)
+- Derived metrics calculated: cost-per-feature, cost-per-bug-fix, lines-per-dollar
+- Weekly digest generated with project breakdown and day-by-day trends
+- Executive summary ready for stakeholder review with week-over-week comparisons
+- Metrics stored persistently at `~/.claude/portfolio/daily-metrics.jsonl`
+</success_criteria>
+
 <triggers>
 - "capture metrics", "portfolio report", "what did I ship"
 - "weekly summary", "executive summary", "sprint report"

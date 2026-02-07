@@ -24,6 +24,14 @@ Launch 3 Explore agents in parallel:
 ```
 </quick_start>
 
+<success_criteria>
+- Subagents spawned with correct model tiers (Haiku for search/review, Sonnet for code, Opus for architecture)
+- Parallel agents complete independently without conflicting file edits
+- Fan-in synthesis captures key findings from all background agents
+- Total parallel agents stays within 5-7 limit to avoid context overflow
+- TaskCreate/TaskUpdate used for progress tracking with live UI spinners
+</success_criteria>
+
 <triggers>
 - "set up subagent team", "fan out", "parallel tasks", "Task tool team"
 - "research in parallel", "explore in parallel", "review in parallel"

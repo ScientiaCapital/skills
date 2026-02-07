@@ -74,6 +74,14 @@ llm = ChatOpenAI(
 
 </quick_start>
 
+<success_criteria>
+- OpenRouter API key configured and authenticated
+- Model selection follows the decision tree (vision -> Qwen-VL, code -> DeepSeek Coder, etc.)
+- LangChain ChatOpenAI integration working with correct base URL and headers
+- Cost savings of 60-97% vs Western model equivalents for comparable quality
+- Fallback chain configured for production reliability
+</success_criteria>
+
 <core_concepts>
 
 ## Model Selection Decision Tree

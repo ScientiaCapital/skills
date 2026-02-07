@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "category": "Dev Tools",
   "dependencies": ["extension-authoring-skill", "agent-teams-skill"],
-  "triggers": ["subagent team", "fan out", "parallel tasks", "Task tool team", "in-session agents"],
+  "activation_triggers": ["subagent team", "fan out", "parallel tasks", "Task tool team", "in-session agents"],
   "model_defaults": {
     "explore": "haiku",
     "review": "haiku",

@@ -3,6 +3,25 @@ name: "docker-compose-skill"
 description: "Local dev environments with Docker Compose - multi-service setups, databases, hot reload, debugging. Use when: docker compose, local dev, postgres container, redis local, dev environment."
 ---
 
+<objective>
+Set up and manage local multi-service development environments using Docker Compose. Provides compose.yml templates, health checks, hot reload, and essential commands for PostgreSQL, Redis, MongoDB, and other services.
+</objective>
+
+<quick_start>
+1. Copy the compose.yml template below for your stack (Postgres, Redis, etc.)
+2. Create a `.env` file with database credentials
+3. Run `docker compose up -d` to start services
+4. Use `docker compose logs -f` to monitor
+</quick_start>
+
+<success_criteria>
+- All services start with `docker compose up -d` and reach healthy state
+- Health checks configured for every database/cache service
+- Environment variables externalized to `.env` (no hardcoded secrets in compose.yml)
+- Hot reload working for application code via volume mounts
+- `docker compose down -v` cleanly removes all containers and volumes
+</success_criteria>
+
 # Docker Compose Skill
 
 Local development environments using Docker Compose for multi-service setups.

@@ -6,6 +6,25 @@ description: Use when building revenue analytics on HubSpot — SQL warehouse qu
   "pipeline forecast", "ICP analysis", "hubspot SQL".
 ---
 
+<objective>
+Build revenue analytics infrastructure on HubSpot API + SQL data warehouse. Covers ICP validation, ML lead scoring, competitive intelligence, activity analysis, and pipeline forecasting — bridging CRM data into actionable intelligence products.
+</objective>
+
+<quick_start>
+1. Create a HubSpot Private App with required CRM scopes (contacts, companies, deals, owners, timeline)
+2. Confirm SQL replica access and schema prefix for your data warehouse
+3. Run ICP validation query (UC1) to segment conversion rates
+4. Build pipeline forecast (UC5) using stage-specific historical win rates
+</quick_start>
+
+<success_criteria>
+- HubSpot Private App authenticated with all required scopes
+- SQL warehouse connected and data freshness validated (sync lag < 24h)
+- At least one use case (ICP, scoring, competitive, activity, forecast) producing results
+- Lead scoring model trained on 200+ historical closed deals with measurable AUC
+- Enrichment pipeline writing scores back to HubSpot without duplicates
+</success_criteria>
+
 # HubSpot RevOps Analytics
 
 Revenue analytics infrastructure on HubSpot API + SQL data warehouse.

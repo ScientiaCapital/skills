@@ -2,6 +2,7 @@
   "name": "openrouter",
   "version": "1.0.0",
   "category": "Infrastructure",
+  "activation_triggers": ["openrouter", "chinese llm", "deepseek", "qwen", "moonshot", "model routing", "auto router"],
   "defaultModel": "deepseek/deepseek-chat",
   "visionModel": "qwen/qwen-2-vl-72b-instruct",
   "fastModel": "qwen/qwen-2.5-7b-instruct",

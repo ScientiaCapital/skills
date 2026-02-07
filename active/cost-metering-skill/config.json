@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "category": "Core",
   "dependencies": ["workflow-orchestrator-skill"],
-  "triggers": ["cost check", "budget status", "how much spent", "optimize costs"],
+  "activation_triggers": ["cost check", "budget status", "how much spent", "optimize costs"],
   "budget_defaults": {
     "monthly": 100,
     "daily": 5,

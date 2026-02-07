@@ -3,6 +3,25 @@ name: miro-skill
 description: Use when creating visual boards, strategy canvases, architecture diagrams, or sprint boards in Miro. Triggers on "miro board", "visual diagram", "strategy canvas", "whiteboard".
 ---
 
+<objective>
+Create and manage visual collaboration boards in Miro for strategy canvases, architecture diagrams, sprint boards, and competitive analysis. Uses Miro MCP server for programmatic board creation with sticky notes, shapes, connectors, and frames.
+</objective>
+
+<quick_start>
+1. Add Miro MCP server: `claude mcp add --transport http miro https://mcp.miro.com`
+2. Authenticate: `/mcp auth`
+3. Create a board with `create_board` and populate using workflows below
+4. Use color conventions (yellow=ideas, blue=tech, green=data, red=critical)
+</quick_start>
+
+<success_criteria>
+- Miro MCP server authenticated and responding to `get_boards` calls
+- Board created with appropriate title and frame structure
+- Items positioned using grid spacing (250px) without overlap
+- Color conventions applied consistently across sticky notes and shapes
+- Board visually communicates the intended strategy, architecture, or sprint plan
+</success_criteria>
+
 # Miro Board Interaction
 
 Visual collaboration boards for strategy, architecture, and sprint planning via Miro MCP + AI plugin.

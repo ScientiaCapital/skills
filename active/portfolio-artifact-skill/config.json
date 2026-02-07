@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "category": "Core",
   "dependencies": ["workflow-orchestrator-skill", "cost-metering-skill", "git-workflow-skill"],
-  "triggers": ["capture metrics", "portfolio report", "what did I ship", "weekly summary"],
+  "activation_triggers": ["capture metrics", "portfolio report", "what did I ship", "weekly summary"],
   "storage_path": "~/.claude/portfolio/",
   "metrics": ["commits", "features", "fixes", "lines_added", "lines_removed", "cost", "tests_added"],
   "report_types": ["executive", "weekly", "sprint"]

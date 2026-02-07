@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "category": "Dev Tools",
   "dependencies": ["workflow-orchestrator-skill"],
-  "triggers": ["which agent", "route task", "agent for this", "best agent", "capability matrix"],
+  "activation_triggers": ["which agent", "route task", "agent for this", "best agent", "capability matrix"],
   "total_agents_cataloged": 70,
   "model_tiers": {
     "fast": "haiku",
