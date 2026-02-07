@@ -1,7 +1,7 @@
 # Skills Index
 
 > Last updated: 2026-02-07
-> Total skills: 31 (2 stable, 29 active)
+> Total skills: 36 (2 stable, 34 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
 
 ## Architecture
@@ -22,6 +22,8 @@
 | Create project plans, meta-prompts | [planning-prompts](#planning-prompts-skill) | Dev Tools |
 | Manage git worktrees for parallel dev | [worktree-manager](#worktree-manager-skill) | Dev Tools |
 | Orchestrate parallel Claude Code sessions | [agent-teams](#agent-teams-skill) | Dev Tools |
+| Orchestrate in-session Task tool subagents | [subagent-teams](#subagent-teams-skill) | Dev Tools |
+| Map task types to best agent/skill | [agent-capability-matrix](#agent-capability-matrix-skill) | Dev Tools |
 | Conventional commits, PR templates | [git-workflow](#git-workflow-skill) | Dev Tools |
 | Write tests, TDD, test coverage | [testing](#testing-skill) | Dev Tools |
 | Design REST/GraphQL APIs | [api-design](#api-design-skill) | Dev Tools |
@@ -43,8 +45,11 @@
 | B2B content marketing | [content-marketing](#content-marketing-skill) | Business |
 | Executive data analysis, dashboards | [data-analysis](#data-analysis-skill) | Business |
 | Trading signals, technical analysis | [trading-signals](#trading-signals-skill) | Business |
+| Create visual Miro boards | [miro](#miro-skill) | Business |
 | Design business models (9 blocks) | [business-model-canvas](#business-model-canvas-skill) | Strategy |
 | Blue ocean market differentiation | [blue-ocean-strategy](#blue-ocean-strategy-skill) | Strategy |
+| Track and manage API costs | [cost-metering](#cost-metering-skill) | Core |
+| Auto-extract GTME metrics from sessions | [portfolio-artifact](#portfolio-artifact-skill) | Core |
 | Track project context across sessions | [project-context](#project-context-skill) | Core |
 | Enforce workflow discipline | [workflow-enforcer](#workflow-enforcer) | Core |
 | Orchestrate full-day workflows with cost tracking | [workflow-orchestrator](#workflow-orchestrator-skill) | Core |
@@ -104,6 +109,44 @@ Comprehensive workflow orchestration for full-day Claude sessions with cost trac
 - `templates/worktree-registry.json` - Worktree management registry
 
 **Triggers:** "start day", "end day", "orchestrate workflow", "track costs", "route agent"
+
+---
+
+#### cost-metering-skill
+**Location:** `active/cost-metering-skill/`
+
+Track and manage Claude API costs across sessions with budget alerts and optimization strategies.
+
+**Key Features:**
+- Model rate cards (Opus/Sonnet/Haiku per 1M tokens)
+- Daily/monthly budget tracking with alert thresholds (50%/80%/95%)
+- Cost optimization: model routing, context management, task batching
+- Integration with workflow-orchestrator cost gate
+
+**Reference Files (2):**
+- `reference/cost-tracking-guide.md` - Data formats, tracking methods, reporting queries
+- `reference/budget-templates.md` - Budget tiers (Hobby/Pro/Enterprise), monthly calculator
+
+**Triggers:** "cost check", "budget status", "how much spent", "optimize costs"
+
+---
+
+#### portfolio-artifact-skill
+**Location:** `active/portfolio-artifact-skill/`
+
+Auto-extract engineering metrics from work sessions for portfolio reporting.
+
+**Key Features:**
+- Per-session metrics: lines shipped, bugs fixed, PRs merged, cost per feature
+- 3 report templates: executive summary, weekly digest, sprint report
+- Auto-capture from git log, diff stats, test results
+- Storage at `~/.claude/portfolio/YYYY-MM-DD.json`
+
+**Reference Files (2):**
+- `reference/metrics-guide.md` - What to capture, how to measure impact
+- `reference/report-templates.md` - Executive summary, weekly digest, sprint report templates
+
+**Triggers:** "capture metrics", "portfolio report", "what did I ship", "weekly summary"
 
 ---
 
@@ -308,6 +351,50 @@ Orchestrate teams of 2-3 parallel Claude Code sessions working on the same codeb
 - `reference/prompt-templates.md` - Spawn prompts for 4 team patterns
 
 **Triggers:** "set up agent team", "parallel development", "coordinate Claude sessions", "team of agents", "spawn agents", "agent coordination"
+
+---
+
+#### subagent-teams-skill
+**Location:** `active/subagent-teams-skill/`
+
+Orchestrate in-session Task tool subagents for parallel work without terminal overhead.
+
+**Depends on:** extension-authoring-skill, agent-teams-skill
+
+**Team Patterns:**
+| Pattern | Agents | Use Case |
+|---------|--------|----------|
+| Research Team | 3 Explore | Broad codebase investigation |
+| Implement Team | architect → builders → reviewer | Multi-component features |
+| Review Team | 3 reviewers | Parallel code review |
+| Explore Team | 3 search strategies | Find unknown code locations |
+| Doc Team | N updaters | Independent file updates |
+
+**Reference Files (3):**
+- `reference/task-tool-guide.md` - Subagent types, parameters, parallel execution
+- `reference/team-patterns.md` - 5 reusable team compositions with cost estimates
+- `reference/prompt-templates.md` - Spawn prompts per pattern
+
+**Triggers:** "subagent team", "Task tool team", "in-session parallel", "fan-out subagents"
+
+---
+
+#### agent-capability-matrix-skill
+**Location:** `active/agent-capability-matrix-skill/`
+
+Map task types to best agent, skill, fallback, and model tier. 70+ agents cataloged.
+
+**Key Features:**
+- Full task→agent mapping across 5 categories
+- Decision flowchart for agent selection
+- Model tier guide (Haiku→search, Sonnet→code, Opus→architecture)
+- Cost impact per strategy
+
+**Reference Files (2):**
+- `reference/matrix-table.md` - Complete agent listing (built-in, plugin, custom skills)
+- `reference/selection-flowchart.md` - Decision tree + cost impact table
+
+**Triggers:** "which agent", "route task", "agent for this", "capability matrix"
 
 ---
 
@@ -585,6 +672,31 @@ Technical analysis for quantitative trading systems.
 
 ---
 
+#### miro-skill
+**Location:** `active/miro-skill/`
+
+Visual collaboration boards for strategy, architecture, and sprint planning via Miro MCP + AI plugin.
+
+**Setup:** `claude mcp add --transport http miro https://mcp.miro.com` → `/mcp auth`
+
+**Workflows:**
+| Workflow | Use Case |
+|----------|----------|
+| Strategy Board → Tech Spec | GTM planning, product strategy |
+| Architecture → Code Scaffold | System design, data flow |
+| Sprint Board → Tasks | Sprint planning, capacity tracking |
+| Competitive Analysis → GTM Playbook | Market positioning |
+
+**Reference Files (4):**
+- `reference/setup-guide.md` - MCP + plugin installation
+- `reference/board-workflows.md` - Strategy → execution workflows
+- `reference/mcp-tools-reference.md` - All Miro MCP tools with examples
+- `reference/prompt-templates.md` - GTM board prompts
+
+**Triggers:** "miro board", "visual diagram", "strategy canvas", "whiteboard"
+
+---
+
 ### Strategy
 
 #### business-model-canvas-skill
@@ -644,29 +756,34 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ```
 skills/
-├── active/                    # 29 active skills
+├── active/                    # 34 active skills
+│   ├── agent-capability-matrix-skill/
 │   ├── agent-teams-skill/
 │   ├── api-design-skill/
 │   ├── api-testing-skill/
-│   ├── docker-compose-skill/
 │   ├── blue-ocean-strategy-skill/
 │   ├── business-model-canvas-skill/
 │   ├── content-marketing-skill/
+│   ├── cost-metering-skill/
 │   ├── crm-integration-skill/
 │   ├── data-analysis-skill/
 │   ├── debug-like-expert-skill/
+│   ├── docker-compose-skill/
 │   ├── extension-authoring-skill/
 │   ├── git-workflow-skill/
 │   ├── groq-inference-skill/
 │   ├── gtm-pricing-skill/
 │   ├── langgraph-agents-skill/
+│   ├── miro-skill/
 │   ├── openrouter-skill/
 │   ├── planning-prompts-skill/
+│   ├── portfolio-artifact-skill/
 │   ├── research-skill/
 │   ├── runpod-deployment-skill/
 │   ├── sales-revenue-skill/
 │   ├── security-skill/
 │   ├── stripe-stack-skill/
+│   ├── subagent-teams-skill/
 │   ├── supabase-sql-skill/
 │   ├── testing-skill/
 │   ├── trading-signals-skill/

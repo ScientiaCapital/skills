@@ -1,0 +1,23 @@
+{
+  "name": "miro-skill",
+  "version": "1.0.0",
+  "category": "Business",
+  "description": "Miro board interaction for strategy, architecture, and sprint planning",
+  "requires": ["miro-mcp-server"],
+  "depends_on": [],
+  "integrates_with": [
+    "business-model-canvas-skill",
+    "blue-ocean-strategy-skill",
+    "gtm-pricing-skill",
+    "research-skill",
+    "workflow-orchestrator-skill"
+  ],
+  "activation_triggers": [
+    "miro board",
+    "visual diagram",
+    "strategy canvas",
+    "whiteboard",
+    "sprint board visual",
+    "architecture diagram miro"
+  ]
+}

@@ -1,7 +1,7 @@
 # Skill Dependency Graph
 
 > Last validated: 2026-02-07
-> Total skills: 31
+> Total skills: 36
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -15,8 +15,13 @@ graph TB
         WE[workflow-enforcer]
         PC[project-context]
         WO[workflow-orchestrator]
+        CMT[cost-metering]
+        PA[portfolio-artifact]
         WE --> WO
         PC --> WO
+        WO --> CMT
+        WO --> PA
+        CMT --> PA
     end
 
     subgraph DevTools["Dev Tools"]
@@ -31,11 +36,16 @@ graph TB
         AT[api-testing]
         DC[docker-compose]
         AT2[agent-teams]
+        SAT[subagent-teams]
+        ACM[agent-capability-matrix]
 
         AD --> AT
         TS --> AT
         GW --> WM
         WM --> AT2
+        EA --> SAT
+        AT2 --> SAT
+        WO -.-> ACM
     end
 
     subgraph Infrastructure["Infrastructure (LLM & Deployment)"]
@@ -63,6 +73,7 @@ graph TB
         CM[content-marketing]
         DA[data-analysis]
         TRD[trading-signals]
+        MIRO[miro]
 
         RES --> GTP
         GTP --> SR
@@ -87,6 +98,9 @@ graph TB
     SEC -.-> SS
     TRD -.-> OR
     TRD -.-> GI
+    MIRO -.-> BMC
+    MIRO -.-> BOS
+    MIRO -.-> GTP
 ```
 
 ### Legend
@@ -102,22 +116,22 @@ graph TB
 
 | Cluster | Skills | Purpose |
 |---------|--------|---------|
-| **Core** | workflow-enforcer, project-context, workflow-orchestrator | Session lifecycle management |
-| **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams | Development workflows |
+| **Core** | workflow-enforcer, project-context, workflow-orchestrator, cost-metering, portfolio-artifact | Session lifecycle management |
+| **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
-| **Business** | gtm-pricing, research, sales-revenue, crm-integration, content-marketing, data-analysis, trading-signals | GTM & revenue operations |
+| **Business** | gtm-pricing, research, sales-revenue, crm-integration, content-marketing, data-analysis, trading-signals, miro | GTM & revenue operations |
 | **Strategy** | business-model-canvas, blue-ocean-strategy | Business model design |
 
 ### Count by Cluster
 
 | Cluster | Count |
 |---------|-------|
-| Core | 3 |
-| Dev Tools | 11 |
+| Core | 5 |
+| Dev Tools | 13 |
 | Infrastructure | 8 |
-| Business | 7 |
+| Business | 8 |
 | Strategy | 2 |
-| **Total** | **31** |
+| **Total** | **36** |
 
 ---
 
@@ -228,6 +242,14 @@ The orchestrator routes to 13+ skills based on task type:
 | security | supabase-sql | RLS policies |
 | agent-teams | worktree-manager | Infrastructure (worktrees, ports, terminals) |
 | agent-teams | extension-authoring | SKILL.md authoring patterns |
+| subagent-teams | extension-authoring | Task tool patterns |
+| subagent-teams | agent-teams | Team orchestration concepts |
+| cost-metering | workflow-orchestrator | Cost gate integration |
+| portfolio-artifact | workflow-orchestrator | End Day metrics capture |
+| portfolio-artifact | cost-metering | Cost per feature metrics |
+| miro | business-model-canvas | Canvas visualization |
+| miro | blue-ocean-strategy | Strategy Canvas on Miro |
+| miro | gtm-pricing | Pricing matrix boards |
 
 ### Implicit Chains (Common Usage)
 
@@ -279,7 +301,7 @@ grep -l "DEPENDENCY_GRAPH" *.md
 ### Last Validated
 
 - **Date:** 2026-02-07
-- **Skill Count:** 31 (2 stable, 29 active)
+- **Skill Count:** 36 (2 stable, 34 active)
 - **Mermaid:** Renders correctly
 - **Cross-links:** SKILLS_INDEX.md, README.md
 

@@ -1,8 +1,8 @@
 # Skill Activation Test Matrix
 
 **Date:** 2026-02-07
-**Total Skills:** 31 (2 stable, 29 active)
-**Status:** ✅ All 31/31 activation tests passing
+**Total Skills:** 36 (2 stable, 34 active)
+**Status:** ✅ All 36/36 activation tests passing
 
 ## Test Protocol
 
@@ -14,31 +14,35 @@ For each skill:
 
 ---
 
-## Core Skills (3)
+## Core Skills (5)
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
 | 1 | workflow-enforcer | "follow workflow" | ✅ | ✅ | Stable |
 | 2 | project-context | "load project context" | ✅ | ✅ | Stable |
 | 3 | workflow-orchestrator | "start day" | ✅ | ✅ | Active |
+| 4 | cost-metering | "cost check" / "budget status" | ✅ | ✅ | NEW |
+| 5 | portfolio-artifact | "capture metrics" / "portfolio report" | ✅ | ✅ | NEW |
 
 ---
 
-## Dev Tools (11)
+## Dev Tools (13)
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 4 | extension-authoring | "create skill" | ✅ | ✅ | |
-| 5 | debug-like-expert | "debug systematically" | ✅ | ✅ | |
-| 6 | planning-prompts | "create plan" | ✅ | ✅ | |
-| 7 | worktree-manager | "create worktree" | ✅ | ✅ | |
-| 8 | git-workflow | "commit" / "conventional commits" | ✅ | ✅ | Deployed |
-| 9 | testing | "write tests" | ✅ | ✅ | |
-| 10 | api-design | "design API" | ✅ | ✅ | |
-| 11 | security | "security audit" | ✅ | ✅ | |
-| 12 | api-testing | "postman" / "bruno" / "API testing" | ✅ | ✅ | |
-| 13 | docker-compose | "docker compose" / "local dev env" | ✅ | ✅ | NEW |
-| 14 | agent-teams | "set up agent team" / "parallel development" | ✅ | ✅ | NEW |
+| 6 | extension-authoring | "create skill" | ✅ | ✅ | |
+| 7 | debug-like-expert | "debug systematically" | ✅ | ✅ | |
+| 8 | planning-prompts | "create plan" | ✅ | ✅ | |
+| 9 | worktree-manager | "create worktree" | ✅ | ✅ | |
+| 10 | git-workflow | "commit" / "conventional commits" | ✅ | ✅ | Deployed |
+| 11 | testing | "write tests" | ✅ | ✅ | |
+| 12 | api-design | "design API" | ✅ | ✅ | |
+| 13 | security | "security audit" | ✅ | ✅ | |
+| 14 | api-testing | "postman" / "bruno" / "API testing" | ✅ | ✅ | |
+| 15 | docker-compose | "docker compose" / "local dev env" | ✅ | ✅ | |
+| 16 | agent-teams | "set up agent team" / "parallel development" | ✅ | ✅ | |
+| 17 | subagent-teams | "subagent team" / "Task tool team" | ✅ | ✅ | NEW |
+| 18 | agent-capability-matrix | "which agent" / "route task" | ✅ | ✅ | NEW |
 
 ---
 
@@ -46,28 +50,29 @@ For each skill:
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 15 | unsloth-training | "train with GRPO" | ✅ | ✅ | |
-| 16 | langgraph-agents | "LangGraph agent" | ✅ | ✅ | |
-| 17 | runpod-deployment | "deploy to RunPod" | ✅ | ✅ | |
-| 18 | groq-inference | "groq" | ✅ | ✅ | |
-| 19 | openrouter | "OpenRouter" / "DeepSeek" / "Chinese LLM" | ✅ | ✅ | NEW |
-| 20 | voice-ai | "voice agent" | ✅ | ✅ | |
-| 21 | supabase-sql | "fix SQL" | ✅ | ✅ | |
-| 22 | stripe-stack | "stripe" | ✅ | ✅ | |
+| 19 | unsloth-training | "train with GRPO" | ✅ | ✅ | |
+| 20 | langgraph-agents | "LangGraph agent" | ✅ | ✅ | |
+| 21 | runpod-deployment | "deploy to RunPod" | ✅ | ✅ | |
+| 22 | groq-inference | "groq" | ✅ | ✅ | |
+| 23 | openrouter | "OpenRouter" / "DeepSeek" / "Chinese LLM" | ✅ | ✅ | |
+| 24 | voice-ai | "voice agent" | ✅ | ✅ | |
+| 25 | supabase-sql | "fix SQL" | ✅ | ✅ | |
+| 26 | stripe-stack | "stripe" | ✅ | ✅ | |
 
 ---
 
-## Business (7)
+## Business (8)
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 23 | crm-integration | "Close CRM" | ✅ | ✅ | |
-| 24 | gtm-pricing | "GTM strategy" | ✅ | ✅ | |
-| 25 | research | "research company" | ✅ | ✅ | |
-| 26 | sales-revenue | "cold email" | ✅ | ✅ | |
-| 27 | content-marketing | "content strategy" | ✅ | ✅ | |
-| 28 | data-analysis | "analyze data" | ✅ | ✅ | |
-| 29 | trading-signals | "fibonacci levels" | ✅ | ✅ | |
+| 27 | crm-integration | "Close CRM" | ✅ | ✅ | |
+| 28 | gtm-pricing | "GTM strategy" | ✅ | ✅ | |
+| 29 | research | "research company" | ✅ | ✅ | |
+| 30 | sales-revenue | "cold email" | ✅ | ✅ | |
+| 31 | content-marketing | "content strategy" | ✅ | ✅ | |
+| 32 | data-analysis | "analyze data" | ✅ | ✅ | |
+| 33 | trading-signals | "fibonacci levels" | ✅ | ✅ | |
+| 34 | miro | "miro board" / "strategy canvas" | ✅ | ✅ | NEW |
 
 ---
 
@@ -75,8 +80,8 @@ For each skill:
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 30 | business-model-canvas | "business model canvas" | ✅ | ✅ | |
-| 31 | blue-ocean-strategy | "blue ocean" | ✅ | ✅ | |
+| 35 | business-model-canvas | "business model canvas" | ✅ | ✅ | |
+| 36 | blue-ocean-strategy | "blue ocean" | ✅ | ✅ | |
 
 ---
 
@@ -84,12 +89,12 @@ For each skill:
 
 | Category | Count | YAML Pass | Activation Pass |
 |----------|-------|-----------|-----------------|
-| Core | 3 | 3/3 | 3/3 |
-| Dev Tools | 11 | 11/11 | 11/11 |
+| Core | 5 | 5/5 | 5/5 |
+| Dev Tools | 13 | 13/13 | 13/13 |
 | Infrastructure | 8 | 8/8 | 8/8 |
-| Business | 7 | 7/7 | 7/7 |
+| Business | 8 | 8/8 | 8/8 |
 | Strategy | 2 | 2/2 | 2/2 |
-| **Total** | **31** | **31/31** | **31/31** |
+| **Total** | **36** | **36/36** | **36/36** |
 
 ---
 
@@ -97,11 +102,12 @@ For each skill:
 
 | Skill | Action | Notes |
 |-------|--------|-------|
-| openrouter (NEW) | Created | Chinese LLMs via OpenRouter, LangChain integration |
-| docker-compose (NEW) | Created | Local dev environments, multi-service setups |
-| agent-teams (NEW) | Created | Parallel Claude Code session orchestration |
-| worktree-manager | Polished | .claude/ dir propagation, hooks, permissions |
-| agent-teams | Polished | CLAUDE.md inheritance, @claude bot, plan mode |
+| subagent-teams (NEW) | Created | In-session Task tool subagent orchestration |
+| agent-capability-matrix (NEW) | Created | Task→agent mapping, 70+ agents cataloged |
+| cost-metering (NEW) | Created | API cost tracking, budget alerts, optimization |
+| portfolio-artifact (NEW) | Created | Engineering metrics capture, report templates |
+| miro (NEW) | Created | Miro board interaction via MCP |
+| workflow-orchestrator | Polished | Cost gate, progress rendering, agent selection |
 
 ---
 
@@ -110,7 +116,7 @@ For each skill:
 ```bash
 # Verify skill count
 ls -d active/*-skill stable/*-skill stable/workflow-enforcer 2>/dev/null | wc -l
-# Expected: 31
+# Expected: 36
 
 # Check YAML frontmatter (first 5 lines of each SKILL.md)
 for dir in active/*-skill stable/*-skill stable/workflow-enforcer; do
