@@ -32,7 +32,7 @@ Production-ready skills library with **38 skills** (2 stable, 36 active). All sk
 ### Deployment Status
 - All 38 skills in `active/` and `stable/`
 - Zips in `dist/` (ready for Claude Desktop upload)
-- All committed and pushed to GitHub
+- All committed, 5 ahead of origin (ready to push)
 - Dependency graph current (DEPENDENCY_GRAPH.md)
 
 ### Known Tech Debt
@@ -49,11 +49,11 @@ None
 
 ## Recent Commits
 ```
+b3d1926 docs: End-of-session — update project context to 38 skills
 31ec91f fix(skills): Library health audit — add missing XML sections, fix legacy config keys
 f40f792 refactor(skills): Rename workflow-enforcer → workflow-enforcer-skill
 4bbc7d7 feat(skills): Add heal-skill (#38) — auto-diagnose and repair broken skills
 9470097 docs: Update machine specs M1→M4 (24GB RAM)
-176d89e docs: End-of-day lockdown — update project context to 37 skills
 ```
 
 ## Tech Stack
