@@ -6,11 +6,13 @@
 - [x] Document worktree workflow in README ✅ DONE 2026-02-05
 - [x] Create skill dependency graph ✅ DONE 2026-02-05 (DEPENDENCY_GRAPH.md)
 - [x] Deploy skills globally with symlinks ✅ Done
+- [x] Create agent-teams-skill ✅ IN PROGRESS 2026-02-07
 
 ---
 
 ## P2: Future Enhancements
 
+- [ ] Create subagent-teams-skill (in-session Task tool orchestration)
 - [ ] Skill version tracking
 - [ ] Auto-healing for broken skills (/heal-skill)
 - [ ] Skill usage analytics
@@ -43,6 +45,8 @@ _Add new skill ideas here for triage_
 - [x] api-testing-skill (Postman/Bruno patterns) ✅ DONE 2026-02-05
 - [x] openrouter-skill (Chinese LLMs via OpenRouter) ✅ DONE 2026-02-05
 - [x] docker-compose-skill (local dev environments) ✅ DONE 2026-02-05
+- [x] agent-teams-skill (parallel Claude Code orchestration) ✅ 2026-02-07
+- [ ] subagent-teams-skill (in-session Task tool teams)
 
 ---
 

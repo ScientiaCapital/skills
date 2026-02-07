@@ -1,7 +1,7 @@
 # Skills Index
 
-> Last updated: 2026-02-05
-> Total skills: 30 (2 stable, 28 active)
+> Last updated: 2026-02-07
+> Total skills: 31 (2 stable, 29 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
 
 ## Architecture
@@ -21,6 +21,7 @@
 | Systematic expert debugging | [debug-like-expert](#debug-like-expert-skill) | Dev Tools |
 | Create project plans, meta-prompts | [planning-prompts](#planning-prompts-skill) | Dev Tools |
 | Manage git worktrees for parallel dev | [worktree-manager](#worktree-manager-skill) | Dev Tools |
+| Orchestrate parallel Claude Code sessions | [agent-teams](#agent-teams-skill) | Dev Tools |
 | Conventional commits, PR templates | [git-workflow](#git-workflow-skill) | Dev Tools |
 | Write tests, TDD, test coverage | [testing](#testing-skill) | Dev Tools |
 | Design REST/GraphQL APIs | [api-design](#api-design-skill) | Dev Tools |
@@ -283,6 +284,30 @@ Local development environments using Docker Compose for multi-service setups.
 | MySQL | `mysql:8` | 3306 |
 
 **Triggers:** "docker compose", "local dev", "postgres container", "redis local", "dev environment"
+
+---
+
+#### agent-teams-skill
+**Location:** `active/agent-teams-skill/`
+
+Orchestrate teams of 2-3 parallel Claude Code sessions working on the same codebase. Handles task decomposition, agent coordination via WORKTREE_TASK.md, context isolation, and merge strategies.
+
+**Depends on:** worktree-manager-skill (infrastructure layer)
+
+**Team Patterns:**
+| Pattern | Agents | Execution |
+|---------|--------|-----------|
+| Feature Parallel | 2-3 | Parallel |
+| Frontend/Backend | 2 | Parallel |
+| Test/Implement | 2 | Sequential |
+| Review/Refactor | 2 | Sequential |
+
+**Reference Files (3):**
+- `reference/context-engineering.md` - Context isolation, delegation patterns
+- `reference/worktree-integration.md` - Port allocation, terminal strategies
+- `reference/prompt-templates.md` - Spawn prompts for 4 team patterns
+
+**Triggers:** "set up agent team", "parallel development", "coordinate Claude sessions", "team of agents", "spawn agents", "agent coordination"
 
 ---
 
@@ -619,7 +644,8 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ```
 skills/
-├── active/                    # 28 active skills
+├── active/                    # 29 active skills
+│   ├── agent-teams-skill/
 │   ├── api-design-skill/
 │   ├── api-testing-skill/
 │   ├── docker-compose-skill/

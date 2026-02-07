@@ -1,0 +1,34 @@
+{
+  "name": "agent-teams",
+  "version": "1.0.0",
+  "category": "dev-tools",
+  "constraints": {
+    "max_agents": 3,
+    "ram_per_agent_mb": 1500,
+    "system_reserved_mb": 2000,
+    "total_ram_mb": 8192
+  },
+  "defaults": {
+    "terminal": "ghostty",
+    "display_mode": "compact",
+    "worktree_base": "~/tmp/worktrees",
+    "model": "opus",
+    "claude_flags": "--model opus --dangerously-skip-permissions"
+  },
+  "team_patterns": [
+    "feature-parallel",
+    "frontend-backend",
+    "test-implement",
+    "review-refactor"
+  ],
+  "files": {
+    "task_file": "WORKTREE_TASK.md",
+    "status_file": ".agent-status",
+    "contract_file": "CONTRACT.md"
+  },
+  "monitoring": {
+    "poll_interval_seconds": 30,
+    "timeout_minutes": 60,
+    "status_values": ["STARTING", "IN_PROGRESS", "DONE", "ERROR"]
+  }
+}

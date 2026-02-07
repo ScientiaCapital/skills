@@ -1,7 +1,7 @@
 # Skill Dependency Graph
 
-> Last validated: 2026-02-05
-> Total skills: 30
+> Last validated: 2026-02-07
+> Total skills: 31
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -30,10 +30,12 @@ graph TB
         SEC[security]
         AT[api-testing]
         DC[docker-compose]
+        AT2[agent-teams]
 
         AD --> AT
         TS --> AT
         GW --> WM
+        WM --> AT2
     end
 
     subgraph Infrastructure["Infrastructure (LLM & Deployment)"]
@@ -81,6 +83,7 @@ graph TB
     WO -.-> SEC
     WO -.-> GW
 
+    AT2 -.-> EA
     SEC -.-> SS
     TRD -.-> OR
     TRD -.-> GI
@@ -100,7 +103,7 @@ graph TB
 | Cluster | Skills | Purpose |
 |---------|--------|---------|
 | **Core** | workflow-enforcer, project-context, workflow-orchestrator | Session lifecycle management |
-| **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose | Development workflows |
+| **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
 | **Business** | gtm-pricing, research, sales-revenue, crm-integration, content-marketing, data-analysis, trading-signals | GTM & revenue operations |
 | **Strategy** | business-model-canvas, blue-ocean-strategy | Business model design |
@@ -110,11 +113,11 @@ graph TB
 | Cluster | Count |
 |---------|-------|
 | Core | 3 |
-| Dev Tools | 10 |
+| Dev Tools | 11 |
 | Infrastructure | 8 |
 | Business | 7 |
 | Strategy | 2 |
-| **Total** | **30** |
+| **Total** | **31** |
 
 ---
 
@@ -190,6 +193,11 @@ api-design → testing → api-testing → security
 langgraph-agents → [openrouter | groq-inference] → voice-ai
 ```
 
+### Parallel Agent Development
+```
+planning-prompts → agent-teams → worktree-manager → [testing | git-workflow]
+```
+
 ---
 
 ## 6. Dependency Details
@@ -218,6 +226,8 @@ The orchestrator routes to 13+ skills based on task type:
 | langgraph-agents | groq-inference | Fast inference |
 | trading-signals | openrouter | Chinese LLM stack |
 | security | supabase-sql | RLS policies |
+| agent-teams | worktree-manager | Infrastructure (worktrees, ports, terminals) |
+| agent-teams | extension-authoring | SKILL.md authoring patterns |
 
 ### Implicit Chains (Common Usage)
 
@@ -268,8 +278,8 @@ grep -l "DEPENDENCY_GRAPH" *.md
 
 ### Last Validated
 
-- **Date:** 2026-02-05
-- **Skill Count:** 30 (2 stable, 28 active)
+- **Date:** 2026-02-07
+- **Skill Count:** 31 (2 stable, 29 active)
 - **Mermaid:** Renders correctly
 - **Cross-links:** SKILLS_INDEX.md, README.md
 

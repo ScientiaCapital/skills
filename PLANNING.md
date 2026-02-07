@@ -1,12 +1,30 @@
 # Skills Library Planning
 
-**Current Sprint:** Doc Hygiene + Skill Testing
-**Date:** 2026-02-05
+**Current Sprint:** Agent Teams Skill Development
+**Date:** 2026-02-07
 **Constraint:** M1 8GB RAM - max 2-3 parallel agents
 
 ---
 
 ## Active Work
+
+### agent-teams-skill (IN PROGRESS)
+
+| Task | Status |
+|------|--------|
+| Create SKILL.md (objective, quick_start, workflows, etc.) | ✅ complete |
+| Create config.json | ✅ complete |
+| Create reference/context-engineering.md | ✅ complete |
+| Create reference/worktree-integration.md | ✅ complete |
+| Create reference/prompt-templates.md | ✅ complete |
+| Update SKILLS_INDEX.md | ✅ complete |
+| Update DEPENDENCY_GRAPH.md | ✅ complete |
+| Deploy and test activation | ✅ complete |
+| Git commit | ⬜ pending |
+
+---
+
+## Completed Work
 
 ### langgraph-agents-skill Polish (COMPLETED 2026-02-05)
 
@@ -35,28 +53,15 @@
 | Task | Status |
 |------|--------|
 | Create SKILL.md | ✅ complete |
-| Create postman-patterns reference | ✅ complete |
-| Create bruno-patterns reference | ✅ complete |
-| Create test-design reference | ✅ complete |
-| Create data-management reference | ✅ complete |
-| Create ci-integration reference | ✅ complete |
+| Create 5 reference files | ✅ complete |
 | Update SKILLS_INDEX.md | ✅ complete |
 | Deploy and test activation | ✅ complete |
-| Update SKILL_TEST_MATRIX.md | ✅ complete |
 
 ### openrouter-skill (COMPLETED 2026-02-05)
 
 | Task | Status |
 |------|--------|
-| Create SKILL.md | ✅ complete |
-| Create models-catalog reference | ✅ complete |
-| Create routing-strategies reference | ✅ complete |
-| Create langchain-integration reference | ✅ complete |
-| Create cost-optimization reference | ✅ complete |
-| Create tool-calling reference | ✅ complete |
-| Create multimodal reference | ✅ complete |
-| Create observability reference | ✅ complete |
-| Create config.json | ✅ complete |
+| Create SKILL.md + 7 reference files + config.json | ✅ complete |
 | Update SKILLS_INDEX.md | ✅ complete |
 | Create dist zip | ✅ complete |
 
@@ -64,19 +69,9 @@
 
 | Task | Status |
 |------|--------|
-| Create SKILL.md | ✅ complete |
-| Create compose-patterns reference | ✅ complete |
-| Create services reference | ✅ complete |
-| Create networking reference | ✅ complete |
-| Create dev-workflow reference | ✅ complete |
-| Create config.json | ✅ complete |
-| Update SKILLS_INDEX.md | ✅ complete |
-| Update README with worktree docs | ✅ complete |
+| Create SKILL.md + 4 reference files + config.json | ✅ complete |
+| Update SKILLS_INDEX.md + README | ✅ complete |
 | Create dist zip | ✅ complete |
-
----
-
-## Completed Work
 
 ### Workflow Orchestrator Skill v2.0 (COMPLETED 2026-01-23)
 Full workflow orchestration system with cost tracking, model routing, and 70+ agent catalog.
@@ -92,14 +87,11 @@ Boris Cherny workflow integration, .env handling, model selection.
 
 ---
 
-## Next Up (From Backlog P1)
+## Next Up
 
-- [x] Test remaining skill activations ✅ 30/30 passing
-- [x] Triage backlog api-testing-skill ✅ CREATED
-- [x] Create openrouter-skill ✅ CREATED
-- [x] Create docker-compose-skill ✅ DONE 2026-02-05
-- [x] Document worktree workflow in README ✅ DONE 2026-02-05
-- [x] Create skill dependency graph ✅ DONE 2026-02-05 (DEPENDENCY_GRAPH.md)
+- [ ] Create subagent-teams-skill (in-session Task tool orchestration)
+- [ ] Skill version tracking
+- [ ] Auto-healing for broken skills (/heal-skill)
 
 ---
 
