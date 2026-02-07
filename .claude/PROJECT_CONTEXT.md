@@ -16,6 +16,7 @@ Production-ready skills library with **37 skills** (2 stable, 35 active). All sk
 - [x] Create 27 new config.json files using standardized metadata+integration schema
 - [x] Verify all 37 configs valid JSON with version field
 - [x] Update SKILLS_INDEX.md, PLANNING.md, PROJECT_CONTEXT.md
+- [x] End-of-day lockdown: audit, security sweep, quality gate, state sync
 
 ## Current State
 
@@ -50,11 +51,11 @@ None
 
 ## Recent Commits
 ```
+7becea1 feat(skills): Backfill config.json for all 37 skills with version tracking
+8562d90 feat(skills): Add TaskCreate/Teams API awareness across 6 orchestration skills
+4f24f6e docs: End-of-day lockdown — update project context to 37 skills
 c3bc872 feat(skills): Add hubspot-revops-skill, update metadata to 37 skills
 0b1ad6f feat(skills): Add miro-skill, update all metadata to 36 skills
-6a88989 feat(skills): Add subagent-teams + agent-capability-matrix + cost-metering + portfolio-artifact
-767d54a feat(skills): Polish workflow-orchestrator with cost gate + progress rendering
-12912c5 docs: Update all project docs to current state (36 skills, fix stale refs)
 ```
 
 ## Tech Stack
