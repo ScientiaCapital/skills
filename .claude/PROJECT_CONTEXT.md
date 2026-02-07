@@ -3,7 +3,7 @@
 **Branch**: main | **Updated**: 2026-02-07
 
 ## Status
-Production-ready skills library with **37 skills** (2 stable, 35 active). All skills comply with Anthropic YAML specification. All P1 tasks complete. Library fully documented with dependency graph. **100% config.json coverage** with version tracking. All commits pushed to origin.
+Production-ready skills library with **38 skills** (2 stable, 36 active). All skills comply with Anthropic YAML specification. All P1 tasks complete. Library fully documented with dependency graph. **100% config.json coverage** with version tracking. All commits pushed to origin.
 
 ## Today's Session (2026-02-07)
 
@@ -20,18 +20,18 @@ Production-ready skills library with **37 skills** (2 stable, 35 active). All sk
 
 ## Current State
 
-### Skills by Category (37 total)
+### Skills by Category (38 total)
 
 | Category | Count | Skills |
 |----------|-------|--------|
-| **Core** | 5 | workflow-orchestrator, cost-metering, portfolio-artifact, workflow-enforcer (stable), project-context (stable) |
-| **Dev Tools** | 13 | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, agent-teams, subagent-teams, agent-capability-matrix, git-workflow, testing, api-design, security, api-testing, docker-compose |
+| **Core** | 5 | workflow-orchestrator, cost-metering, portfolio-artifact, workflow-enforcer-skill (stable), project-context (stable) |
+| **Dev Tools** | 14 | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, agent-teams, subagent-teams, agent-capability-matrix, git-workflow, testing, api-design, security, api-testing, docker-compose, heal-skill |
 | **Infrastructure** | 8 | unsloth-training, runpod-deployment, voice-ai, groq-inference, langgraph-agents, openrouter, supabase-sql, stripe-stack |
 | **Business** | 9 | crm-integration, gtm-pricing, research, sales-revenue, content-marketing, data-analysis, trading-signals, miro, hubspot-revops |
 | **Strategy** | 2 | business-model-canvas, blue-ocean-strategy |
 
 ### Deployment Status
-- All 37 skills in `active/` and `stable/`
+- All 38 skills in `active/` and `stable/`
 - Zips in `dist/` (ready for Claude Desktop upload)
 - All committed and pushed to GitHub
 - Dependency graph current (DEPENDENCY_GRAPH.md)

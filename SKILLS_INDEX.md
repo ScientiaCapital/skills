@@ -1,9 +1,9 @@
 # Skills Index
 
 > Last updated: 2026-02-07
-> Total skills: 37 (2 stable, 35 active)
+> Total skills: 38 (2 stable, 36 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 37 skills have `config.json` with version tracking (v1.0.0)
+> **100% config.json coverage** — All 38 skills have `config.json` with version tracking (v1.0.0)
 
 ## Architecture
 
@@ -53,15 +53,16 @@
 | Track and manage API costs | [cost-metering](#cost-metering-skill) | Core |
 | Auto-extract GTME metrics from sessions | [portfolio-artifact](#portfolio-artifact-skill) | Core |
 | Track project context across sessions | [project-context](#project-context-skill) | Core |
-| Enforce workflow discipline | [workflow-enforcer](#workflow-enforcer) | Core |
+| Auto-diagnose and repair broken skills | [heal-skill](#heal-skill) | Dev Tools |
+| Enforce workflow discipline | [workflow-enforcer-skill](#workflow-enforcer-skill) | Core |
 | Orchestrate full-day workflows with cost tracking | [workflow-orchestrator](#workflow-orchestrator-skill) | Core |
 
 ---
 
 ## Stable Skills (Battle-Tested)
 
-### workflow-enforcer
-**Location:** `stable/workflow-enforcer/`
+### workflow-enforcer-skill
+**Location:** `stable/workflow-enforcer-skill/`
 
 Enforces workflow discipline across ALL projects. Ensures Claude checks for specialized agents, announces usage, and creates TaskCreate tasks (preferred) or TodoWrite todos for multi-step work.
 
@@ -399,6 +400,25 @@ Map task types to best agent, skill, fallback, and model tier. 70+ agents catalo
 - `reference/selection-flowchart.md` - Decision tree + cost impact table
 
 **Triggers:** "which agent", "route task", "agent for this", "capability matrix"
+
+---
+
+#### heal-skill
+**Location:** `active/heal-skill/`
+
+Auto-diagnose and repair broken skills. Validates YAML frontmatter, XML sections, config.json schema, and cross-skill dependencies.
+
+**Key Features:**
+- 3-layer diagnostic engine: Structural → Content → Integration
+- 16 automated checks with severity levels
+- Auto-fix protocol with preview, confirm, apply workflow
+- Health scoring per skill and library-wide
+
+**Reference Files (2):**
+- `reference/validation-rules.md` - Complete check reference (S1-S10, C1-C6, I1-I5)
+- `reference/known-issues.md` - GitHub issue patterns and library audit findings
+
+**Triggers:** "/heal-skill", "fix broken skill", "skill health check", "validate skills"
 
 ---
 
@@ -793,7 +813,7 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ```
 skills/
-├── active/                    # 35 active skills
+├── active/                    # 36 active skills
 │   ├── agent-capability-matrix-skill/
 │   ├── agent-teams-skill/
 │   ├── api-design-skill/
@@ -809,6 +829,7 @@ skills/
 │   ├── extension-authoring-skill/
 │   ├── git-workflow-skill/
 │   ├── groq-inference-skill/
+│   ├── heal-skill/
 │   ├── gtm-pricing-skill/
 │   ├── hubspot-revops-skill/
 │   ├── langgraph-agents-skill/
@@ -831,7 +852,7 @@ skills/
 │   └── worktree-manager-skill/
 ├── stable/                    # 2 stable skills
 │   ├── project-context-skill/
-│   └── workflow-enforcer/
+│   └── workflow-enforcer-skill/
 ├── dist/                      # Zips for Claude Desktop
 ├── scripts/
 │   ├── deploy.sh              # Deploy to ~/.claude/skills/

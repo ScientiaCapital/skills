@@ -1,0 +1,19 @@
+{
+  "name": "heal-skill",
+  "version": "1.0.0",
+  "category": "Dev Tools",
+  "description": "Auto-diagnose and repair broken skills — YAML validation, XML sections, config.json schema",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "extension-authoring-skill"
+  ],
+  "activation_triggers": [
+    "/heal-skill",
+    "heal skill",
+    "fix broken skill",
+    "skill health check",
+    "validate skills",
+    "skill diagnostic"
+  ]
+}

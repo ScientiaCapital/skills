@@ -1,7 +1,7 @@
 # Skill Dependency Graph
 
 > Last validated: 2026-02-07
-> Total skills: 37
+> Total skills: 38
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -12,7 +12,7 @@ Visual map of relationships between skills in this library. Enables skill discov
 ```mermaid
 graph TB
     subgraph Core["Core (Session Lifecycle)"]
-        WE[workflow-enforcer]
+        WE[workflow-enforcer-skill]
         PC[project-context]
         WO[workflow-orchestrator]
         CMT[cost-metering]
@@ -38,6 +38,7 @@ graph TB
         AT2[agent-teams]
         SAT[subagent-teams]
         ACM[agent-capability-matrix]
+        HS[heal-skill]
 
         AD --> AT
         TS --> AT
@@ -46,6 +47,7 @@ graph TB
         EA --> SAT
         AT2 --> SAT
         WO -.-> ACM
+        EA --> HS
     end
 
     subgraph Infrastructure["Infrastructure (LLM & Deployment)"]
@@ -120,8 +122,8 @@ graph TB
 
 | Cluster | Skills | Purpose |
 |---------|--------|---------|
-| **Core** | workflow-enforcer, project-context, workflow-orchestrator, cost-metering, portfolio-artifact | Session lifecycle management |
-| **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix | Development workflows |
+| **Core** | workflow-enforcer-skill, project-context, workflow-orchestrator, cost-metering, portfolio-artifact | Session lifecycle management |
+| **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix, heal-skill | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
 | **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro | GTM & revenue operations |
 | **Strategy** | business-model-canvas, blue-ocean-strategy | Business model design |
@@ -131,11 +133,11 @@ graph TB
 | Cluster | Count |
 |---------|-------|
 | Core | 5 |
-| Dev Tools | 13 |
+| Dev Tools | 14 |
 | Infrastructure | 8 |
 | Business | 9 |
 | Strategy | 2 |
-| **Total** | **37** |
+| **Total** | **38** |
 
 ---
 
@@ -309,7 +311,7 @@ grep -l "DEPENDENCY_GRAPH" *.md
 ### Last Validated
 
 - **Date:** 2026-02-07
-- **Skill Count:** 37 (2 stable, 35 active)
+- **Skill Count:** 38 (2 stable, 36 active)
 - **Mermaid:** Renders correctly
 - **Cross-links:** SKILLS_INDEX.md, README.md
 
