@@ -1,42 +1,45 @@
 # Skills Library
 
-**Branch**: main | **Updated**: 2026-02-05
+**Branch**: main | **Updated**: 2026-02-07
 
 ## Status
-Production-ready skills library with **30 skills** (2 stable, 28 active). All skills comply with Anthropic YAML specification. All P1 tasks complete. Library fully documented with dependency graph.
+Production-ready skills library with **37 skills** (2 stable, 35 active). All skills comply with Anthropic YAML specification. All P1 tasks complete. Library fully documented with dependency graph. All commits pushed to origin.
 
-## Today's Session (2026-02-05)
+## Today's Session (2026-02-07)
 
 ### Focus
-- Skill dependency graph creation
-- End-of-day lockdown
+- Morning standup + sprint planning
+- Commit + push hubspot-revops-skill (#37)
+- End-of-day audit + lockdown
 
 ### Done (This Session)
-- [x] Create DEPENDENCY_GRAPH.md with Mermaid diagrams
-- [x] Update SKILLS_INDEX.md with link to graph
-- [x] Update README.md project structure
-- [x] Update PLANNING.md (mark dependency graph complete)
-- [x] Update BACKLOG.md (mark dependency graph complete)
-- [x] End-of-day security sweep (CLEAN)
-- [x] Commit and push all changes
+- [x] Commit hubspot-revops-skill + 6 metadata files
+- [x] Push 5 commits to origin/main (now fully synced)
+- [x] Security sweep (secrets=0, CVEs=N/A) — PASS
+- [x] Quality gate (37/37 SKILL.md, index matches disk) — PASS
+- [x] Update PROJECT_CONTEXT.md to current state
 
 ## Current State
 
-### Skills by Category (30 total)
+### Skills by Category (37 total)
 
 | Category | Count | Skills |
 |----------|-------|--------|
-| **Core** | 3 | workflow-orchestrator, workflow-enforcer (stable), project-context (stable) |
-| **Dev Tools** | 10 | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose |
+| **Core** | 5 | workflow-orchestrator, cost-metering, portfolio-artifact, workflow-enforcer (stable), project-context (stable) |
+| **Dev Tools** | 13 | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, agent-teams, subagent-teams, agent-capability-matrix, git-workflow, testing, api-design, security, api-testing, docker-compose |
 | **Infrastructure** | 8 | unsloth-training, runpod-deployment, voice-ai, groq-inference, langgraph-agents, openrouter, supabase-sql, stripe-stack |
-| **Business** | 7 | crm-integration, gtm-pricing, research, sales-revenue, content-marketing, data-analysis, trading-signals |
+| **Business** | 9 | crm-integration, gtm-pricing, research, sales-revenue, content-marketing, data-analysis, trading-signals, miro, hubspot-revops |
 | **Strategy** | 2 | business-model-canvas, blue-ocean-strategy |
 
 ### Deployment Status
-- All 30 skills in `active/` and `stable/`
+- All 37 skills in `active/` and `stable/`
 - Zips in `dist/` (ready for Claude Desktop upload)
-- All committed to GitHub
-- Dependency graph created (DEPENDENCY_GRAPH.md)
+- All committed and pushed to GitHub
+- Dependency graph current (DEPENDENCY_GRAPH.md)
+
+### Known Tech Debt
+- 26/37 skills missing config.json (legacy, non-blocking)
+- `workflow-enforcer` lacks `-skill` suffix (naming inconsistency)
 
 ## Blockers
 None
@@ -44,29 +47,19 @@ None
 ## Next Tasks
 | Priority | Task | Notes |
 |----------|------|-------|
-| P2 | Skill version tracking | Future enhancement |
-| P2 | Auto-healing for broken skills | /heal-skill command |
-| P2 | Skill usage analytics | Track activation patterns |
+| P3 | Skill version tracking | Add version field to config.json |
+| P3 | Auto-healing for broken skills | /heal-skill command |
+| P3 | Skill usage analytics | Track activation patterns |
+| P3 | Integration tests for skill activation | Automated validation |
+| P3 | Backfill config.json for 26 legacy skills | Standardize metadata |
 
 ## Recent Commits
 ```
-9d6cbe8 docs: Add skill dependency graph with Mermaid diagrams
-370820b docs: Add docker-compose-skill to PLANNING.md completion log
-d926a56 feat(skills): Add docker-compose-skill + README worktree docs
-27f2b0e feat(skills): Add openrouter-skill for Chinese LLM orchestration
-45c686e feat(skills): Add api-testing-skill with Postman/Bruno patterns
-```
-
-## Quick Commands
-```bash
-# View all skills
-cat SKILLS_INDEX.md
-
-# Check skill count
-ls -d active/*-skill stable/*-skill 2>/dev/null | wc -l
-
-# View dependency graph
-cat DEPENDENCY_GRAPH.md
+c3bc872 feat(skills): Add hubspot-revops-skill, update metadata to 37 skills
+0b1ad6f feat(skills): Add miro-skill, update all metadata to 36 skills
+6a88989 feat(skills): Add subagent-teams + agent-capability-matrix + cost-metering + portfolio-artifact
+767d54a feat(skills): Polish workflow-orchestrator with cost gate + progress rendering
+12912c5 docs: Update all project docs to current state (36 skills, fix stale refs)
 ```
 
 ## Tech Stack
