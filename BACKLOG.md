@@ -22,7 +22,7 @@ All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 ## P3: Future Enhancements
 
 - [x] Skill version tracking (completed 2026-02-07 — config.json backfill)
-- [ ] Auto-healing for broken skills (/heal-skill)
+- [x] Auto-healing for broken skills (/heal-skill) — completed 2026-02-07
 - [ ] Skill usage analytics
 - [ ] Integration tests for skill activation
 

@@ -2,7 +2,7 @@
   "name": "agent-capability-matrix",
   "version": "1.0.0",
   "category": "Dev Tools",
-  "dependencies": ["workflow-orchestrator-skill"],
+  "depends_on": ["workflow-orchestrator-skill"],
   "activation_triggers": ["which agent", "route task", "agent for this", "best agent", "capability matrix"],
   "total_agents_cataloged": 70,
   "model_tiers": {

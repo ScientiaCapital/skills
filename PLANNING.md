@@ -33,7 +33,7 @@ All phases delivered. See [ARCHIVE.md](./ARCHIVE.md).
 
 ## Next Up
 
-- [ ] Auto-healing for broken skills (/heal-skill)
+- [x] Auto-healing for broken skills (/heal-skill) — ✅ shipped as skill #38
 - [ ] Skill usage analytics
 - [ ] Integration tests for skill activation
 
