@@ -29,6 +29,24 @@ echo ""
 # Create target if needed
 mkdir -p "$DEPLOY_DIR"
 
+# Clean stale symlinks (prevents broken links after skill renames)
+# Note: bash glob */ does NOT match broken symlinks, so we use find -type l
+echo "Cleaning stale symlinks..."
+stale_count=0
+while IFS= read -r link; do
+    if [ ! -e "$link" ]; then
+        echo "  ✗ $(basename "$link") (removed broken symlink)"
+        rm "$link"
+        stale_count=$((stale_count + 1))
+    fi
+done < <(find "$DEPLOY_DIR" -maxdepth 1 -type l 2>/dev/null)
+if [ "$stale_count" -gt 0 ]; then
+    echo "  Removed $stale_count stale symlink(s)"
+else
+    echo "  No stale symlinks found"
+fi
+echo ""
+
 # Deploy active skills
 echo "Deploying active skills..."
 for skill in "$REPO_DIR"/active/*/; do

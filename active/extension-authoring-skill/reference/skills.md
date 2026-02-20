@@ -7,11 +7,12 @@ Skills are modular, filesystem-based capabilities that provide domain expertise 
 2. YAML Frontmatter
 3. Required XML Tags
 4. Conditional XML Tags
-5. Router Pattern
-6. Progressive Disclosure
-7. Templates and Patterns
-8. Anti-Patterns
-9. Validation Checklist
+5. Skill-Scoped Hooks
+6. Router Pattern
+7. Progressive Disclosure
+8. Templates and Patterns
+9. Anti-Patterns
+10. Validation Checklist
 </table_of_contents>
 
 <file_structure>
@@ -101,6 +102,32 @@ Use verb-noun convention:
 | `generate-*` | Generation tasks | `generate-ai-images` |
 | `process-*` | Data processing | `process-pdfs`, `process-excel` |
 </naming_conventions>
+
+<invocation_control>
+### `disable-model-invocation: true`
+
+Prevents Claude from auto-invoking the skill. The skill description is NOT loaded into Claude's context, resulting in zero passive token cost.
+
+```yaml
+---
+name: deploy
+description: Deploy the application to production
+disable-model-invocation: true
+---
+```
+
+**Use for:** Destructive operations (deploy, delete), high-cost operations, side-effect-heavy workflows.
+
+Only the user can invoke via `/skill-name`. The full skill body loads on manual invocation.
+
+### Invocation Control Matrix
+
+| Frontmatter | User invokes | Claude invokes | Context cost |
+|-------------|-------------|----------------|--------------|
+| _(default)_ | Yes | Yes | Description always loaded |
+| `disable-model-invocation: true` | Yes | No | Zero until invoked |
+| `user-invocable: false` | No | Yes | Description always loaded |
+</invocation_control>
 </yaml_frontmatter>
 
 <required_tags>
@@ -171,6 +198,29 @@ Add based on skill complexity:
 **Complex skills** (security, APIs): Required + conditional as appropriate
 </tag_selection_intelligence>
 </conditional_tags>
+
+<skill_scoped_hooks>
+### Skill-Scoped Hooks
+
+Skills can define hooks directly in their YAML frontmatter. These hooks are active only while the skill is loaded.
+
+```yaml
+---
+name: my-skill
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./scripts/lint-check.sh"
+          once: true
+---
+```
+
+- `once: true` — fires once per session, then auto-removes (skills only)
+- Skill hooks run after global hooks from settings.json
+- See [hooks reference](../reference/hooks.md) for full hook documentation
+</skill_scoped_hooks>
 
 <router_pattern>
 For skills with multiple workflows, use the router pattern:

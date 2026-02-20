@@ -1,9 +1,9 @@
 # Skills Index
 
-> Last updated: 2026-02-07
+> Last updated: 2026-02-20
 > Total skills: 38 (2 stable, 36 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 38 skills have `config.json` with version tracking (v1.0.0)
+> **100% config.json coverage** — All 38 skills have `config.json` with version tracking
 
 ## Architecture
 
@@ -84,40 +84,47 @@ Maintains project context and progress tracking across Claude sessions.
 ### Core
 
 #### workflow-orchestrator-skill
-**Location:** `active/workflow-orchestrator-skill/`
+**Location:** `active/workflow-orchestrator-skill/` | **Version:** 2.0.0
 
-Comprehensive workflow orchestration for full-day Claude sessions with cost tracking, model routing, and team coordination.
+Dual-team workflow orchestration with Builder + Observer concurrent teams, cost tracking, model routing, security gates, and devil's advocate pattern.
 
 **Key Features:**
+- **Dual-Team Architecture:** Builder team ships fast, Observer team watches for drift/debt/gaps
+- **Devil's Advocate:** Adversarial roles on both teams prevent groupthink
+- **Contract-First Development:** Define endpoints + scope boundaries before any code
+- **Observer BLOCKER Gate:** Phase transitions blocked if active Observer findings
 - **5 Workflow Phases:** START DAY → RESEARCH → FEATURE DEVELOPMENT → DEBUG → END DAY
-- **Native Progress:** TaskCreate/TaskUpdate for live UI spinners + phase sequencing
-- **Cost Optimization:** Intelligent model routing (Claude/DeepSeek/GROQ/Ollama) based on budget
-- **Parallel Execution:** Git worktree management with isolated environments
-- **70+ Agent Catalog:** Smart routing to specialized agents based on task type
-- **Security Gates:** Automated security scanning before commits
+- **Native Agent Teams:** Experimental support for DAG tasks, peer messaging, TeammateIdle hooks
+- **Cost Optimization:** Intelligent model routing; Observers use Haiku for routine checks
+- **Security Gates:** Automated scanning + Observer findings before commits
 
-**Reference Files (8):**
+**Reference Files (11):**
 - `reference/start-day-protocol.md` - Session initialization, context loading
-- `reference/research-workflow.md` - Systematic research with cost optimization  
+- `reference/research-workflow.md` - Systematic research with cost optimization
 - `reference/feature-development.md` - Multi-phase development with quality gates
 - `reference/debug-methodology.md` - Evidence-based debugging
 - `reference/end-day-protocol.md` - Security sweeps, context preservation
 - `reference/cost-tracking.md` - Model pricing, budget management
 - `reference/agent-routing.md` - Complete 70+ agent catalog
 - `reference/rollback-recovery.md` - Rollback strategies and recovery
+- `reference/dual-team-architecture.md` - Full Builder + Observer team spec
+- `reference/observer-patterns.md` - 7 drift detection patterns with commands
+- `reference/devils-advocate.md` - Adversarial prompt templates and protocol
 
-**Templates (4):**
+**Templates (6):**
 - `templates/PROJECT_CONTEXT.md` - Dynamic context generation
 - `templates/RESEARCH.md` - Research documentation format
 - `templates/daily-cost.json` - Cost tracking data structure
 - `templates/worktree-registry.json` - Worktree management registry
+- `templates/OBSERVER_QUALITY.md` - Code Quality Observer report template
+- `templates/OBSERVER_ARCH.md` - Architecture Observer report template
 
-**Triggers:** "start day", "end day", "orchestrate workflow", "track costs", "route agent"
+**Triggers:** "start day", "end day", "orchestrate workflow", "track costs", "route agent", "dual team", "observer team", "builder team", "spawn observers", "devil's advocate"
 
 ---
 
 #### cost-metering-skill
-**Location:** `active/cost-metering-skill/`
+**Location:** `active/cost-metering-skill/` | **Version:** 1.1.0
 
 Track and manage Claude API costs across sessions with budget alerts and optimization strategies.
 
@@ -158,7 +165,7 @@ Auto-extract engineering metrics from work sessions for portfolio reporting.
 ### Dev Tools
 
 #### extension-authoring-skill
-**Location:** `active/extension-authoring-skill/`
+**Location:** `active/extension-authoring-skill/` | **Version:** 1.1.0
 
 Comprehensive guide for authoring Claude Code extensions: skills, hooks, slash commands, and subagents.
 
@@ -197,7 +204,7 @@ Hierarchical project planning and meta-prompt creation for Claude-to-Claude work
 ---
 
 #### worktree-manager-skill
-**Location:** `active/worktree-manager-skill/`
+**Location:** `active/worktree-manager-skill/` | **Version:** 1.1.0
 
 Git worktree automation for parallel development with Claude agents.
 
@@ -336,7 +343,7 @@ Local development environments using Docker Compose for multi-service setups.
 ---
 
 #### agent-teams-skill
-**Location:** `active/agent-teams-skill/`
+**Location:** `active/agent-teams-skill/` | **Version:** 1.1.0
 
 Orchestrate teams of 2-3 parallel Claude Code sessions working on the same codebase. Handles task decomposition, agent coordination via WORKTREE_TASK.md, context isolation, and merge strategies. Includes Native Teams API alternative (TeamCreate + SendMessage) for lightweight coordination.
 

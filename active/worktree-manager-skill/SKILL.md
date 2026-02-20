@@ -18,8 +18,36 @@ Claude will:
 2. Create worktree at `~/tmp/worktrees/[project]/feature-auth`
 3. Install dependencies
 4. Create WORKTREE_TASK.md for the agent
-5. Launch terminal with Claude Opus 4.5 agent
+5. Launch terminal with Claude Opus 4.6 agent
 </quick_start>
+
+## Native --worktree Flag (Claude Code v2.1.49+)
+
+Claude Code now has built-in worktree support:
+
+```bash
+# Named worktree
+claude --worktree feature-auth   # or: claude -w feature-auth
+
+# Auto-generated name
+claude -w
+```
+
+### What It Does
+
+- Creates worktree at `<repo>/.claude/worktrees/<name>/`
+- Branch: `worktree-<name>` (auto-created from default remote branch)
+- On exit: auto-cleanup if no changes; prompts to keep/remove if changes exist
+
+**Tip:** Add `.claude/worktrees/` to `.gitignore`
+
+### When to Use Native vs This Skill
+
+| Scenario | Use |
+|----------|-----|
+| Quick isolated work, single agent | `claude -w feature-name` |
+| Multi-agent teams, port allocation, registry | This skill (worktree-manager) |
+| Subagent isolation | `isolation: "worktree"` in agent frontmatter |
 
 <success_criteria>
 A worktree setup is successful when:
@@ -126,7 +154,7 @@ Branch names are slugified for filesystem safety:
 | Setting | Value | Reason |
 |---------|-------|--------|
 | Terminal | Ghostty or iTerm2 | Auto-detected, configurable in config.json |
-| Model | `--model opus` | Opus 4.5 alias (most capable) |
+| Model | `--model opus` | Opus 4.6 alias (most capable) |
 | Flags | `--dangerously-skip-permissions` | Required for autonomous file ops |
 
 **Launch command pattern:**
@@ -137,6 +165,22 @@ claude --model opus --dangerously-skip-permissions
 # Or with explicit permission allowlist (safer, from .claude/settings.json):
 claude --model opus --allowedTools "Bash(npm test),Bash(npm run build),Edit,Write,Read,Glob,Grep"
 ```
+
+### Subagent Worktree Isolation
+
+Subagents can be configured to run in isolated worktrees:
+
+```yaml
+# In subagent frontmatter:
+---
+name: my-subagent
+isolation: worktree
+---
+```
+
+The subagent runs in a temporary worktree. On completion:
+- If no changes: auto-cleanup
+- If changes exist: changes preserved for review
 
 </core_concepts>
 

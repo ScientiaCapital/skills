@@ -1,6 +1,6 @@
 {
   "name": "cost-metering",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "category": "Core",
   "depends_on": ["workflow-orchestrator-skill"],
   "activation_triggers": ["cost check", "budget status", "how much spent", "optimize costs"],

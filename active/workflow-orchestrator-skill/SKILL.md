@@ -1,10 +1,10 @@
 ---
 name: "workflow-orchestrator"
-description: "Project workflow system - cost tracking, parallel execution, security gates, agent orchestration. Use when: start day, begin session, status check, new feature, build, implement, end day, wrap up, debug, investigate, research, evaluate."
+description: "Dual-team project workflow — Builder + Observer teams, cost tracking, parallel execution, security gates, agent orchestration. Use when: start day, begin session, status check, new feature, build, implement, end day, wrap up, debug, investigate, dual team, observer team, builder team, spawn observers, devil's advocate."
 ---
 
 <objective>
-Universal project workflow system providing cost tracking, parallel execution via git worktrees, security gates, and intelligent agent orchestration. Manages complete development lifecycle from session start to end-of-day with mandatory security sweeps and context preservation.
+Dual-team project workflow system providing Builder + Observer concurrent teams, cost tracking, parallel execution via git worktrees, security gates, and intelligent agent orchestration. Every session runs two teams: Builders ship features fast, Observers watch for drift, debt, and scope creep. Each team has a devil's advocate role. Manages complete development lifecycle from session start to end-of-day with mandatory Observer reports, security sweeps, and context preservation.
 </objective>
 
 <quick_start>
@@ -13,31 +13,66 @@ Universal project workflow system providing cost tracking, parallel execution vi
 pwd && git status && git log --oneline -5
 cat PROJECT_CONTEXT.md 2>/dev/null
 ```
+→ Auto-spawns Observer team (non-negotiable)
+
+**Feature development:** Contract → Builder Team → Observer monitors → Security gate → Ship
 
 **End session:**
-1. Run security sweep: `gitleaks detect --source .`
-2. Update `PROJECT_CONTEXT.md` with completed/in-progress
-3. Log costs to `costs/daily-YYYY-MM-DD.json`
-
-**Feature development:** Plan → DB/Schema → Parallel implementation → Security gate → Ship
+1. Observer final report
+2. Security sweep: `gitleaks detect --source .`
+3. Update `PROJECT_CONTEXT.md`
+4. Log costs to `costs/daily-YYYY-MM-DD.json`
 </quick_start>
 
 <success_criteria>
 Workflow is successful when:
-- Context scan completed at session start (pwd, git status, PROJECT_CONTEXT.md)
-- Security sweep passes before any commits (gitleaks, secrets check, audit)
+- Context scan completed at session start
+- Observer team spawned and monitoring (non-negotiable)
+- Contract defined before any feature implementation
+- Observer BLOCKER gate checked before phase transitions
+- Security sweep passes before any commits
 - Cost tracking updated (daily.json, mtd.json)
+- Observer final report generated at end of day
 - PROJECT_CONTEXT.md updated at session end
-- Worktrees cleaned up after merge
 - All security gates passed before shipping
 </success_criteria>
 
 <triggers>
 
 - **Session Management:** "start day", "begin session", "what's the status", "end day", "wrap up", "done for today"
-- **Feature Development:** "new feature", "build", "implement"  
+- **Feature Development:** "new feature", "build", "implement"
+- **Dual-Team:** "dual team", "observer team", "builder team", "spawn observers", "devil's advocate"
 - **Debugging:** "debug", "investigate", "why is this broken"
 - **Research:** "research", "evaluate", "should we use"
+
+---
+
+## DUAL-TEAM ARCHITECTURE
+
+Every session runs two concurrent teams under the Orchestrator:
+
+```
+              ORCHESTRATOR
+              ┌────┴────┐
+        BUILDER TEAM   OBSERVER TEAM
+        (ships fast)   (watches quality)
+        ├ Lead Builder  ├ Code Quality (haiku)
+        ├ Builder(s)    └ Architecture (sonnet)
+        └ Devil's Adv.    └─ (Devil's Advocate)
+```
+
+**Observer team is non-negotiable.** It always runs, even for "small" changes.
+
+- **Builders** optimize for velocity — ship features via worktrees or subagents
+- **Observers** optimize for correctness — detect drift, debt, gaps, scope creep
+- **Devil's advocate** on each team prevents groupthink and blind spots
+
+Observers write findings to `.claude/OBSERVER_*.md` with severity levels:
+- 🔴 BLOCKER — stop work, fix immediately
+- 🟡 WARNING — fix before merge or log
+- 🔵 INFO — backlog
+
+**Deep dive:** See `reference/dual-team-architecture.md`
 
 ---
 
@@ -45,65 +80,56 @@ Workflow is successful when:
 
 ### Pre-Flight Checks
 ```bash
-# Git clean?
 git status --short | head -5
-# Deps installed?
-[ -f package.json ] && [ ! -d node_modules ] && echo "⚠️ Run npm install"
-[ -f requirements.txt ] && [ ! -d .venv ] && echo "⚠️ Run pip install"
-# Env exists?
-[ -f .env.example ] && [ ! -f .env ] && echo "⚠️ Copy .env.example to .env"
+[ -f package.json ] && [ ! -d node_modules ] && echo "Run npm install"
+[ -f requirements.txt ] && [ ! -d .venv ] && echo "Run pip install"
+[ -f .env.example ] && [ ! -f .env ] && echo "Copy .env.example to .env"
 ```
 
 ### Context Scan (Mandatory)
 ```bash
-# Detect project
-pwd
-git status
-git log --oneline -5
-
-# Load context
+pwd && git status && git log --oneline -5
 cat PROJECT_CONTEXT.md 2>/dev/null || echo "No context file"
 cat CLAUDE.md 2>/dev/null
-cat TASK.md 2>/dev/null
 cat PLANNING.md 2>/dev/null
 ```
 
-### Worktree Status
+### Observer Team Spawn (Automatic)
+Spawn Observer team concurrent with standup:
+- Code Quality Observer (haiku) — tech debt, test gaps, imports
+- Architecture Observer (sonnet) — contract drift, scope creep, design violations
+
 ```bash
-cat ~/.claude/worktree-registry.json 2>/dev/null | jq '.worktrees[] | select(.project == "'$(basename $(pwd))'")'
-git worktree list
+# Detect Native Agent Teams support
+if [ "${CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS}" = "1" ]; then
+  echo "Native Agent Teams enabled — using DAG task system"
+  # Use TeamCreate + SendMessage for Observer coordination
+else
+  echo "Native Agent Teams not enabled — falling back to manual worktree spawn"
+  # Use subagent-teams-skill Task tool pattern
+fi
 ```
 
-### Cost Status
-```bash
-cat costs/daily-$(date +%Y-%m-%d).json 2>/dev/null || echo "No cost tracking today"
-cat costs/mtd.json 2>/dev/null | jq '.total'
-```
+### Sprint Plan
+Include Observer BLOCKER gate in sprint plan — no phase transitions if active BLOCKERs in `.claude/OBSERVER_ALERTS.md`.
 
 ### Output Format
 ```markdown
 ## Session Start: [PROJECT_NAME]
-
 ### Completed (Last Session)
 - [x] Task 1
-- [x] Task 2
-
 ### In Progress
 | Task | Branch/Worktree | Status |
 |------|-----------------|--------|
-| API endpoint | feature/api @ 8100 | 70% |
-
-### Blockers
-- [ ] Waiting on X
-
+| API endpoint | feature/api | 70% |
+### Observer Status
+- Team: ACTIVE (Code Quality + Architecture)
+- Active blockers: 0
 ### Today's Priority Queue
-1. [AGENT: research-skill] Evaluate framework options
-2. [AGENT: langgraph-agents-skill] Build orchestration
-3. [AGENT: debug-like-expert] Fix flaky test
-
+1. [BUILDER] Feature implementation
+2. [OBSERVER] Continuous monitoring
 ### Cost Context
 - Today: $0.00 | MTD: $12.34 | Budget: $100
-- Avg cost/task: $0.45
 ```
 
 **Deep dive:** See `reference/start-day-protocol.md`
@@ -114,43 +140,13 @@ cat costs/mtd.json 2>/dev/null | jq '.total'
 
 **Trigger:** Before ANY feature development involving new frameworks, APIs, or architectural decisions.
 
-### Scan Existing Solutions
-```bash
-# Check MCP cookbook first
-ls /Users/tmk/Desktop/tk_projects/mcp-server-cookbook/ 2>/dev/null
+### Scan → Evaluate → Decide
+1. Check existing solutions in your repos and MCP cookbook
+2. Use `research-skill` checklist for framework selection
+3. Cost projection before building
+4. Create `RESEARCH.md` → `FINDINGS.md` with GO/NO-GO recommendation
 
-# Check your repos
-find ~/tk_projects -name "*.md" -exec grep -l "[search_term]" {} \; 2>/dev/null | head -20
-```
-
-### Evaluate Approach
-Use `/research-skill` checklist:
-- Framework selection criteria
-- LLM selection (default: DeepSeek V3 for bulk, Claude Sonnet for reasoning)
-- Infrastructure (Supabase/Neon/RunPod)
-
-### Cost Projection
-```python
-# Estimate before building
-estimated_costs = {
-    "inference": tokens_estimate * model_cost_per_1k / 1000,
-    "compute": hours_estimate * runpod_hourly,
-    "storage": gb_estimate * supabase_monthly / 30
-}
-if sum(estimated_costs.values()) > threshold:
-    flag_for_review()
-```
-
-### Output
-Create `RESEARCH.md` → `FINDINGS.md` with:
-- Substantive one-liner summary
-- Confidence score (1-10)
-- Dependencies list
-- Open questions
-- **GO/NO-GO recommendation**
-
-### Gate
-⛔ **Human checkpoint required before proceeding**
+⛔ **Gate: Human checkpoint required before proceeding**
 
 **Deep dive:** See `reference/research-workflow.md`
 
@@ -158,104 +154,67 @@ Create `RESEARCH.md` → `FINDINGS.md` with:
 
 ## FEATURE DEVELOPMENT
 
-### Phase 0: PLAN
+### Phase 0: CONTRACT DEFINITION (Before Code)
 ```markdown
-1. Create BRIEF.md with scope
-2. Map to agents (use workflow-enforcer-skill 70+ catalog)
-3. Identify parallelization opportunities
-4. Create TodoWrite todos
-5. Cost estimate
+## Feature Contract: [NAME]
+### Endpoints / Interfaces
+- POST /api/widgets → { id, name, created_at }
+### Scope Boundaries
+- IN SCOPE: [list]
+- OUT OF SCOPE: [list]
+### Observer Checkpoints
+- [ ] Architecture Observer approves contract
+- [ ] Code Quality Observer runs after each merge
+```
+⛔ **Gate: Architecture Observer must approve contract before Phase 1**
+
+### Phase 1: BUILDER TEAM SPAWN
+```bash
+# Option A: Worktree sessions (long tasks, 30+ min)
+git worktree add -b feature/api ~/tmp/worktrees/$(basename $(pwd))/api
+# Option B: Native Agent Teams (short tasks, <20 min)
+# Use TeamCreate + Task tool subagents
+# Option C: Hybrid — worktrees for Builders, Task tool for Observers
 ```
 
-### Phase 1: SETUP + DB
+Each builder gets a WORKTREE_TASK.md with:
+- Scope boundary (what they CAN and CANNOT touch)
+- Contract reference
+- Devil's advocate mandate (for one builder per cycle)
+
+### Phase 2: OBSERVER MONITORING (Concurrent)
+Observers run parallel to builders on a 5-10 minute loop:
+1. Pull latest from builder branches
+2. Run 7 drift detection patterns (see `reference/observer-patterns.md`)
+3. Write findings to `.claude/OBSERVER_QUALITY.md` and `.claude/OBSERVER_ARCH.md`
+4. Escalate BLOCKERs to `.claude/OBSERVER_ALERTS.md`
+
+### Phase 3: SECURITY + QUALITY GATE
 ```bash
-# Schema design
-/database-design:schema-design
-
-# Migrations
-/supabase-sql-skill or /database-migrations:sql-migrations
-```
-⛔ **Gate: Schema review before Phase 2**
-
-### Phase 2: PARALLEL IMPLEMENTATION
-
-#### Port Allocation
-```bash
-# Reserve ports upfront (8100-8199 pool)
-PORTS=$(cat ~/.claude/worktree-registry.json | jq '[.worktrees[].ports[]] | max // 8098' | xargs -I{} expr {} + 2)
-echo "Next available: $PORTS, $(expr $PORTS + 1)"
-```
-
-#### Spawn Worktrees
-```bash
-# Worktree A: Backend
-git worktree add -b feature/api-backend ~/tmp/worktrees/$(basename $(pwd))/api-backend
-# Assign ports 8100, 8101
-
-# Worktree B: Frontend  
-git worktree add -b feature/ui ~/tmp/worktrees/$(basename $(pwd))/ui
-# Assign ports 8102, 8103
-
-# Worktree C: Tests
-git worktree add -b feature/tests ~/tmp/worktrees/$(basename $(pwd))/tests
-# Assign ports 8104, 8105
-```
-
-#### Monitor & Merge
-```bash
-# Check status
-git worktree list
-
-# After completion, merge
-git checkout main
-git merge feature/api-backend
-git worktree remove ~/tmp/worktrees/my-project/api-backend
-```
-
-### Phase 3: SECURITY + INTEGRATION
-
-Run parallel scans:
-```bash
-# SAST
-semgrep --config auto . 
-
-# Secrets
+# Security scans
+semgrep --config auto .
 gitleaks detect --source .
-
-# Dependencies
 npm audit --audit-level=critical || pip-audit
-
-# Tests
 pytest --cov=src || npm test -- --coverage
 ```
 
-⛔ **Gate: ALL must pass**
+⛔ **Gate: ALL must pass + no active Observer BLOCKERs**
 ```python
 gate = (
-    sast_clean AND 
-    secrets_found == 0 AND 
-    critical_vulns == 0 AND 
-    test_coverage >= 80
+    sast_clean AND
+    secrets_found == 0 AND
+    critical_vulns == 0 AND
+    test_coverage >= 80 AND
+    observer_blockers == 0  # NEW: Observer gate
 )
 ```
 
 ### Phase 4: SHIP
 ```bash
-# Final review
 git diff main...HEAD
-
-# Update docs
-# - TASK.md (mark complete)
-# - PLANNING.md (update status)  
-# - CLAUDE.md (add learnings)
-
-# Commit
-git add .
-git commit -m "feat: [description]"
+git add . && git commit -m "feat: [description]"
 git push
-
-# Log cost
-echo '{"feature": "X", "cost": 1.23, "date": "'$(date -Iseconds)'"}' >> costs/by-feature.jsonl
+echo '{"feature": "X", "cost": 1.23}' >> costs/by-feature.jsonl
 ```
 
 **Deep dive:** See `reference/feature-development.md`
@@ -266,60 +225,16 @@ echo '{"feature": "X", "cost": 1.23, "date": "'$(date -Iseconds)'"}' >> costs/by
 
 **Trigger:** When standard troubleshooting fails or issue is complex.
 
-### Context Scan
-```bash
-# Detect project type
-cat package.json 2>/dev/null && echo "Node.js project"
-cat pyproject.toml 2>/dev/null && echo "Python project"
-cat Cargo.toml 2>/dev/null && echo "Rust project"
-
-# Load domain expertise
-ls ~/.claude/skills/expertise/ 2>/dev/null
-```
-
-### Evidence Gathering (Mandatory)
-Document before ANY fix attempt:
-```markdown
-## Issue
-[Exact error message]
-
-## Reproduction
-1. Step 1
-2. Step 2
-3. Error occurs
-
-## Expected vs Actual
-- Expected: X
-- Actual: Y
-
-## Environment
-- OS: 
-- Runtime version:
-- Dependencies:
-```
-
-### Hypothesis Formation
-List 3+ hypotheses with evidence:
-```markdown
-### Hypotheses
-1. **[Most likely]** Database connection timeout
-   - Evidence: Error mentions "connection refused"
-   - Test: Check DB status
-   
-2. **[Possible]** Race condition in async code
-   - Evidence: Intermittent failure
-   - Test: Add logging around suspect area
-   
-3. **[Less likely]** Dependency version mismatch
-   - Evidence: Works on other machine
-   - Test: Compare package-lock.json
-```
+### Evidence → Hypothesize → Test → Verify
+1. **Evidence gathering** — exact error, reproduction steps, expected vs actual
+2. **Hypothesis formation** — 3+ hypotheses with evidence for each
+3. **Systematic testing** — one variable at a time
+4. **Verification** — root cause confirmed before committing fix
 
 ### Critical Rules
-- ❌ NO DRIVE-BY FIXES - if you can't explain WHY, don't commit
-- ❌ NO GUESSING - verify everything
+- ❌ NO DRIVE-BY FIXES — explain WHY before committing
+- ❌ NO GUESSING — verify everything
 - ✅ Use all tools: MCP servers, web search, extended thinking
-- ✅ Think out loud
 - ✅ One variable at a time
 
 **Deep dive:** See `reference/debug-methodology.md`
@@ -328,118 +243,63 @@ List 3+ hypotheses with evidence:
 
 ## END DAY
 
-### Security Sweep (Mandatory - Blocks Commits)
+### Phase 1: Observer Final Report (Before Security Sweep)
+Observers generate final reports:
+- Summary of all findings (resolved + open)
+- Metrics: debt items, test coverage delta, contract compliance
+- Write to `.claude/OBSERVER_QUALITY.md` and `.claude/OBSERVER_ARCH.md`
+
+⛔ **Gate: Review Observer report before proceeding**
+
+### Phase 2: Security Sweep (Mandatory)
 ```bash
-# Parallel scans
 gitleaks detect --source . --verbose
 git log -p | grep -E "(password|secret|api.?key|token)" || echo "Clean"
-npm audit --audit-level=critical 2>/dev/null || pip-audit 2>/dev/null || echo "No package manager"
-grep -r "API_KEY\|SECRET" --include="*.env*" . && echo "⚠️ Check env files"
+npm audit --audit-level=critical 2>/dev/null || pip-audit 2>/dev/null
 ```
 
 ⛔ **Gate: ALL must pass before any commits**
 
-### Context Preservation
-Update `PROJECT_CONTEXT.md`:
+### Phase 3: Context + Metrics + Cleanup
 ```markdown
-## Last Updated: [DATE]
-
+## PROJECT_CONTEXT.md Update
 ### Completed This Session
-- [x] Built API endpoint
-- [x] Fixed auth bug
-
-### In Progress
-- [ ] Frontend integration (70%)
-
-### Blockers
-- Waiting on design review
-
-### Decisions Made
-- Chose Supabase over Firebase (cost: $0 vs $25/mo)
-- Using DeepSeek V3 for embeddings (90% cheaper)
-
+- [x] Feature X
+### Observer Summary
+- Blockers resolved: N | Warnings logged: N | Debt delta: +/-N
 ### Tomorrow's Priorities
-1. Complete frontend integration
-2. Write tests
-3. Deploy to staging
+1. Next task
 ```
 
-### Cost Tracking
-```bash
-# Log today's costs
-cat >> costs/daily-$(date +%Y-%m-%d).json << EOF
-{
-  "inference": {"claude": 0.45, "deepseek": 0.02},
-  "compute": {"runpod": 0.00},
-  "total": 0.47
-}
-EOF
+Archive observer reports to `.claude/OBSERVER_HISTORY/`, reset for next session.
 
-# Update MTD
-jq '.total += 0.47' costs/mtd.json > tmp && mv tmp costs/mtd.json
-```
-
-### Portfolio Metrics Capture
 ```bash
-# Lines shipped today
+# Cost tracking
+echo '{"total": 0.47}' >> costs/daily-$(date +%Y-%m-%d).json
+# Portfolio metrics
 git diff --stat $(git log --since="today 00:00" --format="%H" | tail -1)..HEAD 2>/dev/null
-
-# Session summary
-echo '{"date":"'$(date +%Y-%m-%d)'","commits":'$(git log --since="today 00:00" --oneline | wc -l | tr -d ' ')',"files_changed":'$(git diff --stat $(git log --since="today 00:00" --format="%H" | tail -1)..HEAD 2>/dev/null | tail -1 | grep -oE '[0-9]+ file' | grep -oE '[0-9]+' || echo 0)'}' >> ~/.claude/portfolio/daily-metrics.jsonl
-```
-
-### Learning Capture
-Add to PROJECT_CONTEXT.md or CLAUDE.md:
-- Patterns discovered (reusable approaches)
-- Mistakes made (avoid next time)
-- Tools discovered (new MCP servers, agents, commands)
-
-### Worktree Cleanup
-```bash
-# Check for orphans
-git worktree list --porcelain | grep -E "^worktree"
-
-# Merge completed work
-for wt in $(git worktree list | grep -v "bare\|main" | awk '{print $1}'); do
-  # Check if PR merged, then cleanup
-done
-
-# Remove merged worktrees
-git worktree prune
 ```
 
 **Deep dive:** See `reference/end-day-protocol.md`
 
 ---
 
-## COST TRACKING
+## COST GATE
 
-### Model Costs Reference
-```python
-MODEL_COSTS = {
-    # Per 1K tokens
-    "claude-sonnet": 0.003,      # Complex reasoning
-    "deepseek-v3": 0.00014,      # 95% cheaper - bulk processing
-    "qwen-72b": 0.0002,          # 93% cheaper - alternatives
-    "voyage-embed": 0.0001,      # Embeddings
-    "ollama-local": 0.0,         # Free - local dev
-}
-
-BUDGETS = {
-    "daily": 5.00,
-    "monthly": 100.00,
-    "alert_threshold": 0.8,  # Alert at 80%
-}
+### Pre-Flight Budget Check
+```bash
+COST_FILE=~/.claude/daily-cost.json
+SPENT=$(jq '.spent' "$COST_FILE" 2>/dev/null || echo 0)
+BUDGET=$(jq '.budget_monthly' "$COST_FILE" 2>/dev/null || echo 100)
+echo "MTD: \$$SPENT / \$$BUDGET"
 ```
 
-### Cost-Optimized Routing
-| Task Type | Model | Why |
-|-----------|-------|-----|
-| Complex reasoning | Claude Sonnet | Quality critical |
-| Bulk processing | DeepSeek V3 | 90% savings |
-| Code generation | Claude Sonnet | Accuracy matters |
-| Embeddings | Voyage | Cost + quality balance |
-| Local dev/testing | Ollama | Free |
+| % of Budget | Action |
+|-------------|--------|
+| < 50% | Proceed normally |
+| 50-80% | Cost warning, suggest model downgrade |
+| 80-95% | **WARN** — Ask user before proceeding |
+| > 95% | **BLOCK** — Require explicit override |
 
 **Deep dive:** See `reference/cost-tracking.md`
 
@@ -447,211 +307,53 @@ BUDGETS = {
 
 ## ROLLBACK / RECOVERY
 
-### When to Rollback
-- Tests failing after "fix"
-- Security scan finds new issues
-- Performance degradation
-- Unexpected behavior
-
-### Recovery Workflow
-```bash
-# 1. Stash current work
-git stash
-
-# 2. Find last known good
-git log --oneline -20
-
-# 3. Selective rollback
-git checkout [commit] -- [specific_file]
-
-# OR full revert
-git revert [commit]
-
-# 4. Verify
-pytest  # or npm test
-
-# 5. Investigate root cause using debug-like-expert
-```
+- Stash current work → find last known good → selective rollback or full revert → verify tests → investigate root cause
+- Use `debug-like-expert-skill` for root cause analysis
 
 **Deep dive:** See `reference/rollback-recovery.md`
 
 ---
 
-## AGENT QUICK REFERENCE
+## SKILL INVOCATION QUICK REFERENCE
 
-| Need | Agent/Skill |
-|------|-------------|
-| Market/tech research | `/research-skill` |
-| Project planning | `/planning-prompts` |
-| Multi-agent systems | `/langgraph-agents-skill` |
-| Complex debugging | `/debug-like-expert` |
-| Parallel development | `/worktree-manager` |
-| Session context | `/project-context-skill` |
-| CRM integration | `/crm-integration-skill` |
-| Data analysis | `/data-analysis-skill` |
-| Voice AI | `/voice-ai-skill` |
-| Trading signals | `/trading-signals-skill` |
-| SQL migrations | `/supabase-sql-skill` |
-| GPU deployment | `/runpod-deployment-skill` |
-| Sales/revenue | `/sales-revenue-skill` |
-| Fast inference | `/groq-inference-skill` |
+| Need | Invoke | Model |
+|------|--------|-------|
+| Spawn builder team | `agent-teams-skill` or Task tool with `team_name` | sonnet |
+| Spawn observer team | Auto at START DAY, or `workflow-orchestrator` | haiku/sonnet |
+| Debug a failing test | `debug-like-expert-skill` | sonnet |
+| Review code quality | `superpowers:requesting-code-review` | sonnet |
+| Run security sweep | `security-skill` | sonnet |
+| Track costs | `cost-metering-skill` | haiku |
+| Write tests | `testing-skill` | sonnet |
+| Design API contract | `api-design-skill` | sonnet |
+| Plan architecture | `planning-prompts-skill` | opus |
+| Capture metrics | `portfolio-artifact-skill` | haiku |
+| Parallel build (worktrees) | `agent-teams-skill` | sonnet |
+| Parallel build (in-session) | `subagent-teams-skill` | sonnet |
+| Map task → best agent | `agent-capability-matrix-skill` | — |
+
+### Native Agent Teams (Experimental)
+```bash
+export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
+claude --worktree  # auto-creates worktree branch
+```
+
+Features: DAG task system, peer-to-peer messaging, TeammateIdle/TaskCompleted hooks, shared task lists, `isolation: "worktree"` for subagents.
 
 **Deep dive:** See `reference/agent-routing.md` for complete 70+ agent catalog
 
 ---
 
-## PROJECT STRUCTURE
-
-```
-project/
-├── CLAUDE.md              # Project rules + learnings
-├── PLANNING.md            # Roadmap + phases
-├── TASK.md                # Current sprint
-├── Backlog.md             # Future work
-├── PROJECT_CONTEXT.md     # Auto-generated session context
-├── .taskmaster/
-│   └── docs/
-│       └── prd.txt        # Product requirements
-├── .prompts/              # Meta-prompts
-│   ├── research/
-│   ├── plan/
-│   ├── do/
-│   └── refine/
-├── costs/                 # Cost tracking
-│   ├── daily-YYYY-MM-DD.json
-│   ├── by-feature.jsonl
-│   └── mtd.json
-└── src/
-```
-
----
-
-## COST GATE
-
-### Pre-Flight Budget Check
-
-Run before ANY resource-intensive workflow (feature builds, research sprints, parallel agents):
-
-```bash
-# Read or initialize daily cost tracker
-COST_FILE=~/.claude/daily-cost.json
-if [ ! -f "$COST_FILE" ]; then
-  echo '{"date":"'$(date +%Y-%m-%d)'","spent":0,"budget_monthly":100}' > "$COST_FILE"
-fi
-
-# Check budget status
-SPENT=$(jq '.spent' "$COST_FILE")
-BUDGET=$(jq '.budget_monthly' "$COST_FILE")
-PCT=$(echo "scale=0; $SPENT * 100 / $BUDGET" | bc)
-echo "MTD: \$$SPENT / \$$BUDGET ($PCT%)"
-```
-
-### Threshold Actions
-
-| % of Budget | Action |
-|-------------|--------|
-| < 50% | Proceed normally |
-| 50-80% | Display cost warning, suggest model downgrade |
-| 80-95% | **WARN** — Ask user before proceeding |
-| > 95% | **BLOCK** — Require explicit override |
-
-### Model Cost Reference
-
-| Model | Input/1M | Output/1M | Use When |
-|-------|----------|-----------|----------|
-| Claude Opus | $15.00 | $75.00 | Complex architecture decisions |
-| Claude Sonnet | $3.00 | $15.00 | Code generation, reasoning |
-| Claude Haiku | $0.25 | $1.25 | Search, classification, simple tasks |
-| DeepSeek V3 | $0.27 | $1.10 | Bulk processing, 90% savings |
-
-### Cost Tracking Per Operation
-
-After each workflow phase, log:
-```bash
-echo '{"phase":"feature-build","model":"sonnet","est_tokens":50000,"est_cost":0.15,"ts":"'$(date -Iseconds)'"}' >> ~/.claude/cost-log.jsonl
-```
-
----
-
 ## PROGRESS RENDERING
 
-### Native Progress (TaskCreate/TaskUpdate) — Preferred
-
-Use TaskCreate with `activeForm` for live UI spinners during execution. This renders native checkmarks and progress indicators in Claude Code's UI:
-
+Use TaskCreate with `activeForm` for live UI spinners:
 ```javascript
-// Create tasks for each workflow phase
 TaskCreate({ subject: "Plan architecture", activeForm: "Planning architecture" })
-TaskCreate({ subject: "Build components", activeForm: "Building components" })
-TaskCreate({ subject: "Run security sweep", activeForm: "Running security sweep" })
-
-// Set dependencies for sequential phases
-TaskUpdate({ taskId: "2", addBlockedBy: ["1"] })  // Build waits for Plan
-TaskUpdate({ taskId: "3", addBlockedBy: ["2"] })  // Security waits for Build
-
-// Track progress transitions
 TaskUpdate({ taskId: "1", status: "in_progress" })  // → live spinner
 TaskUpdate({ taskId: "1", status: "completed" })     // → checkmark
 ```
 
-**Key fields:**
-- `subject` — imperative title ("Run tests", "Build API")
-- `activeForm` — present continuous for spinner display ("Running tests", "Building API")
-- `addBlockedBy` — task IDs that must complete first (creates phase sequencing)
-
-### Markdown Fallback (for summary output)
-
-For session overviews and sprint reviews, use markdown tables:
-
-```markdown
-| Phase | Status | Duration | Notes |
-|-------|--------|----------|-------|
-| Plan | Done | 2m | Architecture approved |
-| Build | In Progress | 8m | 2/3 components done |
-| Test | Blocked | — | Blocked on build |
-```
-
-### Status Block (for quick checks)
-```
-Cost: $2.40 today | $38.20 MTD | Budget: $100/mo
-Active: 2 worktrees | 1 agent running
-Completed: 3/5 phases | 12 files changed
-```
-
-Use TaskCreate for live progress during execution. Use markdown tables for summaries. Use status blocks for quick checks.
-
----
-
-## AGENT SELECTION
-
-### Decision Logic
-
-When routing a task to an agent:
-
-1. **Identify task type** — debug, review, build, explore, research
-2. **Check capability matrix** — see `/agent-capability-matrix-skill`
-3. **Select model tier** — haiku for search/classify, sonnet for code, opus for architecture
-4. **Check budget** — run cost gate before expensive operations
-
-### Quick Selection Table
-
-| Task Type | Primary Agent | Fallback | Model |
-|-----------|--------------|----------|-------|
-| Debug | debug-like-expert | general-purpose | sonnet |
-| Code Review | code-reviewer | feature-dev:code-reviewer | haiku |
-| Architecture | Plan agent | code-architect | opus |
-| Security | security-skill | general-purpose | sonnet |
-| Testing | testing-skill | general-purpose | sonnet |
-| Explore | Explore agent | Grep/Glob direct | haiku |
-| Research | research-skill | WebSearch | sonnet |
-| Parallel Build | agent-teams | worktree-manager | sonnet |
-
-### Failure Recovery
-
-If an agent fails or returns poor results:
-1. Try the fallback agent from the table above
-2. If fallback fails, escalate to a higher model tier
-3. If still failing, checkpoint current state and ask user
+Use `addBlockedBy` for phase sequencing. Markdown tables for summaries.
 
 ---
 
@@ -659,22 +361,22 @@ If an agent fails or returns poor results:
 
 | Command | Workflow |
 |---------|----------|
-| `/start-day` | Start Day protocol — context scan, cost status |
-| `/build-feature <name>` | Feature Development — plan → build → test → ship |
-| `/end-day` | End Day protocol — security sweep, context save |
-| `/quick-fix <issue>` | Targeted debug flow — evidence → hypothesis → fix |
+| `/start-day` | Start Day — context scan, Observer spawn, cost status |
+| `/build-feature <name>` | Feature Dev — contract → build → observe → ship |
+| `/end-day` | End Day — Observer report, security sweep, context save |
+| `/quick-fix <issue>` | Debug — evidence → hypothesis → fix |
 | `/cost-check` | Display daily/MTD spend and budget status |
 
 ---
 
 ## GTME PERSPECTIVE
 
-This workflow system demonstrates core Go-To-Market Engineer capabilities:
+This dual-team workflow demonstrates advanced GTME capabilities:
 
-1. **Systematization** - Converting ad-hoc processes into repeatable, documented workflows
-2. **Cost Awareness** - Unit economics thinking (cost-per-task, cost-per-lead mindset)
-3. **Parallelization** - Orchestrating complex multi-agent systems efficiently
-4. **Documentation Discipline** - Audit trails that prove capability
-5. **Tool Integration** - Connecting sales, engineering, and ops tooling
+1. **Process Engineering** — Quality control built into lifecycle, not bolted on
+2. **Parallel Orchestration** — Managing concurrent teams with different objectives
+3. **Adversarial Thinking** — Devil's advocate prevents "happy path only" trap
+4. **Cost Awareness** — Observers use cheaper models; unit economics thinking
+5. **Measurable Output** — Observer reports quantify debt, coverage, compliance
 
-**Portfolio Value:** This skill itself is a GTME portfolio piece showing technical depth + process thinking + cost optimization - directly relevant for roles combining GTM strategy with technical implementation.
+**Portfolio Value:** Produces auditable artifacts demonstrating engineering discipline + process thinking + cost optimization.

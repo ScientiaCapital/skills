@@ -190,6 +190,45 @@ Continuous status with `git log` polling (for long-running teams).
 
 </display_modes>
 
+## DISPLAY MODES
+
+Agent teams support two display modes for managing teammate visibility:
+
+| Mode | Terminal | How |
+|------|----------|-----|
+| `in-process` | Any terminal | All teammates in main terminal. `Shift+Down` to cycle between them. |
+| `split-pane` | tmux or iTerm2 only | Each teammate gets own pane. Click pane to interact. |
+
+### Configuration
+
+```json
+// ~/.claude/settings.json
+{
+  "teammateMode": "auto"
+}
+```
+
+Valid values: `"auto"` (default) | `"tmux"` | `"in-process"`
+
+CLI override:
+```bash
+claude --teammate-mode in-process
+```
+
+### Terminal Compatibility
+
+- **tmux**: Full split-pane support. Set `"teammateMode": "tmux"`.
+- **iTerm2**: Native split-pane support. Enable Python API in Settings > General > Magic.
+- **Ghostty**: NOT supported for split-pane. Workaround: run tmux inside Ghostty and use `"tmux"` mode.
+- **Other terminals**: Use `in-process` mode (all teammates in one terminal).
+
+### Keyboard Shortcuts (in-process mode)
+
+| Shortcut | Action |
+|----------|--------|
+| `Shift+Down` | Cycle to next teammate |
+| `Ctrl+T` | Toggle task list view |
+
 <workflows>
 
 ## Workflows
@@ -405,6 +444,14 @@ SendMessage({ type: "shutdown_request", recipient: "ui-builder" })
 - Agents need **separate terminals / long-running processes** → Worktrees
 - Agents need **real-time messaging** → Native Teams API
 
+**DAG task dependencies:** Tasks support `blocks` and `blockedBy` fields for dependency ordering. File locking is used for concurrent task claiming to prevent race conditions.
+
+**Storage paths:**
+- Team config: `~/.claude/teams/{name}/config.json`
+- Tasks: `~/.claude/tasks/{name}/`
+
+**Keyboard shortcuts:** Use `Shift+Down` to cycle between teammates and `Ctrl+T` to toggle the task list view.
+
 See [subagent-teams](../subagent-teams-skill/SKILL.md) for the complete Task tool reference and team patterns.
 
 </workflows>
@@ -532,6 +579,56 @@ Write this contract to a `CONTRACT.md` or shared type file that both agents can 
 
 </best_practices>
 
+## NATIVE AGENT TEAMS HOOKS
+
+Two hook events are specific to agent teams: `TeammateIdle` and `TaskCompleted`.
+
+### TeammateIdle
+
+Fires when a teammate is about to go idle (between turns).
+
+```json
+{
+  "hooks": {
+    "TeammateIdle": [
+      {
+        "type": "command",
+        "command": "./scripts/check-remaining-work.sh"
+      }
+    ]
+  }
+}
+```
+
+**Exit code 2 pattern** (unique to team hooks):
+- `exit 0` → Allow teammate to go idle
+- `exit 2` → Keep teammate working (stderr fed back as instructions)
+- `exit 1` → Error (logged, teammate goes idle anyway)
+
+**Note:** Agent hooks (`type: "agent"`) are NOT supported for TeammateIdle — use command hooks only.
+
+### TaskCompleted
+
+Fires when a task is being marked complete.
+
+```json
+{
+  "hooks": {
+    "TaskCompleted": [
+      {
+        "type": "command",
+        "command": "./scripts/verify-task.sh"
+      }
+    ]
+  }
+}
+```
+
+**Exit code 2 pattern:**
+- `exit 0` → Allow task completion
+- `exit 2` → Block completion (stderr explains why — e.g., "tests not passing")
+- `exit 1` → Error (logged, task completes anyway)
+
 <limitations>
 
 ## Limitations
@@ -546,6 +643,19 @@ Write this contract to a `CONTRACT.md` or shared type file that both agents can 
 - **File conflicts** — If two agents edit the same file, manual resolution needed
 - **No shared context** — Each agent starts fresh with only WORKTREE_TASK.md
 - **Sequential dependency** — If Agent 2 needs Agent 1's output, Agent 2 must wait
+
+### Native Agent Teams Constraints
+
+Known constraints of Claude Code's native agent teams:
+
+| Limitation | Details |
+|-----------|---------|
+| **No session resumption** | `/resume` does not restore in-process teammates. Only the lead agent resumes. |
+| **No nested teams** | Teammates cannot spawn sub-teams. Only one level of team hierarchy. |
+| **One team per session** | Clean up current team (TeamDelete) before starting a new one. |
+| **Lead is fixed** | Cannot promote teammates or transfer leadership mid-session. |
+| **Permissions at spawn** | Teammate permissions set at spawn time. Can adjust per-teammate after creation, not during spawn. |
+| **Shutdown can be slow** | Teammates finish their current request before shutting down. Plan for graceful wind-down. |
 
 ### What This Skill Is NOT
 - **Not a CI/CD pipeline** — Use GitHub Actions for automated testing

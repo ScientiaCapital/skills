@@ -48,6 +48,21 @@ To use a skill in another project, either:
 
 3. **Copy the `.zip`** directly into project
 
+## Dual-Team Daily Workflow
+
+Every development session runs two concurrent agent teams:
+- **Builder Team** (1-3 agents): Ships features fast via worktrees
+- **Observer Team** (2 agents, always active): Watches for drift, debt, gaps
+
+Each team has a **devil's advocate** role. Observer team is non-negotiable.
+
+See `active/workflow-orchestrator-skill/reference/dual-team-architecture.md` for full spec.
+
+Quick invocation:
+- Start day: triggers workflow-orchestrator → spawns Observers automatically
+- Feature build: uses agent-teams or subagent-teams → Observers monitor
+- End day: Observer final report → security sweep → context save
+
 ## Available Skills
 
 See SKILLS_INDEX.md for the complete list.

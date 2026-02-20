@@ -50,17 +50,23 @@ Hooks are event-driven automation for Claude Code that execute shell commands or
 </quick_start>
 
 <hook_types>
-| Event | When It Fires | Can Block? |
-|-------|---------------|------------|
-| **PreToolUse** | Before tool execution | Yes |
-| **PostToolUse** | After tool execution | No |
-| **UserPromptSubmit** | User submits a prompt | Yes |
-| **Stop** | Claude attempts to stop | Yes |
-| **SubagentStop** | Subagent attempts to stop | Yes |
-| **SessionStart** | Session begins | No |
-| **SessionEnd** | Session ends | No |
-| **PreCompact** | Before context compaction | Yes |
-| **Notification** | Claude needs input | No |
+| Event | When | Can Block? |
+|-------|------|------------|
+| `SessionStart` | Session begins or resumes | No |
+| `UserPromptSubmit` | Before Claude processes prompt | Yes |
+| `PreToolUse` | Before tool execution | Yes |
+| `PermissionRequest` | Permission dialog appears | Yes |
+| `PostToolUse` | After tool succeeds | No (feeds back) |
+| `PostToolUseFailure` | After tool fails | No |
+| `Notification` | Claude sends notification | No |
+| `SubagentStart` | Subagent spawns | No |
+| `SubagentStop` | Subagent finishes | Yes |
+| `Stop` | Claude finishes responding | Yes |
+| `TeammateIdle` | Agent team teammate about to go idle | Yes (exit 2 only) |
+| `TaskCompleted` | Task being marked complete | Yes (exit 2 only) |
+| `ConfigChange` | Config file changes mid-session | Yes (except policy) |
+| `PreCompact` | Before context compaction | No |
+| `SessionEnd` | Session terminates | No |
 
 <pretooluse>
 **Purpose:** Validate, modify, or block tool calls before execution.
@@ -71,7 +77,35 @@ Hooks are event-driven automation for Claude Code that execute shell commands or
 - Add flags to commands (--save-exact)
 - Log command attempts
 
-**Example - Block force push to main:**
+**Example - Block force push to main (command hook):**
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/path/to/check-safety.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Command hook output schema:**
+```json
+{
+  "decision": "approve" | "block",
+  "reason": "Explanation",
+  "updatedInput": { "command": "modified command" }
+}
+```
+
+**Example - Block force push to main (prompt hook):**
 ```json
 {
   "hooks": {
@@ -81,7 +115,7 @@ Hooks are event-driven automation for Claude Code that execute shell commands or
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Check if this command is safe: $ARGUMENTS\n\nBlock if: force push to main/master\n\nReturn: {\"decision\": \"approve\" or \"block\", \"reason\": \"explanation\"}"
+            "prompt": "Check if this command is safe: $ARGUMENTS\n\nBlock if: force push to main/master\n\nReturn JSON: {\"ok\": true} or {\"ok\": false, \"reason\": \"explanation\"}"
           }
         ]
       }
@@ -90,12 +124,15 @@ Hooks are event-driven automation for Claude Code that execute shell commands or
 }
 ```
 
-**Output schema:**
+**Prompt hook output schema:**
 ```json
 {
-  "decision": "approve" | "block",
-  "reason": "Explanation",
-  "updatedInput": { "command": "modified command" }
+  "ok": true
+}
+// or
+{
+  "ok": false,
+  "reason": "Explanation"
 }
 ```
 </pretooluse>
@@ -217,6 +254,51 @@ Hooks are event-driven automation for Claude Code that execute shell commands or
 }
 ```
 </notification>
+
+<teammateidle>
+### TeammateIdle
+
+Fires when an agent team teammate is about to go idle (between turns).
+
+**Input:**
+```json
+{
+  "session_id": "abc-123",
+  "teammate_name": "researcher",
+  "teammate_agent_id": "agent-456",
+  "tasks_completed": 3,
+  "tasks_remaining": 2
+}
+```
+
+**Exit code 2 pattern:** Unlike standard blocking (exit 1), TeammateIdle uses exit code 2:
+- `exit 0` → Allow teammate to go idle
+- `exit 2` → Keep teammate working (stderr fed back as instructions)
+- `exit 1` → Error (logged, teammate goes idle anyway)
+
+**Note:** Agent hooks (`type: "agent"`) are NOT supported for TeammateIdle.
+</teammateidle>
+
+<taskcompleted>
+### TaskCompleted
+
+Fires when a task is being marked as complete in agent teams.
+
+**Input:**
+```json
+{
+  "session_id": "abc-123",
+  "task_id": "task-789",
+  "task_subject": "Implement auth module",
+  "completed_by": "builder-1"
+}
+```
+
+**Exit code 2 pattern:**
+- `exit 0` → Allow task completion
+- `exit 2` → Block completion (stderr fed back as reason — e.g., "tests not passing")
+- `exit 1` → Error (logged, task completes anyway)
+</taskcompleted>
 </hook_types>
 
 <hook_anatomy>
@@ -251,29 +333,171 @@ Hooks are event-driven automation for Claude Code that execute shell commands or
 - Reasoning required
 
 **Input:** Prompt with `$ARGUMENTS` placeholder
-**Output:** JSON with `decision` and `reason`
+**Output:** JSON with `ok` and `reason`
 
 ```json
 {
   "type": "prompt",
-  "prompt": "Evaluate if this command is safe: $ARGUMENTS\n\nReturn JSON: {\"decision\": \"approve\" or \"block\", \"reason\": \"explanation\"}"
+  "prompt": "Evaluate if this command is safe: $ARGUMENTS\n\nReturn JSON: {\"ok\": true} or {\"ok\": false, \"reason\": \"explanation\"}"
 }
 ```
+
+**Response schema:**
+```json
+{
+  "ok": true
+}
+// or
+{
+  "ok": false,
+  "reason": "Explanation of why the action was blocked"
+}
+```
+
+**Note:** Prompt hooks use `{ "ok": true/false }` — NOT `{ "decision": "approve" | "block" }` which is for command hooks only.
 </prompt_hooks>
+
+<agent_hooks>
+
+## Agent-Based Hooks (type: "agent")
+
+Agent hooks spawn a subagent to evaluate conditions using Read, Grep, and Glob tools. Best for multi-step verification that requires reasoning.
+
+### Configuration
+
+```json
+{
+  "hooks": {
+    "Stop": [
+      {
+        "type": "agent",
+        "prompt": "Verify all unit tests pass before stopping. $ARGUMENTS",
+        "model": "claude-haiku-4-5",
+        "timeout": 120
+      }
+    ]
+  }
+}
+```
+
+### How Agent Hooks Work
+
+1. Subagent spawns with Read, Grep, and Glob tools (up to 50 turns)
+2. Subagent evaluates the prompt against current state
+3. Returns structured response: `{ "ok": true }` or `{ "ok": false, "reason": "..." }`
+4. If `ok: false`, the action is blocked and reason is fed back to Claude
+
+### Constraints
+
+- Default model: `claude-haiku-4-5` (fast, cheap — override with `model` field)
+- NOT supported for `TeammateIdle` event
+- Maximum 50 agentic turns per invocation
+- `$ARGUMENTS` expands to the hook's input JSON
+
+### When to Use Agent Hooks
+
+| Scenario | Handler |
+|----------|---------|
+| Deterministic check (lint, format) | `type: "command"` |
+| Single LLM judgment ("is this safe?") | `type: "prompt"` |
+| Multi-step verification (read files, grep patterns, reason) | `type: "agent"` |
+
+</agent_hooks>
+
+<async_hooks>
+
+## Async Hooks (async: true)
+
+Command hooks can run asynchronously — fire-and-forget without blocking Claude's response.
+
+### Configuration
+
+```json
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "type": "command",
+        "command": "/path/to/run-tests.sh",
+        "async": true,
+        "timeout": 120
+      }
+    ]
+  }
+}
+```
+
+### Behavior
+
+- **Command hooks only** — not supported for `type: "prompt"` or `type: "agent"`
+- Fire-and-forget — does NOT block the action
+- Output is delivered via `systemMessage` on Claude's next turn
+- Exit codes are ignored (cannot block)
+
+### Best Used For
+
+- `PostToolUse`: Run tests after file changes
+- `Stop`: Trigger CI pipeline after session ends
+- `SessionEnd`: Save analytics or cleanup
+
+### Anti-pattern
+
+Do NOT use `async: true` on blocking events (`PreToolUse`, `UserPromptSubmit`) — the action will proceed before the hook completes, defeating the purpose.
+
+</async_hooks>
+
+<skill_scoped_hooks>
+
+## Skill-Scoped Hooks
+
+Hooks can be defined directly in a skill's YAML frontmatter. These hooks are scoped to the skill's lifecycle — active only while the skill is loaded.
+
+### Syntax
+
+```yaml
+---
+name: my-skill
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./scripts/security-check.sh"
+          once: true
+---
+```
+
+### The `once: true` Field
+
+- Fires once per session, then auto-removes
+- **Skills only** — not supported in `.claude/settings.json` or agent hooks
+- Useful for one-time setup checks, session initialization validation
+
+### Scoping Rules
+
+- Hooks activate when the skill loads and deactivate when it unloads
+- Multiple skills can register hooks for the same event (all fire in order)
+- Skill hooks run AFTER global hooks (from settings.json)
+
+### Known Issue
+
+Skill-scoped hooks don't fire when the skill is loaded via a plugin/MCP server (GitHub Issue #17688). Workaround: define the hook in `.claude/settings.json` instead.
+
+</skill_scoped_hooks>
 
 <decision_tree>
 ```
 Is the check simple and deterministic?
-  YES --> Command hook
+  YES --> type: "command"
 
-Does it require natural language understanding?
-  YES --> Prompt hook
+Does it require a single LLM judgment ("is this safe?")?
+  YES --> type: "prompt" (default model: Haiku)
 
-Does it need to inspect code semantics?
-  YES --> Prompt hook
+Does it need multi-step verification (read files, grep patterns, reason)?
+  YES --> type: "agent" (Read/Grep/Glob, up to 50 turns)
 
 Is it just logging or formatting?
-  YES --> Command hook
+  YES --> type: "command"
 ```
 </decision_tree>
 </hook_anatomy>
@@ -358,12 +582,25 @@ All hooks receive:
 <blocking_output>
 For PreToolUse, UserPromptSubmit, Stop:
 
+**Command hooks** (`type: "command"`):
 ```json
 {
   "decision": "approve" | "block",
   "reason": "Explanation",
   "systemMessage": "Message to user",
   "updatedInput": { "command": "modified" }
+}
+```
+
+**Prompt and agent hooks** (`type: "prompt"` or `type: "agent"`):
+```json
+{
+  "ok": true
+}
+// or
+{
+  "ok": false,
+  "reason": "Explanation of why the action was blocked"
 }
 ```
 </blocking_output>

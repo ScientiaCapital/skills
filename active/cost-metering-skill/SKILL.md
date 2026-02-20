@@ -40,12 +40,14 @@ echo '{"date":"'$(date +%Y-%m-%d)'","spent":0,"budget_monthly":100,"budget_daily
 
 | Model | Input/1M tokens | Output/1M tokens | Typical Use |
 |-------|----------------|-------------------|-------------|
-| Claude Opus 4 | $15.00 | $75.00 | Architecture, complex reasoning |
-| Claude Sonnet 4.5 | $3.00 | $15.00 | Code generation, standard tasks |
-| Claude Haiku 4.5 | $0.25 | $1.25 | Search, classification, simple |
+| Claude Opus 4.6 | $5.00 | $25.00 | Architecture, complex reasoning |
+| Claude Sonnet 4.6 | $3.00 | $15.00 | Code generation, standard tasks |
+| Claude Haiku 4.5 | $1.00 | $5.00 | Search, classification, simple |
 | DeepSeek V3 | $0.27 | $1.10 | Bulk processing |
 | GROQ Llama 3.3 70B | $0.59 | $0.79 | Fast inference |
 | Voyage Embeddings | $0.10 | — | Embeddings |
+
+> **v1.1.0 pricing changes:** Opus $15/$75 → $5/$25 (70% cheaper with Opus 4.6). Haiku $0.25/$1.25 → $1/$5 (Haiku 3 → 4.5, 4x more expensive). Sonnet $3/$15 unchanged (model upgraded 4.5 → 4.6).
 
 ---
 
@@ -82,9 +84,9 @@ echo '{"date":"'$(date +%Y-%m-%d)'","spent":0,"budget_monthly":100,"budget_daily
 
 | Task | Expensive | Optimized | Savings |
 |------|-----------|-----------|---------|
-| File search | Sonnet ($3/1M) | Haiku ($0.25/1M) | 92% |
-| Code review | Sonnet ($3/1M) | Haiku ($0.25/1M) | 92% |
-| Classification | Sonnet ($3/1M) | Haiku ($0.25/1M) | 92% |
+| File search | Sonnet ($3/1M) | Haiku ($1/1M) | 67% |
+| Code review | Sonnet ($3/1M) | Haiku ($1/1M) | 67% |
+| Classification | Sonnet ($3/1M) | Haiku ($1/1M) | 67% |
 | Bulk processing | Sonnet ($3/1M) | DeepSeek ($0.27/1M) | 91% |
 
 **Rule:** If the task doesn't generate code, use Haiku. If it doesn't need Claude, use DeepSeek.

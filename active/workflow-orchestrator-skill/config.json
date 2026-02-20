@@ -1,8 +1,8 @@
 {
   "name": "workflow-orchestrator",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "category": "Core",
-  "description": "Full-day workflow orchestration with cost tracking, model routing, and team coordination",
+  "description": "Dual-team workflow orchestration with Builder + Observer teams, cost tracking, model routing, security gates, and devil's advocate pattern",
   "requires": [],
   "depends_on": [
     "workflow-enforcer-skill",
@@ -11,13 +11,26 @@
   "integrates_with": [
     "cost-metering-skill",
     "portfolio-artifact-skill",
-    "agent-capability-matrix-skill"
+    "agent-capability-matrix-skill",
+    "agent-teams-skill",
+    "subagent-teams-skill",
+    "debug-like-expert-skill",
+    "security-skill",
+    "testing-skill"
   ],
   "activation_triggers": [
     "start day",
     "end day",
     "orchestrate workflow",
     "track costs",
-    "route agent"
+    "route agent",
+    "dual team",
+    "observer team",
+    "builder team",
+    "spawn observers",
+    "devil's advocate"
+  ],
+  "experimental_features": [
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS"
   ]
 }

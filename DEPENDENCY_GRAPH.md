@@ -98,6 +98,8 @@ graph TB
     WO -.-> TS
     WO -.-> SEC
     WO -.-> GW
+    WO -.-> AT2
+    WO -.-> SAT
 
     AT2 -.-> EA
     SEC -.-> SS
@@ -228,11 +230,11 @@ The orchestrator routes to 13+ skills based on task type:
 
 | Phase | Routes To |
 |-------|-----------|
-| START DAY | project-context, planning-prompts |
+| START DAY | project-context, planning-prompts, **Observer spawn** (agent-teams / subagent-teams) |
 | RESEARCH | research, data-analysis |
-| FEATURE DEV | testing, api-design, worktree-manager, git-workflow |
+| FEATURE DEV | testing, api-design, worktree-manager, git-workflow, **agent-teams, subagent-teams** |
 | DEBUG | debug-like-expert |
-| END DAY | security, git-workflow |
+| END DAY | security, git-workflow, **Observer final report** |
 
 ### Explicit Cross-References
 

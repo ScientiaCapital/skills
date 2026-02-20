@@ -272,7 +272,7 @@ For each issue found:
 
 <model_selection>
 <model_capabilities>
-**Sonnet 4.5** (`sonnet`):
+**Sonnet 4.6** (`sonnet`):
 - Best for agentic tasks: 64% on coding benchmarks
 - SWE-bench Verified: 49.0%
 - Use for: Planning, complex reasoning, validation
