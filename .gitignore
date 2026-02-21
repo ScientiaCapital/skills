@@ -35,3 +35,22 @@ logs/
 *.tmp
 *.temp
 .cache/
+
+# ===========================================
+# Observer Reports (ephemeral, per-session)
+# ===========================================
+# These are regenerated each session by observer agents.
+# Do NOT track them — they contain transient findings.
+.claude/OBSERVER_QUALITY.md
+.claude/OBSERVER_ARCH.md
+.claude/OBSERVER_ALERTS.md
+.claude/archive/*.md
+
+# Cost tracking (ephemeral)
+.claude/daily-cost.json
+costs/*.json
+
+# Environment
+.env
+.env.local
+.env.*.local
