@@ -31,15 +31,20 @@ c308006 chore(infra): update gitignore and lock files
 
 ## Today's Focus
 
-1. [x] P3 Backlog — all items complete
+1. [x] P4 Tech Debt — trim 6 oversized skills
 
 ## Done (This Session — Feb 22)
 
-- [x] Created scripts/test-skills.sh — 8 automated test cases, --verbose and --skill options
-- [x] Created scripts/log-skill-usage.sh + PostToolUse Skill hook for analytics
-- [x] Created scripts/skill-analytics-report.sh — top skills, daily breakdown, unused detection
-- [x] Added Vite SPA patterns to frontend-ui-skill — 2 reference files, 2 templates, SKILL.md + config.json updated
-- [x] Updated all metadata (PLANNING, BACKLOG, SKILLS_INDEX, README, SKILL_TEST_MATRIX)
+- [x] Trimmed agent-teams-skill (717→331), api-testing-skill (592→261), gtm-pricing-skill (516→110)
+- [x] Trimmed api-design-skill (515→403), security-skill (515→438), worktree-manager-skill (510→404)
+- [x] Created 6 new reference files (filtering-sorting, rate-limiting, secrets-management, advanced-workflows, workflows-detailed, best-practices-full)
+- [x] All 39 skills now under 500-line advisory limit
+- [x] All 274 tests passing, 40 zips rebuilt
+- [x] Observer-full ran (scope escalation at 6 files)
+
+## Tomorrow
+
+All P1-P4 backlog complete. P5 candidates logged in plan: platform updates for agent-teams, worktree-manager, subagent-teams, skill frontmatter, hook migration.
 
 ## Blockers
 

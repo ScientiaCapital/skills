@@ -151,399 +151,68 @@ Use sequence numbers for dependent requests:
 <test_patterns>
 ## Test Assertion Patterns
 
-### Status Code Validation
+| Assertion Type | What to Check | Example |
+|---------------|---------------|---------|
+| Status codes | 200, 201, 400, 401, 404 | `pm.response.to.have.status(200)` |
+| Response body | Required fields, types, patterns | `pm.expect(json).to.have.property("id")` |
+| Response time | Under threshold | `pm.expect(pm.response.responseTime).to.be.below(500)` |
+| Headers | Content-Type, X-Request-Id | `pm.response.to.have.header("Content-Type")` |
+| JSON schema | Full schema validation | `pm.response.to.have.jsonSchema(schema)` |
 
-```javascript
-// Postman
-pm.test("Success response", () => pm.response.to.have.status(200));
-pm.test("Created response", () => pm.response.to.have.status(201));
-pm.test("Not found", () => pm.response.to.have.status(404));
-
-// Bruno
-test("Success response", () => expect(res.status).to.equal(200));
-```
-
-### Response Body Validation
-
-```javascript
-// Postman
-pm.test("Has required fields", function () {
-    const json = pm.response.json();
-    pm.expect(json).to.have.property("id");
-    pm.expect(json.id).to.be.a("string");
-    pm.expect(json.email).to.match(/^[\w-]+@[\w-]+\.\w+$/);
-});
-
-// Array validation
-pm.test("Returns array of users", function () {
-    const json = pm.response.json();
-    pm.expect(json.users).to.be.an("array");
-    pm.expect(json.users.length).to.be.greaterThan(0);
-});
-```
-
-### Response Time Validation
-
-```javascript
-pm.test("Response time < 500ms", function () {
-    pm.expect(pm.response.responseTime).to.be.below(500);
-});
-```
-
-### Header Validation
-
-```javascript
-pm.test("Content-Type is JSON", function () {
-    pm.response.to.have.header("Content-Type", /application\/json/);
-});
-
-pm.test("Has request ID", function () {
-    pm.response.to.have.header("X-Request-Id");
-});
-```
-
-### JSON Schema Validation (Postman)
-
-```javascript
-const schema = {
-    type: "object",
-    required: ["id", "name", "email"],
-    properties: {
-        id: { type: "string", format: "uuid" },
-        name: { type: "string", minLength: 1 },
-        email: { type: "string", format: "email" }
-    }
-};
-
-pm.test("Schema is valid", function () {
-    pm.response.to.have.jsonSchema(schema);
-});
-```
+See `reference/test-design.md` for full assertion patterns with Postman and Bruno examples.
 </test_patterns>
 
 <environment_management>
 ## Environment Management
 
-### Variable Scopes (Postman)
+**Variable scope (Postman):** Global → Collection → Environment → Data → Local (highest priority).
 
-```
-Global → Collection → Environment → Data → Local
-(lowest priority)         (highest priority)
-```
+Use environment files for `baseUrl`, `apiKey` per env (local/staging/production). Chain requests by saving response values (`pm.environment.set("authToken", json.accessToken)`) for use in subsequent requests.
 
-### Environment Files
-
-**Postman environment.json:**
-```json
-{
-    "id": "env-uuid",
-    "name": "staging",
-    "values": [
-        { "key": "baseUrl", "value": "https://staging.api.com", "enabled": true },
-        { "key": "apiKey", "value": "stg_key_xxx", "enabled": true, "type": "secret" }
-    ]
-}
-```
-
-**Bruno environment:**
-```javascript
-// environments/staging.bru
-vars {
-  baseUrl: https://staging.api.com
-  apiKey: stg_key_xxx
-}
-```
-
-### Dynamic Variables
-
-```javascript
-// Pre-request script - set dynamic values
-const timestamp = Date.now();
-const uniqueEmail = `test_${timestamp}@example.com`;
-
-// Postman
-pm.environment.set("uniqueEmail", uniqueEmail);
-pm.environment.set("timestamp", timestamp);
-
-// Bruno (in pre-request)
-bru.setVar("uniqueEmail", uniqueEmail);
-```
-
-### Chaining Requests
-
-```javascript
-// Request 1: Login - save token
-pm.test("Save auth token", function () {
-    const json = pm.response.json();
-    pm.environment.set("authToken", json.accessToken);
-    pm.environment.set("userId", json.user.id);
-});
-
-// Request 2: Use saved token
-// Headers: Authorization: Bearer {{authToken}}
-// URL: {{baseUrl}}/users/{{userId}}
-```
+See `reference/data-management.md` for environment file formats, dynamic variables, and request chaining patterns.
 </environment_management>
 
 <authentication_testing>
 ## Authentication Testing
 
-### Bearer Token Flow
+| Auth Type | Method | Key Pattern |
+|-----------|--------|-------------|
+| Bearer token | Save from login response, use in `Authorization` header | `pm.environment.set("accessToken", json.accessToken)` |
+| API key | Header (`X-API-Key`) or query param | `{{apiKey}}` variable |
+| OAuth 2.0 | Pre-request script checks expiry, refreshes automatically | `pm.sendRequest()` for token refresh |
 
-```javascript
-// 1. Login request - Pre-request or separate request
-// 2. Save token to environment
-pm.environment.set("accessToken", pm.response.json().accessToken);
+Always test: 401 without token, 403 with wrong role.
 
-// 3. Use in subsequent requests
-// Header: Authorization: Bearer {{accessToken}}
-```
-
-### API Key Authentication
-
-```javascript
-// Header-based
-// X-API-Key: {{apiKey}}
-
-// Query param
-// GET {{baseUrl}}/endpoint?api_key={{apiKey}}
-```
-
-### OAuth 2.0 with Refresh
-
-```javascript
-// Pre-request script for token refresh
-const tokenExpiry = pm.environment.get("tokenExpiry");
-const now = Date.now();
-
-if (!tokenExpiry || now > tokenExpiry) {
-    pm.sendRequest({
-        url: pm.environment.get("authUrl") + "/token",
-        method: "POST",
-        header: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: {
-            mode: "urlencoded",
-            urlencoded: [
-                { key: "grant_type", value: "refresh_token" },
-                { key: "refresh_token", value: pm.environment.get("refreshToken") },
-                { key: "client_id", value: pm.environment.get("clientId") }
-            ]
-        }
-    }, (err, res) => {
-        if (!err) {
-            const json = res.json();
-            pm.environment.set("accessToken", json.access_token);
-            pm.environment.set("tokenExpiry", now + (json.expires_in * 1000));
-        }
-    });
-}
-```
-
-### Testing Auth Failures
-
-```javascript
-// Test unauthorized access
-pm.test("Returns 401 without token", function () {
-    pm.response.to.have.status(401);
-});
-
-// Test forbidden access
-pm.test("Returns 403 for wrong role", function () {
-    pm.response.to.have.status(403);
-    pm.expect(pm.response.json().error).to.include("permission");
-});
-```
+See `reference/postman-patterns.md` for OAuth 2.0 refresh flow and auth failure test patterns.
 </authentication_testing>
 
 <error_testing>
 ## Error Response Testing
 
-### Validation Errors (400)
+Test each error class: 400 (validation errors with `details` array), 404 (not found), 429 (rate limit headers present), 5xx (has `requestId`).
 
-```javascript
-pm.test("Returns validation error", function () {
-    pm.response.to.have.status(400);
-
-    const json = pm.response.json();
-    pm.expect(json.error).to.equal("VALIDATION_ERROR");
-    pm.expect(json.details).to.be.an("array");
-    pm.expect(json.details[0]).to.have.property("field");
-    pm.expect(json.details[0]).to.have.property("message");
-});
-```
-
-### Not Found (404)
-
-```javascript
-pm.test("Returns 404 for missing resource", function () {
-    pm.response.to.have.status(404);
-    pm.expect(pm.response.json().error).to.equal("NOT_FOUND");
-});
-```
-
-### Rate Limiting (429)
-
-```javascript
-pm.test("Rate limit headers present", function () {
-    pm.response.to.have.header("X-RateLimit-Limit");
-    pm.response.to.have.header("X-RateLimit-Remaining");
-    pm.response.to.have.header("X-RateLimit-Reset");
-});
-```
-
-### Server Errors (5xx)
-
-```javascript
-// Test graceful error handling
-pm.test("Error response has request ID", function () {
-    pm.expect(pm.response.json()).to.have.property("requestId");
-});
-```
+See `reference/test-design.md` for error response assertion patterns.
 </error_testing>
 
 <ci_integration>
 ## CI/CD Integration
 
-### Newman (Postman CLI)
+| Tool | CLI | Run Command |
+|------|-----|-------------|
+| Postman | Newman | `newman run collection.json -e staging.json` |
+| Bruno | Bruno CLI | `bru run --env staging` |
 
-```bash
-# Install
-npm install -g newman
+Integrate via GitHub Actions: install CLI, run collection, upload HTML report as artifact. Use `${{ secrets.* }}` for sensitive env vars.
 
-# Run collection
-newman run collection.json -e environment.json
-
-# With reporters
-newman run collection.json \
-  -e staging.json \
-  --reporters cli,junit \
-  --reporter-junit-export results.xml
-
-# Specific folder
-newman run collection.json --folder "users"
-```
-
-### Bruno CLI
-
-```bash
-# Install
-npm install -g @usebruno/cli
-
-# Run collection
-bru run --env staging
-
-# Specific file
-bru run users/create-user.bru --env local
-```
-
-### GitHub Actions Example
-
-```yaml
-name: API Tests
-
-on:
-  pull_request:
-    branches: [main]
-
-jobs:
-  api-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install Newman
-        run: npm install -g newman newman-reporter-htmlextra
-
-      - name: Run API Tests
-        run: |
-          newman run tests/api/collection.json \
-            -e tests/api/ci.json \
-            --reporters cli,htmlextra \
-            --reporter-htmlextra-export report.html
-
-      - name: Upload Report
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: api-test-report
-          path: report.html
-```
-
-### Environment Secrets in CI
-
-```yaml
-# Use GitHub Secrets for sensitive values
-- name: Run API Tests
-  env:
-    API_KEY: ${{ secrets.STAGING_API_KEY }}
-  run: |
-    newman run collection.json \
-      --env-var "apiKey=$API_KEY" \
-      -e staging.json
-```
+See `reference/ci-integration.md` for GitHub Actions workflow, reporters, and secrets handling.
 </ci_integration>
 
 <data_management>
 ## Test Data Management
 
-### Data Files (Newman)
+Use data files (`newman run -d test-data.json`) for iteration-based testing. Postman has built-in dynamic variables (`{{$guid}}`, `{{$randomEmail}}`, `{{$timestamp}}`). Add cleanup scripts in post-request to delete created resources.
 
-```json
-// test-data.json
-[
-    { "email": "user1@test.com", "name": "User One" },
-    { "email": "user2@test.com", "name": "User Two" },
-    { "email": "user3@test.com", "name": "User Three" }
-]
-```
-
-```bash
-# Run with data iterations
-newman run collection.json -d test-data.json -n 3
-```
-
-### Dynamic Data Generation
-
-```javascript
-// Pre-request script
-const faker = require("faker"); // Postman has built-in faker
-
-pm.environment.set("randomEmail", pm.variables.replaceIn("{{$randomEmail}}"));
-pm.environment.set("randomName", pm.variables.replaceIn("{{$randomFullName}}"));
-pm.environment.set("randomUUID", pm.variables.replaceIn("{{$guid}}"));
-```
-
-### Built-in Dynamic Variables (Postman)
-
-| Variable | Example Output |
-|----------|----------------|
-| `{{$guid}}` | `a8b2c3d4-e5f6-7890-abcd-ef1234567890` |
-| `{{$timestamp}}` | `1612345678` |
-| `{{$randomEmail}}` | `test.user@example.com` |
-| `{{$randomInt}}` | `42` |
-| `{{$randomFullName}}` | `John Smith` |
-
-### Cleanup Scripts
-
-```javascript
-// Post-request script - cleanup created resources
-if (pm.response.code === 201) {
-    const createdId = pm.response.json().id;
-
-    pm.sendRequest({
-        url: pm.environment.get("baseUrl") + "/users/" + createdId,
-        method: "DELETE",
-        header: { "Authorization": "Bearer " + pm.environment.get("authToken") }
-    }, (err, res) => {
-        console.log("Cleanup: deleted user " + createdId);
-    });
-}
-```
+See `reference/data-management.md` for data file formats, dynamic generation, and cleanup patterns.
 </data_management>
 
 <checklist>

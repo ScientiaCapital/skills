@@ -333,67 +333,9 @@ async function getPosts(limit: number, cursor?: string) {
 <filtering>
 ## Filtering and Sorting
 
-### Query Parameters
+Use query params: `?status=active`, `?sort=-created_at` (prefix `-` for desc), `?fields=id,name,email`. Validate with Zod schema, build Prisma `where` clause from parsed filters.
 
-```
-# Simple filters
-GET /users?status=active
-GET /users?role=admin&status=active
-
-# Range filters
-GET /orders?created_after=2024-01-01
-GET /orders?total_min=100&total_max=500
-
-# Search
-GET /products?search=keyboard
-GET /products?q=wireless+keyboard
-
-# Sorting
-GET /posts?sort=created_at&order=desc
-GET /posts?sort=-created_at  # Prefix with - for desc
-
-# Multiple sorts
-GET /posts?sort=status,-created_at
-
-# Field selection (sparse fieldsets)
-GET /users?fields=id,name,email
-GET /users/{id}?include=posts,comments
-```
-
-### Implementation
-
-```typescript
-const filterSchema = z.object({
-  status: z.enum(['active', 'inactive', 'all']).optional(),
-  search: z.string().max(100).optional(),
-  created_after: z.coerce.date().optional(),
-  created_before: z.coerce.date().optional(),
-  sort: z.string().optional(),
-  order: z.enum(['asc', 'desc']).default('desc'),
-  fields: z.string().optional(),
-});
-
-function buildQuery(filters: z.infer<typeof filterSchema>) {
-  const where: any = {};
-
-  if (filters.status && filters.status !== 'all') {
-    where.status = filters.status;
-  }
-
-  if (filters.search) {
-    where.OR = [
-      { name: { contains: filters.search, mode: 'insensitive' } },
-      { email: { contains: filters.search, mode: 'insensitive' } },
-    ];
-  }
-
-  if (filters.created_after) {
-    where.createdAt = { gte: filters.created_after };
-  }
-
-  return where;
-}
-```
+See `reference/filtering-sorting.md` for full query parameter patterns and implementation.
 </filtering>
 
 <versioning>
@@ -437,65 +379,9 @@ Don't create a new version for:
 <rate_limiting>
 ## Rate Limiting
 
-### Headers
+Include headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`. Return `429` with `Retry-After` when exceeded. Use sliding window algorithm (e.g., `@upstash/ratelimit`).
 
-```
-X-RateLimit-Limit: 100        # Max requests per window
-X-RateLimit-Remaining: 95     # Requests remaining
-X-RateLimit-Reset: 1640000000 # Unix timestamp when limit resets
-Retry-After: 60               # Seconds until can retry (on 429)
-```
-
-### Tiers
-
-| Tier | Limit | Window |
-|------|-------|--------|
-| Anonymous | 60 req | 1 hour |
-| Free | 100 req | 1 minute |
-| Pro | 1000 req | 1 minute |
-| Enterprise | 10000 req | 1 minute |
-
-### Implementation
-
-```typescript
-import { Ratelimit } from '@upstash/ratelimit';
-
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.slidingWindow(100, '1 m'),
-});
-
-async function rateLimitMiddleware(req: Request) {
-  const identifier = req.headers.get('authorization') || req.ip;
-  const { success, limit, remaining, reset } = await ratelimit.limit(identifier);
-
-  const headers = {
-    'X-RateLimit-Limit': limit.toString(),
-    'X-RateLimit-Remaining': remaining.toString(),
-    'X-RateLimit-Reset': reset.toString(),
-  };
-
-  if (!success) {
-    return new Response(
-      JSON.stringify({
-        error: {
-          code: 'rate_limited',
-          message: 'Too many requests',
-        },
-      }),
-      {
-        status: 429,
-        headers: {
-          ...headers,
-          'Retry-After': Math.ceil((reset - Date.now()) / 1000).toString(),
-        },
-      }
-    );
-  }
-
-  return { headers };
-}
-```
+See `reference/rate-limiting.md` for tier definitions and implementation.
 </rate_limiting>
 
 <references>
@@ -506,6 +392,8 @@ For detailed patterns, load the appropriate reference:
 | REST patterns | `reference/rest-patterns.md` | Endpoint design |
 | Error handling | `reference/error-handling.md` | Error responses |
 | Pagination | `reference/pagination.md` | List endpoints |
+| Filtering & sorting | `reference/filtering-sorting.md` | Query parameters |
+| Rate limiting | `reference/rate-limiting.md` | Throttling |
 | Versioning | `reference/versioning.md` | API evolution |
 | Documentation | `reference/documentation.md` | OpenAPI, docs |
 | Checklist | `reference/checklist.md` | Pre-launch validation |

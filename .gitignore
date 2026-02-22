@@ -3,6 +3,7 @@
 .env.*
 *.key
 *secret*
+!**/reference/secrets-management.md
 *credential*
 
 # OS files

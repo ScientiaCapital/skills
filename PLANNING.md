@@ -1,12 +1,30 @@
 # Skills Library Planning
 
-**Current Sprint:** Observer Fix + frontend-ui-skill (#39)
+**Current Sprint:** P4 Tech Debt — Trim Oversized Skills
 **Date:** 2026-02-22
 **Constraint:** M4 24GB RAM - max 5-6 parallel agents
 
 ---
 
 ## Active Work
+
+### P4 Tech Debt: Trim 6 Oversized Skills (COMPLETE)
+
+| Skill | Before | After | Reduction |
+|-------|--------|-------|-----------|
+| agent-teams-skill | 717 | 331 | -54% |
+| api-testing-skill | 592 | 261 | -56% |
+| gtm-pricing-skill | 516 | 110 | -79% |
+| api-design-skill | 515 | 403 | -22% |
+| security-skill | 515 | 438 | -15% |
+| worktree-manager-skill | 510 | 404 | -21% |
+
+**Scope:** STANDARD — observer-full ran. 6 new reference files created, 6 SKILL.md files trimmed.
+
+**Deliverables:**
+- 6 new reference files with extracted content (filtering, rate-limiting, secrets-management, advanced-workflows, workflows-detailed, best-practices-full)
+- All 39 skills now under 500-line advisory limit
+- All 274 tests passing, 40 zips rebuilt
 
 ### P3 Backlog: Analytics, Tests, Vite/SPA Patterns (COMPLETE)
 

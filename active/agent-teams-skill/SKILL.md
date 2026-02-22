@@ -172,287 +172,32 @@ Each agent is a **completely separate Claude session**. Agents:
 
 ## Display Modes
 
-### Compact (Default)
-Show team status as a single table:
-```
-Agent Team Status:
-| # | Branch | Task | Status |
-|---|--------|------|--------|
-| 1 | feature/api | Build REST endpoints | ✅ Complete |
-| 2 | feature/ui | Build React components | 🔄 In Progress |
-```
-
-### Detailed
-Show per-agent context including recent commits and file changes.
-
-### Monitoring
-Continuous status with `git log` polling (for long-running teams).
-
-</display_modes>
-
-## DISPLAY MODES
-
-Agent teams support two display modes for managing teammate visibility:
-
 | Mode | Terminal | How |
 |------|----------|-----|
-| `in-process` | Any terminal | All teammates in main terminal. `Shift+Down` to cycle between them. |
+| `in-process` | Any terminal | All teammates in main terminal. `Shift+Down` to cycle, `Ctrl+T` for task list. |
 | `split-pane` | tmux or iTerm2 only | Each teammate gets own pane. Click pane to interact. |
 
-### Configuration
+Config: `"teammateMode": "auto"` in `~/.claude/settings.json`. CLI: `claude --teammate-mode in-process`. Ghostty requires tmux wrapper for split-pane.
 
-```json
-// ~/.claude/settings.json
-{
-  "teammateMode": "auto"
-}
-```
-
-Valid values: `"auto"` (default) | `"tmux"` | `"in-process"`
-
-CLI override:
-```bash
-claude --teammate-mode in-process
-```
-
-### Terminal Compatibility
-
-- **tmux**: Full split-pane support. Set `"teammateMode": "tmux"`.
-- **iTerm2**: Native split-pane support. Enable Python API in Settings > General > Magic.
-- **Ghostty**: NOT supported for split-pane. Workaround: run tmux inside Ghostty and use `"tmux"` mode.
-- **Other terminals**: Use `in-process` mode (all teammates in one terminal).
-
-### Keyboard Shortcuts (in-process mode)
-
-| Shortcut | Action |
-|----------|--------|
-| `Shift+Down` | Cycle to next teammate |
-| `Ctrl+T` | Toggle task list view |
+</display_modes>
 
 <workflows>
 
 ## Workflows
 
-### 1. Spawn a Team
+| Workflow | Purpose |
+|----------|---------|
+| 1. Spawn a Team | Decompose → JSON roadmap → worktrees → task files → launch → monitor |
+| 2. Write WORKTREE_TASK.md | Context, assignment, file boundaries, contract, verification, completion protocol |
+| 3. Monitor Progress | `git log` per branch + `.agent-status` checks |
+| 4. Merge Agent Work | Merge in planned order, test after each, `--no-ff` |
+| 5. Async Handoff | `@claude` bot on GitHub PRs for long-running tasks |
+| 6. Plan Mode | Explore codebase read-only before committing to decomposition |
+| 7. Native Teams API | `TeamCreate` + `TaskCreate` + `SendMessage` for in-session teams without worktrees |
 
-**User says:** "Set up a team to build the auth system. Agent 1 does the API, Agent 2 does the UI."
+**Native vs Worktree decision:** Different files → Native Teams API. Same files → Worktrees. Real-time messaging → Native. Long-running processes → Worktrees.
 
-**Team lead does:**
-
-```
-STEP 1: DECOMPOSE
-─────────────────
-Break the request into agent assignments. Each assignment needs:
-  • Clear scope (which files/directories)
-  • Input contract (what data shapes to expect)
-  • Output contract (what to produce)
-  • Completion signal (how to know it's done)
-
-STEP 2: CREATE JSON ROADMAP
-────────────────────────────
-Before spawning, create a coordination plan:
-
-{
-  "team": "auth-system",
-  "agents": [
-    {
-      "id": 1,
-      "branch": "feature/auth-api",
-      "task": "Build auth API endpoints",
-      "files": ["src/api/auth/", "src/middleware/"],
-      "contract": "POST /api/auth/login → { token, user }",
-      "done_when": "All endpoints pass tests"
-    },
-    {
-      "id": 2,
-      "branch": "feature/auth-ui",
-      "task": "Build auth UI components",
-      "files": ["src/components/auth/", "src/pages/login.tsx"],
-      "contract": "Uses POST /api/auth/login → { token, user }",
-      "done_when": "Login page renders and calls API"
-    }
-  ],
-  "merge_order": [1, 2],
-  "merge_target": "main"
-}
-
-STEP 3: CREATE WORKTREES
-─────────────────────────
-Use worktree-manager to create each worktree:
-  → "create worktree feature/auth-api"
-  → "create worktree feature/auth-ui"
-
-worktree-manager automatically copies .claude/ directory to each worktree.
-This gives each agent:
-  • CLAUDE.md — project conventions, dev commands, tech stack
-  • .claude/settings.json — PostToolUse hooks (auto-format), permissions
-  • .claude/agents/ — custom subagents (build-validator, verify-app, etc.)
-
-STEP 4: WRITE TASK FILES
-─────────────────────────
-Write WORKTREE_TASK.md to each worktree with:
-  • Task description (what to build)
-  • File boundaries (what NOT to touch)
-  • Contract (shared interfaces)
-  • Verification steps (how to self-check)
-  • Completion protocol (commit, push, update .agent-status)
-
-STEP 5: LAUNCH AGENTS
-──────────────────────
-Via worktree-manager terminal launching.
-Each agent opens, reads WORKTREE_TASK.md, and starts working.
-
-STEP 6: MONITOR (optional)
-───────────────────────────
-Check progress via git:
-  git log --oneline feature/auth-api -5
-  git log --oneline feature/auth-ui -5
-```
-
-### 2. Write a WORKTREE_TASK.md
-
-The task file is the ONLY way to communicate with an agent. Make it count.
-
-**Template:**
-```markdown
-# Task: [Agent's Assignment]
-
-## Context
-[2-3 sentences about what the broader project is doing and where this fits]
-
-## Your Assignment
-[Specific, measurable task description]
-
-## File Boundaries
-**Work in:** [directories/files this agent owns]
-**Do NOT touch:** [directories/files another agent owns]
-
-## Contract
-[Shared interfaces, API shapes, type definitions]
-
-## Verification
-Before committing, verify:
-1. [Specific check, e.g., "tests pass"]
-2. [Specific check, e.g., "no type errors"]
-3. [Specific check, e.g., "API returns expected shape"]
-
-## When Done
-1. Commit all changes with descriptive message
-2. Push branch: `git push -u origin [branch]`
-3. Write "DONE" to `.agent-status`
-```
-
-### 3. Monitor Team Progress
-
-```bash
-# Quick check: last commit per agent branch
-for branch in feature/auth-api feature/auth-ui; do
-  echo "=== $branch ==="
-  git log --oneline $branch -3 2>/dev/null || echo "No commits yet"
-done
-
-# Check agent status files
-for wt in ~/tmp/worktrees/$(basename $(pwd))/*/; do
-  echo "$(basename $wt): $(cat $wt/.agent-status 2>/dev/null || echo 'no status')"
-done
-```
-
-### 4. Merge Agent Work
-
-```
-MERGE PROTOCOL:
-1. Wait for all agents to report DONE (or timeout)
-2. Merge in planned order (API before UI typically)
-3. Run full test suite after each merge
-4. Resolve any conflicts
-5. Clean up worktrees via worktree-manager
-```
-
-**Merge commands:**
-```bash
-git checkout main
-git merge feature/auth-api --no-ff -m "feat(auth): API endpoints"
-npm test  # or project's test command
-git merge feature/auth-ui --no-ff -m "feat(auth): UI components"
-npm test
-```
-
-### 5. Async Handoff with @claude Bot
-
-For longer-running agent work, use GitHub's `@claude` bot integration:
-
-1. Agent creates PR from worktree branch
-2. Add `@claude` comment on PR with instructions
-3. Claude bot works asynchronously on the PR
-4. You get notified when work is complete
-
-**Use when:**
-- Agent task will take >30 minutes
-- You want to step away from the terminal
-- Task involves iterative PR feedback cycles
-
-**Workflow:**
-```bash
-# Agent pushes branch and creates PR
-gh pr create --title "feat(auth): API endpoints" --body "API implementation"
-
-# You (or the agent) tags @claude on the PR
-# @claude "Review this implementation and fix any test failures"
-
-# Claude bot works asynchronously, commits to the branch
-# You monitor at https://github.com/<org>/<repo>/pulls
-```
-
-### 6. Plan Mode for Complex Decomposition
-
-For non-trivial task decomposition, use Claude Code's plan mode:
-
-```
-"Enter plan mode and design the team decomposition for [feature].
-Identify file boundaries, contracts, and merge order before spawning agents."
-```
-
-Plan mode lets you explore the codebase (read-only) and design the team structure before committing to any worktree creation. This prevents wasted effort from bad decomposition.
-
-### 7. Native Teams API Alternative
-
-For teams that don't need full worktree isolation, Claude Code provides native coordination APIs. These are ideal when agents work on different files or do read-only tasks:
-
-```javascript
-// Create a team with shared task list
-TeamCreate({ team_name: "feature-sprint" })
-
-// Track progress with native UI (live spinners + checkmarks)
-TaskCreate({ subject: "Build API endpoints", activeForm: "Building API endpoints" })
-TaskCreate({ subject: "Build UI components", activeForm: "Building UI components" })
-
-// Spawn teammates into the team
-Task({ subagent_type: "general-purpose", team_name: "feature-sprint", name: "api-builder", prompt: "..." })
-Task({ subagent_type: "general-purpose", team_name: "feature-sprint", name: "ui-builder", prompt: "..." })
-
-// Coordinate via messages (real-time, unlike worktree agents)
-SendMessage({ type: "message", recipient: "api-builder", content: "Contract updated: add status field" })
-
-// Shutdown when done
-SendMessage({ type: "shutdown_request", recipient: "api-builder" })
-SendMessage({ type: "shutdown_request", recipient: "ui-builder" })
-```
-
-**When to use native Teams API vs worktrees:**
-- Agents edit **different files** → Native Teams API (simpler, faster)
-- Agents edit **same files** → Worktrees (git isolation prevents conflicts)
-- Agents need **separate terminals / long-running processes** → Worktrees
-- Agents need **real-time messaging** → Native Teams API
-
-**DAG task dependencies:** Tasks support `blocks` and `blockedBy` fields for dependency ordering. File locking is used for concurrent task claiming to prevent race conditions.
-
-**Storage paths:**
-- Team config: `~/.claude/teams/{name}/config.json`
-- Tasks: `~/.claude/tasks/{name}/`
-
-**Keyboard shortcuts:** Use `Shift+Down` to cycle between teammates and `Ctrl+T` to toggle the task list view.
-
-See [subagent-teams](../subagent-teams-skill/SKILL.md) for the complete Task tool reference and team patterns.
+See `reference/workflows-detailed.md` for step-by-step instructions, WORKTREE_TASK.md template, merge protocol, and Native Teams API examples.
 
 </workflows>
 
@@ -486,148 +231,15 @@ Agent 1 refactors code. Agent 2 reviews the refactored code and writes improveme
 
 ## Best Practices
 
-### Context Engineering for Teams
+- **Isolate context per agent** — only relevant info in WORKTREE_TASK.md, keep tasks to <50 words
+- **Use external state** — `.agent-status`, git commits, `WORKTREE_TASK.md` (agents have no shared memory)
+- **Front-load instructions** — most important info at TOP of task files
+- **Contract-first** — define shared API shapes in `CONTRACT.md` BEFORE spawning agents
+- **Merge order matters** — foundation (API) before consumer (UI), test after each, use `--no-ff`
+- **Project config inheritance** — `.claude/` dir auto-copied gives agents CLAUDE.md, hooks, permissions, custom subagents
+- **Team hooks** — `TeammateIdle` and `TaskCompleted` hooks use exit code 2 to keep working / block completion
 
-**Each agent gets minimal, focused context.** This is the #1 factor in agent team success.
-
-1. **Isolate context per agent** — An agent building the API doesn't need to know about React component patterns. Put only relevant information in WORKTREE_TASK.md.
-
-2. **Use external state, not agent memory** — Agents forget everything between sessions. Track progress in files:
-   - `.agent-status` — simple status flag
-   - Git commits — work product audit trail
-   - `WORKTREE_TASK.md` — the "briefing document"
-
-3. **Front-load instructions** — Put the most important information (task, contract, boundaries) at the TOP of WORKTREE_TASK.md. Agents read top-down and may deprioritize content at the bottom.
-
-4. **Keep agent tasks to <50 words** — If you can't describe an agent's task concisely, it's too complex. Break it down further.
-
-### Project Config Inheritance
-
-Each agent inherits the project's `.claude/` directory, which ensures consistency:
-
-**CLAUDE.md inheritance** — Agents auto-load the project's CLAUDE.md on startup, giving them:
-- Dev commands (`npm test`, `bun run build`, etc.)
-- Code style conventions
-- Tech stack context
-- File structure documentation
-
-**PostToolUse hooks** — If the project uses auto-formatting hooks (e.g., `bun run format || true` after Write/Edit), every agent runs them too. This prevents style conflicts at merge time.
-
-**Permissions model** — Two approaches for agent safety:
-```bash
-# Option A: Skip all permissions (faster, less safe)
-claude --model opus --dangerously-skip-permissions
-
-# Option B: Explicit allowlist (safer, from .claude/settings.json)
-claude --model opus --allowedTools "Bash(npm test),Bash(npm run build),Edit,Write,Read"
-```
-
-**Custom subagents** — If the project has `.claude/agents/` (e.g., `verify-app.md`, `build-validator.md`), agents can dispatch them for verification steps:
-```markdown
-## Verification
-1. Run tests: `npm test`
-2. Run build validator: dispatch `.claude/agents/build-validator.md`
-3. Run verify-app: dispatch `.claude/agents/verify-app.md`
-```
-
-### Session Harness Patterns
-
-Adapted from Anthropic's session harness methodology:
-
-1. **Startup protocol** — Each agent should:
-   - Read WORKTREE_TASK.md first
-   - Check for existing work (`git log`, file listing)
-   - Confirm understanding before starting
-
-2. **Verification loops** — Build self-checks into agent tasks:
-   ```
-   After each major change:
-   1. Run tests: npm test
-   2. Check types: npx tsc --noEmit
-   3. If failing, fix before moving on
-   ```
-
-3. **Completion protocol** — Each agent must:
-   - Run final verification
-   - Commit with descriptive message
-   - Push branch
-   - Update `.agent-status` to "DONE"
-
-### Contract-First Development
-
-When agents need to integrate, define the contract BEFORE spawning:
-
-```typescript
-// CONTRACT: Auth API Shape (shared between agents)
-interface AuthResponse {
-  token: string;
-  user: { id: string; email: string; role: string };
-}
-
-// POST /api/auth/login
-// Body: { email: string; password: string }
-// Response: AuthResponse
-```
-
-Write this contract to a `CONTRACT.md` or shared type file that both agents can reference.
-
-### Merge Strategy
-
-1. **Merge order matters** — Merge the "foundation" branch first (usually API/backend), then the "consumer" branch (usually UI/frontend)
-2. **Test after each merge** — Don't batch merges. Test incrementally.
-3. **Use `--no-ff`** — Preserves branch history for debugging
-
-</best_practices>
-
-## NATIVE AGENT TEAMS HOOKS
-
-Two hook events are specific to agent teams: `TeammateIdle` and `TaskCompleted`.
-
-### TeammateIdle
-
-Fires when a teammate is about to go idle (between turns).
-
-```json
-{
-  "hooks": {
-    "TeammateIdle": [
-      {
-        "type": "command",
-        "command": "./scripts/check-remaining-work.sh"
-      }
-    ]
-  }
-}
-```
-
-**Exit code 2 pattern** (unique to team hooks):
-- `exit 0` → Allow teammate to go idle
-- `exit 2` → Keep teammate working (stderr fed back as instructions)
-- `exit 1` → Error (logged, teammate goes idle anyway)
-
-**Note:** Agent hooks (`type: "agent"`) are NOT supported for TeammateIdle — use command hooks only.
-
-### TaskCompleted
-
-Fires when a task is being marked complete.
-
-```json
-{
-  "hooks": {
-    "TaskCompleted": [
-      {
-        "type": "command",
-        "command": "./scripts/verify-task.sh"
-      }
-    ]
-  }
-}
-```
-
-**Exit code 2 pattern:**
-- `exit 0` → Allow task completion
-- `exit 2` → Block completion (stderr explains why — e.g., "tests not passing")
-- `exit 1` → Error (logged, task completes anyway)
+See `reference/best-practices-full.md` for context engineering, session harness patterns, permissions model, and hook configuration.
 
 <limitations>
 
@@ -710,6 +322,8 @@ Load these on demand when you need deeper guidance:
 
 | Reference | Load When |
 |-----------|-----------|
+| `reference/workflows-detailed.md` | Step-by-step spawn, monitor, merge, async handoff, Native Teams API |
+| `reference/best-practices-full.md` | Context engineering, session harness, contract-first, hooks config |
 | `reference/context-engineering.md` | Designing agent prompts, optimizing context usage, delegation patterns |
 | `reference/worktree-integration.md` | Coordinating with worktree-manager, port allocation, terminal strategies |
 | `reference/prompt-templates.md` | Need ready-to-use spawn prompts for the 4 team patterns |
