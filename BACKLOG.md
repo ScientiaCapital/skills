@@ -35,6 +35,17 @@ All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 
 ---
 
+## P5: Platform Updates (from 2026-02-22 research)
+
+- [ ] **Update agent-teams-skill** for native Agent Teams features (TeammateIdle/TaskCompleted hooks, split pane modes, plan approval). Effort: MEDIUM, Impact: MEDIUM.
+- [ ] **Update worktree-manager-skill** for native `--worktree` flag and `WorktreeCreate`/`WorktreeRemove` hooks. Effort: SMALL, Impact: LOW.
+- [ ] **Update subagent-teams-skill** for `memory:` field, `Task(agent_type)` restrictions, `background: true`. Effort: SMALL, Impact: LOW.
+- [ ] **Update skill frontmatter** across library for new fields (`model`, `context: fork`, `hooks`). Effort: MEDIUM, Impact: LOW.
+- [ ] **Audit PreToolUse hooks** for deprecated `decision` format — migrate to `hookSpecificOutput.permissionDecision`. Effort: SMALL, Impact: LOW.
+- [ ] **Add comments to bare `except:` clauses** in unsloth-training-skill reference code (2 instances). Effort: MINIMAL, Impact: LOW.
+
+---
+
 ## Recurring: Worktree Maintenance
 
 **Weekly (Monday):**
