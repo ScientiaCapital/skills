@@ -1,12 +1,29 @@
 # Skills Library Planning
 
-**Current Sprint:** P4 Tech Debt — Trim Oversized Skills
+**Current Sprint:** P5 Tasks 1-3 — Core Skill Updates
 **Date:** 2026-02-22
 **Constraint:** M4 24GB RAM - max 5-6 parallel agents
 
 ---
 
 ## Active Work
+
+### P5 Tasks 1-3: Core Skill Updates (COMPLETE)
+
+| Skill | Before | After | Changes |
+|-------|--------|-------|---------|
+| agent-teams v1.2.0 | 331 lines | 403 lines | TeammateIdle/TaskCompleted hooks, split pane details, plan approval flow |
+| subagent-teams v1.1.0 | 298 lines | 355 lines | Memory scopes, background execution, agent_type table |
+| worktree-manager v1.2.0 | 405 lines | 432 lines | WorktreeCreate/WorktreeRemove hooks, native vs skill guidance |
+
+**Also fixed:** PreToolUse observer hook now skips files outside project dir (jq-based path extraction).
+
+**Scope:** STANDARD — observer-full ran. 9 files modified, all under 500-line limit.
+
+**Deliverables:**
+- 3 skill updates with platform-current hook events and API features
+- Observer hook path exclusion fix (settings.json + settings.local.json)
+- All 274 tests passing, 40 zips rebuilt
 
 ### P4 Tech Debt: Trim 6 Oversized Skills (COMPLETE)
 

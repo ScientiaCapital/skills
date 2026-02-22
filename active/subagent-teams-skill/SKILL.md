@@ -86,7 +86,50 @@ Launch 3 Explore agents in parallel:
 | `hooks` | object | Event-driven automation (PostToolUse, etc.) |
 | `maxTurns` | number | Max API round-trips before stopping |
 | `skills` | list | Skills available to the agent |
-| `memory` | object | Persistent state: `scope: user\|project\|local` |
+| `memory` | object | Persistent state (see Memory Scopes below) |
+
+### Memory Scopes
+
+The `memory` field gives agents persistent state across sessions:
+
+```yaml
+# User-scoped: shared across all projects for this user
+memory:
+  scope: user    # Stored in ~/.claude/agent-memory/
+
+# Project-scoped: shared across sessions within one project
+memory:
+  scope: project # Stored in .claude/agent-memory/
+
+# Local-scoped: private to this machine + project combo
+memory:
+  scope: local   # Stored in .claude/local/agent-memory/
+```
+
+**When to use:** `user` for personal preferences/patterns. `project` for shared team knowledge. `local` for machine-specific paths or credentials.
+
+### Background Execution
+
+Use `run_in_background: true` for agents that don't block your next action:
+
+```javascript
+// Launch in background — returns immediately with output_file path
+Task({
+  subagent_type: "Explore",
+  prompt: "Search for all auth patterns",
+  run_in_background: true  // Non-blocking
+})
+
+// Check results later
+TaskOutput({ task_id: "agent-id", block: false })  // Non-blocking check
+TaskOutput({ task_id: "agent-id", block: true })    // Wait for completion
+```
+
+**Foreground vs background:**
+- **Foreground** (default): Use when you need results before proceeding — research that informs next steps
+- **Background**: Use when you have independent work to do in parallel — observers, linters, long searches
+
+**Tip:** Background agents are ideal for observer-lite/observer-full, security scans, and parallel research where you can synthesize results later.
 
 ### Permission Modes
 
@@ -108,6 +151,21 @@ tools:
   - Task(Explore)        # Can only spawn Explore subagents
   - Task(code-reviewer)  # Can also spawn code reviewers
 ```
+
+**Built-in agent types and their tool access:**
+
+| Agent Type | Tools | Best For |
+|-----------|-------|----------|
+| `Explore` | Glob, Grep, Read, LS, WebFetch, WebSearch | Fast codebase search (read-only) |
+| `Plan` | Glob, Grep, Read, LS, WebFetch, WebSearch | Architecture design (read-only) |
+| `general-purpose` | All tools | Implementation, full access |
+| `feature-dev:code-reviewer` | Glob, Grep, Read, LS, WebFetch | Code review (read-only) |
+| `feature-dev:code-explorer` | Glob, Grep, Read, LS, WebFetch | Deep feature analysis (read-only) |
+| `feature-dev:code-architect` | Glob, Grep, Read, LS, WebFetch | Architecture blueprints (read-only) |
+| `observer-lite` | Read, Glob, Grep, Bash, Write | Quick quality checks |
+| `observer-full` | Read, Glob, Grep, Bash, Write | Full drift detection |
+
+**Custom agents:** Define in `.claude/agents/*.md` with frontmatter. Reference by filename (without `.md`).
 
 ### Model Selection Guide
 

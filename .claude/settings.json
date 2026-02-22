@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash -c 'INPUT=$(cat); if echo \"$INPUT\" | grep -q \"OBSERVER_QUALITY\\|OBSERVER_ARCH\"; then exit 0; fi; OBSERVER_FILE=\".claude/OBSERVER_QUALITY.md\"; if [ -f \"$OBSERVER_FILE\" ]; then STILL_TEMPLATE=$(grep -c \"_not yet run_\" \"$OBSERVER_FILE\" 2>/dev/null || echo 0); if [ \"$STILL_TEMPLATE\" -gt 0 ]; then echo \"** OBSERVER NOT ACTIVE ** The observer has not run yet this session. Before making code changes, spawn an observer agent: Use Task tool with subagent_type=observer-lite (for MINIMAL/SMALL scope) or subagent_type=observer-full (for STANDARD/FULL scope). See CLAUDE.md for scope classification.\" >&2; exit 2; fi; fi'"
+            "command": "bash -c 'INPUT=$(cat); if echo \"$INPUT\" | grep -q \"OBSERVER_QUALITY\\|OBSERVER_ARCH\"; then exit 0; fi; FILE_PATH=$(echo \"$INPUT\" | jq -r \".tool_input.file_path // empty\" 2>/dev/null || echo \"\"); if [ -n \"$FILE_PATH\" ] && [ \"${FILE_PATH#$(pwd)/}\" = \"$FILE_PATH\" ]; then exit 0; fi; OBSERVER_FILE=\".claude/OBSERVER_QUALITY.md\"; if [ -f \"$OBSERVER_FILE\" ]; then STILL_TEMPLATE=$(grep -c \"_not yet run_\" \"$OBSERVER_FILE\" 2>/dev/null || echo 0); if [ \"$STILL_TEMPLATE\" -gt 0 ]; then echo \"** OBSERVER NOT ACTIVE ** The observer has not run yet this session. Before making code changes, spawn an observer agent: Use Task tool with subagent_type=observer-lite (for MINIMAL/SMALL scope) or subagent_type=observer-full (for STANDARD/FULL scope). See CLAUDE.md for scope classification.\" >&2; exit 2; fi; fi'"
           }
         ]
       }

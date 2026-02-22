@@ -47,7 +47,35 @@ claude -w
 |----------|-----|
 | Quick isolated work, single agent | `claude -w feature-name` |
 | Multi-agent teams, port allocation, registry | This skill (worktree-manager) |
-| Subagent isolation | `isolation: "worktree"` in agent frontmatter |
+| Subagent isolation | `isolation: "worktree"` in Task tool param |
+| Non-git VCS (Perforce, SVN) | WorktreeCreate/WorktreeRemove hooks |
+
+### WorktreeCreate / WorktreeRemove Hooks
+
+New hook events for VCS-agnostic worktree lifecycle. These replace the default git worktree behavior when configured:
+
+```json
+{
+  "hooks": {
+    "WorktreeCreate": [{
+      "hooks": [{
+        "type": "command",
+        "command": "bash -c 'INPUT=$(cat); NAME=$(echo \"$INPUT\" | jq -r .name); mkdir -p /tmp/worktrees/$NAME && echo $NAME'"
+      }]
+    }],
+    "WorktreeRemove": [{
+      "hooks": [{
+        "type": "command",
+        "command": "bash -c 'INPUT=$(cat); PATH=$(echo \"$INPUT\" | jq -r .path); rm -rf $PATH'"
+      }]
+    }]
+  }
+}
+```
+
+**When to use hooks vs native:** Use hooks when working with non-git VCS systems or when you need custom isolation logic (e.g., Docker containers, remote dev servers). For standard git repos, the native `claude -w` flag or this skill's workflow is preferred.
+
+**Note:** These hooks do NOT support matchers. They fire once per worktree lifecycle event. The hook receives `{name, path}` via stdin JSON.
 
 <success_criteria>
 A worktree setup is successful when:

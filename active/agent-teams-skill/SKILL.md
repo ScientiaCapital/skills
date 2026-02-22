@@ -179,7 +179,78 @@ Each agent is a **completely separate Claude session**. Agents:
 
 Config: `"teammateMode": "auto"` in `~/.claude/settings.json`. CLI: `claude --teammate-mode in-process`. Ghostty requires tmux wrapper for split-pane.
 
+### Split Pane Setup
+
+**tmux:** Auto-detected when `$TMUX` is set. Each teammate gets a split pane. Navigate with `Ctrl+B` + arrow keys.
+
+**iTerm2:** Uses AppleScript automation. Teammates open in split panes within the current tab.
+
+**Limitations:** Ghostty lacks programmatic pane splitting — use tmux wrapper: `ghostty -e "tmux new-session"`. Max 4 panes recommended (leader + 3 teammates). Each pane needs ~120 columns.
+
 </display_modes>
+
+<team_hooks>
+
+## Team Hooks
+
+### TeammateIdle Hook
+
+Fires when a teammate finishes its current turn and goes idle. Configure in `settings.json`:
+
+```json
+{
+  "hooks": {
+    "TeammateIdle": [{
+      "hooks": [{
+        "type": "command",
+        "command": "bash -c 'echo \"Teammate idle — check TaskList for unassigned work\" >&2'"
+      }]
+    }]
+  }
+}
+```
+
+**Use cases:** Auto-assign next task, log idle time, trigger cleanup. Exit code 2 blocks the idle transition (keeps teammate working). Does NOT support matchers — fires for all teammates.
+
+### TaskCompleted Hook
+
+Fires when a task is marked complete via `TaskUpdate`. Use for auto-assignment pipelines:
+
+```json
+{
+  "hooks": {
+    "TaskCompleted": [{
+      "hooks": [{
+        "type": "command",
+        "command": "bash -c 'echo \"Task completed — assigning next unblocked task\" >&2'"
+      }]
+    }]
+  }
+}
+```
+
+Exit code 2 blocks task completion (keeps task in_progress). Does NOT support matchers.
+
+### Plan Approval Flow
+
+Teammates spawned with `mode: "plan"` must get plans approved before implementing:
+
+1. Teammate calls `ExitPlanMode` → sends `plan_approval_request` to team lead
+2. Team lead reviews → sends `plan_approval_response` (approve or reject with feedback)
+3. On approval: teammate exits plan mode, begins implementation
+4. On rejection: teammate receives feedback and revises
+
+```javascript
+// Approving a teammate's plan
+SendMessage({
+  type: "plan_approval_response",
+  request_id: "abc-123",  // from plan_approval_request
+  recipient: "architect",
+  approve: true
+})
+```
+
+</team_hooks>
 
 <workflows>
 
@@ -194,6 +265,7 @@ Config: `"teammateMode": "auto"` in `~/.claude/settings.json`. CLI: `claude --te
 | 5. Async Handoff | `@claude` bot on GitHub PRs for long-running tasks |
 | 6. Plan Mode | Explore codebase read-only before committing to decomposition |
 | 7. Native Teams API | `TeamCreate` + `TaskCreate` + `SendMessage` for in-session teams without worktrees |
+| 8. Plan Approval | Teammates with `mode: "plan"` submit plans for lead approval before implementing |
 
 **Native vs Worktree decision:** Different files → Native Teams API. Same files → Worktrees. Real-time messaging → Native. Long-running processes → Worktrees.
 
