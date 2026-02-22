@@ -29,6 +29,12 @@ All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 
 ---
 
+## P4: Tech Debt (from Observer/Test Findings)
+
+- [ ] **T5 line count violations** — 6 skills over 500 lines. Extract content to reference files. Effort: SMALL per skill, Impact: LOW (advisory only). Skills: agent-teams (717), api-testing (592), gtm-pricing (516), api-design (515), security (515), worktree-manager (510)
+
+---
+
 ## Recurring: Worktree Maintenance
 
 **Weekly (Monday):**
