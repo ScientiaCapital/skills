@@ -1,12 +1,35 @@
 # Skills Library Planning
 
-**Current Sprint:** Config.json Backfill + Version Tracking
-**Date:** 2026-02-07
+**Current Sprint:** Observer Fix + frontend-ui-skill (#39)
+**Date:** 2026-02-22
 **Constraint:** M4 24GB RAM - max 5-6 parallel agents
 
 ---
 
 ## Active Work
+
+### Observer Fix + frontend-ui-skill #39 (IN PROGRESS)
+
+| Task | Status |
+|------|--------|
+| Fix PreToolUse hook exit code (exit 0 → exit 2) | ✅ complete |
+| Fix PostToolUse hook exit code (exit 0 → exit 2) | ✅ complete |
+| Add stdin check to exclude observer file writes from hook | ✅ complete |
+| Create committable .claude/settings.json (hooks only) | ✅ complete |
+| Create frontend-ui-skill directory + config.json | ✅ complete |
+| Create feature contract | ✅ complete |
+| Write SKILL.md (336 lines, under 500 target) | ✅ complete |
+| Write 8 reference files | ✅ complete |
+| Write 5 template files | ✅ complete |
+| Update SKILLS_INDEX, DEPENDENCY_GRAPH, README, PLANNING | ✅ complete |
+| Update SKILL_TEST_MATRIX (37→39) | ✅ complete |
+| Security gate + commits | ✅ complete |
+
+**Scope:** STANDARD — observer-full ran. Fixed observer hooks deadlock (exit 2 blocked observer self-update). Added stdin check to allow writes to OBSERVER_QUALITY.md and OBSERVER_ARCH.md.
+
+**New skill:** frontend-ui-skill (#39) — Enterprise SaaS frontend with Tailwind v4, shadcn/ui 2026, Next.js 15+ App Router, React 19. 8 reference files, 5 templates, WCAG 2.1 AA accessibility, Core Web Vitals performance.
+
+---
 
 ### Feb 2026 Platform Updates — 4 Skill Updates (COMPLETE)
 

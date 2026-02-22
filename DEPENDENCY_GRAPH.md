@@ -1,7 +1,7 @@
 # Skill Dependency Graph
 
-> Last validated: 2026-02-07
-> Total skills: 38
+> Last validated: 2026-02-22
+> Total skills: 39
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -39,6 +39,7 @@ graph TB
         SAT[subagent-teams]
         ACM[agent-capability-matrix]
         HS[heal-skill]
+        FUI[frontend-ui]
 
         AD --> AT
         TS --> AT
@@ -48,6 +49,9 @@ graph TB
         AT2 --> SAT
         WO -.-> ACM
         EA --> HS
+        FUI -.-> TS
+        FUI -.-> AD
+        FUI -.-> SEC
     end
 
     subgraph Infrastructure["Infrastructure (LLM & Deployment)"]
@@ -109,6 +113,7 @@ graph TB
     MIRO -.-> BOS
     MIRO -.-> GTP
     DA -.-> HR
+    FUI -.-> ST
 ```
 
 ### Legend
@@ -125,7 +130,7 @@ graph TB
 | Cluster | Skills | Purpose |
 |---------|--------|---------|
 | **Core** | workflow-enforcer-skill, project-context, workflow-orchestrator, cost-metering, portfolio-artifact | Session lifecycle management |
-| **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix, heal-skill | Development workflows |
+| **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix, heal-skill, frontend-ui | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
 | **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro | GTM & revenue operations |
 | **Strategy** | business-model-canvas, blue-ocean-strategy | Business model design |
@@ -135,11 +140,11 @@ graph TB
 | Cluster | Count |
 |---------|-------|
 | Core | 5 |
-| Dev Tools | 14 |
+| Dev Tools | 15 |
 | Infrastructure | 8 |
 | Business | 9 |
 | Strategy | 2 |
-| **Total** | **38** |
+| **Total** | **39** |
 
 ---
 
@@ -210,6 +215,11 @@ research → gtm-pricing → sales-revenue → crm-integration → hubspot-revop
 api-design → testing → api-testing → security
 ```
 
+### Frontend Development
+```
+frontend-ui → [testing | api-design] → security → stripe-stack
+```
+
 ### Multi-Agent Systems
 ```
 langgraph-agents → [openrouter | groq-inference] → voice-ai
@@ -261,6 +271,10 @@ The orchestrator routes to 13+ skills based on task type:
 | hubspot-revops | crm-integration | Base CRUD patterns |
 | hubspot-revops | sales-revenue | Pipeline metrics, MEDDIC context |
 | hubspot-revops | data-analysis | Visualization patterns |
+| frontend-ui | testing | Component tests, accessibility audit |
+| frontend-ui | api-design | API endpoint integration |
+| frontend-ui | security | CSP, XSS prevention, auth UI |
+| frontend-ui | stripe-stack | Pricing page, checkout UI |
 | hubspot-revops | cost-metering | Enrichment cost tracking |
 
 ### Implicit Chains (Common Usage)
@@ -312,8 +326,8 @@ grep -l "DEPENDENCY_GRAPH" *.md
 
 ### Last Validated
 
-- **Date:** 2026-02-07
-- **Skill Count:** 38 (2 stable, 36 active)
+- **Date:** 2026-02-22
+- **Skill Count:** 39 (2 stable, 37 active)
 - **Mermaid:** Renders correctly
 - **Cross-links:** SKILLS_INDEX.md, README.md
 

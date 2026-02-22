@@ -1,6 +1,6 @@
 # Skills Library
 
-37 production-ready Claude Code skills. AI-native engineering, GTM, and business ops.
+39 production-ready Claude Code skills. AI-native engineering, GTM, and business ops.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@
 ./scripts/deploy.sh
 ```
 
-## Skills (37)
+## Skills (39)
 
 ### Core (5)
 | Skill | What It Does |
@@ -24,7 +24,7 @@
 | **project-context** | Session continuity across conversations |
 | **workflow-enforcer-skill** | Automatic agent routing + discipline enforcement |
 
-### Dev Tools (13)
+### Dev Tools (15)
 | Skill | What It Does |
 |-------|-------------|
 | **extension-authoring** | Author skills, hooks, slash commands, subagents |
@@ -40,6 +40,8 @@
 | **security** | Auth, secrets, OWASP, RLS, security audit |
 | **api-testing** | API testing with Postman and Bruno |
 | **docker-compose** | Local dev environments with Docker Compose |
+| **frontend-ui** | Enterprise SaaS frontend: Tailwind v4, shadcn/ui, Next.js |
+| **heal-skill** | Auto-diagnose and repair broken skills |
 
 ### Infrastructure (8)
 | Skill | What It Does |
@@ -76,7 +78,7 @@
 
 ```
 skills/
-├── active/              # 35 trigger-activated skills
+├── active/              # 37 trigger-activated skills
 ├── stable/              # 2 always-loaded core skills
 ├── dist/                # Zip files for Claude Desktop
 ├── scripts/

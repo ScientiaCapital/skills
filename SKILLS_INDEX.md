@@ -1,9 +1,9 @@
 # Skills Index
 
-> Last updated: 2026-02-20
-> Total skills: 38 (2 stable, 36 active)
+> Last updated: 2026-02-22
+> Total skills: 39 (2 stable, 37 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 38 skills have `config.json` with version tracking
+> **100% config.json coverage** — All 39 skills have `config.json` with version tracking
 
 ## Architecture
 
@@ -54,6 +54,7 @@
 | Auto-extract GTME metrics from sessions | [portfolio-artifact](#portfolio-artifact-skill) | Core |
 | Track project context across sessions | [project-context](#project-context-skill) | Core |
 | Auto-diagnose and repair broken skills | [heal-skill](#heal-skill) | Dev Tools |
+| Enterprise SaaS frontend (Tailwind v4, shadcn, Next.js) | [frontend-ui](#frontend-ui-skill) | Dev Tools |
 | Enforce workflow discipline | [workflow-enforcer-skill](#workflow-enforcer-skill) | Core |
 | Orchestrate full-day workflows with cost tracking | [workflow-orchestrator](#workflow-orchestrator-skill) | Core |
 
@@ -426,6 +427,43 @@ Auto-diagnose and repair broken skills. Validates YAML frontmatter, XML sections
 - `reference/known-issues.md` - GitHub issue patterns and library audit findings
 
 **Triggers:** "/heal-skill", "fix broken skill", "skill health check", "validate skills"
+
+---
+
+#### frontend-ui-skill
+**Location:** `active/frontend-ui-skill/` | **Version:** 1.0.0
+
+Enterprise SaaS frontend patterns with Tailwind CSS v4, shadcn/ui (2026), Next.js 15+ App Router, and React 19.
+
+**Key Features:**
+- Tailwind v4 CSS-first configuration (@theme, @theme inline, OKLCH, container queries)
+- shadcn/ui 2026 patterns (data-slot, no forwardRef, tw-animate-css)
+- Server/Client Component architecture with boundary optimization
+- Enterprise SaaS UI: dashboards, pricing pages, data tables, role-based UI
+- Accessibility (WCAG 2.1 AA): keyboard, focus management, ARIA, contrast
+- Forms: React Hook Form + Zod + shadcn Form + Server Actions
+- Performance: Core Web Vitals targets, code splitting, image/font optimization
+
+**Integrates with:** testing-skill, api-design-skill, security-skill, stripe-stack-skill
+
+**Reference Files (8):**
+- `reference/tailwind-v4-setup.md` - Complete v4 setup, migration from v3
+- `reference/shadcn-setup.md` - shadcn + Tailwind v4 configuration
+- `reference/component-patterns.md` - Compound, cva, polymorphic, data-slot
+- `reference/saas-dashboard.md` - Dashboard layouts, KPI cards, charts, RBAC
+- `reference/saas-pricing-checkout.md` - Pricing pages, Stripe UI, conversion
+- `reference/accessibility-checklist.md` - WCAG 2.1 AA per-component patterns
+- `reference/form-patterns.md` - Multi-step, file upload, optimistic updates
+- `reference/performance-optimization.md` - Core Web Vitals, Lighthouse CI
+
+**Templates (5):**
+- `templates/nextjs-tailwind-v4-setup.css` - Complete globals.css with design tokens
+- `templates/component-with-variants.tsx` - cva + data-slot + React 19 props
+- `templates/dashboard-layout.tsx` - Sidebar + header + responsive layout
+- `templates/form-with-server-action.tsx` - RHF + Zod + Server Action
+- `templates/pricing-page.tsx` - 3-tier pricing with toggle and comparison
+
+**Triggers:** "React component", "Next.js page", "frontend UI", "Tailwind", "shadcn", "accessibility", "a11y", "responsive design", "form validation", "server component", "client component", "design system", "dark mode", "SaaS UI", "dashboard", "pricing page", "enterprise UI", "data table", "landing page"
 
 ---
 
@@ -820,7 +858,7 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ```
 skills/
-├── active/                    # 36 active skills
+├── active/                    # 37 active skills
 │   ├── agent-capability-matrix-skill/
 │   ├── agent-teams-skill/
 │   ├── api-design-skill/
@@ -834,6 +872,7 @@ skills/
 │   ├── debug-like-expert-skill/
 │   ├── docker-compose-skill/
 │   ├── extension-authoring-skill/
+│   ├── frontend-ui-skill/
 │   ├── git-workflow-skill/
 │   ├── groq-inference-skill/
 │   ├── heal-skill/

@@ -1,8 +1,8 @@
 # Skill Activation Test Matrix
 
-**Date:** 2026-02-07
-**Total Skills:** 37 (2 stable, 35 active)
-**Status:** ✅ All 37/37 activation tests passing
+**Date:** 2026-02-22
+**Total Skills:** 39 (2 stable, 37 active)
+**Status:** ✅ All 39/39 activation tests passing
 
 ## Test Protocol
 
@@ -26,7 +26,7 @@ For each skill:
 
 ---
 
-## Dev Tools (13)
+## Dev Tools (15)
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
@@ -43,6 +43,8 @@ For each skill:
 | 16 | agent-teams | "set up agent team" / "parallel development" | ✅ | ✅ | |
 | 17 | subagent-teams | "subagent team" / "Task tool team" | ✅ | ✅ | NEW |
 | 18 | agent-capability-matrix | "which agent" / "route task" | ✅ | ✅ | NEW |
+| 19 | heal-skill | "/heal-skill" / "fix broken skill" | ✅ | ✅ | NEW |
+| 20 | frontend-ui | "React component" / "Tailwind" / "shadcn" | ✅ | ✅ | NEW |
 
 ---
 
@@ -50,14 +52,14 @@ For each skill:
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 19 | unsloth-training | "train with GRPO" | ✅ | ✅ | |
-| 20 | langgraph-agents | "LangGraph agent" | ✅ | ✅ | |
-| 21 | runpod-deployment | "deploy to RunPod" | ✅ | ✅ | |
-| 22 | groq-inference | "groq" | ✅ | ✅ | |
-| 23 | openrouter | "OpenRouter" / "DeepSeek" / "Chinese LLM" | ✅ | ✅ | |
-| 24 | voice-ai | "voice agent" | ✅ | ✅ | |
-| 25 | supabase-sql | "fix SQL" | ✅ | ✅ | |
-| 26 | stripe-stack | "stripe" | ✅ | ✅ | |
+| 21 | unsloth-training | "train with GRPO" | ✅ | ✅ | |
+| 22 | langgraph-agents | "LangGraph agent" | ✅ | ✅ | |
+| 23 | runpod-deployment | "deploy to RunPod" | ✅ | ✅ | |
+| 24 | groq-inference | "groq" | ✅ | ✅ | |
+| 25 | openrouter | "OpenRouter" / "DeepSeek" / "Chinese LLM" | ✅ | ✅ | |
+| 26 | voice-ai | "voice agent" | ✅ | ✅ | |
+| 27 | supabase-sql | "fix SQL" | ✅ | ✅ | |
+| 28 | stripe-stack | "stripe" | ✅ | ✅ | |
 
 ---
 
@@ -65,15 +67,15 @@ For each skill:
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 27 | crm-integration | "Close CRM" | ✅ | ✅ | |
-| 28 | gtm-pricing | "GTM strategy" | ✅ | ✅ | |
-| 29 | research | "research company" | ✅ | ✅ | |
-| 30 | sales-revenue | "cold email" | ✅ | ✅ | |
-| 31 | content-marketing | "content strategy" | ✅ | ✅ | |
-| 32 | data-analysis | "analyze data" | ✅ | ✅ | |
-| 33 | trading-signals | "fibonacci levels" | ✅ | ✅ | |
-| 34 | miro | "miro board" / "strategy canvas" | ✅ | ✅ | |
-| 35 | hubspot-revops | "hubspot analytics" / "lead scoring" | ✅ | ✅ | NEW |
+| 29 | crm-integration | "Close CRM" | ✅ | ✅ | |
+| 30 | gtm-pricing | "GTM strategy" | ✅ | ✅ | |
+| 31 | research | "research company" | ✅ | ✅ | |
+| 32 | sales-revenue | "cold email" | ✅ | ✅ | |
+| 33 | content-marketing | "content strategy" | ✅ | ✅ | |
+| 34 | data-analysis | "analyze data" | ✅ | ✅ | |
+| 35 | trading-signals | "fibonacci levels" | ✅ | ✅ | |
+| 36 | miro | "miro board" / "strategy canvas" | ✅ | ✅ | |
+| 37 | hubspot-revops | "hubspot analytics" / "lead scoring" | ✅ | ✅ | NEW |
 
 ---
 
@@ -81,8 +83,8 @@ For each skill:
 
 | # | Skill | Trigger Phrase | YAML | Activation | Notes |
 |---|-------|---------------|------|------------|-------|
-| 36 | business-model-canvas | "business model canvas" | ✅ | ✅ | |
-| 37 | blue-ocean-strategy | "blue ocean" | ✅ | ✅ | |
+| 38 | business-model-canvas | "business model canvas" | ✅ | ✅ | |
+| 39 | blue-ocean-strategy | "blue ocean" | ✅ | ✅ | |
 
 ---
 
@@ -91,25 +93,20 @@ For each skill:
 | Category | Count | YAML Pass | Activation Pass |
 |----------|-------|-----------|-----------------|
 | Core | 5 | 5/5 | 5/5 |
-| Dev Tools | 13 | 13/13 | 13/13 |
+| Dev Tools | 15 | 15/15 | 15/15 |
 | Infrastructure | 8 | 8/8 | 8/8 |
 | Business | 9 | 9/9 | 9/9 |
 | Strategy | 2 | 2/2 | 2/2 |
-| **Total** | **37** | **37/37** | **37/37** |
+| **Total** | **39** | **39/39** | **39/39** |
 
 ---
 
-## Changes This Session (2026-02-07)
+## Changes This Session (2026-02-22)
 
 | Skill | Action | Notes |
 |-------|--------|-------|
-| subagent-teams (NEW) | Created | In-session Task tool subagent orchestration |
-| agent-capability-matrix (NEW) | Created | Task→agent mapping, 70+ agents cataloged |
-| cost-metering (NEW) | Created | API cost tracking, budget alerts, optimization |
-| portfolio-artifact (NEW) | Created | Engineering metrics capture, report templates |
-| miro (NEW) | Created | Miro board interaction via MCP |
-| hubspot-revops (NEW) | Created | HubSpot SQL analytics, lead scoring, pipeline forecasting |
-| workflow-orchestrator | Polished | Cost gate, progress rendering, agent selection |
+| heal-skill (NEW) | Added to matrix | Auto-diagnose and repair broken skills |
+| frontend-ui (NEW) | Created | Enterprise SaaS frontend: Tailwind v4, shadcn/ui, Next.js |
 
 ---
 
@@ -118,7 +115,7 @@ For each skill:
 ```bash
 # Verify skill count
 ls -d active/*-skill stable/*-skill 2>/dev/null | wc -l
-# Expected: 37
+# Expected: 39
 
 # Check YAML frontmatter (first 5 lines of each SKILL.md)
 for dir in active/*-skill stable/*-skill; do
