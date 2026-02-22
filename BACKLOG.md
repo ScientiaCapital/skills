@@ -46,12 +46,12 @@ All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 
 ---
 
-## P6: Observer Findings (from 2026-02-22 session)
+## P6: Observer Debt Cleanup (from 2026-02-22 session)
 
-- [ ] **Bare `except:` in data-analysis-skill** — `data-wrangling.md` lines 111, 427. Fix: `except (ValueError, TypeError, pd.errors.OutOfBoundsDatetime):`. Effort: MINIMAL, Impact: LOW.
-- [ ] **Bare `except:` in workflow-orchestrator debug-methodology.md** — Line 15 (anti-pattern demo, add comment), line 370 (teardown, narrow to `except Exception:`). Effort: MINIMAL, Impact: LOW.
-- [ ] **SKILL_TEMPLATE.md body format** — Template uses markdown headings (`## Triggers`, etc.) instead of XML tag structure. Convert body to match canonical format from skills.md. Effort: SMALL, Impact: MEDIUM.
-- [ ] **Archive stale frontend-ui-skill contract** — `.claude/contracts/frontend-ui-skill.md` is from completed sprint. Mark CLOSED or archive. Effort: MINIMAL, Impact: LOW.
+- [x] **Bare `except:` in data-analysis-skill** — `data-wrangling.md` lines 111, 427. Fixed: `except (ValueError, TypeError):` and `except Exception:`. Completed 2026-02-22.
+- [x] **Bare `except:` in workflow-orchestrator debug-methodology.md** — Line 15 (anti-pattern comment added), line 370 (narrowed to `except Exception:`). Completed 2026-02-22.
+- [x] **SKILL_TEMPLATE.md body format** — Converted from markdown headings to canonical XML tag structure. Completed 2026-02-22.
+- [x] **Archive stale frontend-ui-skill contract** — Marked CLOSED, moved to `.claude/archive/`. Completed 2026-02-22.
 
 ---
 

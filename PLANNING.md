@@ -8,6 +8,23 @@
 
 ## Active Work
 
+### P6: Observer Debt Cleanup (COMPLETE)
+
+| Task | Scope | Changes |
+|------|-------|---------|
+| Bare `except:` in data-wrangling.md | MINIMAL | Lines 111, 427: narrowed to specific exception types |
+| Bare `except:` in debug-methodology.md | MINIMAL | Line 15: anti-pattern comment, line 370: `except Exception:` |
+| SKILL_TEMPLATE.md body format | SMALL | Converted markdown headings to canonical XML tag structure |
+| Archive frontend-ui-skill contract | MINIMAL | APPROVED → CLOSED, moved to `.claude/archive/` |
+
+**Scope:** SMALL — observer-lite ran. 4 files modified + 1 archive file created.
+
+**Deliverables:**
+- All bare `except:` clauses resolved across entire library (0 remaining)
+- SKILL_TEMPLATE.md matches canonical format from extension-authoring-skill
+- Stale contract archived, `.claude/contracts/` clean
+- All 274 tests passing, 40 zips rebuilt
+
 ### P5 Tasks 4-6: Frontmatter, Hooks Migration, Except Clauses (COMPLETE)
 
 | Task | Scope | Changes |
@@ -149,9 +166,12 @@ All phases delivered. See [ARCHIVE.md](./ARCHIVE.md).
 
 ## Next Up
 
+All P1-P6 backlog items complete. No active work remaining.
+
 - [x] Auto-healing for broken skills (/heal-skill) — ✅ shipped as skill #38
 - [x] Skill usage analytics — ✅ shipped (PostToolUse hook + reporting script)
 - [x] Integration tests for skill activation — ✅ shipped (scripts/test-skills.sh)
+- [x] P6 observer debt cleanup — ✅ shipped (bare excepts, template, contract)
 
 ---
 
