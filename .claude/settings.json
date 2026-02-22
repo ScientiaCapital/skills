@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'INPUT=$(cat); if echo \"$INPUT\" | grep -q \"OBSERVER_QUALITY\\|OBSERVER_ARCH\"; then exit 0; fi; OBSERVER_FILE=\".claude/OBSERVER_QUALITY.md\"; if [ -f \"$OBSERVER_FILE\" ]; then STILL_TEMPLATE=$(grep -c \"_not yet run_\" \"$OBSERVER_FILE\" 2>/dev/null || echo 0); if [ \"$STILL_TEMPLATE\" -gt 0 ]; then echo \"** OBSERVER NOT ACTIVE ** The observer has not run yet this session. Before making code changes, spawn an observer agent: Use Task tool with subagent_type=observer-lite (for MINIMAL/SMALL scope) or subagent_type=observer-full (for STANDARD/FULL scope). See CLAUDE.md for scope classification.\" >&2; exit 2; fi; fi'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'CHANGED=$(git diff --name-only 2>/dev/null | wc -l | tr -d \" \"); STAGED=$(git diff --cached --name-only 2>/dev/null | wc -l | tr -d \" \"); TOTAL=$((CHANGED + STAGED)); if [ \"$TOTAL\" -gt 5 ]; then echo \"** SCOPE ESCALATION ** $TOTAL files modified. If you started with observer-lite, consider upgrading to observer-full. Check CLAUDE.md scope classification rules.\" >&2; exit 2; fi'"
+          }
+        ]
+      }
+    ]
+  }
+}
