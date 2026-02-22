@@ -1,0 +1,36 @@
+{
+  "name": "frontend-ui",
+  "version": "1.0.0",
+  "category": "Dev Tools",
+  "description": "Enterprise SaaS frontend — Tailwind v4, shadcn/ui, Next.js App Router, accessibility, UX patterns",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "testing-skill",
+    "api-design-skill",
+    "security-skill",
+    "stripe-stack-skill"
+  ],
+  "activation_triggers": [
+    "React component",
+    "Next.js page",
+    "frontend UI",
+    "Tailwind",
+    "shadcn",
+    "accessibility",
+    "a11y",
+    "responsive design",
+    "form validation",
+    "server component",
+    "client component",
+    "design system",
+    "dark mode",
+    "component library",
+    "SaaS UI",
+    "dashboard",
+    "pricing page",
+    "enterprise UI",
+    "data table",
+    "landing page"
+  ]
+}
