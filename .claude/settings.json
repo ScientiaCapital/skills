@@ -20,6 +20,15 @@
             "command": "bash -c 'CHANGED=$(git diff --name-only 2>/dev/null | wc -l | tr -d \" \"); STAGED=$(git diff --cached --name-only 2>/dev/null | wc -l | tr -d \" \"); TOTAL=$((CHANGED + STAGED)); if [ \"$TOTAL\" -gt 5 ]; then echo \"** SCOPE ESCALATION ** $TOTAL files modified. If you started with observer-lite, consider upgrading to observer-full. Check CLAUDE.md scope classification rules.\" >&2; exit 2; fi'"
           }
         ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash scripts/log-skill-usage.sh"
+          }
+        ]
       }
     ]
   }
