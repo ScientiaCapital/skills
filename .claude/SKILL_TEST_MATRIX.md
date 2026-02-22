@@ -110,7 +110,22 @@ For each skill:
 
 ---
 
-## Test Commands
+## Automated Testing
+
+```bash
+# Run all 8 integration tests across all skills
+./scripts/test-skills.sh
+
+# Verbose output (shows individual test results)
+./scripts/test-skills.sh --verbose
+
+# Test a single skill
+./scripts/test-skills.sh --skill frontend-ui-skill
+```
+
+Tests: T1 (files exist), T2 (YAML frontmatter), T3 (config.json schema), T4 (XML sections), T5 (line count), T6 (circular deps), T7 (integrates_with refs), T8 (activation_triggers).
+
+## Manual Test Commands
 
 ```bash
 # Verify skill count

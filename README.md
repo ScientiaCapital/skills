@@ -110,6 +110,12 @@ Skills use **progressive disclosure** to minimize token usage:
 
 # Rebuild all zip files after changes
 ./scripts/rebuild-zips.sh
+
+# Run integration tests (8 checks per skill)
+./scripts/test-skills.sh [--verbose] [--skill <name>]
+
+# View skill usage analytics
+./scripts/skill-analytics-report.sh [--days N] [--all]
 ```
 
 ## Principles

@@ -23,8 +23,9 @@ All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 
 - [x] Skill version tracking (completed 2026-02-07 — config.json backfill)
 - [x] Auto-healing for broken skills (/heal-skill) — completed 2026-02-07
-- [ ] Skill usage analytics
-- [ ] Integration tests for skill activation
+- [x] Skill usage analytics — completed 2026-02-22 (PostToolUse hook + reporting script)
+- [x] Integration tests for skill activation — completed 2026-02-22 (scripts/test-skills.sh)
+- [x] React + Vite SPA patterns for frontend-ui-skill — completed 2026-02-22
 
 ---
 

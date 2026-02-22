@@ -433,12 +433,13 @@ Auto-diagnose and repair broken skills. Validates YAML frontmatter, XML sections
 #### frontend-ui-skill
 **Location:** `active/frontend-ui-skill/` | **Version:** 1.0.0
 
-Enterprise SaaS frontend patterns with Tailwind CSS v4, shadcn/ui (2026), Next.js 15+ App Router, and React 19.
+Enterprise SaaS frontend patterns with Tailwind CSS v4, shadcn/ui (2026), Next.js 15+ App Router or Vite SPA, and React 19.
 
 **Key Features:**
 - Tailwind v4 CSS-first configuration (@theme, @theme inline, OKLCH, container queries)
 - shadcn/ui 2026 patterns (data-slot, no forwardRef, tw-animate-css)
 - Server/Client Component architecture with boundary optimization
+- **Vite SPA support:** React Router v7, TanStack Router, client-only patterns
 - Enterprise SaaS UI: dashboards, pricing pages, data tables, role-based UI
 - Accessibility (WCAG 2.1 AA): keyboard, focus management, ARIA, contrast
 - Forms: React Hook Form + Zod + shadcn Form + Server Actions
@@ -446,7 +447,7 @@ Enterprise SaaS frontend patterns with Tailwind CSS v4, shadcn/ui (2026), Next.j
 
 **Integrates with:** testing-skill, api-design-skill, security-skill, stripe-stack-skill
 
-**Reference Files (8):**
+**Reference Files (10):**
 - `reference/tailwind-v4-setup.md` - Complete v4 setup, migration from v3
 - `reference/shadcn-setup.md` - shadcn + Tailwind v4 configuration
 - `reference/component-patterns.md` - Compound, cva, polymorphic, data-slot
@@ -455,15 +456,19 @@ Enterprise SaaS frontend patterns with Tailwind CSS v4, shadcn/ui (2026), Next.j
 - `reference/accessibility-checklist.md` - WCAG 2.1 AA per-component patterns
 - `reference/form-patterns.md` - Multi-step, file upload, optimistic updates
 - `reference/performance-optimization.md` - Core Web Vitals, Lighthouse CI
+- `reference/vite-react-setup.md` - Vite + React 19 SPA project setup
+- `reference/spa-routing.md` - React Router v7, TanStack Router, migration table
 
-**Templates (5):**
+**Templates (7):**
 - `templates/nextjs-tailwind-v4-setup.css` - Complete globals.css with design tokens
 - `templates/component-with-variants.tsx` - cva + data-slot + React 19 props
 - `templates/dashboard-layout.tsx` - Sidebar + header + responsive layout
 - `templates/form-with-server-action.tsx` - RHF + Zod + Server Action
 - `templates/pricing-page.tsx` - 3-tier pricing with toggle and comparison
+- `templates/vite-react-config.ts` - Vite config with Tailwind v4, aliases, chunks
+- `templates/spa-app-layout.tsx` - SPA layout with React Router + code splitting
 
-**Triggers:** "React component", "Next.js page", "frontend UI", "Tailwind", "shadcn", "accessibility", "a11y", "responsive design", "form validation", "server component", "client component", "design system", "dark mode", "SaaS UI", "dashboard", "pricing page", "enterprise UI", "data table", "landing page"
+**Triggers:** "React component", "Next.js page", "frontend UI", "Tailwind", "shadcn", "accessibility", "a11y", "responsive design", "form validation", "server component", "client component", "design system", "dark mode", "SaaS UI", "dashboard", "pricing page", "enterprise UI", "data table", "landing page", "Vite", "React Router", "SPA", "single page app"
 
 ---
 
@@ -920,6 +925,12 @@ skills/
 
 # Rebuild all zip files in dist/
 ./scripts/rebuild-zips.sh
+
+# Run integration tests (8 checks per skill)
+./scripts/test-skills.sh [--verbose] [--skill <name>]
+
+# View skill usage analytics (last 7 days)
+./scripts/skill-analytics-report.sh [--days N] [--all]
 ```
 
 ---

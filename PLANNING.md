@@ -8,26 +8,31 @@
 
 ## Active Work
 
-### Observer Fix + frontend-ui-skill #39 (IN PROGRESS)
+### P3 Backlog: Analytics, Tests, Vite/SPA Patterns (COMPLETE)
 
 | Task | Status |
 |------|--------|
-| Fix PreToolUse hook exit code (exit 0 → exit 2) | ✅ complete |
-| Fix PostToolUse hook exit code (exit 0 → exit 2) | ✅ complete |
-| Add stdin check to exclude observer file writes from hook | ✅ complete |
-| Create committable .claude/settings.json (hooks only) | ✅ complete |
-| Create frontend-ui-skill directory + config.json | ✅ complete |
-| Create feature contract | ✅ complete |
-| Write SKILL.md (336 lines, under 500 target) | ✅ complete |
-| Write 8 reference files | ✅ complete |
-| Write 5 template files | ✅ complete |
-| Update SKILLS_INDEX, DEPENDENCY_GRAPH, README, PLANNING | ✅ complete |
-| Update SKILL_TEST_MATRIX (37→39) | ✅ complete |
-| Security gate + commits | ✅ complete |
+| Create scripts/test-skills.sh (8 test cases, bash+jq) | ✅ complete |
+| Create scripts/log-skill-usage.sh (PostToolUse hook target) | ✅ complete |
+| Create scripts/skill-analytics-report.sh (usage reporting) | ✅ complete |
+| Add PostToolUse Skill hook to .claude/settings.json | ✅ complete |
+| Create reference/vite-react-setup.md | ✅ complete |
+| Create reference/spa-routing.md | ✅ complete |
+| Create templates/vite-react-config.ts | ✅ complete |
+| Create templates/spa-app-layout.tsx | ✅ complete |
+| Update frontend-ui-skill SKILL.md + config.json for Vite/SPA | ✅ complete |
+| Update metadata (PLANNING, BACKLOG, SKILLS_INDEX, README) | ✅ complete |
 
-**Scope:** STANDARD — observer-full ran. Fixed observer hooks deadlock (exit 2 blocked observer self-update). Added stdin check to allow writes to OBSERVER_QUALITY.md and OBSERVER_ARCH.md.
+**Scope:** STANDARD — observer-full ran. 11 new/modified files.
 
-**New skill:** frontend-ui-skill (#39) — Enterprise SaaS frontend with Tailwind v4, shadcn/ui 2026, Next.js 15+ App Router, React 19. 8 reference files, 5 templates, WCAG 2.1 AA accessibility, Core Web Vitals performance.
+**Deliverables:**
+- **Integration tests:** `scripts/test-skills.sh` — 8 automated test cases (T1-T8), `--verbose` and `--skill` options
+- **Usage analytics:** PostToolUse Skill hook → JSONL event log, `scripts/skill-analytics-report.sh` for top skills, daily breakdown, unused detection
+- **Vite/SPA patterns:** 2 reference files, 2 templates, SKILL.md + config.json updated (24 triggers)
+
+### Previous: Observer Fix + frontend-ui-skill #39 (COMPLETE)
+
+All tasks delivered. See above sprint for continued frontend-ui work.
 
 ---
 
@@ -88,8 +93,8 @@ All phases delivered. See [ARCHIVE.md](./ARCHIVE.md).
 ## Next Up
 
 - [x] Auto-healing for broken skills (/heal-skill) — ✅ shipped as skill #38
-- [ ] Skill usage analytics
-- [ ] Integration tests for skill activation
+- [x] Skill usage analytics — ✅ shipped (PostToolUse hook + reporting script)
+- [x] Integration tests for skill activation — ✅ shipped (scripts/test-skills.sh)
 
 ---
 
