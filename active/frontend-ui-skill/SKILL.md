@@ -1,10 +1,10 @@
 ---
 name: "frontend-ui"
-description: "Enterprise SaaS frontend — Tailwind v4, shadcn/ui, Next.js App Router, accessibility, responsive design, component patterns. Use when: React component, Next.js page, frontend UI, Tailwind, shadcn, accessibility, a11y, responsive design, form validation, server component, client component, design system, dark mode, SaaS UI, dashboard, pricing page, enterprise UI, data table, landing page."
+description: "Enterprise SaaS frontend — Tailwind v4, shadcn/ui, Next.js App Router or Vite SPA, accessibility, responsive design, component patterns. Use when: React component, Next.js page, frontend UI, Tailwind, shadcn, accessibility, a11y, responsive design, form validation, server component, client component, design system, dark mode, SaaS UI, dashboard, pricing page, enterprise UI, data table, landing page, Vite, React Router, SPA, single page app."
 ---
 
 <objective>
-Enterprise-grade frontend skill for auditing and building world-class SaaS UIs. Covers Tailwind CSS v4 (CSS-first config), shadcn/ui (2026), Next.js 15+ App Router with React 19 Server Components.
+Enterprise-grade frontend skill for auditing and building world-class SaaS UIs. Covers Tailwind CSS v4 (CSS-first config), shadcn/ui (2026), Next.js 15+ App Router **or Vite SPA** with React 19.
 
 Production SaaS: dashboards, pricing pages, data tables, onboarding, role-based UI — with WCAG 2.1 AA accessibility and Core Web Vitals performance baked in.
 </objective>
@@ -67,6 +67,24 @@ import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) { return twMerge(clsx(inputs)) }
 ```
+
+### Vite SPA Alternative
+
+```bash
+npm create vite@latest my-app -- --template react-ts
+cd my-app && npm i -D @tailwindcss/vite && npx shadcn@latest init
+```
+
+Key differences from Next.js:
+- `@tailwindcss/vite` plugin (not postcss) — faster HMR, native Vite integration
+- `VITE_` env prefix (not `NEXT_PUBLIC_`), accessed via `import.meta.env`
+- Client-only — no Server Components, use React Query for data fetching
+- `React.lazy()` + `<Suspense>` replaces `dynamic()` for code splitting
+- Routing via React Router v7 or TanStack Router (not file-based)
+
+Tailwind v4, shadcn/ui, component patterns, accessibility, forms, and performance guidance all apply equally to Vite SPAs. Only routing and data fetching genuinely differ.
+
+See `reference/vite-react-setup.md` and `reference/spa-routing.md`.
 </quick_start>
 
 <success_criteria>
@@ -176,6 +194,7 @@ export default async function DashboardPage() {
 - **React.ComponentProps** — Replace manual interfaces, ref as regular prop
 - **data-slot** — External styling hooks for parent-child overrides
 - **Polymorphic (asChild)** — `Slot` pattern for rendering as different elements
+- **SPA code splitting** — `React.lazy()` + `<Suspense>` replaces Next.js `dynamic()`
 
 See `reference/component-patterns.md` for complete examples.
 </component_architecture>
@@ -263,6 +282,7 @@ See `reference/accessibility-checklist.md` for per-component ARIA patterns.
 | Suspense streaming | Slow data | `<Suspense fallback={<Skeleton/>}><SlowComponent/></Suspense>` |
 | Server Actions | Mutations | `"use server"` + `revalidatePath()` |
 | React Query | Client real-time | `useQuery({ queryKey, queryFn, refetchInterval })` |
+| React Query (SPA) | Client-only apps | `useQuery({ queryKey, queryFn })` with loaders — replaces Server Components |
 </data_fetching>
 
 <forms>
@@ -306,6 +326,8 @@ Tailwind v4 produces 70% smaller CSS automatically. See `reference/performance-o
 | Accessibility | `reference/accessibility-checklist.md` | WCAG audit, ARIA patterns |
 | Form patterns | `reference/form-patterns.md` | Multi-step forms, file upload |
 | Performance | `reference/performance-optimization.md` | Core Web Vitals, Lighthouse |
+| Vite + React setup | `reference/vite-react-setup.md` | New Vite SPA project |
+| SPA routing | `reference/spa-routing.md` | React Router, TanStack Router |
 </references>
 
 <checklist>

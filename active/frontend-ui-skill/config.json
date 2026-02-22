@@ -2,7 +2,7 @@
   "name": "frontend-ui",
   "version": "1.0.0",
   "category": "Dev Tools",
-  "description": "Enterprise SaaS frontend — Tailwind v4, shadcn/ui, Next.js App Router, accessibility, UX patterns",
+  "description": "Enterprise SaaS frontend — Tailwind v4, shadcn/ui, Next.js App Router or Vite SPA, accessibility, UX patterns",
   "requires": [],
   "depends_on": [],
   "integrates_with": [
@@ -31,6 +31,10 @@
     "pricing page",
     "enterprise UI",
     "data table",
-    "landing page"
+    "landing page",
+    "Vite",
+    "React Router",
+    "SPA",
+    "single page app"
   ]
 }
