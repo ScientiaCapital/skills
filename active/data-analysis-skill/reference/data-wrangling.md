@@ -108,7 +108,7 @@ def smart_load_csv(path: str) -> pd.DataFrame:
         if df[col].dtype == 'object':
             try:
                 df[col] = pd.to_datetime(df[col])
-            except:
+            except (ValueError, TypeError):  # non-date strings or incompatible types
                 pass
 
     # Clean column names
@@ -424,7 +424,7 @@ def clean_dataframe(df: pd.DataFrame) -> pd.DataFrame:
                 dates = pd.to_datetime(df[col], errors='coerce')
                 if dates.notna().sum() > len(df) * 0.5:
                     df[col] = dates
-            except:
+            except Exception:  # defensive fallback; errors='coerce' handles most cases
                 pass
 
     return df

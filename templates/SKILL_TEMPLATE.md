@@ -9,48 +9,58 @@ description: What this skill does and when to use it
 # argument-hint: [filename]         # Autocomplete hint
 ---
 
-# Skill Name
+<objective>
+What this skill does and why it matters.
+When to activate: user asks about [topic], working on [project type].
+Keywords: `keyword1`, `keyword2`, `keyword3`
+</objective>
 
-> Brief one-line description
+<quick_start>
+Immediate, actionable guidance — minimal working example.
 
-## Triggers
-
-When to activate this skill:
-- User asks about [topic]
-- Working on [project type]
-- Keywords: `keyword1`, `keyword2`, `keyword3`
-
-## Core Patterns
-
-### Pattern 1: Name
 ```
+# Pattern 1: Name
+Description and example
+
+# Pattern 2: Name
 Description and example
 ```
+</quick_start>
 
-### Pattern 2: Name
-```
-Description and example
-```
+<success_criteria>
+- [ ] Criterion 1
+- [ ] Criterion 2
+- [ ] Criterion 3
+</success_criteria>
 
-## References
+<!-- Optional tags — add based on skill complexity:
 
+<context>
+Background information, prerequisites, or assumptions.
+</context>
+
+<workflow>
+Step-by-step procedures for complex tasks.
+</workflow>
+
+<examples>
+<example number="1">
+<input>What user asked</input>
+<output>What skill produces</output>
+</example>
+</examples>
+
+<common_patterns>
+Code examples and recipes for typical use cases.
+</common_patterns>
+
+<anti_patterns>
+Common mistakes to avoid.
+</anti_patterns>
+
+<reference_guides>
 - See `./references/detailed-guide.md` for deep dive
 - See `./references/templates.md` for starter templates
+</reference_guides>
 
-## Examples
-
-### Example 1: Brief description
-```
-Input: What user asked
-Output: What skill produces
-```
-
-## Integration Notes
-
-How this skill works with other skills or tools:
-- Pairs well with: [other-skill]
-- Conflicts with: [none]
-
-## Version History
-
-- v0.1 - Initial creation
+-->

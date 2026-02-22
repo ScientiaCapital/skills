@@ -12,7 +12,7 @@ Bad approach:
 # "Let me just try adding this..."
 try:
     result = problematic_function()
-except:
+except:  # BAD: bare except swallows all errors — never do this
     result = None  # This might work?
 ```
 
@@ -367,7 +367,7 @@ class DebugTest:
             try:
                 func()
                 print(" ✓")
-            except:
+            except Exception:  # Suppress errors during teardown to ensure cleanup completes
                 print(" ✗")
                 
         # Summary
