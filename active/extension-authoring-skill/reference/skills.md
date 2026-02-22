@@ -128,6 +128,80 @@ Only the user can invoke via `/skill-name`. The full skill body loads on manual 
 | `disable-model-invocation: true` | Yes | No | Zero until invoked |
 | `user-invocable: false` | No | Yes | Description always loaded |
 </invocation_control>
+
+<additional_frontmatter_fields>
+### Complete Frontmatter Reference
+
+| Field | Required | Description |
+|-------|----------|-------------|
+| `name` | No | Display name. Lowercase, hyphens, max 64 chars |
+| `description` | Recommended | What the skill does + when to use it |
+| `argument-hint` | No | Autocomplete hint shown in `/` menu, e.g. `[issue-number]` |
+| `disable-model-invocation` | No | `true` = manual-only via `/name` |
+| `user-invocable` | No | `false` = hidden from `/` menu |
+| `allowed-tools` | No | Restrict tools when skill is active (comma-separated) |
+| `model` | No | Override model when skill is active (e.g. `haiku`, `sonnet`) |
+| `context` | No | `fork` = run in isolated subagent |
+| `agent` | No | Subagent type for `context: fork` (e.g. `Explore`, `Plan`) |
+| `hooks` | No | Skill-scoped lifecycle hooks (see hooks reference) |
+
+### `context: fork`
+
+Runs the skill in an isolated subagent rather than the main conversation. The subagent gets its own context window but can use tools.
+
+```yaml
+---
+name: research-topic
+description: Deep research on a topic
+context: fork
+agent: Explore
+---
+```
+
+**Important:** When using `context: fork`, the skill body should contain explicit task instructions (not just guidelines), since the subagent starts fresh without conversation context.
+
+### `allowed-tools`
+
+Restricts which tools Claude can use while the skill is active:
+
+```yaml
+---
+name: read-only-audit
+description: Audit codebase without modifications
+allowed-tools: Read, Grep, Glob
+---
+```
+
+### String Substitution Variables
+
+These variables expand dynamically in the skill body:
+
+| Variable | Expands to |
+|----------|------------|
+| `$ARGUMENTS` | Full argument string after `/skill-name` |
+| `$ARGUMENTS[N]` | Nth space-delimited argument (0-indexed) |
+| `$N` | Shorthand for `$ARGUMENTS[N]` |
+| `${CLAUDE_SESSION_ID}` | Current session UUID |
+
+**Example:**
+```yaml
+---
+name: review-pr
+argument-hint: [pr-number]
+---
+Review PR #$ARGUMENTS[0] using gh pr view $ARGUMENTS[0].
+```
+
+### Dynamic Context Injection
+
+Load external content into a skill at runtime using `` !`command` `` syntax:
+
+```
+!`git log --oneline -5`
+```
+
+The command runs when the skill loads and its stdout replaces the directive.
+</additional_frontmatter_fields>
 </yaml_frontmatter>
 
 <required_tags>

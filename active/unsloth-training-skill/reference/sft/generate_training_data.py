@@ -997,7 +997,7 @@ async def generate_all_data():
             extraction = json.loads(example["conversations"][2]["content"])
             if not extraction.get("company_name"):
                 continue
-        except:
+        except (json.JSONDecodeError, KeyError, TypeError):  # JSON parse, missing key, or wrong type
             continue
         
         filtered_examples.append(example)

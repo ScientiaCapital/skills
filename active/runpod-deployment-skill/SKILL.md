@@ -1,6 +1,7 @@
 ---
 name: "runpod-deployment"
 description: "Deploy GPU workloads to RunPod serverless and pods - vLLM endpoints, A100/H100 setup, scale-to-zero, cost optimization. Use when: deploy to RunPod, GPU serverless, vLLM endpoint, scale to zero, A100 deployment, H100 setup, serverless handler, GPU cost optimization."
+disable-model-invocation: true
 ---
 
 <objective>

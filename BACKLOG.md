@@ -40,9 +40,18 @@ All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 - [x] **Update agent-teams-skill** v1.2.0 — TeammateIdle/TaskCompleted hooks, split pane details, plan approval flow. Completed 2026-02-22.
 - [x] **Update worktree-manager-skill** v1.2.0 — WorktreeCreate/WorktreeRemove hooks, native vs skill-managed guidance. Completed 2026-02-22.
 - [x] **Update subagent-teams-skill** v1.1.0 — memory scopes, background execution, agent_type table. Completed 2026-02-22.
-- [ ] **Update skill frontmatter** across library for new fields (`model`, `context: fork`, `hooks`). Effort: MEDIUM, Impact: LOW.
-- [ ] **Audit PreToolUse hooks** for deprecated `decision` format — migrate to `hookSpecificOutput.permissionDecision`. Effort: SMALL, Impact: LOW.
-- [ ] **Add comments to bare `except:` clauses** in unsloth-training-skill reference code (2 instances). Effort: MINIMAL, Impact: LOW.
+- [x] **Update skill frontmatter** across library for new fields (`model`, `context: fork`, `hooks`). Completed 2026-02-22. Added complete 10-field frontmatter reference to skills.md, updated SKILL_TEMPLATE.md, added `disable-model-invocation` to 3 skills, fixed heal-skill allowlist.
+- [x] **Audit PreToolUse hooks** for deprecated `decision` format — migrate to `hookSpecificOutput.permissionDecision`. Completed 2026-02-22. 3 edits in hooks.md, Stop hooks correctly left unchanged.
+- [x] **Add comments to bare `except:` clauses** in unsloth-training-skill reference code (2 instances). Completed 2026-02-22.
+
+---
+
+## P6: Observer Findings (from 2026-02-22 session)
+
+- [ ] **Bare `except:` in data-analysis-skill** — `data-wrangling.md` lines 111, 427. Fix: `except (ValueError, TypeError, pd.errors.OutOfBoundsDatetime):`. Effort: MINIMAL, Impact: LOW.
+- [ ] **Bare `except:` in workflow-orchestrator debug-methodology.md** — Line 15 (anti-pattern demo, add comment), line 370 (teardown, narrow to `except Exception:`). Effort: MINIMAL, Impact: LOW.
+- [ ] **SKILL_TEMPLATE.md body format** — Template uses markdown headings (`## Triggers`, etc.) instead of XML tag structure. Convert body to match canonical format from skills.md. Effort: SMALL, Impact: MEDIUM.
+- [ ] **Archive stale frontend-ui-skill contract** — `.claude/contracts/frontend-ui-skill.md` is from completed sprint. Mark CLOSED or archive. Effort: MINIMAL, Impact: LOW.
 
 ---
 

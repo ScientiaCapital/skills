@@ -1,12 +1,34 @@
 # Skills Library Planning
 
-**Current Sprint:** P5 Tasks 1-3 — Core Skill Updates
+**Current Sprint:** P5 Complete — All 6 Tasks Shipped
 **Date:** 2026-02-22
 **Constraint:** M4 24GB RAM - max 5-6 parallel agents
 
 ---
 
 ## Active Work
+
+### P5 Tasks 4-6: Frontmatter, Hooks Migration, Except Clauses (COMPLETE)
+
+| Task | Scope | Changes |
+|------|-------|---------|
+| Task 6: Bare `except:` fixes | MINIMAL | 2 Python files: specific exception types added |
+| Task 5: Hooks `decision` migration | SMALL | hooks.md: PreToolUse → `hookSpecificOutput.permissionDecision` (3 edits) |
+| Task 4A: skills.md frontmatter ref | MEDIUM | 10-field table, string substitution vars, `context: fork`, dynamic context |
+| Task 4B: SKILL_TEMPLATE.md | MINIMAL | YAML frontmatter with commented-out new fields |
+| Task 4C: `disable-model-invocation` | MINIMAL | Added to runpod, stripe-stack, worktree-manager |
+| Bonus: heal-skill allowlist | MINIMAL | S7b check with valid frontmatter key list |
+| Bonus: `{"decision": undefined}` fix | MINIMAL | hooks.md:842 → `{}` (invalid JSON corrected) |
+
+**Scope:** STANDARD — observer-full ran. 9 files modified.
+
+**Deliverables:**
+- Complete frontmatter reference in extension-authoring-skill
+- Hooks migration to `hookSpecificOutput` format (PreToolUse only)
+- 2 bare except clauses narrowed to specific exception types
+- 3 skills marked manual-only (`disable-model-invocation: true`)
+- heal-skill frontmatter validation allowlist updated
+- All 274 tests passing, 40 zips rebuilt
 
 ### P5 Tasks 1-3: Core Skill Updates (COMPLETE)
 

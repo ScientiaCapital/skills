@@ -1,6 +1,7 @@
 ---
 name: "worktree-manager"
 description: "Parallel development with git worktrees and Claude Code agents. Handles Ghostty terminal launching, port allocation, and global registry. Use when creating worktrees, managing parallel development, or launching agents in isolated workspaces."
+disable-model-invocation: true
 ---
 
 <objective>

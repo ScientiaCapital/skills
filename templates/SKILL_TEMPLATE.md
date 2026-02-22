@@ -1,3 +1,14 @@
+---
+name: my-skill
+description: What this skill does and when to use it
+# disable-model-invocation: true    # Manual-only via /name
+# context: fork                     # Run in isolated subagent
+# agent: Explore                    # Subagent type (with context: fork)
+# model: haiku                      # Override model
+# allowed-tools: Read, Grep, Glob   # Restrict available tools
+# argument-hint: [filename]         # Autocomplete hint
+---
+
 # Skill Name
 
 > Brief one-line description

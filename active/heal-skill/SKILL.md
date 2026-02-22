@@ -51,6 +51,7 @@ These checks verify the skill can even load. Failures here mean the skill is bro
 | S5 | `description` length | Max 1024 chars | Yes — truncate |
 | S6 | `description` has no XML tags | No `<tags>` in value | Yes — strip tags |
 | S7 | `description` is a string | Not YAML array/object | Yes — join if array |
+| S7b | Frontmatter keys valid | All keys in valid set (see below) | Warning |
 | S8 | SKILL.md exists | Must exist in skill directory | No |
 | S9 | config.json exists | Must exist in skill directory | Yes — generate from SKILL.md |
 | S10 | config.json is valid JSON | Must parse without error | No |
@@ -59,6 +60,7 @@ These checks verify the skill can even load. Failures here mean the skill is bro
 **Detection for S3:** Regex `^[a-z0-9-]+$` on name value, check `length <= 64`.
 **Detection for S6:** Regex `<[a-z_]+>` in description value.
 **Detection for S7:** YAML parse — check type is string, not array/object.
+**Detection for S7b:** Valid frontmatter keys are: `name`, `description`, `disable-model-invocation`, `user-invocable`, `allowed-tools`, `model`, `context`, `agent`, `argument-hint`, `hooks`. Any other key is a WARNING (not an error — unknown keys are ignored by Claude Code, not rejected).
 
 ### Layer 2: Content Quality (HIGH)
 

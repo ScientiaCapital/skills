@@ -96,14 +96,19 @@ Hooks are event-driven automation for Claude Code that execute shell commands or
 }
 ```
 
-**Command hook output schema:**
+**Command hook output schema (PreToolUse):**
 ```json
 {
-  "decision": "approve" | "block",
-  "reason": "Explanation",
+  "hookSpecificOutput": {
+    "permissionDecision": "allow" | "deny" | "ask",
+    "permissionDecisionReason": "Explanation"
+  },
   "updatedInput": { "command": "modified command" }
 }
 ```
+
+> **Note:** `"allow"` permits, `"deny"` blocks, `"ask"` escalates to the user.
+> Top-level `decision`/`reason` fields are deprecated for PreToolUse. Other events (Stop, UserPromptSubmit) still use top-level `decision`.
 
 **Example - Block force push to main (prompt hook):**
 ```json
@@ -582,13 +587,25 @@ All hooks receive:
 <blocking_output>
 For PreToolUse, UserPromptSubmit, Stop:
 
-**Command hooks** (`type: "command"`):
+**Command hooks — PreToolUse** (`type: "command"`):
 ```json
 {
-  "decision": "approve" | "block",
-  "reason": "Explanation",
-  "systemMessage": "Message to user",
+  "hookSpecificOutput": {
+    "permissionDecision": "allow" | "deny" | "ask",
+    "permissionDecisionReason": "Explanation"
+  },
   "updatedInput": { "command": "modified" }
+}
+```
+
+> Top-level `decision`/`reason` are deprecated for PreToolUse. Use `hookSpecificOutput` instead.
+
+**Command hooks — Stop, UserPromptSubmit** (`type: "command"`):
+```json
+{
+  "decision": "block",
+  "reason": "Explanation",
+  "systemMessage": "Message to user"
 }
 ```
 
@@ -684,11 +701,11 @@ command=$(echo "$input" | jq -r '.tool_input.command')
 
 if [[ "$command" == *"rm -rf /"* ]] || \
    [[ "$command" == *"git push"*"--force"*"main"* ]]; then
-  echo '{"decision": "block", "reason": "Destructive command detected"}'
+  echo '{"hookSpecificOutput": {"permissionDecision": "deny", "permissionDecisionReason": "Destructive command detected"}}'
   exit 0
 fi
 
-echo '{"decision": "approve", "reason": "Command is safe"}'
+echo '{"hookSpecificOutput": {"permissionDecision": "allow", "permissionDecisionReason": "Command is safe"}}'
 ```
 
 Hook config:
@@ -822,7 +839,7 @@ Always check `stop_hook_active`:
 ```bash
 input=$(cat)
 if [ "$(echo "$input" | jq -r '.stop_hook_active')" = "true" ]; then
-  echo '{"decision": undefined}'
+  echo '{}'  # Empty object = no decision, allow stop
   exit 0
 fi
 ```

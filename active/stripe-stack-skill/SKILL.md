@@ -1,6 +1,7 @@
 ---
 name: "stripe-stack"
 description: "Stripe integration patterns for Next.js + Supabase - payments, subscriptions, webhooks, credit systems, checkout. Use when: stripe, payments, billing, subscription, webhook, checkout, add payments to project."
+disable-model-invocation: true
 ---
 
 <objective>

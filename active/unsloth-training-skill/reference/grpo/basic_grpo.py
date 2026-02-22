@@ -150,7 +150,7 @@ def integer_answer_reward(completions, **kwargs):
         try:
             value = float(extracted.replace(",", "").replace("$", "").strip())
             rewards.append(0.2 if value == int(value) else 0.0)
-        except:
+        except (ValueError, AttributeError):  # non-numeric string or None from extract_answer
             rewards.append(0.0)
     return rewards
 
