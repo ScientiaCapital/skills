@@ -14,28 +14,26 @@ MCP (Model Context Protocol) standardizes tool interfaces. LangChain's `langchai
 The primary interface for connecting to MCP servers:
 
 ```python
-from langchain_mcp_adapters import MultiServerMCPClient
+from langchain_mcp_adapters.client import MultiServerMCPClient
 
-# Create client
-client = MultiServerMCPClient()
-
-# Add servers
-client.add_server(
-    name="local_tools",
-    transport="stdio",
-    command="python",
-    args=["./mcp_server.py"]
-)
-
-client.add_server(
-    name="remote_tools",
-    transport="http",
-    url="https://mcp.example.com"
-)
-
-# Get LangChain-compatible tools
-tools = client.get_langchain_tools()
+# Configuration-based initialization (langchain-mcp-adapters 0.1.0+)
+async with MultiServerMCPClient(
+    {
+        "local_tools": {
+            "transport": "stdio",
+            "command": "python",
+            "args": ["./mcp_server.py"]
+        },
+        "remote_tools": {
+            "transport": "streamable-http",
+            "url": "https://mcp.example.com/mcp"
+        }
+    }
+) as client:
+    tools = await client.get_tools()
 ```
+
+Note: The `client.add_server()` pattern is deprecated. Use dict-config with `async with` context manager instead.
 
 ---
 
@@ -44,44 +42,40 @@ tools = client.get_langchain_tools()
 ### stdio (Local Process)
 
 ```python
-client.add_server(
-    name="file_tools",
-    transport="stdio",
-    command="npx",
-    args=["-y", "@anthropic/mcp-server-files"]
-)
+async with MultiServerMCPClient(
+    {
+        "file_tools": {
+            "transport": "stdio",
+            "command": "npx",
+            "args": ["-y", "@anthropic/mcp-server-files"]
+        }
+    }
+) as client:
+    tools = await client.get_tools()
 ```
 
 - Spawns local process
 - Communicates via stdin/stdout
 - Best for: Local development, single-machine deployment
 
-### HTTP (Remote Server)
+### streamable-http (Remote Server)
 
 ```python
-client.add_server(
-    name="api_tools",
-    transport="http",
-    url="https://api.example.com/mcp",
-    headers={"Authorization": "Bearer ${API_KEY}"}
-)
+async with MultiServerMCPClient(
+    {
+        "api_tools": {
+            "transport": "streamable-http",
+            "url": "https://api.example.com/mcp",
+            "headers": {"Authorization": "Bearer ${API_KEY}"}
+        }
+    }
+) as client:
+    tools = await client.get_tools()
 ```
 
-- Connects to HTTP endpoint
+- Connects to HTTP endpoint with streaming support
 - Best for: Distributed systems, shared tool servers
-
-### SSE (Server-Sent Events)
-
-```python
-client.add_server(
-    name="streaming_tools",
-    transport="sse",
-    url="https://stream.example.com/mcp"
-)
-```
-
-- Real-time streaming connection
-- Best for: Long-running operations with progress updates
+- Note: `"sse"` transport is deprecated in the MCP spec; use `"streamable-http"` instead
 
 ---
 
@@ -92,21 +86,22 @@ client.add_server(
 ```python
 from langgraph.prebuilt import create_react_agent
 from langchain_anthropic import ChatAnthropic
-
-# Setup
-client = MultiServerMCPClient()
-client.add_server("tools", "stdio", command="python", args=["./mcp_tools.py"])
-tools = client.get_langchain_tools()
+from langchain_mcp_adapters.client import MultiServerMCPClient
 
 model = ChatAnthropic(model="claude-sonnet-4-6")
 
-# Create agent with MCP tools
-agent = create_react_agent(model, tools=tools)
+async with MultiServerMCPClient(
+    {"tools": {"transport": "stdio", "command": "python", "args": ["./mcp_tools.py"]}}
+) as client:
+    tools = await client.get_tools()
 
-# Invoke
-result = agent.invoke({
-    "messages": [{"role": "user", "content": "Read the config.json file"}]
-})
+    # Create agent with MCP tools
+    agent = create_react_agent(model, tools=tools)
+
+    # Invoke
+    result = agent.invoke({
+        "messages": [{"role": "user", "content": "Read the config.json file"}]
+    })
 ```
 
 ### With Graph API
@@ -115,8 +110,8 @@ result = agent.invoke({
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 
-# Get MCP tools
-tools = client.get_langchain_tools()
+# Get MCP tools (inside async with block)
+tools = await client.get_tools()
 
 # Create tool node
 tool_node = ToolNode(tools)
@@ -148,7 +143,7 @@ def calculate_sum(a: int, b: int) -> int:
     return a + b
 
 # MCP tools
-mcp_tools = client.get_langchain_tools()
+mcp_tools = await client.get_tools()
 
 # Combine
 all_tools = [calculate_sum] + mcp_tools
@@ -160,7 +155,7 @@ agent = create_react_agent(model, tools=all_tools)
 
 ```python
 # Get all tools
-all_mcp_tools = client.get_langchain_tools()
+all_mcp_tools = await client.get_tools()
 
 # Filter to specific tools
 allowed_tools = ["read_file", "write_file", "search"]
@@ -176,35 +171,28 @@ agent = create_react_agent(model, tools=filtered_tools)
 ### Lifecycle Management
 
 ```python
-async with MultiServerMCPClient() as client:
-    client.add_server("tools", "stdio", command="python", args=["./server.py"])
-    tools = client.get_langchain_tools()
+async with MultiServerMCPClient(
+    {"tools": {"transport": "stdio", "command": "python", "args": ["./server.py"]}}
+) as client:
+    tools = await client.get_tools()
 
     # Use tools...
     result = agent.invoke(...)
 
-# Servers automatically cleaned up
+# Servers automatically cleaned up on context exit
 ```
 
 ### Error Handling
 
 ```python
 try:
-    client.add_server("unreliable", "http", url="https://flaky.example.com")
-    tools = client.get_langchain_tools()
-except MCPConnectionError as e:
+    async with MultiServerMCPClient(
+        {"unreliable": {"transport": "streamable-http", "url": "https://flaky.example.com/mcp"}}
+    ) as client:
+        tools = await client.get_tools()
+except Exception as e:
     # Fallback to local tools
     tools = [local_fallback_tool]
-```
-
-### Health Checks
-
-```python
-# Check server status
-for server in client.servers:
-    status = client.ping(server.name)
-    if not status.healthy:
-        logger.warning(f"Server {server.name} unhealthy: {status.error}")
 ```
 
 ---
@@ -213,45 +201,37 @@ for server in client.servers:
 
 ### File Operations
 ```python
-client.add_server(
-    "files",
-    "stdio",
-    command="npx",
-    args=["-y", "@anthropic/mcp-server-files", "/allowed/path"]
-)
+async with MultiServerMCPClient(
+    {"files": {"transport": "stdio", "command": "npx", "args": ["-y", "@anthropic/mcp-server-files", "/allowed/path"]}}
+) as client:
+    tools = await client.get_tools()
 ```
 
 ### Web Search
 ```python
-client.add_server(
-    "brave",
-    "stdio",
-    command="npx",
-    args=["-y", "@anthropic/mcp-server-brave"],
-    env={"BRAVE_API_KEY": os.environ["BRAVE_API_KEY"]}
-)
+async with MultiServerMCPClient(
+    {"brave": {"transport": "stdio", "command": "npx", "args": ["-y", "@anthropic/mcp-server-brave"],
+               "env": {"BRAVE_API_KEY": os.environ["BRAVE_API_KEY"]}}}
+) as client:
+    tools = await client.get_tools()
 ```
 
 ### Database
 ```python
-client.add_server(
-    "postgres",
-    "stdio",
-    command="npx",
-    args=["-y", "@anthropic/mcp-server-postgres"],
-    env={"DATABASE_URL": os.environ["DATABASE_URL"]}
-)
+async with MultiServerMCPClient(
+    {"postgres": {"transport": "stdio", "command": "npx", "args": ["-y", "@anthropic/mcp-server-postgres"],
+                  "env": {"DATABASE_URL": os.environ["DATABASE_URL"]}}}
+) as client:
+    tools = await client.get_tools()
 ```
 
 ### GitHub
 ```python
-client.add_server(
-    "github",
-    "stdio",
-    command="npx",
-    args=["-y", "@anthropic/mcp-server-github"],
-    env={"GITHUB_TOKEN": os.environ["GITHUB_TOKEN"]}
-)
+async with MultiServerMCPClient(
+    {"github": {"transport": "stdio", "command": "npx", "args": ["-y", "@anthropic/mcp-server-github"],
+                "env": {"GITHUB_TOKEN": os.environ["GITHUB_TOKEN"]}}}
+) as client:
+    tools = await client.get_tools()
 ```
 
 ---
@@ -261,23 +241,18 @@ client.add_server(
 ### Connection Pooling
 
 ```python
-class MCPToolProvider:
-    _instance = None
+SERVER_CONFIG = {
+    "files": {"transport": "stdio", "command": "python", "args": ["./file_server.py"]},
+    "search": {"transport": "streamable-http", "url": "https://search.example.com/mcp"},
+}
 
-    @classmethod
-    def get_client(cls) -> MultiServerMCPClient:
-        if cls._instance is None:
-            cls._instance = MultiServerMCPClient()
-            cls._setup_servers()
-        return cls._instance
-
-    @classmethod
-    def _setup_servers(cls):
-        cls._instance.add_server("files", "stdio", ...)
-        cls._instance.add_server("search", "http", ...)
+# Reuse config across calls; create new context per request to ensure clean lifecycle
+async def get_mcp_tools():
+    async with MultiServerMCPClient(SERVER_CONFIG) as client:
+        return await client.get_tools()
 
 # Usage
-tools = MCPToolProvider.get_client().get_langchain_tools()
+tools = await get_mcp_tools()
 ```
 
 ### Environment-Based Configuration
@@ -290,28 +265,28 @@ MCP_CONFIG = {
         "files": {"transport": "stdio", "command": "python", "args": ["./dev_server.py"]},
     },
     "production": {
-        "files": {"transport": "http", "url": os.environ.get("MCP_FILES_URL")},
+        "files": {"transport": "streamable-http", "url": os.environ.get("MCP_FILES_URL")},
     }
 }
 
 env = os.environ.get("ENVIRONMENT", "development")
-config = MCP_CONFIG[env]
+server_config = MCP_CONFIG[env]
 
-client = MultiServerMCPClient()
-for name, server_config in config.items():
-    client.add_server(name, **server_config)
+async with MultiServerMCPClient(server_config) as client:
+    tools = await client.get_tools()
 ```
 
 ---
 
 ## Best Practices
 
-1. **Use context managers**: `async with MultiServerMCPClient()` ensures cleanup
-2. **Filter tools**: Only expose tools the agent needs
-3. **Handle failures**: MCP servers can fail; have fallback strategies
-4. **Environment isolation**: Different server configs for dev/prod
-5. **Pool connections**: Reuse client instances across invocations
-6. **Monitor health**: Implement health checks for remote servers
+1. **Use context managers**: `async with MultiServerMCPClient({...})` ensures proper lifecycle and cleanup
+2. **Dict-config pattern**: Pass server config to the constructor — do not use deprecated `add_server()`
+3. **Use `get_tools()`**: The method is `await client.get_tools()`, not `get_langchain_tools()`
+4. **Filter tools**: Only expose tools the agent needs to reduce token usage
+5. **Handle failures**: MCP servers can fail; have fallback strategies with native LangChain tools
+6. **Use `streamable-http`**: SSE transport is deprecated in the MCP spec
+7. **Environment isolation**: Different server configs for dev/prod
 
 ---
 
@@ -320,6 +295,6 @@ for name, server_config in config.items():
 | Issue | Solution |
 |-------|----------|
 | Server won't start | Check command path, permissions, dependencies |
-| Tool not found | Verify server exposes tool, check `get_langchain_tools()` output |
+| Tool not found | Verify server exposes tool, check `get_tools()` output |
 | Connection timeout | Increase timeout, check network, verify URL |
 | Auth failures | Check API keys in env vars, verify headers |

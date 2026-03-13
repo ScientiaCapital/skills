@@ -16,11 +16,12 @@ class TaskRouter:
 
     def __init__(self):
         self.provider_costs = {
-            "ollama": 0.0,           # Free, local (Qwen, Llama)
-            "groq": 0.05,            # $0.05/1M tokens (Llama 3.1)
-            "deepseek": 0.14,        # $0.14/1M tokens
-            "claude-haiku": 1.0,     # $1/1M tokens
-            "claude-sonnet": 3.0,    # $3/1M tokens
+            "ollama": 0.0,            # Free, local
+            "groq": 0.05,             # $0.05/1M tokens (Llama 3.3)
+            "deepseek": 0.27,         # $0.27/1M input, $1.10/1M output
+            "claude-haiku": 0.80,     # $0.80/1M input, $4/1M output
+            "claude-sonnet": 3.0,     # $3/1M input, $15/1M output
+            "claude-opus": 15.0,      # $15/1M input, $75/1M output
         }
 
     def select_provider(self, complexity: int, requires_reasoning: bool) -> ProviderType:
@@ -94,8 +95,8 @@ class CostController:
         costs_per_million = {
             "ollama": 0.0,
             "groq": 0.05,
-            "deepseek": 0.14,
-            "claude-haiku": 1.0,
+            "deepseek": 0.27,
+            "claude-haiku": 0.80,
             "claude-sonnet": 3.0,
         }
         return (tokens / 1_000_000) * costs_per_million.get(provider, 0.0)
@@ -108,7 +109,7 @@ class CostController:
             return False  # Budget exceeded
 
         if self.spent_today + cost > self.daily_budget * self.alert_threshold:
-            print(f"⚠️ Alert: {(self.spent_today/self.daily_budget)*100:.1f}% of daily budget used")
+            print(f"Alert: {(self.spent_today/self.daily_budget)*100:.1f}% of daily budget used")
 
         return True
 
@@ -137,7 +138,7 @@ Integrate cost tracking into your agent graph:
 from langgraph.graph import StateGraph
 from langchain_anthropic import ChatAnthropic
 from langchain_groq import ChatGroq
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama  # pip install langchain-ollama
 
 # Provider initialization (NO OPENAI)
 PROVIDERS = {
@@ -177,6 +178,86 @@ def create_cost_aware_graph(cost_controller: CostController):
 
     return graph
 ```
+
+## Guardrails for Cost
+
+### Budget Tripwires
+
+```python
+class BudgetGuardrail:
+    """Hard stop when budget is exceeded."""
+
+    def __init__(self, max_cost: float = 5.0):
+        self.max_cost = max_cost
+        self.total_cost = 0.0
+
+    def check(self, estimated_cost: float) -> bool:
+        if self.total_cost + estimated_cost > self.max_cost:
+            raise RuntimeError(
+                f"Budget limit ${self.max_cost} would be exceeded. "
+                f"Current spend: ${self.total_cost:.2f}"
+            )
+        return True
+
+    def record(self, actual_cost: float):
+        self.total_cost += actual_cost
+```
+
+### Query Complexity Limits
+
+Limit expensive operations before they start:
+- Set `recursion_limit` in config (default: 25 graph steps)
+- Track tool call count in state for finer control
+- See `reference/guardrails.md` for implementation patterns
+
+## Multi-Provider Fallback Chain
+
+Cascade from cheap to expensive with circuit breaker:
+
+```python
+from langchain_core.runnables import RunnableWithFallbacks
+
+# Build fallback chain: cheapest -> most capable
+fallback_chain = (
+    ChatGroq(model="llama-3.3-70b-versatile")
+    .with_fallbacks([
+        ChatAnthropic(model="claude-haiku-4-5"),
+        ChatAnthropic(model="claude-sonnet-4-6"),
+    ])
+)
+
+# Use in agent — first working provider wins
+agent = create_react_agent(fallback_chain, tools=tools)
+```
+
+**Fallback triggers**: Rate limits, timeouts, model errors. NOT content quality — use routing for that.
+
+## Observability Cost Tracking
+
+### LangSmith Per-Run Cost Attribution
+
+```python
+import os
+os.environ["LANGSMITH_TRACING"] = "true"
+os.environ["LANGSMITH_API_KEY"] = "ls_..."
+os.environ["LANGSMITH_PROJECT"] = "my-agent"
+
+# All create_react_agent / StateGraph runs auto-trace
+# View per-run token usage and cost in LangSmith dashboard
+```
+
+### Custom Cost Metadata
+
+```python
+from langsmith import traceable
+
+@traceable(tags=["cost-sensitive"], metadata={"budget_tier": "low"})
+async def cheap_task(query: str):
+    """Tagged for cost filtering in LangSmith."""
+    return await groq_model.ainvoke(query)
+```
+
+Filter by `budget_tier` in LangSmith to identify cost hotspots.
 
 ## Best Practices
 

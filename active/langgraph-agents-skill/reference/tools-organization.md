@@ -197,6 +197,34 @@ def get_tools_for_agent(agent_type: str) -> list:
 
 ---
 
+## InjectedState and InjectedStore Access
+
+Tools can access graph state and long-term store via type annotations:
+
+```python
+from typing import Annotated
+from langgraph.prebuilt import InjectedState, InjectedStore
+from langchain_core.tools import tool
+
+@tool
+def get_user_context(
+    query: str,
+    state: Annotated[dict, InjectedState],      # Auto-injected, hidden from LLM
+    store: Annotated[BaseStore, InjectedStore],  # Auto-injected, hidden from LLM
+) -> str:
+    """Search user context. The state and store params are injected automatically."""
+    user_id = state["user_id"]
+    memories = store.search(("users", user_id, "memories"), query=query)
+    return format_memories(memories)
+```
+
+**Key rules:**
+- `InjectedState`/`InjectedStore` params are invisible to the LLM (not in tool schema)
+- Use for accessing conversation history, user preferences, or cross-thread data
+- Requires the tool to be used within a LangGraph graph with appropriate state/store configured
+
+---
+
 ## Related References
-- `graph-architecture.md` - How to attach tools to graph nodes
-- `agent-state-management.md` - Passing tool results through state
+- `state-schemas.md` - How to attach tools to graph nodes
+- `orchestration-patterns.md` - Passing tool results through state

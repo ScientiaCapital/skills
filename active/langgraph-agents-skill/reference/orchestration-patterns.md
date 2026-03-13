@@ -13,16 +13,19 @@ Three proven patterns for coordinating multiple agents in LangGraph systems.
 ### Implementation
 
 ```python
-from langgraph.prebuilt import create_supervisor
+from langgraph_supervisor import create_supervisor
+from langgraph.prebuilt import create_react_agent
 from langchain_anthropic import ChatAnthropic
 
+# Initialize model
+model = ChatAnthropic(model="claude-sonnet-4-6")
+
 # Define specialized agents
-research_agent = create_agent(model, research_tools, "Research specialist")
-writer_agent = create_agent(model, writer_tools, "Content writer")
-reviewer_agent = create_agent(model, review_tools, "Quality reviewer")
+research_agent = create_react_agent(model, tools=research_tools, prompt="Research specialist")
+writer_agent = create_react_agent(model, tools=writer_tools, prompt="Content writer")
+reviewer_agent = create_react_agent(model, tools=review_tools, prompt="Quality reviewer")
 
 # Create supervisor with centralized routing
-model = ChatAnthropic(model="claude-sonnet-4-6")
 supervisor_graph = create_supervisor(
     agents=[research_agent, writer_agent, reviewer_agent],
     model=model
@@ -60,19 +63,24 @@ if response.tool_calls and response.tool_calls[0]["name"] == "FINISH":
 ### Implementation
 
 ```python
-from langgraph.prebuilt import create_swarm
+from langgraph_swarm import create_swarm, create_handoff_tool
+from langgraph.prebuilt import create_react_agent
 
-# Define peer agents with handoff capabilities
-alice = Agent(
-    name="Alice",
-    instructions="SQL expert. Hand off to Bob for Python.",
-    tools=[query_db, handoff_to_bob]
+# Create handoff tools
+handoff_to_bob = create_handoff_tool(agent_name="Bob", description="Transfer to Bob for Python tasks")
+handoff_to_alice = create_handoff_tool(agent_name="Alice", description="Transfer to Alice for SQL tasks")
+
+# Create peer agents with handoff capabilities
+alice = create_react_agent(
+    model,
+    tools=[query_db, handoff_to_bob],
+    prompt="You are Alice, a SQL expert. Hand off to Bob for Python tasks."
 )
 
-bob = Agent(
-    name="Bob",
-    instructions="Python expert. Hand off to Alice for SQL.",
-    tools=[execute_code, handoff_to_alice]
+bob = create_react_agent(
+    model,
+    tools=[execute_code, handoff_to_alice],
+    prompt="You are Bob, a Python expert. Hand off to Alice for SQL tasks."
 )
 
 # Create swarm with peer-to-peer coordination
@@ -89,14 +97,7 @@ result = swarm_graph.invoke({
 
 ### Handoff Mechanism
 
-Agents use handoff tools to transfer control:
-```python
-def handoff_to_bob(reason: str):
-    """Transfer task to Bob with context"""
-    return {"active_agent": "Bob", "context": reason}
-```
-
-State passes seamlessly between peers without central coordinator.
+Agents use `create_handoff_tool` from `langgraph_swarm` to transfer control. Handoff tools return a `Command` that updates the active agent in state and passes a `ToolMessage` with context. State passes seamlessly between peers without a central coordinator.
 
 ---
 
@@ -169,6 +170,9 @@ workflow.add_conditional_edges(
 |---------|---------|-------------|------------|---------------|
 | **Supervisor** | Centralized | Low | Low | Linear workflows, clear hierarchy |
 | **Swarm** | Distributed | High | Medium | Peer collaboration, dynamic tasks |
+| **Handoff** | Sequential | Medium | Low | Pipeline chains, escalation flows |
+| **Router** | Dispatch | Medium | Low | Classify-and-route workflows |
+| **Skills** | On-demand | High | Low | Progressive disclosure of capabilities |
 | **Master Orchestrator** | Custom | Very High | High | Learning systems, adaptive routing |
 
 ### When to Choose Each
@@ -346,6 +350,129 @@ workflow.add_node("fan_out", fan_out_node)
 workflow.add_node("process_item", process_item)
 workflow.add_node("reduce", reduce_node)
 
-workflow.add_conditional_edges("fan_out", lambda _: "process_item")
+# fan_out returns Send objects that route directly to process_item
+# No edge needed from fan_out — Send handles routing
 workflow.add_edge("process_item", "reduce")
+workflow.set_entry_point("fan_out")
 ```
+
+---
+
+## 6. Handoff Pattern
+
+**When to use**: Sequential workflows where one agent must complete before the next begins, with precondition validation.
+
+**Best for**: Multi-step pipelines, agent specialization chains, escalation workflows.
+
+### Implementation
+
+```python
+from langgraph_swarm import create_handoff_tool
+from langgraph.prebuilt import create_react_agent
+from langgraph.types import Command
+
+# Create handoff tool with precondition description
+handoff_to_reviewer = create_handoff_tool(
+    agent_name="reviewer",
+    description="Transfer to reviewer only after analysis is complete"
+)
+
+# Analyst agent hands off when done
+analyst = create_react_agent(
+    model,
+    tools=[analyze_data, handoff_to_reviewer],
+    prompt="Analyze data thoroughly, then hand off to reviewer."
+)
+
+# Reviewer receives control via handoff
+reviewer = create_react_agent(
+    model,
+    tools=[approve_result, request_revision],
+    prompt="Review the analyst's findings and approve or request revision."
+)
+```
+
+### When Handoffs vs Swarm
+
+- **Handoff**: Sequential, one agent active at a time, precondition checks enforced via tool descriptions. Use for linear pipelines where order matters.
+- **Swarm**: Parallel-capable, multiple agents can be active, peer-to-peer. Use for exploratory workflows without a fixed sequence.
+
+---
+
+## 7. Router Pattern
+
+**When to use**: Classify input then dispatch to a specialist, with optional synthesis. No iterative decision-making needed.
+
+**Best for**: Intent routing, domain triage, fan-out to specialists.
+
+### Implementation
+
+```python
+from langgraph.graph import StateGraph, END
+from langgraph.types import Command
+from typing import Literal
+
+def classifier_node(state: State) -> Command[Literal["sql_agent", "python_agent", "general_agent"]]:
+    """Classify intent and route to the right specialist."""
+    intent = llm.invoke(f"Classify this task: {state['task']}. Reply with: sql, python, or general")
+    route_map = {"sql": "sql_agent", "python": "python_agent", "general": "general_agent"}
+    return Command(
+        update={"intent": intent.content},
+        goto=route_map.get(intent.content.strip(), "general_agent")
+    )
+
+# Parallel routing with Send
+from langgraph.types import Send
+
+def parallel_router(state: State) -> list[Send]:
+    """Route to multiple specialists simultaneously."""
+    return [
+        Send("sql_agent", {**state, "focus": "data"}),
+        Send("python_agent", {**state, "focus": "logic"})
+    ]
+
+workflow = StateGraph(State)
+workflow.add_node("classify", classifier_node)
+workflow.add_node("sql_agent", sql_agent_node)
+workflow.add_node("python_agent", python_agent_node)
+workflow.add_node("general_agent", general_agent_node)
+workflow.set_entry_point("classify")
+```
+
+---
+
+## 8. Skills-Based Multi-Agent
+
+**When to use**: Progressive disclosure of capabilities. Load specialized prompts and tools on demand rather than giving every agent access to everything.
+
+**Best for**: Large tool libraries, cost reduction, composable agent capabilities.
+
+### Implementation
+
+```python
+from langgraph.prebuilt import create_react_agent
+
+SKILL_REGISTRY = {
+    "sql": {"tools": [run_sql, explain_query], "prompt": "You are a SQL specialist."},
+    "python": {"tools": [execute_code, lint_code], "prompt": "You are a Python specialist."},
+    "research": {"tools": [web_search, summarize], "prompt": "You are a research specialist."},
+}
+
+@tool
+def load_skill(skill_name: str) -> str:
+    """Load a specialist skill set for the current task."""
+    if skill_name not in SKILL_REGISTRY:
+        return f"Unknown skill: {skill_name}. Available: {list(SKILL_REGISTRY.keys())}"
+    skill = SKILL_REGISTRY[skill_name]
+    # Dynamically bind tools to the agent for this turn
+    return f"Skill '{skill_name}' loaded. Prompt: {skill['prompt']}"
+
+# Base agent with skill-loading capability
+base_agent = create_react_agent(
+    model,
+    tools=[load_skill, *base_tools],
+    prompt="You have access to specialized skills. Load the appropriate skill before proceeding."
+)
+```
+
+This pattern is lighter-weight than spawning full subagents: the base agent selects and applies skill context within a single execution rather than delegating to separate processes.

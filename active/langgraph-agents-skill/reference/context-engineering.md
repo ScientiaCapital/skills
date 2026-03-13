@@ -275,6 +275,92 @@ def trim_to_budget(state: Dict, max_tokens: int = 8000) -> Dict:
     return trimmed
 ```
 
+## Anthropic Context Engineering Best Practices
+
+Principles from Anthropic's production agent engineering:
+
+### 1. Right Altitude Principle
+
+Match context detail to the agent's current needs:
+- **Too high**: "Process data" — agent lacks specifics
+- **Too low**: Full database schema dump — wastes tokens
+- **Right**: "Query the users table for active subscriptions created after 2024-01-01"
+
+### 2. Structured Note-Taking
+
+Have agents write structured notes to persist key findings:
+
+```python
+@tool
+def save_finding(category: str, finding: str, confidence: float) -> str:
+    """Save a research finding for later synthesis."""
+    store.put(
+        ("findings", thread_id, category),
+        str(uuid4()),
+        {"finding": finding, "confidence": confidence}
+    )
+    return f"Saved finding in {category}"
+```
+
+### 3. Tool Result Clearing
+
+For long-running agents, clear verbose tool results to reclaim context:
+
+```python
+from langchain_core.messages import RemoveMessage
+
+def context_cleanup_node(state: State) -> dict:
+    """Remove verbose tool results older than 10 messages."""
+    messages = state["messages"]
+    to_remove = []
+    for msg in messages[:-10]:
+        if hasattr(msg, "type") and msg.type == "tool":
+            if len(str(msg.content)) > 500:
+                to_remove.append(RemoveMessage(id=msg.id))
+    return {"messages": to_remove}
+```
+
+### 4. Multi-Context-Window Workflows
+
+For complex tasks, split across multiple agent invocations:
+- **Research agent**: Gathers data, writes to store
+- **Analysis agent**: Reads store, produces insights
+- **Synthesis agent**: Reads insights, produces final output
+
+Each agent gets a fresh context window with only relevant data.
+
+## Message History Trimming
+
+### Built-in Trimming
+
+```python
+from langchain_core.messages import trim_messages
+
+# Keep last N tokens
+trimmed = trim_messages(
+    messages,
+    strategy="last",
+    max_tokens=4000,
+    token_counter=ChatAnthropic(model="claude-sonnet-4-6"),
+    include_system=True,  # Always keep system message
+    start_on="human"  # Ensure first kept message is from human
+)
+```
+
+### Targeted Message Removal
+
+```python
+from langchain_core.messages import RemoveMessage
+
+def remove_old_messages(state: State) -> dict:
+    """Keep system + last 20 messages."""
+    messages = state["messages"]
+    if len(messages) > 20:
+        to_remove = [RemoveMessage(id=m.id) for m in messages[1:-20]]
+        return {"messages": to_remove}
+    return {}
+```
+
 ## Just-in-Time Context Loading
 
 ### Task-Specific Templates
@@ -304,36 +390,26 @@ You are crafting outreach sequences. Consider:
 def load_context_for_node(node_name: str, base_state: Dict) -> str:
     """Inject only relevant context for current node."""
     template = CONTEXT_TEMPLATES.get(node_name, "")
-
-    # Add minimal state data
     context = f"{template}\n\nCurrent data: {base_state.get('current_record', {})}"
     return context
 ```
 
 ### Lazy Loading Pattern
 
+Load and cache context per node on demand — avoids loading all context upfront:
+
 ```python
 class ContextLoader:
-    """Load context only when node executes."""
-
     def __init__(self):
         self._cache = {}
 
     def get_context(self, node: str, state: Dict) -> str:
-        """Load and cache context for node."""
         cache_key = f"{node}:{state.get('record_id')}"
-
-        if cache_key in self._cache:
-            return self._cache[cache_key]
-
-        # Expensive context loading
-        context = self._load_from_source(node, state)
-        self._cache[cache_key] = context
-
-        return context
+        if cache_key not in self._cache:
+            self._cache[cache_key] = self._load_from_source(node, state)
+        return self._cache[cache_key]
 
     def _load_from_source(self, node: str, state: Dict) -> str:
-        """Simulate loading from DB/API."""
         # In production: query vector DB, fetch from API, etc.
         return CONTEXT_TEMPLATES.get(node, "")
 ```

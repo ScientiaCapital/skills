@@ -556,7 +556,7 @@ Orchestrate Chinese LLMs (DeepSeek, Qwen, Yi, Moonshot) through OpenRouter's uni
 ---
 
 #### langgraph-agents-skill
-**Location:** `active/langgraph-agents-skill/`
+**Location:** `active/langgraph-agents-skill/` | **Version:** 2.0.0
 
 Multi-agent systems with LangGraph. NO OPENAI.
 
@@ -564,15 +564,19 @@ Multi-agent systems with LangGraph. NO OPENAI.
 |---------|----------|
 | Supervisor | Centralized routing |
 | Swarm | Peer-to-peer handoffs |
+| Handoff | Sequential pipelines |
+| Router | Classify-and-dispatch |
+| Skills | Progressive disclosure |
 | Master Orchestrator | Complex workflows |
 | Functional API | Simpler decorator-based workflows |
 | Deep Agents | Production framework with backends |
 | HITL/Interrupts | Human approval gates |
 | MCP Integration | Standardized tool protocols |
+| Guardrails | PII, budget, safety controls |
 
-**Reference Files (10):** state-schemas, orchestration-patterns, context-engineering, cost-optimization, base-agent-architecture, tools-organization, functional-api, deep-agents, mcp-integration, streaming-patterns
+**Reference Files (14):** state-schemas, orchestration-patterns, context-engineering, cost-optimization, base-agent-architecture, tools-organization, functional-api, deep-agents, mcp-integration, streaming-patterns, guardrails, testing-patterns, observability, deployment-patterns
 
-**Triggers:** "LangGraph agent", "multi-agent", "supervisor pattern", "functional API", "deep agents", "MCP tools", "human in the loop"
+**Triggers:** "LangGraph agent", "multi-agent", "supervisor pattern", "functional API", "deep agents", "MCP tools", "human in the loop", "guardrails", "durable execution", "time travel", "agent handoff", "swarm", "StateGraph", "checkpointer", "interrupt", "agent testing", "LangSmith", "observability", "LangGraph deploy", "create_react_agent"
 
 ---
 

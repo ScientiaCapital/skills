@@ -49,6 +49,25 @@ result = agent.invoke({
 
 ---
 
+### Full API Reference
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `model` | `BaseChatModel` | required | LLM instance (ChatAnthropic, ChatGroq, etc.) |
+| `system_prompt` | `str` | `None` | System message for the agent |
+| `tools` | `list[BaseTool]` | `[]` | Additional tools beyond built-in 6 |
+| `backend` | `BackendProtocol` | `StateBackend()` | Storage backend configuration |
+| `middleware` | `list[AgentMiddleware]` | `[]` | Middleware stack |
+| `interrupt_on` | `dict[str, bool]` | `{}` | Tool-level HITL configuration |
+| `checkpointer` | `BaseCheckpointSaver` | `None` | Persistence backend |
+| `store` | `BaseStore` | `None` | Long-term cross-thread memory |
+| `skills_dirs` | `list[str]` | `[]` | Directories to scan for skills |
+| `memory` | `list[str]` | `[]` | Paths to AGENTS.md files (always loaded) |
+| `subagents` | `list[SubAgent]` | `[]` | Subagent configurations |
+| `name` | `str` | `"deep-agent"` | Agent name (for tracing/logging) |
+
+---
+
 ## Backend Configurations
 
 Backends control where agent data lives:
@@ -167,6 +186,36 @@ agent = create_deep_agent(
 
 ## Skills Integration
 
+### Skills Progressive Disclosure
+
+Deep Agents loads skills using a two-phase approach:
+
+1. **Frontmatter scan**: Read only YAML frontmatter to check relevance
+2. **Full load**: Read complete SKILL.md only when skill matches current task
+
+```
+skills/
+└── skill-name/
+    ├── SKILL.md          # Required — frontmatter + instructions
+    ├── script.py         # Optional — executable scripts
+    └── reference-docs/   # Optional — deep-dive references
+```
+
+**SKILL.md frontmatter (required fields):**
+```yaml
+---
+name: "my-skill"
+description: "Max 1,024 chars — used for relevance matching"
+---
+```
+
+**Source precedence:** Later sources override earlier (last-wins).
+
+**Skills vs tools vs memory:**
+- Skills: bundled capabilities with contextual instructions (loaded on-demand)
+- Tools: atomic actions the agent can call
+- Memory (AGENTS.md): persistent context, always loaded every invocation
+
 Skills are loaded from directories:
 
 ```
@@ -192,6 +241,47 @@ Agent sees available skills and can invoke them:
 ```python
 # Agent has access to skill_invoke tool
 {"tool": "skill_invoke", "skill": "researcher", "input": "Find LangGraph patterns"}
+```
+
+---
+
+## Subagent Configuration
+
+Two subagent types for context quarantine — parent receives only final result:
+
+```python
+from deep_agents import CompiledSubAgent
+
+# Dict-based subagent (simple)
+research_subagent = {
+    "name": "research-agent",
+    "description": "In-depth research using web search",
+    "system_prompt": "You are a thorough researcher...",
+    "tools": [internet_search],
+    "model": "claude-sonnet-4-6",
+}
+
+# CompiledSubAgent (complex LangGraph workflows)
+custom_subagent = CompiledSubAgent(
+    name="data-analyzer",
+    description="Analyze datasets with custom pipeline",
+    runnable=custom_compiled_graph
+)
+
+agent = create_deep_agent(
+    model=model,
+    subagents=[research_subagent, custom_subagent]
+)
+```
+
+**Inheritance rules:**
+- Custom subagents do NOT inherit parent's skills — specify `skills=` explicitly
+- The default "general-purpose" subagent DOES inherit parent's skills/tools/model
+- Override the default by including `name="general-purpose"` in subagents list
+
+**Identify calling agent in tools:**
+```python
+agent_name = config.get("metadata", {}).get("lc_agent_name")
 ```
 
 ---
@@ -235,35 +325,57 @@ result = agent.invoke(
 
 ## Anthropic Provider Configuration
 
-Deep Agents works best with Anthropic models:
+See `base-agent-architecture.md` for full provider setup. Quick reference:
+
+| Model | Use Case |
+|-------|---------|
+| `claude-opus-4-6` | Complex reasoning, architecture decisions |
+| `claude-sonnet-4-6` | Fast execution, general tasks |
+| `claude-haiku-4-5` | Simple classification, extraction |
 
 ```python
 from langchain_anthropic import ChatAnthropic
 
-# Production config
 model = ChatAnthropic(
-    model="claude-opus-4-6",  # Or claude-sonnet-4-6
+    model="claude-sonnet-4-6",
     max_tokens=4096,
-    temperature=0.7,
-    # Extended thinking for complex reasoning
-    extra_headers={"anthropic-beta": "extended-thinking-2025-04-16"}
+    # Note: Extended thinking is now GA in Claude 4 models;
+    # beta header only needed for older API versions
+    # extra_headers={"anthropic-beta": "extended-thinking-2025-04-16"}
 )
-
-agent = create_deep_agent(model=model)
 ```
 
-### Model Selection by Task
+---
+
+## Long-Term Memory via Store
+
+Use `CompositeBackend` to route `/memories/` to a persistent `StoreBackend`:
 
 ```python
-# Complex reasoning / architecture
-opus = ChatAnthropic(model="claude-opus-4-6")
+from deepagents.backends import CompositeBackend, StateBackend, StoreBackend
+from langgraph.store.memory import InMemoryStore  # Dev
+# from langgraph.store.postgres import PostgresStore  # Production
 
-# Fast execution / simple tasks
-sonnet = ChatAnthropic(model="claude-sonnet-4-6")
+backend = CompositeBackend(
+    default=StateBackend(runtime),
+    routes={"/memories/": StoreBackend(runtime)}
+)
 
-# Route by task complexity
-model = opus if task.requires_deep_reasoning else sonnet
+agent = create_deep_agent(
+    model=model,
+    store=InMemoryStore(),  # or PostgresStore.from_conn_string(...)
+    backend=make_backend,
+    checkpointer=MemorySaver()
+)
 ```
+
+**Production stores:**
+
+| Store | Package | Use Case |
+|-------|---------|----------|
+| `InMemoryStore` | `langgraph` | Dev/testing only |
+| `PostgresStore` | `langgraph-checkpoint-postgres` | Production |
+| `RedisStore` | `langgraph-checkpoint-redis` | High-throughput; `# pip install langgraph-checkpoint-redis` |
 
 ---
 
@@ -289,9 +401,12 @@ from langchain_anthropic import ChatAnthropic
 from langgraph.store.redis import RedisStore
 
 # Production backend
+store = RedisStore.from_conn_string("redis://localhost:6379")
+# await store.setup()  # Required for Redis/Postgres stores
+
 backend = CompositeBackend({
     "/scratch/": StateBackend(),
-    "/memories/": StoreBackend(store=RedisStore(url="redis://localhost:6379")),
+    "/memories/": StoreBackend(store=store),
 })
 
 # Model

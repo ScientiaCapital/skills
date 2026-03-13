@@ -82,7 +82,7 @@ class AgentConfig:
 ```python
 from langchain_anthropic import ChatAnthropic
 from langchain_groq import ChatGroq
-from langchain_community.chat_models import ChatOllama
+from langchain_ollama import ChatOllama  # pip install langchain-ollama
 
 def create_agent(config: AgentConfig, tools: list = None):
     """Factory pattern for creating configured agents"""
@@ -176,4 +176,4 @@ class AgentState(TypedDict):
 
 ---
 
-**Next Steps**: See `multi-agent-orchestration.md` for agent coordination patterns.
+**Next Steps**: See `orchestration-patterns.md` for agent coordination patterns.

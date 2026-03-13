@@ -135,25 +135,134 @@ result = approval_workflow.invoke(
 
 ---
 
-## Durable Execution Guarantees
+## Durable Execution
 
-Functional API provides **deterministic replay**:
+### Durability Modes
+
+Control checkpoint write overhead vs crash safety:
+
+| Mode | Behavior | Trade-off |
+|------|----------|-----------|
+| `"exit"` | Persists only at completion | Best performance |
+| `"async"` | Async writes between steps | Balanced; minor crash risk |
+| `"sync"` | Sync writes before each step | Highest safety |
+
+### Failure and Resume
+
+When a workflow crashes mid-execution:
+1. Runtime identifies the last completed `@task` checkpoint
+2. All completed tasks return cached results (no re-execution)
+3. Execution resumes from the first incomplete task
 
 ```python
 @task
-def non_deterministic_op() -> str:
-    # This is checkpointed - replay returns same value
-    return str(uuid.uuid4())
+def fetch_data(url: str) -> dict:
+    """If this completes before crash, result is cached."""
+    return requests.get(url).json()
 
-@entrypoint(checkpointer=InMemorySaver())
-def durable_workflow() -> dict:
-    # If workflow crashes after task_1 completes,
-    # replay will return the SAME uuid, not generate a new one
-    uuid_result = non_deterministic_op().result()
-    return {"id": uuid_result}
+@task
+def process_data(data: dict) -> dict:
+    """If crash happens here, fetch_data won't re-run on resume."""
+    return transform(data)
+
+@entrypoint(checkpointer=PostgresSaver.from_conn_string(DB_URL))
+def pipeline(url: str) -> dict:
+    data = fetch_data(url).result()      # Cached after completion
+    result = process_data(data).result()  # Resumes here after crash
+    return result
 ```
 
+### Critical Rules for Durability
+
+1. **All side effects inside `@task`**: Random values, API calls, timestamps
+2. **Maintain consistent task order**: Task matching on resume is index-based
+3. **Tasks must be idempotent**: They may re-run on resume if incomplete
+4. **`@entrypoint` code re-runs**: Only `@task` results are cached
+
 **Implication**: Wrap non-deterministic operations (API calls, timestamps, random values) in `@task` for reliable replay.
+
+---
+
+## Time Travel and Debugging
+
+### State History
+
+Access all checkpoints for a thread:
+
+```python
+config = {"configurable": {"thread_id": "my-thread"}}
+
+# List all state snapshots
+history = list(workflow.get_state_history(config))
+for snapshot in history:
+    print(f"Step: {snapshot.metadata['step']}, Next: {snapshot.next}")
+
+# Get current state
+current = workflow.get_state(config)
+```
+
+### Forking from Historical State
+
+Branch from a past checkpoint with modified state:
+
+```python
+# Find desired checkpoint
+history = list(workflow.get_state_history(config))
+target = history[3]  # 4th checkpoint
+
+# Fork with state modification
+fork_config = workflow.update_state(
+    target.config,
+    values={"query": "modified query"}
+)
+
+# Execute from forked state
+result = workflow.invoke(None, fork_config)
+```
+
+**Warning**: Replay RE-EXECUTES nodes — LLM calls fire again (no caching at node level). Use `@task` for fine-grained caching.
+
+---
+
+## Testing Functional Workflows
+
+### Unit Testing Individual Tasks
+
+```python
+import pytest
+
+def test_research_task():
+    """Tasks can be tested in isolation."""
+    result = research("LangGraph patterns").result()
+    assert "LangGraph" in result
+
+def test_parallel_tasks():
+    """Test parallel execution returns all results."""
+    futures = [fetch_source_a(q) for q in ["a", "b", "c"]]
+    results = [f.result() for f in futures]
+    assert len(results) == 3
+```
+
+### Integration Testing with Checkpointer
+
+```python
+from langgraph.checkpoint.memory import InMemorySaver
+
+def test_interrupt_resume():
+    """Test HITL interrupt and resume cycle."""
+    checkpointer = InMemorySaver()
+    config = {"configurable": {"thread_id": "test-1"}}
+
+    # First invocation — hits interrupt
+    result = approval_workflow.invoke("production", config=config)
+    assert "__interrupt__" in result
+
+    # Resume with approval
+    final = approval_workflow.invoke(
+        Command(resume="approve"), config=config
+    )
+    assert final["status"] == "deployed"
+```
 
 ---
 
