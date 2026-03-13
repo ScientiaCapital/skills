@@ -8,6 +8,26 @@
 
 ## Active Work
 
+### P7: LangGraph Agents v2.0.0 + Trading-Signals v2.1 (COMPLETE)
+
+**Date:** 2026-03-13
+**Scope:** FULL — observer-full ran. 15+ files modified.
+
+| Task | Skill | Status |
+|------|-------|--------|
+| Fix 3 CRITICALs (wrong imports, broken APIs) | langgraph-agents | Done |
+| Fix 7 WARNINGs (deprecated imports, cross-refs, fictitious APIs) | langgraph-agents | Done |
+| 4 new reference files (guardrails, testing, observability, deployment) | langgraph-agents | Done |
+| 7 existing reference file updates | langgraph-agents | Done |
+| SKILL.md, config.json v2.0.0, SKILLS_INDEX.md | langgraph-agents | Done |
+| trading-signals v2.1 (daily workflow, backtesting, deep enhancements) | trading-signals | Done |
+
+**Deliverables:**
+- langgraph-agents v2.0.0: 14 reference files, all fictitious APIs removed, correct imports throughout
+- trading-signals v2.1: 18 reference files, daily trading workflow automation, backtesting patterns
+- All 274 tests passing, 40 zips rebuilt, gitleaks clean
+- Observer quality: 0 BLOCKERs, 0 CRITICALs at end of session
+
 ### P6: Observer Debt Cleanup (COMPLETE)
 
 | Task | Scope | Changes |

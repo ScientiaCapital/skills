@@ -190,7 +190,7 @@ class MemoryManager:
 ### Redis Checkpointer Integration
 
 ```python
-from langgraph.checkpoint.redis import RedisSaver
+from langgraph.checkpoint.redis import RedisSaver  # pip install langgraph-checkpoint-redis
 import redis
 
 # Production-grade persistence

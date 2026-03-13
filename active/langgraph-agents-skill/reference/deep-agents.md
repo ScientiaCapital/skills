@@ -352,7 +352,7 @@ model = ChatAnthropic(
 Use `CompositeBackend` to route `/memories/` to a persistent `StoreBackend`:
 
 ```python
-from deepagents.backends import CompositeBackend, StateBackend, StoreBackend
+from deep_agents.backends import CompositeBackend, StateBackend, StoreBackend
 from langgraph.store.memory import InMemoryStore  # Dev
 # from langgraph.store.postgres import PostgresStore  # Production
 
