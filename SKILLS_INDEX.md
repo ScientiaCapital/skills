@@ -45,7 +45,7 @@
 | Sales outreach, discovery, RevOps | [sales-revenue](#sales-revenue-skill) | Business |
 | B2B content marketing | [content-marketing](#content-marketing-skill) | Business |
 | Executive data analysis, dashboards | [data-analysis](#data-analysis-skill) | Business |
-| Trading signals, technical analysis | [trading-signals](#trading-signals-skill) | Business |
+| Expert trading partner: Options, Stocks, Crypto, Commodities, VIX, Forex | [trading-signals](#trading-signals-skill) | Business |
 | Create visual Miro boards | [miro](#miro-skill) | Business |
 | HubSpot SQL analytics, lead scoring, forecasting | [hubspot-revops](#hubspot-revops-skill) | Business |
 | Design business models (9 blocks) | [business-model-canvas](#business-model-canvas-skill) | Strategy |
@@ -728,21 +728,24 @@ Executive-grade data analysis for VC, PE, angels, and founders.
 ---
 
 #### trading-signals-skill
-**Location:** `active/trading-signals-skill/`
+**Location:** `active/trading-signals-skill/` | **Version:** 2.0.0
 
-Technical analysis for quantitative trading systems.
+Expert trading partner across all major asset classes. Combines 5 TA methodologies, 25+ options strategies, regime detection, sentiment analysis, and risk management.
 
-| Methodology | Coverage |
-|-------------|----------|
-| Elliott Wave | Wave rules, targets |
-| Turtle Trading | Donchian, ATR sizing |
-| Fibonacci | Golden pocket, confluence |
-| Wyckoff | Phase detection, VSA |
-| Markov Regime | 7-state transitions |
+| Domain | Coverage |
+|--------|----------|
+| Options | 25+ strategies, full Greeks (1st+2nd order), IV surface, GEX |
+| Stocks/ETFs | Sector rotation, scanner, Kelly allocation, earnings plays |
+| Crypto/Bitcoin | On-chain metrics, halving supercycle, Markov 7-state regime |
+| Commodities | Gold/Silver (COT, real rates), Oil (EIA, OPEC, contango) |
+| VIX/Volatility | IV rank, term structure, crisis thresholds, regime integration |
+| Forex | Carry trade, rate differentials, COT, central bank policy |
+| Risk Management | Position sizing, Greeks gates, drawdown limits, smart execution |
+| Sentiment | Social filtering, multi-model consensus, noise detection |
 
-**Reference Files (8):** elliott-wave, turtle-trading, fibonacci, wyckoff, markov-regime, pattern-recognition, swarm-consensus, chinese-llm-stack
+**Reference Files (16):** elliott-wave, turtle-trading, fibonacci, wyckoff, markov-regime, pattern-recognition, swarm-consensus, chinese-llm-stack, options-trading, options-strategies, commodities, vix-volatility, forex, equities, sentiment-signals, risk-management
 
-**Triggers:** "fibonacci levels", "elliott wave", "wyckoff", "trading signals"
+**Triggers:** "options greeks", "iron condor", "credit spread", "VIX", "gold silver oil", "forex", "bitcoin crypto", "position sizing", "IV rank", + all v1.0 triggers
 
 ---
 

@@ -1,19 +1,41 @@
 {
   "name": "trading-signals",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "category": "Business",
-  "description": "Technical analysis for quantitative trading: Elliott Wave, Turtle, Fibonacci, Wyckoff, Markov",
+  "description": "Expert trading partner: Options (25+ strategies, Greeks), Stocks, Crypto/Bitcoin, Commodities (Gold/Silver/Oil), VIX, Forex. Technical analysis, risk management, sentiment signals.",
   "requires": [],
   "depends_on": [],
   "integrates_with": [
     "openrouter-skill",
-    "groq-inference-skill"
+    "groq-inference-skill",
+    "data-analysis-skill",
+    "cost-metering-skill"
   ],
   "activation_triggers": [
     "fibonacci levels",
     "elliott wave",
     "wyckoff",
     "trading signals",
-    "turtle trading"
+    "turtle trading",
+    "options greeks",
+    "iron condor",
+    "credit spread",
+    "covered call",
+    "cash secured put",
+    "implied volatility",
+    "IV rank",
+    "position sizing",
+    "gold silver oil",
+    "VIX volatility",
+    "forex currency",
+    "bitcoin crypto",
+    "on-chain metrics",
+    "markov regime",
+    "options strategy",
+    "risk management",
+    "theta decay",
+    "gamma exposure",
+    "delta hedge",
+    "portfolio greeks"
   ]
 }

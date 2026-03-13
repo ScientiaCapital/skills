@@ -29,10 +29,39 @@
 
 ## Crypto Adaptation
 
+Crypto markets run hotter and faster than traditional markets. Elliott waves still work, but the parameters need adjustment:
+
 ```python
-WAVE_TIME_MULTIPLIER = 0.6  # 40% faster cycles
-EXTENDED_TARGETS = [2.618, 3.618, 4.236]  # Common in crypto
+WAVE_TIME_MULTIPLIER = 0.6  # Cycles complete 40% faster than equities
+EXTENDED_TARGETS = [2.618, 3.618, 4.236]  # Common in crypto (equities rarely exceed 2.618)
+VOLATILITY_ADJUST = True  # Use log-scale pivots for high-vol assets
 ```
+
+**Why crypto waves extend further:** Crypto markets are driven by retail sentiment cycles (FOMO/FUD) with less institutional dampening. Wave 3 extensions of 3.618x or even 4.236x are common in Bitcoin — these would be extraordinary in the S&P 500. Always check extended targets for crypto assets.
+
+**24/7 markets:** Unlike stocks, crypto trades continuously. Wave counts can develop over weekends. The "opening gap" doesn't exist — instead watch for session-based volume patterns (Asian, European, US session overlaps).
+
+### On-Chain Metrics as Wave Confirmation
+
+On-chain data provides independent confirmation of Elliott wave positions:
+
+| Wave Position | On-Chain Signal | What to Look For |
+|---------------|-----------------|------------------|
+| Wave 1 start | Exchange outflows increasing | Smart money accumulating off-exchange |
+| Wave 2 bottom | MVRV < 1.0, NUPL negative | Market below realized value — capitulation |
+| Wave 3 middle | Hash rate ATH, rising active addresses | Network strength confirms trend |
+| Wave 4 support | Long-term holder supply stable | Diamond hands holding through correction |
+| Wave 5 top | Exchange inflows spike, funding rates >0.1% | Distribution to exchanges, extreme leverage |
+
+### Bitcoin-Specific Metrics
+
+| Metric | Formula/Source | Signal |
+|--------|---------------|--------|
+| **MVRV Ratio** | Market Cap / Realized Cap | >3.5 = overvalued (Wave 5 zone), <1.0 = undervalued (Wave 1 zone) |
+| **NVT Ratio** | Network Value / Transaction Volume | High NVT = speculative (late waves), Low NVT = utility-driven |
+| **Puell Multiple** | Daily Miner Revenue / 365-day MA | >4.0 = sell zone, <0.5 = buy zone |
+| **SOPR** | Spent Output Profit Ratio | >1 = profit-taking, <1 = selling at loss |
+| **Stock-to-Flow** | Existing supply / annual production | Long-term model, not timing tool |
 
 ## Bitcoin Halving Supercycle (from SwaggyStacks)
 

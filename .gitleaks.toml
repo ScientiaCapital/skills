@@ -1,0 +1,14 @@
+[allowlist]
+description = "Known false positives in documentation/template files"
+
+paths = [
+  '''active/stripe-stack-skill/templates/env-example\.txt''',
+  '''active/stripe-stack-skill/reference/environment-vars\.md''',
+]
+
+[[rules]]
+id = "curl-auth-header-docs"
+description = "Curl auth header examples in API docs"
+regex = '''curl -H "Authorization: Bearer YOUR_TOKEN"'''
+[rules.allowlist]
+paths = ['''active/api-design-skill/reference/documentation\.md''']
