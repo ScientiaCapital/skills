@@ -8,37 +8,36 @@
 
 ## Status
 
-39 production-ready skills (2 stable, 37 active). Trading-signals skill upgraded to v2.1 with 18 reference files (16 existing + 2 new), deep production code patterns from ThetaRoom, SwaggyStacks, and SignalSiphon, plus daily trading workflow automation.
+39 production-ready skills (2 stable, 37 active). Two major upgrades shipped today: langgraph-agents v2.0.0 (14 reference files, 3 CRITICALs + 7 WARNINGs fixed, 4 new reference files) and trading-signals v2.1 (18 reference files, daily workflow automation, backtesting patterns).
 
 ## Recent Commits
 
 ```
+c8f8f5f docs: end-of-day state sync + observer import fixes
+61a760b feat: langgraph-agents v2.0.0 — deep enhancement + 4 new reference files
+fec475f fix: update all model references to current Anthropic lineup
 c1fb164 feat: trading-signals v2.1 — deep reference enhancement + daily workflow
 3685b79 feat: trading-signals v2.0 — expert trading partner upgrade
-299467b docs: update PROJECT_CONTEXT.md for end-of-day handoff
-7debc2c fix: P6 observer debt — bare excepts, template format, contract archive
-99a595c docs: update PROJECT_CONTEXT.md for end-of-day handoff
 ```
 
-## Done (This Session — Mar 13: Trading-Signals v2.0 → v2.1)
+## Done (This Session — Mar 13)
 
-- [x] v2.0: Rewrote SKILL.md, created 8 new reference files, expanded 2 existing, updated config.json
-- [x] v2.1: Deepened 10 reference files with production patterns (Greeks-Fib fusion, Wyckoff on-chain, options flow scanner, zero DTE, wheel strategy, fail-safe closure, circuit breaker, noise filtering)
-- [x] v2.1: Created daily-trading-workflow.md (Desktop tasks + /loop) and backtesting-patterns.md
-- [x] v2.1: Trimmed chinese-llm-stack.md from 807→383 lines, updated model refs to Opus/Sonnet 4.6
-- [x] v2.1: config.json v2.1.0 with 8 new activation triggers
-- [x] Dual-team build: 3 parallel builders (worktree) + 2 observers, all Phase 4 gates GREEN
-- [x] All 274 tests pass, 40 zips rebuilt, gitleaks clean, 0 observer BLOCKERs
+- [x] langgraph-agents v2.0.0: Fixed 3 CRITICALs (create_supervisor/create_swarm imports, get_tools(), MultiServerMCPClient)
+- [x] langgraph-agents v2.0.0: Fixed 7 WARNINGs (ChatOllama, RedisStore, cross-refs, fictitious langchain.middleware APIs)
+- [x] langgraph-agents v2.0.0: 4 new reference files (guardrails, testing, observability, deployment)
+- [x] langgraph-agents v2.0.0: 7 existing reference file updates (durable execution, time travel, handoff/router patterns, etc.)
+- [x] trading-signals v2.1: 2 new reference files (daily-trading-workflow, backtesting-patterns)
+- [x] trading-signals v2.1: Deepened 10 reference files with production patterns
+- [x] Observer: All BLOCKERs resolved, 2 WARNINGs fixed post-review, reports archived
+- [x] All 274 tests pass, 40 zips rebuilt, gitleaks clean, pushed to remote
 
 ## Tomorrow
 
-- Stale hardware refs cleanup (M1/8GB → M4/24GB in agent-teams, subagent-teams, SKILLS_INDEX.md)
-- Skill-creator audit / test cases for trading-signals if time
-- Explore new skill ideas or maintenance via workflow-orchestrator
+Tomorrow: trading-signals routing orphan audit via skill-creator | solo opus | Est: 30min, $2 | Observer notes: 5/18 reference files lack routing table entries
 
 ## Blockers
 
-None. Observer alerts: 0 active blockers, 0 warnings.
+None. Observer alerts: 0 active blockers. 1 RISK logged to backlog (routing orphan accumulation).
 
 ---
 
