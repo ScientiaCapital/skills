@@ -138,9 +138,9 @@ START: What do I need to do?
 
 | Tier | Model | Cost/1M In | Best For |
 |------|-------|-----------|----------|
-| **Fast** | Haiku | $0.25 | Search, classify, review, simple tasks |
-| **Standard** | Sonnet | $3.00 | Code generation, reasoning, most tasks |
-| **Premium** | Opus | $15.00 | Architecture, complex decisions, planning |
+| **Fast** | Haiku 4.5 | $1.00 | Search, classify, review, simple tasks |
+| **Standard** | Sonnet 4.6 | $3.00 | Code generation, reasoning, most tasks |
+| **Premium** | Opus 4.6 | $5.00 | Architecture, complex decisions, planning |
 | **Free** | TaskCreate | $0 | Progress tracking (local UI, not an API call) |
 
 **Default to Sonnet** unless:

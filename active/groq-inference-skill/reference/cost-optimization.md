@@ -116,7 +116,7 @@ def smart_route(prompt: str, priority: str):
 
     elif priority == "quality":
         return claude_client.messages.create(
-            model="claude-sonnet-4-20250514",
+            model="claude-sonnet-4-6",
             max_tokens=1024,
             messages=[{"role": "user", "content": prompt}]
         ).content[0].text

@@ -21,7 +21,7 @@ The harness is a complete agent setup with built-in tools:
 from deep_agents import create_deep_agent
 from langchain_anthropic import ChatAnthropic
 
-model = ChatAnthropic(model="claude-opus-4-5-20251101")
+model = ChatAnthropic(model="claude-opus-4-6")
 
 agent = create_deep_agent(
     model=model,
@@ -242,7 +242,7 @@ from langchain_anthropic import ChatAnthropic
 
 # Production config
 model = ChatAnthropic(
-    model="claude-opus-4-5-20251101",  # Or claude-sonnet-4-5-20250929
+    model="claude-opus-4-6",  # Or claude-sonnet-4-6
     max_tokens=4096,
     temperature=0.7,
     # Extended thinking for complex reasoning
@@ -256,10 +256,10 @@ agent = create_deep_agent(model=model)
 
 ```python
 # Complex reasoning / architecture
-opus = ChatAnthropic(model="claude-opus-4-5-20251101")
+opus = ChatAnthropic(model="claude-opus-4-6")
 
 # Fast execution / simple tasks
-sonnet = ChatAnthropic(model="claude-sonnet-4-5-20250929")
+sonnet = ChatAnthropic(model="claude-sonnet-4-6")
 
 # Route by task complexity
 model = opus if task.requires_deep_reasoning else sonnet
@@ -295,7 +295,7 @@ backend = CompositeBackend({
 })
 
 # Model
-model = ChatAnthropic(model="claude-opus-4-5-20251101")
+model = ChatAnthropic(model="claude-opus-4-6")
 
 # Create agent
 agent = create_deep_agent(

@@ -43,7 +43,7 @@ import hashlib
 CONFIG = {
     # API Configuration - set one of these
     "api_provider": "anthropic",  # "anthropic" or "openai"
-    "anthropic_model": "claude-sonnet-4-20250514",
+    "anthropic_model": "claude-sonnet-4-6",
     "openai_model": "gpt-4o-mini",
     
     # Generation settings

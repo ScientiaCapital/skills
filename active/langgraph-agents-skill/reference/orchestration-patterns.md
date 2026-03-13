@@ -22,7 +22,7 @@ writer_agent = create_agent(model, writer_tools, "Content writer")
 reviewer_agent = create_agent(model, review_tools, "Quality reviewer")
 
 # Create supervisor with centralized routing
-model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
+model = ChatAnthropic(model="claude-sonnet-4-6")
 supervisor_graph = create_supervisor(
     agents=[research_agent, writer_agent, reviewer_agent],
     model=model

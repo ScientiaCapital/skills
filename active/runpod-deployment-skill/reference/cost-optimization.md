@@ -205,8 +205,8 @@ def compare_costs(
     api_costs = {
         "gpt-4": 30.00,
         "gpt-4-turbo": 10.00,
-        "claude-3-opus": 15.00,
-        "claude-3-sonnet": 3.00,
+        "claude-opus-4-6": 5.00,
+        "claude-sonnet-4-6": 3.00,
         "deepseek-api": 0.14,
     }
 

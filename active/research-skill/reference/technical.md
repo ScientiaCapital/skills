@@ -558,7 +558,7 @@ class LLMClient:
     def __init__(self):
         self.client = Anthropic()
 
-    async def complete(self, prompt: str, model: str = "claude-sonnet-4-20250514") -> str:
+    async def complete(self, prompt: str, model: str = "claude-sonnet-4-6") -> str:
         response = await self.client.messages.create(
             model=model,
             max_tokens=4096,
@@ -835,7 +835,7 @@ class APIConfig(BaseSettings):
     openrouter_api_key: str
     google_api_key: Optional[str] = None
 
-    default_model: str = "claude-sonnet-4-20250514"
+    default_model: str = "claude-sonnet-4-6"
     default_timeout: int = 30
     max_retries: int = 3
 

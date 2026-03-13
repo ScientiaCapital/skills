@@ -20,7 +20,7 @@ This document outlines the optimal Chinese LLM stack for your trading systems, a
 |-------|-----------|-------------|--------------------------|
 | **Western Models** |
 | GPT-4 Turbo | $10.00 | $30.00 | ~$8.00 per analysis |
-| Claude Opus 4.6 | $5.00 | $15.00 | ~$4.00 per analysis |
+| Claude Opus 4.6 | $5.00 | $25.00 | ~$6.00 per analysis |
 | Claude Sonnet 4.6 | $3.00 | $15.00 | ~$3.60 per analysis |
 | Claude Haiku 4.5 | $1.00 | $5.00 | ~$1.20 per analysis |
 | **Chinese Models** |

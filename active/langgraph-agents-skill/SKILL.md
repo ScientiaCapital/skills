@@ -170,7 +170,7 @@ backend = CompositeBackend({
     "/memories/": StoreBackend()        # Persistent
 })
 agent = create_deep_agent(
-    model=ChatAnthropic(model="claude-opus-4-5-20251101"),
+    model=ChatAnthropic(model="claude-opus-4-6"),
     backend=backend,
     interrupt_on=["deploy", "delete"],
     skills_dirs=["./skills/"]

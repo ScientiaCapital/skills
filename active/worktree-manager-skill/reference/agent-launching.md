@@ -5,7 +5,7 @@
 **CRITICAL**: These settings MUST be used when launching agents in worktrees:
 
 - **Terminal**: Configurable (Ghostty recommended, iTerm2 for notifications)
-- **Model**: Opus 4.5 (`--model opus` or full ID `claude-opus-4-5-20251101`)
+- **Model**: Opus 4.6 (`--model opus` or full ID `claude-opus-4-6`)
 - **Flags**: `--dangerously-skip-permissions` (required for autonomous operation)
 
 ## Terminal Selection Guide
@@ -24,7 +24,7 @@
 ghostty --title="[1] project - branch" -e "cd {worktree_path} && claude --model opus --dangerously-skip-permissions"
 
 # Full model ID (for pinning to specific version)
-ghostty --title="[1] project - branch" -e "cd {worktree_path} && claude --model claude-opus-4-5-20251101 --dangerously-skip-permissions"
+ghostty --title="[1] project - branch" -e "cd {worktree_path} && claude --model claude-opus-4-6 --dangerously-skip-permissions"
 ```
 
 ## Terminal-Specific Commands
@@ -179,14 +179,14 @@ EOF
 
 | Option | When to Use |
 |--------|-------------|
-| `--model opus` | Default choice, always gets latest Opus 4.5 |
-| `--model claude-opus-4-5-20251101` | Pin to specific version for reproducibility |
+| `--model opus` | Default choice, always gets latest Opus 4.6 |
+| `--model claude-opus-4-6` | Pin to specific version for reproducibility |
 
 ## Why These Defaults Matter
 
 | Setting | Reason |
 |---------|--------|
 | Terminal auto-detect | Launches in whatever terminal you're using |
-| Opus 4.5 | Most capable model for autonomous work |
+| Opus 4.6 | Most capable model for autonomous work |
 | `--dangerously-skip-permissions` | Required for autonomous file operations |
 | Numbered tabs | Track multiple parallel sessions (Boris workflow) |

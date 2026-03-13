@@ -142,7 +142,7 @@ def break_tie(weighted_scores: dict) -> str:
 class AnthropicAdapter:
     async def query(self, prompt: str, context: dict) -> dict:
         response = await anthropic.messages.create(
-            model="claude-sonnet-4-6-20250514",
+            model="claude-sonnet-4-6",
             max_tokens=1024,
             messages=[{"role": "user", "content": prompt}]
         )

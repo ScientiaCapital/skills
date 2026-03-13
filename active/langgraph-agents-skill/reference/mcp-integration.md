@@ -98,7 +98,7 @@ client = MultiServerMCPClient()
 client.add_server("tools", "stdio", command="python", args=["./mcp_tools.py"])
 tools = client.get_langchain_tools()
 
-model = ChatAnthropic(model="claude-sonnet-4-5-20250929")
+model = ChatAnthropic(model="claude-sonnet-4-6")
 
 # Create agent with MCP tools
 agent = create_react_agent(model, tools=tools)

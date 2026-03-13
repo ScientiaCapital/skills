@@ -19,7 +19,7 @@ class TaskRouter:
             "ollama": 0.0,           # Free, local (Qwen, Llama)
             "groq": 0.05,            # $0.05/1M tokens (Llama 3.1)
             "deepseek": 0.14,        # $0.14/1M tokens
-            "claude-haiku": 0.25,    # $0.25/1M tokens
+            "claude-haiku": 1.0,     # $1/1M tokens
             "claude-sonnet": 3.0,    # $3/1M tokens
         }
 
@@ -95,7 +95,7 @@ class CostController:
             "ollama": 0.0,
             "groq": 0.05,
             "deepseek": 0.14,
-            "claude-haiku": 0.25,
+            "claude-haiku": 1.0,
             "claude-sonnet": 3.0,
         }
         return (tokens / 1_000_000) * costs_per_million.get(provider, 0.0)
@@ -141,8 +141,8 @@ from langchain_community.chat_models import ChatOllama
 
 # Provider initialization (NO OPENAI)
 PROVIDERS = {
-    "claude-haiku": ChatAnthropic(model="claude-3-5-haiku-20241022"),
-    "claude-sonnet": ChatAnthropic(model="claude-sonnet-4-20250514"),
+    "claude-haiku": ChatAnthropic(model="claude-haiku-4-5"),
+    "claude-sonnet": ChatAnthropic(model="claude-sonnet-4-6"),
     "groq": ChatGroq(model="llama-3.3-70b-versatile"),
     "ollama": ChatOllama(model="qwen2.5:7b"),
 }

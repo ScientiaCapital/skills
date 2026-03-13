@@ -374,9 +374,9 @@ class CostTracker:
     def get_model_rate(self, model):
         """Get cost per 1K tokens for model."""
         rates = {
-            'claude-sonnet': 0.003,
-            'claude-opus': 0.015,
-            'claude-haiku': 0.00025,
+            'claude-sonnet-4-6': 0.003,
+            'claude-opus-4-6': 0.005,
+            'claude-haiku-4-5': 0.001,
             'deepseek-v3': 0.00014,
             'qwen-72b': 0.0002,
             'gpt-4': 0.03,

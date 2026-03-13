@@ -8,9 +8,9 @@ Comprehensive cost tracking system with model routing, budget management, and op
 ```python
 LLM_COSTS = {
     # Anthropic Claude
-    'claude-3-opus': {'input': 0.015, 'output': 0.075},
-    'claude-3.5-sonnet': {'input': 0.003, 'output': 0.015},
-    'claude-3-haiku': {'input': 0.00025, 'output': 0.00125},
+    'claude-opus-4-6': {'input': 0.005, 'output': 0.025},
+    'claude-sonnet-4-6': {'input': 0.003, 'output': 0.015},
+    'claude-haiku-4-5': {'input': 0.001, 'output': 0.005},
     
     # DeepSeek (95% cheaper than Claude)
     'deepseek-chat': {'input': 0.00014, 'output': 0.00028},
@@ -100,16 +100,16 @@ class ModelRouter:
     def _route_reasoning(self, complexity, quality):
         """Route complex reasoning tasks."""
         if quality == 'critical' or complexity == 'high':
-            return 'claude-3.5-sonnet'  # Best reasoning
+            return 'claude-sonnet-4-6'  # Best reasoning
         elif self.budget > 20:
-            return 'claude-3-haiku'     # Good balance
+            return 'claude-haiku-4-5'   # Good balance
         else:
             return 'deepseek-v3'        # 95% cheaper
-            
+
     def _route_code_gen(self, complexity, quality):
         """Route code generation tasks."""
         if complexity == 'high' or quality == 'critical':
-            return 'claude-3.5-sonnet'  # Most accurate
+            return 'claude-sonnet-4-6'  # Most accurate
         elif complexity == 'medium':
             return 'deepseek-coder'     # Specialized, cheap
         else:
@@ -143,15 +143,15 @@ class ModelRouter:
 ```python
 QUALITY_COST_MATRIX = {
     # (quality_required, budget_sensitivity) -> model
-    ('critical', 'low'): 'claude-3-opus',
-    ('critical', 'medium'): 'claude-3.5-sonnet',
-    ('critical', 'high'): 'claude-3-haiku',
-    
-    ('high', 'low'): 'claude-3.5-sonnet',
-    ('high', 'medium'): 'claude-3-haiku',
+    ('critical', 'low'): 'claude-opus-4-6',
+    ('critical', 'medium'): 'claude-sonnet-4-6',
+    ('critical', 'high'): 'claude-haiku-4-5',
+
+    ('high', 'low'): 'claude-sonnet-4-6',
+    ('high', 'medium'): 'claude-haiku-4-5',
     ('high', 'high'): 'deepseek-v3',
-    
-    ('medium', 'low'): 'claude-3-haiku',
+
+    ('medium', 'low'): 'claude-haiku-4-5',
     ('medium', 'medium'): 'deepseek-v3',
     ('medium', 'high'): 'groq-mixtral-8x7b',
     
@@ -311,7 +311,7 @@ def generate_optimization_suggestions(costs):
     suggestions = []
     
     # Analyze model usage
-    expensive_model_percent = costs['by_model'].get('claude-3.5-sonnet', {}).get('percent', 0)
+    expensive_model_percent = costs['by_model'].get('claude-sonnet-4-6', {}).get('percent', 0)
     if expensive_model_percent > 50:
         savings = expensive_model_percent * 0.95 * costs['mtd'] / 100
         suggestions.append({
@@ -524,9 +524,9 @@ class ProgressiveModelDegradation:
     """Gradually switch to cheaper models as budget depletes."""
     
     DEGRADATION_PATH = {
-        'claude-3-opus': ['claude-3.5-sonnet', 'claude-3-haiku', 'deepseek-v3', 'ollama-llama3'],
-        'claude-3.5-sonnet': ['claude-3-haiku', 'deepseek-v3', 'groq-mixtral', 'ollama-llama3'],
-        'claude-3-haiku': ['deepseek-v3', 'groq-llama-70b', 'groq-llama-8b', 'ollama-llama3'],
+        'claude-opus-4-6': ['claude-sonnet-4-6', 'claude-haiku-4-5', 'deepseek-v3', 'ollama-llama3'],
+        'claude-sonnet-4-6': ['claude-haiku-4-5', 'deepseek-v3', 'groq-mixtral', 'ollama-llama3'],
+        'claude-haiku-4-5': ['deepseek-v3', 'groq-llama-70b', 'groq-llama-8b', 'ollama-llama3'],
         'gpt-4-turbo': ['gpt-3.5-turbo', 'deepseek-v3', 'groq-mixtral', 'ollama-mistral'],
     }
     

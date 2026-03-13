@@ -197,7 +197,7 @@ def select_model(complexity: int, cost_limit: float):
     elif complexity <= 7:
         return "deepseek-api"     # $0.14/1M tokens
     else:
-        return "claude-haiku"     # $0.25/1M tokens
+        return "claude-haiku"     # $1/1M tokens
 ```
 
 ---

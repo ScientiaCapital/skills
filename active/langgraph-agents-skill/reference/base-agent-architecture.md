@@ -95,7 +95,7 @@ def create_agent(config: AgentConfig, tools: list = None):
     # Initialize LLM based on provider (NO OPENAI)
     if provider == ProviderType.ANTHROPIC:
         llm = ChatAnthropic(
-            model="claude-sonnet-4-5-20250929",
+            model="claude-sonnet-4-6",
             temperature=config.temperature,
             max_tokens=config.max_tokens,
             timeout=config.timeout
