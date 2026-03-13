@@ -11,16 +11,16 @@ From ThetaRoom/SwaggyStacks implementations:
 
 ```python
 SWARM_MODELS = {
-    'claude-opus-4-5': {
+    'claude-opus-4-6': {
         'weight': 1.3,
         'role': 'Primary reasoning, highest quality'
     },
-    'claude-sonnet-4-5': {
+    'claude-sonnet-4-6': {
         'weight': 1.2,
         'role': 'Fast, reliable analysis'
     },
     'deepseek-r1': {
-        'weight': 1.1,
+        'weight': 1.2,  # Primary LLM per ThetaRoom v2
         'role': 'Deep reasoning, chain-of-thought'
     },
     'deepseek-v3': {
@@ -40,6 +40,7 @@ SWARM_MODELS = {
         'role': 'Research perspective'
     }
 }
+# Note: DeepSeek R1 is the primary reasoning model per ThetaRoom v2 architecture
 ```
 
 ## Voting System
@@ -141,7 +142,7 @@ def break_tie(weighted_scores: dict) -> str:
 class AnthropicAdapter:
     async def query(self, prompt: str, context: dict) -> dict:
         response = await anthropic.messages.create(
-            model="claude-sonnet-4-5-20241022",
+            model="claude-sonnet-4-6-20250514",
             max_tokens=1024,
             messages=[{"role": "user", "content": prompt}]
         )
@@ -195,8 +196,8 @@ Respond with JSON:
 
 ```python
 MODEL_COSTS = {
-    'claude-opus-4-5': 15.00,     # $/1M tokens
-    'claude-sonnet-4-5': 3.00,
+    'claude-opus-4-6': 5.00,      # $/1M tokens
+    'claude-sonnet-4-6': 3.00,
     'deepseek-r1': 0.55,
     'deepseek-v3': 0.27,
     'gemini-2.0-flash': 0.075,
@@ -206,9 +207,9 @@ MODEL_COSTS = {
 def select_swarm_tier(importance: str) -> list[str]:
     """Select models based on decision importance"""
     if importance == 'critical':
-        return ['claude-opus-4-5', 'claude-sonnet-4-5', 'deepseek-r1']
+        return ['claude-opus-4-6', 'claude-sonnet-4-6', 'deepseek-r1']
     elif importance == 'standard':
-        return ['claude-sonnet-4-5', 'deepseek-v3', 'gemini-2.0-flash']
+        return ['claude-sonnet-4-6', 'deepseek-v3', 'gemini-2.0-flash']
     else:  # 'quick'
         return ['deepseek-v3', 'gemini-2.0-flash', 'qwen-72b']
 ```

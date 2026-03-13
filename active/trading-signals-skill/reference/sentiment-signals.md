@@ -54,6 +54,50 @@ ELEVATE if:
 - Author has tracked accuracy > 60% over 10+ signals
 ```
 
+### Circuit Breaker Pattern (from SignalSiphon)
+Source: `signal-siphon/backend/analyzer/multi_model.py` (FallbackAnalyzer class)
+
+```python
+CIRCUIT_BREAKER = {
+    'failure_threshold': 3,           # 3 consecutive failures opens circuit
+    'rate_limit_detection': [429, 'quota'],  # Auto-detect rate limits
+    'fallback_chain': ['claude', 'openrouter', 'gemini'],  # Priority order
+    'backoff': [1, 2, 4],            # Exponential backoff seconds
+}
+```
+
+When a provider fails 3 times in a row, the circuit opens and traffic routes to the next provider. Rate limit responses (HTTP 429 or "quota exceeded" errors) trigger immediate provider switch without waiting for 3 failures.
+
+### 3-Layer Noise Filtering (from SignalSiphon)
+Source: `signal-siphon/backend/run_pipeline.py` (is_noise function)
+
+```python
+def is_noise(post) -> bool:
+    # Layer 1: Confidence too low (model unsure about this post)
+    if post.confidence < 3:
+        return True
+
+    # Layer 2: Emoji saturation (>5 emojis = hype, not analysis)
+    emoji_count = sum(1 for c in post.text if ord(c) > 127462)
+    if emoji_count > 5:
+        return True
+
+    # Layer 3: ALL CAPS ratio (>50% uppercase = shouting, not thinking)
+    upper_ratio = sum(1 for c in post.text if c.isupper()) / max(len(post.text), 1)
+    if upper_ratio > 0.5:
+        return True
+
+    return False
+```
+
+### Model Weights in Consensus
+
+| Model | Weight | Cost/1K | Notes |
+|-------|:---:|:---:|------|
+| Claude Haiku | 1.2 | $0.25 | Highest weighted -- best quality |
+| Gemini Flash 2.0 | 1.0 | $0.00 | Free tier baseline |
+| DeepSeek (OpenRouter) | 0.9 | $0.01 | Budget with tool calling |
+
 ### Stage 3: Analyze (Multi-Model Consensus)
 
 Each post that passes filters gets scored by multiple LLMs. Using multiple

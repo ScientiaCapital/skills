@@ -168,3 +168,62 @@ def generate_signal(self, current_price: float, levels: dict) -> dict:
 | Wyckoff | Spring at 0.786 retracement = strong buy |
 | Turtle | Breakout from golden zone = trend confirmation |
 | Markov | Golden pocket in `ranging` regime = mean reversion |
+
+## Greeks-Fibonacci Fusion (GEX Analysis)
+
+From SwaggyStacks' `greeks_fibonacci.py` — the intersection of options market structure and technical analysis.
+
+**Why It Matters:**
+Market makers must delta-hedge their options positions. When there's massive gamma concentration at a specific Fibonacci level, market makers are forced to buy dips and sell rallies near that level — creating a magnet effect. Understanding where GEX (Gamma Exposure) aligns with Fib levels gives you the highest-probability support/resistance zones.
+
+```python
+class GreeksFibFusion:
+    """Overlay Gamma Exposure on Fibonacci levels to find reaction zones"""
+
+    GAMMA_ZONES = {
+        'NEGATIVE_EXTREME': {'gamma': '<-5.0', 'behavior': 'Volatile, amplifies moves'},
+        'NEGATIVE':         {'gamma': '-5.0 to 0', 'behavior': 'Momentum, trends persist'},
+        'NEUTRAL':          {'gamma': '~0', 'behavior': 'Balanced, range-bound'},
+        'POSITIVE':         {'gamma': '0 to 5.0', 'behavior': 'Dampened, mean-reverting'},
+        'POSITIVE_EXTREME': {'gamma': '>5.0', 'behavior': 'Pinned, very low volatility'},
+    }
+
+    def analyze(self, fib_levels, options_chain):
+        """Find where GEX concentrates at Fibonacci levels"""
+        fusion_zones = []
+        for level_name, price in fib_levels.items():
+            gex_at_level = self._calculate_gex_near_price(options_chain, price)
+            pin_risk = self._calculate_pin_probability(options_chain, price)
+            oi_alignment = self._check_open_interest(options_chain, price)
+
+            if gex_at_level > threshold:
+                fusion_zones.append({
+                    'fib_level': level_name,
+                    'price': price,
+                    'gex': gex_at_level,
+                    'gamma_zone': self._classify_gamma(gex_at_level),
+                    'pin_risk': pin_risk,
+                    'oi_support': oi_alignment,
+                    'conviction': 'HIGH' if oi_alignment and pin_risk > 0.3 else 'MODERATE'
+                })
+        return fusion_zones
+```
+
+### GEX + Fibonacci Signal Matrix
+
+| Fib Level + GEX | What Happens | Trade Setup |
+|-----------------|--------------|-------------|
+| Golden Pocket + High Positive GEX | Price pinned to 0.618-0.65 zone | Sell premium (iron condor centered here) |
+| 0.786 + Negative GEX | Volatile zone, breakdown risk | Buy protective puts, tight stops |
+| Extension 1.618 + GEX flip | Momentum regime change | Trend trade in direction of break |
+| 0.382 + High OI concentration | Likely support/resistance magnet | Mean reversion entry |
+
+### Pin Risk Near Expiration
+
+As options approach expiration, gamma increases exponentially. If a Fibonacci level coincides with a high open-interest strike, the "pin risk" — price being magnetically attracted to that strike — increases dramatically. This is why SPY often closes near round numbers on monthly expiration.
+
+The strongest setups occur when three factors converge: a key Fibonacci level, concentrated open interest at a nearby strike, and positive gamma exposure forcing market makers to sell rallies and buy dips around that price.
+
+### Agent Message Format
+
+> "Golden Pocket ($XXX-$YYY) has 2.3B in positive GEX — market makers will defend this zone. Pin risk at $ZZZ strike (monthly expiry Friday). High conviction support with Fib + GEX + OI confluence."

@@ -132,6 +132,79 @@ GEX measures net gamma across all options at each strike. It reveals where marke
 - **Dark pool prints:** Large block trades off-exchange often precede significant moves
 - **Sweep orders:** Aggressive fills across multiple exchanges indicate urgency
 
+### Options Flow Scanner (from ThetaRoom v1)
+Source: `theta-room/backend/services/options/options_flow_scanner.py`
+
+```python
+class OptionsFlowScanner:
+    """Detect institutional activity through options flow"""
+
+    # Unusual Volume Alert
+    UNUSUAL_THRESHOLD = 3.0  # Volume > 3x open interest
+    MIN_PREMIUM = 100_000    # $100k minimum premium
+    SMART_MONEY_THRESHOLD = 500_000  # $500k+ = smart money bet
+
+    # Aggression Scoring (0-1 scale)
+    AGGRESSION_WEIGHTS = {
+        'volume_component': 0.4,    # Volume vs OI ratio
+        'spread_component': 0.2,    # Paid at ask vs bid
+        'sweep_component': 0.3,     # Multi-exchange sweeps
+        'price_aggression': 0.1,    # Above theoretical value
+    }
+
+    def scan(self, options_data):
+        alerts = []
+        for contract in options_data:
+            if contract.volume > contract.open_interest * self.UNUSUAL_THRESHOLD:
+                aggression = self._score_aggression(contract)
+                alerts.append({
+                    'contract': contract,
+                    'aggression': aggression,
+                    'is_smart_money': contract.premium > self.SMART_MONEY_THRESHOLD,
+                    'characteristics': self._detect_unusual(contract)
+                })
+        return alerts
+```
+
+**Unusual Characteristics:**
+- Far OTM (delta < 0.20) -- speculative bet on large move
+- Extreme volume (vol > OI x 10) -- new position, not closing
+- High IV (> 100%) -- elevated uncertainty
+- High gamma (> 0.05) -- near-term directional bet
+
+**Flow Sentiment:**
+
+| Call/Put Premium Ratio | Interpretation |
+|----------------------|----------------|
+| > 1.2 | BULLISH -- more call premium flowing |
+| 0.8 - 1.2 | NEUTRAL -- balanced flow |
+| < 0.8 | BEARISH -- put premium dominant |
+
+### Portfolio Greeks Risk Limits (from SwaggyStacks)
+Source: `swaggy-stacks/backend/app/trading/greeks_risk_manager.py`
+
+| Greek | Portfolio Max | Single Position Max | Action on Breach |
+|-------|:---:|:---:|------|
+| Delta | 1,000 shares equiv | 100 | Hedge with opposing delta |
+| Gamma | 10 | 2 | Reduce near-term positions |
+| Vega | 1,000 | 100 | Reduce long vol exposure |
+| Theta | -100/day | -- | Ensure theta income covers |
+| Rho | 500 | -- | Duration cap 1 year |
+
+Concentration warning at 50% threshold. Rebalancing recommendations with priority (high/medium/low).
+
+### Fill Improvement Logic (from ThetaRoom v2)
+Source: `thetaroom/thetaroom/config.py`
+
+```python
+FILL_CONFIG = {
+    'fill_improvement_interval_secs': 120,  # Wait 2 min between attempts
+    'fill_improvement_step': 0.05,           # Improve by $0.05 per attempt
+    'max_fill_attempts': 3,                  # 3 limit orders, then market
+}
+# Pattern: Limit -> wait 120s -> improve $0.05 -> wait -> improve -> market order
+```
+
 ## Data Sources
 
 | Source | Assets | Features |

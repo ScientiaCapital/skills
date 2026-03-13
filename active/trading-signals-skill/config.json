@@ -1,6 +1,6 @@
 {
   "name": "trading-signals",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "category": "Business",
   "description": "Expert trading partner: Options (25+ strategies, Greeks), Stocks, Crypto/Bitcoin, Commodities (Gold/Silver/Oil), VIX, Forex. Technical analysis, risk management, sentiment signals.",
   "requires": [],
@@ -36,6 +36,15 @@
     "theta decay",
     "gamma exposure",
     "delta hedge",
-    "portfolio greeks"
+    "portfolio greeks",
+    "daily prep",
+    "pre-market",
+    "market open",
+    "EOD review",
+    "backtest",
+    "walk forward",
+    "zero DTE",
+    "wheel strategy",
+    "options flow"
   ]
 }

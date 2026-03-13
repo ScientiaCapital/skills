@@ -270,3 +270,50 @@ min_dte_roll = 21                  # Roll/exit at 21 DTE
 profit_target_pct = 0.50           # Exit at 50% max profit
 stop_loss_pct = 2.0                # Exit at 2x credit received loss
 ```
+
+### Zero DTE Strategy Details (from SwaggyStacks)
+Source: `swaggy-stacks/backend/app/strategies/options/zero_dte_strategy.py`
+
+```python
+ZERO_DTE_CONFIG = {
+    'short_delta_range': (-0.42, -0.38),    # Short strikes
+    'long_delta_range': (-0.22, -0.18),     # Wing protection
+    'profit_target': 0.50,                   # 50% of max profit
+    'stop_loss_multiplier': 2.0,             # 2x credit received
+    'iv_range': (0.15, 0.80),               # 15-80% IV
+    'min_open_interest': 500,                # Liquidity requirement
+    'monitoring_interval_minutes': 3,         # Check every 3 min (fast-moving!)
+}
+```
+
+**Why 3-minute monitoring:** Zero DTE gamma is extreme. A 1% SPY move can turn a winning trade into max loss in minutes. The 3-minute interval catches gamma blowups before they become catastrophic.
+
+### Wheel Strategy Two-Phase (from SwaggyStacks)
+Source: `swaggy-stacks/backend/app/strategies/options/wheel_strategy.py`
+
+**Phase 1: Cash-Secured Put**
+- Delta: -0.42 to -0.18 (30-42 delta sweet spot)
+- DTE: 7-35 days
+- If assigned -> transition to Phase 2
+
+**Phase 2: Covered Call**
+- Delta: 0.18 to 0.42
+- DTE: 7-35 days
+- If called away -> back to Phase 1
+
+**Roll Triggers:**
+- Delta exceeds 0.80 -> roll to next expiry
+- Profit reaches 50% -> close early
+- Max position: 10% of portfolio per underlying
+
+**Bollinger Band Enhancement:** 20-period, 2.0 std dev -- sell puts at lower band, sell calls at upper band.
+
+### Strategy-to-Regime Factory (from SwaggyStacks options_strategy_factory.py)
+
+| Market Regime | Recommended Strategies | Why |
+|---------------|----------------------|-----|
+| **High Volatility** | Long Straddle, Protective Put, Gamma Scalping | Expensive premium -> buy directional or hedge |
+| **Low Volatility** | Iron Butterfly, Covered Call, Iron Condor | Cheap premium -> sell it, collect theta |
+| **Bullish** | Bull Call Spread, Covered Call, Calendar Spread | Directional + income |
+| **Bearish** | Bear Put Spread, Protective Put | Protection + directional profit |
+| **Neutral/Ranging** | Iron Condor, Iron Butterfly, Wheel | Range-bound income collection |

@@ -56,6 +56,8 @@ Route the user's question to the right analysis framework. Most questions involv
 | Forex, FX, EUR/USD, carry trade, central bank | `forex.md` | `markov-regime.md` for regime |
 | Sentiment, Twitter, Reddit, social signals | `sentiment-signals.md` | Asset-specific ref |
 | Position sizing, risk, drawdown, portfolio | `risk-management.md` | Asset-specific ref |
+| Daily prep, pre-market, market open, EOD review | `daily-trading-workflow.md` | Asset-specific refs |
+| Backtest, walk forward, monte carlo, strategy test | `backtesting-patterns.md` | Strategy-specific refs |
 | General TA, chart, pattern, support/resistance | TA methodology refs below | `pattern-recognition.md` |
 
 ## When Multiple Assets Interact
@@ -151,6 +153,9 @@ Each node maps to a LangGraph agent. The pipeline is sequential but nodes can ru
 | ThetaRoom v2 | `~/Desktop/tk_projects/thetaroom/` | Architecture blueprint: NautilusTrader, config thresholds, agent design |
 | SwaggyStacks | `~/Desktop/tk_projects/swaggy-stacks/` | Options strategies, Markov model, Greeks-Fib fusion, backtesting |
 | SignalSiphon | `~/Desktop/tk_projects/signal-siphon/` | Sentiment pipeline, social signal filtering |
+| research-hub | `scientiacapital/research-hub` | Multi-agent research with `/trading`, `/market` commands |
+| model-finops | `scientiacapital/model-finops` | Intelligent LLM router (60% cost reduction) |
+| silkroute | `scientiacapital/silkroute` | Chinese LLM orchestrator, 3-tier budget governance |
 
 **Key code references:**
 - Options Greeks: `theta-room/backend/nautilus/greeks_actor.py`
@@ -196,4 +201,8 @@ Each node maps to a LangGraph agent. The pipeline is sequential but nodes can ru
 - `reference/pattern-recognition.md` — Candlestick + chart patterns
 - `reference/swarm-consensus.md` — Multi-LLM voting system
 - `reference/chinese-llm-stack.md` — Cost-optimized Chinese LLMs for trading
+
+**Workflow & Backtesting:**
+- `reference/daily-trading-workflow.md` — /loop + Desktop scheduled tasks for pre-market, open, intraday, EOD
+- `reference/backtesting-patterns.md` — Walk-forward, Monte Carlo, ensemble, combinatorial alpha discovery
 </reference_files>

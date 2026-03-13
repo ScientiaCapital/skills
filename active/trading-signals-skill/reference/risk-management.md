@@ -291,3 +291,57 @@ if portfolio_risk + final_size > max_portfolio_risk:
 This layered approach ensures that no single rule can be circumvented. Even
 if Kelly says 5% and regime says full size, the 2% per-trade cap prevents
 oversizing. Every layer is a safety net for the layers above it.
+
+---
+
+## Strategy-Aware Risk Classification (from ThetaRoom v1)
+Source: `theta-room/backend/services/risk/strategy_aware_risk_manager.py`
+
+| Strategy Type | Max Position % | Stop Loss | Hold Period | Special Rules |
+|--------------|:---:|:---:|:---:|------|
+| Day Trade | 5% | 1% of account | Intraday only | Fail-safe closure at 3:59 PM |
+| Swing | 3% | 2% of account | 2-10 days | Overnight gap risk check |
+| Momentum | 4% | 1.5% | 1-5 days | Requires trend confirmation |
+| Gap Play | 2% | 0.5% | Intraday | Pre-market liquidity check |
+| Earnings | 2% | Defined risk (spreads) | Through event | IV crush expected |
+
+---
+
+## Fail-Safe Closure System (from ThetaRoom v1)
+Source: `theta-room/backend/services/risk/failsafe_closure_system.py`
+
+Multi-stage position closure to prevent unintended overnight exposure:
+
+```
+3:30 PM ET -> WARNING: Review all day-trade positions
+3:45 PM ET -> ALERT: Close positions > 50% of day-trade allocation
+3:55 PM ET -> URGENT: Close ALL day-trade positions at market
+3:59:30 PM -> PANIC: Emergency market orders for anything remaining
+```
+
+**Why:** Day trade positions held overnight violate the strategy classification AND incur overnight gap risk. The multi-stage approach gives you time to close cleanly at limit prices before resorting to market orders.
+
+---
+
+## Account Isolation (from ThetaRoom v2)
+Source: `thetaroom/thetaroom/config.py`
+
+| Account | Access Level | Trading | Notes |
+|---------|:---:|:---:|------|
+| Personal IBKR | FULL | Paper (default) / Live | All strategies allowed |
+| Roth IRA | READ-ONLY | Reference only | No options selling, no margin |
+
+**Non-negotiable:** Roth IRA signals are dropped at the strategy acceptance layer. Even if analysis suggests a trade, the account gate prevents execution.
+
+---
+
+## Anomaly-Adjusted Risk Multipliers (from SwaggyStacks)
+Source: `swaggy-stacks/backend/app/trading/risk_manager.py`
+
+| Threat Level | Risk Multiplier | Position Size Adjustment |
+|:---:|:---:|------|
+| Normal | 1.0x | Standard sizing |
+| Elevated | 1.5x | Widen stops 50%, reduce size 33% |
+| High | 2.0x | Double stops, halve position size |
+
+Triggered by: VIX spike > 25%, unusual options flow divergence, exchange outflow anomaly, or multiple methodology disagreement.
