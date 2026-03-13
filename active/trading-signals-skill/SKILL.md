@@ -58,7 +58,11 @@ Route the user's question to the right analysis framework. Most questions involv
 | Position sizing, risk, drawdown, portfolio | `risk-management.md` | Asset-specific ref |
 | Daily prep, pre-market, market open, EOD review | `daily-trading-workflow.md` | Asset-specific refs |
 | Backtest, walk forward, monte carlo, strategy test | `backtesting-patterns.md` | Strategy-specific refs |
-| General TA, chart, pattern, support/resistance | TA methodology refs below | `pattern-recognition.md` |
+| General TA, chart, pattern, support/resistance | `pattern-recognition.md` | `fibonacci.md`, `wyckoff.md` |
+| Breakout, trend following, Donchian, ATR, pyramiding | `turtle-trading.md` | `markov-regime.md` for regime |
+| Accumulation, distribution, Wyckoff, VSA, composite operator | `wyckoff.md` | `pattern-recognition.md` |
+| Multi-LLM consensus, swarm voting, model agreement | `swarm-consensus.md` | Asset-specific ref |
+| Chinese LLMs, DeepSeek, Qwen, cost routing, budget | `chinese-llm-stack.md` | `swarm-consensus.md` |
 
 ## When Multiple Assets Interact
 Many real trades span asset classes. Examples:
