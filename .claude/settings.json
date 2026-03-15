@@ -85,7 +85,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Before stopping, quickly check the conversation: 1) Were any workflow skills invoked (prospect-research, call-prep, deal-momentum, portfolio-linker, trading-alerts)? 2) Are there uncommitted git changes? 3) Were any deals flagged as RED/stalled? 4) Were prospects researched but not yet loaded into Apollo sequences? If ANY of these are true, return 'block' with a brief reminder of what needs attention. If none apply or the user explicitly asked to stop, return 'approve'.",
+            "prompt": "Check the conversation briefly: Were workflow skills run? Uncommitted changes? RED deals flagged? If any need attention AND the user did NOT explicitly say stop/exit/done, output a short reminder of what needs saving. Otherwise output nothing.",
             "timeout": 10
           }
         ]
