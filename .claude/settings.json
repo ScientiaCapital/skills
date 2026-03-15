@@ -72,9 +72,9 @@
         "matcher": "*",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Check the conversation briefly: Were workflow skills run? Uncommitted changes? RED deals flagged? If any need attention AND the user did NOT explicitly say stop/exit/done, respond with JSON: {\"decision\": \"block\", \"reason\": \"Brief reminder of what needs saving\"}. If everything is clean or user said stop/exit/done, respond with empty JSON: {}.",
-            "timeout": 10
+            "type": "command",
+            "command": "bash -c 'CHANGED=$(git status --porcelain 2>/dev/null | wc -l | tr -d \" \"); if [ \"$CHANGED\" -gt 0 ]; then echo \"⚠ $CHANGED uncommitted file(s). Consider committing before ending session.\"; fi'",
+            "timeout": 5
           }
         ]
       }
