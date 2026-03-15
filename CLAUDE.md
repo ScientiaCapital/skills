@@ -1,6 +1,6 @@
 # Tim's Skills Library
 
-This folder contains reusable skill packages for Claude Desktop and Claude Code.
+46 production-ready skills for Claude Code and Claude Desktop. Engineering, GTM, sales automation, and trading.
 
 ## How to Use This Folder
 
@@ -15,19 +15,27 @@ When working in this folder, Claude should:
 skills/
 ├── CLAUDE.md               # You're reading this
 ├── README.md               # Quick start + skill catalog
-├── SKILLS_INDEX.md         # Detailed skill documentation
+├── SKILLS_INDEX.md         # Detailed skill documentation (46 skills)
 ├── DEPENDENCY_GRAPH.md     # Visual skill relationships
-├── PLANNING.md             # Current sprint
+├── PLANNING.md             # Current sprint (P9)
 ├── BACKLOG.md              # Future work
 ├── ARCHIVE.md              # Completed sprints
-├── active/                 # Trigger-activated skills
-├── stable/                 # Always-loaded core skills
-├── dist/                   # Zip files for Claude Desktop
+├── active/                 # 44 trigger-activated skills
+├── stable/                 # 2 always-loaded core skills
+├── dist/                   # 46 zip files for Claude Desktop
 ├── scripts/
 │   ├── deploy.sh           # Deploy to ~/.claude/skills/
-│   └── rebuild-zips.sh     # Rebuild dist/*.zip
+│   ├── rebuild-zips.sh     # Rebuild dist/*.zip
+│   ├── test-skills.sh      # Integration tests (323 checks)
+│   ├── log-skill-usage.sh  # PostToolUse hook target
+│   ├── skill-analytics-report.sh  # Usage reporting
+│   └── hooks/              # SessionStart + workflow hooks
 ├── templates/              # Skill starter templates
 └── .claude/
+    ├── settings.json       # Hooks config (PreToolUse, PostToolUse, Stop)
+    ├── settings.local.json # Permissions + observer hooks
+    ├── observers/          # QUALITY.md, ARCH.md, ALERTS.md
+    ├── rules/              # coding.md
     └── SKILL_TEST_MATRIX.md  # Activation test results
 ```
 
