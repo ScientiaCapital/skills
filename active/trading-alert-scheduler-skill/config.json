@@ -1,0 +1,29 @@
+{
+  "name": "trading-alert-scheduler-skill",
+  "version": "1.0.0",
+  "category": "Business",
+  "dependencies": ["trading-signals-skill", "ibkr-api-skill"],
+  "mcp_tools": [],
+  "web_search_required": true,
+  "triggers": [
+    "market digest",
+    "trading alerts",
+    "pre-market scan",
+    "watchlist check",
+    "what's setting up",
+    "trading morning brief",
+    "market open prep",
+    "check my positions",
+    "position health"
+  ],
+  "schedule": {
+    "name": "trading-alert-daily",
+    "cron": "0 7 * * 1-5",
+    "timezone": "America/Chicago",
+    "description": "Daily 7am CST pre-market trading digest"
+  },
+  "impact": {
+    "time_saved_daily_min": 30,
+    "description": "No IBKR distraction during 50-call BDR days + fewer missed setups"
+  }
+}

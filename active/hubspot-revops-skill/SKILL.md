@@ -38,6 +38,8 @@ Bridges CRM data → analytics → intelligence products → revenue impact.
 
 ### 1. HubSpot Private App
 
+**Note:** Tim's HubSpot is accessed via the Epiphan CRM MCP connector — no Private App setup needed. All hubspot_* tools are available directly.
+
 Create at Settings → Integrations → Private Apps:
 
 | Scope | Permission | Why |
@@ -91,7 +93,13 @@ BASE = "https://api.hubapi.com"
 
 ### Use Case Details
 
-**UC1 — ICP Validation:** Join contacts + companies + deals in SQL, segment by industry/size/geo, compute conversion rates per segment. Feed results to Clay for enrichment writeback.
+**UC1 — ICP Validation:** Join contacts + companies + deals in SQL, segment by industry/size/geo, compute conversion rates per segment. Feed results to Clay MCP waterfall for enrichment:
+   1. `find-and-enrich-company` or `find-and-enrich-contacts-at-company` to identify target contacts
+   2. `add-contact-data-points` / `add-company-data-points` to queue enrichment jobs
+   3. `get-existing-search` to poll for results and check `state: completed`
+   4. Write enriched data back to HubSpot via API or Epiphan CRM integration
+   
+   Alternative: Use Apollo MCP (`apollo_people_match`) for direct enrichment without waterfall wait.
 
 **UC2 — Lead Scoring:** Train GradientBoostingClassifier on historical won/lost deals. Features: company size, industry, engagement score, days in pipeline. Deploy scores back to HubSpot as custom property.
 
@@ -102,6 +110,35 @@ BASE = "https://api.hubapi.com"
 **UC5 — Pipeline Forecast:** Calculate weighted forecast using stage-specific win rates from historical data. Factor in deal age, velocity, and rep performance.
 
 > **Reference:** See `reference/sql-analytics.md` for complete SQL templates per use case.
+
+---
+
+## Golden Rules for Prospect Quality
+
+**Tim's BDR targeting criteria (as of March 2026)** — Apply these filters before outreach:
+
+```sql
+-- Exclude existing customers and channels
+WHERE lifecyclestage NOT IN ('customer')
+  AND custom.first_conversion NOT LIKE '%Pearl%' 
+  AND custom.first_conversion NOT LIKE '%setup%'
+  AND custom.first_conversion NOT LIKE '%Connect%'
+  AND custom.first_conversion NOT LIKE '%signup%'
+  AND device_count < 1
+  AND is_channel = false
+
+-- Target only Lex, Phil, Ron, Anthony (AE territories)
+  AND hubspot_owner_id IN (82625923, 423155215)
+
+-- Optionally segment by company size, industry, location
+```
+
+**Use this filter in:**
+- ICP Validation queries (UC1) before Clay enrichment
+- Lead scoring model (UC2) training data
+- Prospect research cadence (prospect-research-to-cadence-skill)
+
+**Note:** See `phone-verification-waterfall-skill` for full Golden Rules implementation with Clay MCP integration.
 
 ---
 
@@ -145,6 +182,17 @@ BASE = "https://api.hubapi.com"
 | `sales-revenue-skill` | Pipeline metrics, MEDDIC context, forecasting |
 | `research-skill` | Market/competitive research methodology |
 | `cost-metering-skill` | Track API calls + Clay enrichment spend |
+| `prospect-research-to-cadence-skill` | Automated deal flow, Golden Rules filter |
+| `deal-momentum-analyzer-skill` | Pipeline health scoring |
+
+## MCP Integration Points
+
+| MCP Connector | Tools Available |
+|---------------|----------------|
+| **Epiphan CRM** | hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_company, hubspot_get_contact, hubspot_get_deal, identify_company (fuzzy matching), crm_get_customer, crm_search_customers, crm_get_order, crm_get_customer_orders, analytics_get_device, analytics_search_by_email |
+| **Clay MCP** (prefix: `mcp__00505aa5-49d3-494d-889e-139e05c54d74__`) | find-and-enrich-company, find-and-enrich-contacts-at-company, find-and-enrich-list-of-contacts, add-contact-data-points, add-company-data-points, get-existing-search |
+| **Apollo** | apollo_people_match, apollo_contacts_create, apollo_contacts_search, apollo_organizations_enrich, apollo_organizations_search, apollo_emailer_campaigns_* |
+| **Clari** | clari_search_calls, clari_get_call_summary, clari_get_call |
 
 ---
 
@@ -158,8 +206,9 @@ BASE = "https://api.hubapi.com"
 | Missing association API for object links | Use v4 associations: `POST /crm/v4/associations/{from}/{to}/batch/read` |
 | SQL `DATEDIFF` in Postgres | Use `AGE()` or `EXTRACT(EPOCH FROM ...)` — see dialect notes |
 | Not handling HubSpot's `hs_object_id` | Always include `hs_object_id` in property requests |
-| Clay enrichment without dedup | Check existing property values before writeback |
+| Missing phone numbers after enrichment | Use Clay waterfall after Apollo: Apollo first (fast, free), then Clay MCP (`find-and-enrich-contacts-at-company` → `add-contact-data-points` → `get-existing-search`) for phone verification. Clay aggregates 50+ data providers for high match rates. |
 | Scoring model trained on small dataset | Need 200+ closed deals minimum for reliable ML scores |
+| Apollo-only enrichment missing data | Clay MCP as fallback: Create taskId with `find-and-enrich-company`, then `add-contact-data-points` for Email/phone/work history, poll results with `get-existing-search` |
 
 ---
 

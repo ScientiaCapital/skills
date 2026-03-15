@@ -112,7 +112,7 @@ A CRM integration is successful when:
 |---------|-------|---------|------------|
 | **Auth** | API Key | OAuth 2.0 / Private App | JWT Bearer |
 | **Rate Limit** | 100 req/10s | 100-200 req/10s by tier | 100k req/day |
-| **Best For** | SMB sales, simplicity | Marketing + Sales | Enterprise |
+| **Best For** | SMB sales, simplicity | **Tim's primary CRM** (via Epiphan CRM MCP) | Enterprise |
 | **Starting Price** | $49/user/mo | Free (limited) | $25/user/mo |
 | **API Access** | All plans | Starter+ ($45+) | All plans |
 | **Webhooks** | All plans | Pro+ ($800+) | All plans |
@@ -141,6 +141,8 @@ A CRM integration is successful when:
 
 <close_patterns>
 ## Close CRM (Daily Driver)
+
+**Note:** Tim's primary CRM is HubSpot via Epiphan CRM MCP. Close CRM patterns are retained for reference but are not the active workflow.
 
 ### Query Language (for Smart Views)
 ```python
@@ -380,6 +382,55 @@ def resolve_conflict(close_record, hubspot_record, strategy):
 > See `reference/sync-patterns.md` for deduplication, migration scripts, and bulk sync.
 </sync_architecture>
 
+<integration_points>
+## Integration Points (MCP Tools Available)
+
+### HubSpot / Epiphan CRM
+| Tool | Purpose |
+|------|---------|
+| `hubspot_search_companies` | Find companies by name or domain |
+| `hubspot_search_contacts` | Find contacts by email or name |
+| `hubspot_search_deals` | Find deals by name or PO number |
+| `hubspot_get_company` | Fetch company details by HubSpot ID |
+| `hubspot_get_contact` | Fetch contact details by HubSpot ID |
+| `hubspot_get_deal` | Fetch deal details by HubSpot ID |
+| `identify_company` | Fuzzy-match company names (handles transcription errors) |
+| `crm_get_customer` | Get customer details by CRM ID |
+| `crm_search_customers` | Search customers by company name or email |
+| `crm_get_order` | Get order details by order ID |
+| `crm_get_customer_orders` | Get recent orders for a customer |
+| `analytics_get_device` | Get device details by serial number |
+| `analytics_search_by_email` | Find devices registered by email |
+
+### Clay MCP Enrichment (mcp__00505aa5-49d3-494d-889e-139e05c54d74__)
+**Pattern: HubSpot → Apollo → Clay → HubSpot sync**
+
+| Tool | Purpose |
+|------|---------|
+| `find-and-enrich-company` | Find and enrich company by domain or LinkedIn URL |
+| `find-and-enrich-contacts-at-company` | Find contacts by role/title/location at a company |
+| `find-and-enrich-list-of-contacts` | Find specific named contacts at their companies |
+| `add-contact-data-points` | Queue contact enrichment (Email, Phone, Work History, Thought Leadership) |
+| `add-company-data-points` | Queue company enrichment (Tech Stack, Funding, Headcount, Competitors, etc.) |
+| `get-existing-search` | Poll for enrichment results (check `state: completed`) |
+| `ask-question-about-accounts` | AI analysis of Salesforce account data |
+| `get-my-accounts` | Search Salesforce accounts by filters |
+| `get-task` | Retrieve task status and results by taskId |
+
+**Cost Model:**
+- Apollo: Free (but rate-limited)
+- Clay: Credits-based (~$150-300/month typical usage for BDR teams)
+- Waterfall strategy: Try Apollo first (fast, free), fallback to Clay for missing data (phones, emails, work history)
+
+### Call Data & Intelligence
+| Tool | Purpose |
+|------|---------|
+| `clari_search_calls` | Search recorded sales calls (Clari Copilot) |
+| `clari_get_call_summary` | Get call summary + action items |
+| `clari_get_call` | Get full call details with transcript |
+
+</integration_points>
+
 <file_locations>
 ## Reference Files
 
@@ -402,15 +453,26 @@ def resolve_conflict(close_record, hubspot_record, strategy):
 ## Request Routing
 
 **User wants CRM integration:**
-→ Ask which CRM (Close recommended for simplicity)
+→ Default to HubSpot (Epiphan CRM MCP) for Tim's BDR workflow
 → Provide auth setup + basic CRUD
+
+**User wants enrichment / contact data:**
+→ Use Clay MCP waterfall pattern (preferred for waterfall, credits OK)
+→ Workflow: `find-and-enrich-contacts-at-company` → `add-contact-data-points` → poll `get-existing-search` for results
+→ Fallback: Apollo MCP for quick free enrichment (no polling needed)
+→ Reference: See "Clay MCP Enrichment" in Integration Points above
+→ Cost: Apollo free, Clay $150-300/mo estimate
 
 **User wants Close CRM:**
 → Provide API key setup, query language
 → Reference: `reference/close-deep-dive.md`
 
 **User wants HubSpot:**
-→ Provide SDK setup, search patterns
+→ Use Epiphan CRM MCP tools for direct integration
+→ Available tools: hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_company, hubspot_get_contact, hubspot_get_deal
+→ Company identification: identify_company (fuzzy matching)
+→ Call data: clari_search_calls, clari_get_call_summary
+→ Enrichment: Clay MCP for waterfall enrichment before writeback to HubSpot
 → Reference: `reference/hubspot-patterns.md`
 
 **User wants Salesforce:**
@@ -424,7 +486,90 @@ def resolve_conflict(close_record, hubspot_record, strategy):
 **User wants webhooks:**
 → Provide handler pattern for specified CRM
 → Include signature verification
+
+**User wants phone verification / waterfall enrichment:**
+→ Use Clay MCP after Apollo: `find-and-enrich-contacts-at-company` → `add-contact-data-points` for Email/Phone → poll results
+→ Clay aggregates 50+ providers for high match rates on phones and emails
+→ See `phone-verification-waterfall-skill` for full implementation
 </routing>
+
+<clay_mcp_pattern>
+## Clay MCP Waterfall Enrichment Pattern
+
+**Use Clay MCP for:**
+- Phone verification (aggregates 50+ data providers)
+- Missing email addresses after Apollo
+- Work history and professional background
+- Thought leadership / LinkedIn activity
+- Company tech stack, funding, headcount enrichment
+
+**Waterfall Strategy:**
+```
+1. Apollo (free, fast, limited match rate)
+   └─ If missing phones/emails → 2. Clay MCP (credits, comprehensive)
+   └─ If missing company data → 2. Clay MCP (credits, comprehensive)
+```
+
+**Clay MCP Workflow Pattern:**
+
+```python
+# Step 1: Find company and create enrichment task
+task_id = find_and_enrich_company(
+    companyIdentifier="company.com",  # domain or LinkedIn URL
+    companyDataPoints=[
+        {type: "Tech Stack"},
+        {type: "Latest Funding"},
+        {type: "Headcount Growth"}
+    ]
+)
+# Returns: taskId for polling
+
+# Step 2: Queue contact enrichment jobs
+add_contact_data_points(
+    taskId=task_id,
+    dataPoints=[
+        {type: "Email"},
+        {type: "Summarize Work History"},
+        {type: "Find Thought Leadership"}
+    ]
+)
+
+# Step 3: Poll for results (asynchronous enrichment)
+results = get_existing_search(taskId=task_id)
+# Returns: { state: "in-progress" | "completed", value: {...} }
+
+# Step 4: Write enriched data back to HubSpot
+if results['state'] == 'completed':
+    hubspot_api.update_contact(
+        contact_id=contact['id'],
+        {
+            'phone': results['value']['phone'],
+            'email': results['value']['email'],
+            'work_history': results['value']['work_history']
+        }
+    )
+```
+
+**MCP Tool Prefix:**
+```
+mcp__00505aa5-49d3-494d-889e-139e05c54d74__find-and-enrich-company
+mcp__00505aa5-49d3-494d-889e-139e05c54d74__find-and-enrich-contacts-at-company
+mcp__00505aa5-49d3-494d-889e-139e05c54d74__add-contact-data-points
+mcp__00505aa5-49d3-494d-889e-139e05c54d74__add-company-data-points
+mcp__00505aa5-49d3-494d-889e-139e05c54d74__get-existing-search
+```
+
+**Cost Considerations:**
+- **Apollo:** Free for basic enrichment, rate-limited (good for initial screening)
+- **Clay:** Credits-based pricing (~$150-300/month for typical BDR team)
+  - Waterfall approach: Apollo first (zero cost) → Clay fallback (pay only for misses)
+  - Budget ~5-10 Clay credits per contact for full enrichment (phone + email + work history)
+
+**Integration with HubSpot RevOps:**
+→ See `hubspot-revops-skill` for ICP Validation (UC1) with Clay enrichment
+→ See `phone-verification-waterfall-skill` for Golden Rules filtering + Clay waterfall
+
+</clay_mcp_pattern>
 
 <env_setup>
 ## Environment Variables

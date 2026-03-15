@@ -51,3 +51,42 @@ To use a skill in another project, either:
 ## Available Skills
 
 See SKILLS_INDEX.md for the complete list.
+
+---
+
+## Tim's 2026 BDR Comp Plan — PERMANENT REFERENCE
+
+**Role:** BDR/Application Engineer at Epiphan Video
+**Base Salary:** $75,000/year ($6,250/mo guaranteed)
+**Start Date:** February 2026 (learning month)
+**Ramp Schedule:**
+
+| Month | Phase | Deals | Pipeline | Revenue | Earnings |
+|-------|-------|-------|----------|---------|----------|
+| February | Learning | - | - | - | $6,250 |
+| March | Ramp 50% | 12 | $357K | $125K | $6,250 |
+| April | Ramp 65% | 16 | $464K | $163K | $6,250 |
+| May | Ramp 85% | 20 | $607K | $212K | $6,250 |
+| June | Full (H1) | 24 | $714K | $250K | $6,250 |
+| July | Full (H2) | 24 | $714K | $475K | $6,250 |
+| August | Full (H2) | 24 | $714K | $475K | $6,250 |
+| September | Full (H2) | 24 | $714K | $500K | $6,250 |
+| October | Full (H2) | 24 | $714K | $525K | $6,250 |
+| November | Full (H2) | 24 | $714K | $550K | $6,250 |
+| December | Full (H2) | 24 | $714K | $600K | $6,250 |
+| **Annual** | | **200** | **$6.0M** | **$4.0M** | **$75,000** |
+
+**Accelerators (Monthly):**
+| Attainment vs Quota | Multiplier |
+|---------------------|------------|
+| 126%+ | 1.5x |
+| 111-125% | 1.25x |
+| 100-110% | 1.0x |
+
+**OPERATING PRINCIPLE:** Always target stretch goals (126%+ = 1.5x accelerator) as the MINIMUM. Use every skill, connector, and automation available to exceed quota every month.
+
+**March 2026 Targets (Ramp 50%):**
+- 12 deals minimum (stretch: 16+ for accelerator)
+- $357K pipeline minimum (stretch: $450K+)
+- $125K revenue minimum (stretch: $157K+ for 1.25x)
+- 50+ daily dials | Connect rate: 8-12% | Speed to lead: <60 min

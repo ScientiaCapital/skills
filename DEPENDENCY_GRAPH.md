@@ -1,7 +1,7 @@
 # Skill Dependency Graph
 
-> Last validated: 2026-02-22
-> Total skills: 39
+> Last validated: 2026-03-15
+> Total skills: 45
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -81,12 +81,40 @@ graph TB
         DA[data-analysis]
         TRD[trading-signals]
         MIRO[miro]
+        PRC[prospect-research-to-cadence]
+        PVW[phone-verification-waterfall]
+        MCA[meddic-call-prep-auto]
+        DMA[deal-momentum-analyzer]
+        PDL[portfolio-deal-linker]
+        TAS[trading-alert-scheduler]
 
         RES --> GTP
         GTP --> SR
         SR --> CRM
         SR --> HR
         CRM --> HR
+
+        %% Automated deal flow chain
+        SR --> PRC
+        HR --> PRC
+        RES --> PRC
+        HR --> PVW
+        PRC --> PVW
+        PVW --> DMA
+        PRC --> MCA
+        SR --> MCA
+        HR --> MCA
+        HR --> DMA
+        SR --> DMA
+        MCA --> DMA
+        PA --> DMA
+
+        %% Portfolio attribution + trading
+        DMA --> PDL
+        PRC --> PDL
+        MCA --> PDL
+        PA --> PDL
+        TRD --> TAS
     end
 
     subgraph Strategy["Strategy (Business Design)"]
@@ -132,7 +160,7 @@ graph TB
 | **Core** | workflow-enforcer-skill, project-context, workflow-orchestrator, cost-metering, portfolio-artifact | Session lifecycle management |
 | **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix, heal-skill, frontend-ui | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
-| **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro | GTM & revenue operations |
+| **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro, prospect-research-to-cadence, phone-verification-waterfall, meddic-call-prep-auto, deal-momentum-analyzer, portfolio-deal-linker, trading-alert-scheduler | GTM & revenue operations |
 | **Strategy** | business-model-canvas, blue-ocean-strategy | Business model design |
 
 ### Count by Cluster
@@ -142,9 +170,9 @@ graph TB
 | Core | 5 |
 | Dev Tools | 15 |
 | Infrastructure | 8 |
-| Business | 9 |
+| Business | 15 |
 | Strategy | 2 |
-| **Total** | **39** |
+| **Total** | **45** |
 
 ---
 
@@ -208,6 +236,20 @@ unsloth-training → runpod-deployment → [groq-inference | openrouter]
 ### Sales Pipeline
 ```
 research → gtm-pricing → sales-revenue → crm-integration → hubspot-revops
+```
+
+### Automated Deal Flow
+```
+prospect-research-to-cadence → phone-verification-waterfall → meddic-call-prep-auto → deal-momentum-analyzer → portfolio-deal-linker
+         ↑                            ↑                            ↑                         ↑                        ↑
+   [Apollo + Epiphan CRM]    [Apollo + Clay]        [Clari + Calendar]        [HubSpot + Clari]         [Attribution engine]
+                        (scheduled Monday 6:15am CST)             (scheduled daily 7am CST)   (scheduled daily 7am CST)
+```
+
+### Trading Alerts (Standalone)
+```
+trading-signals + ibkr-api → trading-alert-scheduler
+                             (scheduled daily 7am CST — pre-market digest)
 ```
 
 ### API Development
@@ -276,6 +318,24 @@ The orchestrator routes to 13+ skills based on task type:
 | frontend-ui | security | CSP, XSS prevention, auth UI |
 | frontend-ui | stripe-stack | Pricing page, checkout UI |
 | hubspot-revops | cost-metering | Enrichment cost tracking |
+| prospect-research-to-cadence | sales-revenue | Email templates, MEDDIC framework |
+| prospect-research-to-cadence | hubspot-revops | Golden Rules filter, HubSpot queries |
+| prospect-research-to-cadence | research | Firmographic research patterns |
+| meddic-call-prep-auto | sales-revenue | MEDDIC framework, objection handling |
+| meddic-call-prep-auto | prospect-research-to-cadence | Enrichment logic, Golden Rules |
+| deal-momentum-analyzer | hubspot-revops | HubSpot query patterns, stage definitions |
+| deal-momentum-analyzer | meddic-call-prep-auto | Call prep for recovery actions |
+| deal-momentum-analyzer | portfolio-artifact | Deal recovery metrics for GTME portfolio |
+| portfolio-deal-linker | portfolio-artifact | Base metrics + weekly digest format |
+| portfolio-deal-linker | deal-momentum-analyzer | Recovery attribution (RED/YELLOW → won) |
+| portfolio-deal-linker | prospect-research-to-cadence | Origination attribution (Apollo sequences) |
+| portfolio-deal-linker | meddic-call-prep-auto | Influence attribution (call prep generated) |
+| portfolio-deal-linker | hubspot-revops | HubSpot deal queries |
+| phone-verification-waterfall | hubspot-revops | Phone-less contacts query |
+| phone-verification-waterfall | prospect-research-to-cadence | Shares Golden Rules, enrichment logic |
+| phone-verification-waterfall | deal-momentum-analyzer | Feeds callable leads for recovery calls |
+| trading-alert-scheduler | trading-signals | Core analysis framework (regime, 5 methodologies) |
+| trading-alert-scheduler | ibkr-api | Portfolio positions, P&L, margin |
 
 ### Implicit Chains (Common Usage)
 
@@ -326,8 +386,8 @@ grep -l "DEPENDENCY_GRAPH" *.md
 
 ### Last Validated
 
-- **Date:** 2026-02-22
-- **Skill Count:** 39 (2 stable, 37 active)
+- **Date:** 2026-03-15
+- **Skill Count:** 45 (2 stable, 43 active)
 - **Mermaid:** Renders correctly
 - **Cross-links:** SKILLS_INDEX.md, README.md
 

@@ -1,0 +1,40 @@
+{
+  "name": "deal-momentum-analyzer-skill",
+  "version": "1.0.0",
+  "category": "Business",
+  "dependencies": ["hubspot-revops-skill", "sales-revenue-skill", "meddic-call-prep-auto-skill", "portfolio-artifact-skill"],
+  "mcp_tools": [
+    "hubspot_search_deals",
+    "hubspot_search_companies",
+    "hubspot_search_contacts",
+    "hubspot_get_deal",
+    "hubspot_get_company",
+    "hubspot_get_contact",
+    "clari_search_calls",
+    "clari_get_call_summary",
+    "apollo_mixed_people_api_search",
+    "apollo_people_match",
+    "gmail_create_draft",
+    "gcal_create_event"
+  ],
+  "triggers": [
+    "deal health",
+    "deal momentum",
+    "pipeline review",
+    "stalled deals",
+    "which deals need attention",
+    "morning brief",
+    "SOD"
+  ],
+  "schedule": {
+    "name": "deal-momentum-daily",
+    "cron": "0 7 * * 1-5",
+    "timezone": "America/Chicago",
+    "description": "Daily 7am CST weekday deal momentum analysis"
+  },
+  "impact": {
+    "recovered_pipeline_monthly": "$18K",
+    "recovery_rate": "5-10% of stalled deals",
+    "description": "Surfaces at-risk deals with specific recovery actions before they slip"
+  }
+}

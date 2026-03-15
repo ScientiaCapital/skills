@@ -1,10 +1,10 @@
 ---
 name: "sales-revenue"
-description: "B2B sales - cold outreach, lead scoring, pipeline metrics, MEDDIC/BANT qualification, discovery calls, and demos. Use when writing cold emails, scoring leads, running pipeline reviews, or preparing for sales calls."
+description: "Epiphan Video B2B sales - video capture/streaming lead qualification, pipeline metrics, MEDDIC discovery, and demo execution for Pearl devices, EC20 PTZ, and Epiphan Connect. Use for lead scoring, cold outreach to Higher Ed/Government/Corporate AV, and pipeline reviews."
 ---
 
 <objective>
-Comprehensive B2B sales skill covering cold outreach (email sequences, domain warming, lead scoring), revenue operations (pipeline metrics, forecasting, LTV:CAC), and sales execution (MEDDIC qualification, SPIN discovery, demo delivery, objection handling).
+Comprehensive B2B sales skill for Epiphan Video BDRs covering cold outreach to video/streaming verticals (Higher Ed, Government, Corporate AV, Courts/Legal, Healthcare, K-12, Houses of Worship), lead scoring for Pearl-2/Mini/Nano/Nexus/EC20/Connect, revenue operations (pipeline metrics, forecasting, LTV:CAC), and sales execution (MEDDIC qualification, SPIN discovery, demo delivery for video capture/streaming workflows, objection handling for video capture/streaming/NDI/SRT).
 </objective>
 
 <quick_start>
@@ -16,7 +16,9 @@ Comprehensive B2B sales skill covering cold outreach (email sequences, domain wa
 
 **MEDDIC:** Metrics, Economic Buyer, Decision Criteria, Decision Process, Identify Pain, Champion
 
-**Cold email:** Under 100 words, problem-forward, clear single CTA
+**Cold email:** Under 100 words, problem-forward (video capture, streaming, hybrid/remote), clear single CTA
+
+**Tim's March 2026 Targets (Ramp 50%):** 12+ deals (stretch: 16+), $357K pipeline (stretch: $450K+), $125K revenue (stretch: $157K+), 50+ daily dials, 8-12% connect rate, <60 min speed to lead
 </quick_start>
 
 <success_criteria>
@@ -44,61 +46,61 @@ Comprehensive B2B sales skill: outreach, revenue operations, and demo execution.
 
 ## Part 1: Sales Outreach
 
-### The GTM Pipeline
+### The GTM Pipeline (Epiphan Video)
 
 ```
-Lead Scraping → Lead Scoring → Domain Warming → Sequences → Reply Detection
-     ↓              ↓              ↓               ↓             ↓
- dealer-scraper  sales-agent   cold-reach     cold-reach    sales-agent
+Apollo Discovery → Lead Scoring → ICP Filtering → Apollo Sequences → Clay Enrichment → CRM Routing
+      ↓              ↓              ↓               ↓                 ↓               ↓
+   Apollo MCP    sales-agent    Epiphan ICP   Apollo MCP         Clay MCP      Epiphan CRM MCP
 ```
 
-### Lead Tiering
+### Lead Tiering (Epiphan Video)
 
-| Tier | Criteria | Priority | Action |
-|------|----------|----------|--------|
-| GOLD | Multi-trade, $5-50M, website, reviews | Immediate | Personalized sequence |
-| SILVER | Single trade, has reviews or website | Week 1 | Standard sequence |
-| BRONZE | Basic listing only | Nurture | Drip campaign |
+| Tier | Criteria | Priority | Action | Exclude |
+|------|----------|----------|--------|---------|
+| GOLD | Demo request, pricing inquiry, Pearl family inquiry, general contact us | Immediate | Personalized Apollo sequence | lifecyclestage='customer', device_count≥1, is_channel=true, AE-owned (Lex, Phil, Ron, Anthony) |
+| SILVER | Content download (whitepapers), free guide download, Facebook Lead Ads from video/streaming content | Week 1 | Standard Apollo sequence | First conversion contains 'setup', 'Pearl', 'Connect', 'signup'; product usage in engagement_overview |
+| BRONZE | Webinar/lecture symposium attendance, newsletter signup | Nurture | Drip campaign + nurture flow | |
 
-### Lead Scoring (0-100)
+### Lead Scoring (0-100) — Epiphan Video
 
 ```python
 scoring_factors = {
-    'icp_fit': 0-30,        # Match to ideal customer profile
-    'intent_signals': 0-25, # Buying signals detected
-    'engagement': 0-20,     # Email opens, clicks, replies
-    'timing': 0-15,         # Budget cycle, seasonality
-    'budget_signals': 0-10  # Company size, funding
+    'icp_fit': 0-30,              # Higher Ed (90), Courts/Legal (85), Government (80), Corp AV (80), Healthcare (75), Houses of Worship (70), K-12 (65)
+    'intent_signals': 0-25,       # Pearl inquiry, CMS integration (Kaltura, Panopto, YuJa), streaming protocol (RTMP/S, SRT, HLS, NDI)
+    'engagement': 0-20,           # Email opens, clicks, replies, website visits to Pearl product pages
+    'timing': 0-15,               # Budget cycle (edu = spring/summer, govt = fiscal year), event season (conferences)
+    'budget_signals': 0-10        # Company size, multi-campus/location, existing AV investment
 }
 # Thresholds: Hot: 70+ | Warm: 40-69 | Nurture: <40
 ```
 
-### 6-Agent Architecture
+### 6-Agent Architecture (Epiphan MCP Tools)
 
-| Agent | Role | Output |
-|-------|------|--------|
-| RESEARCHER | Company intel, tech stack | Enriched company data |
-| QUALIFIER | ICP fit scoring | 0-100 score + tier |
-| ENRICHER | Contact discovery | Verified emails, org chart |
-| WRITER | Personalized sequences | Multi-step email campaign |
-| ANALYZER | Reply intent | Route to next action |
-| ROUTER | Orchestration | Next-best-action |
+| Agent | Role | MCP Tool | Output |
+|-------|------|----------|--------|
+| RESEARCHER | Company intel, tech stack (Extron SMP EOL?, Blackmagic, Crestron, vMix, Teradek presence) | Clay MCP | Enriched company data + competitor intel |
+| QUALIFIER | ICP fit scoring (vertical + device readiness) | Epiphan CRM MCP + ask_agent | 0-100 score + tier |
+| ENRICHER | Contact discovery (IT/AV Director/Manager, Procurement) | Apollo MCP | Verified emails, org chart, buying signals |
+| WRITER | Personalized Apollo sequences (Pearl pain points, CMS integrations) | Apollo MCP | Multi-step email campaign |
+| ANALYZER | Reply intent (demo request vs nurture vs disqualify) | Gmail MCP + Epiphan CRM MCP | Route to next action |
+| ROUTER | Orchestration (add to sequence, update HubSpot, schedule follow-up) | Calendar MCP + Epiphan CRM MCP | Next-best-action |
 
-### Cold Email Principles
+### Cold Email Principles (Epiphan Video)
 
 1. **Short and specific** - Under 100 words
-2. **Problem-forward** - Lead with their pain
-3. **Clear CTA** - One ask (usually 10-min call)
-4. **Personalization** - Company name, specific detail
+2. **Problem-forward** - Lead with their pain (hybrid lecture capture, board meeting recording, multi-location streaming, NDI/RTMP integration, CMS workflow)
+3. **Clear CTA** - One ask (usually 10-min Pearl product demo or technical fit call)
+4. **Personalization** - Company name + vertical signal (e.g., "I noticed you're in Higher Ed using Panopto...")
 
-### Email Sequence Structure
+### Apollo Email Sequence Structure (Epiphan Video)
 
-| Step | Timing | Purpose |
-|------|--------|---------|
-| 1 | Day 0 | Initial outreach - problem statement |
-| 2 | Day 3 | Follow-up - different angle |
-| 3 | Day 7 | Value add - insight or resource |
-| 4 | Day 10 | Break-up - last chance |
+| Step | Timing | Purpose | Example |
+|------|--------|---------|---------|
+| 1 | Day 0 | Initial outreach - video capture pain point | "Hybrid lectures + lecture capture best practice" |
+| 2 | Day 3 | Follow-up - different angle (CMS integration or protocol) | "How are you integrating Kaltura/Panopto?" |
+| 3 | Day 7 | Value add - case study or Pearl comparison | "Why Higher Ed departments prefer Pearl Mini over [competitor]" |
+| 4 | Day 10 | Break-up - last chance + link to free trial/webinar | "One last thing: 15-min free Pearl fit assessment" |
 
 ---
 
@@ -229,33 +231,34 @@ E - Explore (understand the root)
 R - Respond (address specifically)
 ```
 
-| Objection | Response Framework |
+| Objection | Response Framework (Epiphan) |
 |-----------|-------------------|
-| "Too expensive" | Acknowledge -> "Compared to what?" -> Show ROI |
-| "Not ready" | Acknowledge -> "What would need to change?" -> Pilot option |
-| "Looking at [competitor]" | Acknowledge -> "What draws you?" -> Differentiate |
-| "Need boss approval" | Acknowledge -> "What will they ask?" -> Offer to join |
+| "Too expensive" | Acknowledge -> "Compared to Extron SMP or Blackmagic?" -> Show Total Cost of Ownership (Pearl-2 vs legacy + integration) |
+| "We use [Blackmagic/Crestron/vMix]" | Acknowledge -> "What pain points?" -> Differentiate (Pearl = portable, NDI + SRT, Kaltura native integration) |
+| "Not ready / testing phase" | Acknowledge -> "When's your pilot window?" -> Offer 30-day trial of Pearl Mini + Epiphan Connect |
+| "Need IT approval" | Acknowledge -> "What will IT ask?" -> Prepare tech brief on NDI/RTMP/SRT support, security |
+| "Looking at free option" | Acknowledge -> "OBS works, but what about reliability + support?" -> Show Pearl value (pro support, firmware updates, CMS integration) |
 
 ---
 
-## Call Prep Checklist
+## Call Prep Checklist (Epiphan Video)
 
 ```markdown
 ### Research (10 min)
-- [ ] Company website - recent news
-- [ ] LinkedIn - prospect background
-- [ ] Tech stack - BuiltWith, job postings
-- [ ] Competitors they might use
+- [ ] Company website - video/streaming mentions, CMS (Kaltura/Panopto/YuJa/Echo360)
+- [ ] LinkedIn - prospect AV/IT/Broadcast background
+- [ ] Tech stack - BuiltWith (CDN, video), job postings (streaming engineer?)
+- [ ] Competitor presence - Extron, Blackmagic, Crestron, vMix, Teradek
 
 ### Preparation (5 min)
-- [ ] Hypothesis: Why might they need us?
-- [ ] 3 discovery questions ready
-- [ ] Demo environment ready
-- [ ] Clear next step in mind
+- [ ] Hypothesis: Hybrid lectures? Multi-location streaming? CMS integration pain?
+- [ ] 3 discovery questions ready (Pearl capability fit, current workflow, CMS integration)
+- [ ] Pearl demo environment ready (focus on their vertical: K-12 classroom? University lecture hall? Government broadcast?)
+- [ ] Clear next step in mind (trial, technical assessment, peer reference call)
 
 ### Mindset
-- [ ] Curiosity, not pitch mode
-- [ ] Understand their world first
+- [ ] Curiosity about their video workflow, not pitch mode
+- [ ] Understand their AV/IT ecosystem first (NDI? RTMP? SRT comfort level?)
 ```
 
 ---
@@ -287,16 +290,36 @@ R - Respond (address specifically)
 
 ---
 
-## Integration Notes
+## Integration Notes (Epiphan Video)
 
-- **Email Tools:** Instantly.ai, Apollo.io, custom SMTP
-- **CRM:** Salesforce, HubSpot, Airtable
-- **Enrichment:** Clearbit, ZoomInfo, LinkedIn, Hunter.io
-- **Related Projects:** cold-reach, sales-agent, dealer-scraper-mvp
+- **Email Sequences:** Apollo.io (MCP connected) — use for GOLD/SILVER tier outreach
+- **CRM:** HubSpot (Epiphan CRM MCP connected) — sync deals, track device_count and engagement_overview
+- **Enrichment:** Apollo MCP (contact discovery), Clay MCP (company intel + competitor tech stack)
+- **Discovery Tools:** Gmail MCP (reply detection), Google Calendar MCP (schedule follow-ups)
+- **Channel Partners:** AVI-SPL, Diversified, CTI, CCS Presentation Systems, Ford AV (cross-check is_channel=true to exclude)
+- **Related Skills:** lead-qualification-skill, demo-script-skill, objection-handling-skill
+- **Products:** Pearl-2, Pearl Mini, Pearl Nano, Pearl Nexus, EC20 PTZ, Epiphan Connect
+- **Verticals:** Higher Ed (90), Courts/Legal (85), Government (80), Corporate AV (80), Healthcare (75), Houses of Worship (70), K-12 (65)
+- **CMS Integrations:** Kaltura, Panopto, YuJa, Echo360, Opencast
+- **Streaming Protocols:** RTMP/S, SRT, HLS, NDI, RTSP
+
+## Golden Rules — EXCLUDE These Leads
+
+**DO NOT OUTREACH if ANY of these conditions are true:**
+- `lifecyclestage = 'customer'` — Already a customer, route to AE/CSM
+- `first_conversion_source` contains 'Pearl', 'setup', 'Connect', 'signup' — Already converting/onboarding
+- `company.device_count >= 1` — Has active devices, route to AE/CSM
+- `engagement_overview` contains product usage data — Already engaged, notify AE
+- `is_channel = true` — Channel partner, route to channel manager
+- `hubspot_owner_id IN ('82625923', '423155215')` — Owned by AE Lex, Phil, Ron, Anthony (respect ownership)
+
+**Action:** Before adding to Apollo sequence, query Epiphan CRM MCP to validate lead state.
+
+---
 
 ## Reference Files
 
-- `reference/outreach.md` - Email templates, domain warming, agent architecture
-- `reference/revenue-ops.md` - Metrics, dashboards, forecasting
-- `reference/discovery.md` - MEDDIC scorecard, demo scripts, objection library
+- `reference/outreach.md` - Email templates, Apollo sequences, Pearl messaging by vertical
+- `reference/revenue-ops.md` - Metrics, dashboards, forecasting, pipeline health
+- `reference/discovery.md` - MEDDIC scorecard, Pearl demo scripts, objection library (video capture specific)
 </core_content>

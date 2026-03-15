@@ -47,9 +47,18 @@ logs/
 .claude/OBSERVER_ALERTS.md
 .claude/archive/*.md
 
+# Observer output directory (session-specific)
+.claude/observers/
+
 # Cost tracking (ephemeral)
 .claude/daily-cost.json
 costs/*.json
+
+# Personal reference docs (not project code)
+*.html
+
+# Claude Desktop plugin files
+*.plugin
 
 # Environment
 .env

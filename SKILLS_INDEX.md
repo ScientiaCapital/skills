@@ -1,9 +1,9 @@
 # Skills Index
 
-> Last updated: 2026-02-22
-> Total skills: 39 (2 stable, 37 active)
+> Last updated: 2026-03-15
+> Total skills: 46 (2 stable, 44 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 39 skills have `config.json` with version tracking
+> **100% config.json coverage** — All 46 skills have `config.json` with version tracking
 
 ## Architecture
 
@@ -48,6 +48,12 @@
 | Expert trading partner: Options, Stocks, Crypto, Commodities, VIX, Forex | [trading-signals](#trading-signals-skill) | Business |
 | Create visual Miro boards | [miro](#miro-skill) | Business |
 | HubSpot SQL analytics, lead scoring, forecasting | [hubspot-revops](#hubspot-revops-skill) | Business |
+| Apollo research → outreach → sequence load | [prospect-research-to-cadence](#prospect-research-to-cadence-skill) | Business |
+| Always have verified phones for dials | [phone-verification-waterfall](#phone-verification-waterfall-skill) | Business |
+| Auto-generate MEDDIC call prep briefs | [meddic-call-prep-auto](#meddic-call-prep-auto-skill) | Business |
+| Deal health scoring + next-best-action (scheduled daily) | [deal-momentum-analyzer](#deal-momentum-analyzer-skill) | Business |
+| Auto-link closed deals to GTME portfolio evidence | [portfolio-deal-linker](#portfolio-deal-linker-skill) | Business |
+| Pre-market trading digest — watchlist + IBKR positions | [trading-alert-scheduler](#trading-alert-scheduler-skill) | Business |
 | Design business models (9 blocks) | [business-model-canvas](#business-model-canvas-skill) | Strategy |
 | Blue ocean market differentiation | [blue-ocean-strategy](#blue-ocean-strategy-skill) | Strategy |
 | Track and manage API costs | [cost-metering](#cost-metering-skill) | Core |
@@ -810,6 +816,155 @@ Revenue analytics infrastructure on HubSpot API + SQL data warehouse. Bridges CR
 - `reference/architecture.md` - System diagram, deployment options, cost tiers
 
 **Triggers:** "hubspot analytics", "revops dashboard", "lead scoring", "pipeline forecast", "ICP analysis", "hubspot SQL"
+
+---
+
+#### prospect-research-to-cadence-skill
+**Location:** `active/prospect-research-to-cadence-skill/` | **Version:** 1.0.0
+
+End-to-end prospect research pipeline: Apollo enrichment → personalized email + call scripts → draft review → Apollo sequence load. Draft+approve mode ensures Tim reviews before contacts are loaded.
+
+**Key Features:**
+- Apollo org enrichment + people search in parallel
+- Golden Rules filter (excludes customers, channel, product-usage contacts)
+- ICP scoring by vertical (Higher Ed 90, Courts 85, Gov 80, Corp AV 80, etc.)
+- 3-touch personalized email sequence generation
+- MEDDIC-structured call scripts with discovery hooks
+- Draft → Tim approval → Apollo sequence auto-load
+
+**Depends on:** sales-revenue-skill, hubspot-revops-skill, research-skill
+
+**MCP Tools:** Apollo (orgs + people + sequences), Epiphan CRM (HubSpot + identify), Gmail (drafts)
+
+**Reference Files:**
+- `reference/email-templates.md` - Vertical-specific email templates (Higher Ed, Courts, Corporate AV)
+
+**Triggers:** "research prospect", "build cadence for", "outreach for", "research-to-cadence", "enrich and sequence"
+
+**Impact:** 90 min/day saved | ~$12K/mo revenue lift
+
+---
+
+#### meddic-call-prep-auto-skill
+**Location:** `active/meddic-call-prep-auto-skill/` | **Version:** 1.0.0
+
+Auto-generate MEDDIC-structured call prep scripts by pulling HubSpot deal + contact data, Apollo enrichment, Clari call history, and Google Calendar context. Complete brief in 60 seconds.
+
+**Key Features:**
+- Calendar-aware: "prep my next call" reads upcoming meetings automatically
+- Clari integration: pulls prior call summaries + objections + commitments
+- Attendee-to-MEDDIC role mapping (EB, Champion, User, Coach)
+- MEDDIC scorecard with ✅/⚠️/❌ per dimension
+- Competitive displacement angle identification
+- Demo-specific addon flow (RECAP → AGENDA → SHOW VALUE → SUMMARIZE → NEXT STEPS)
+- 3 personalized discovery questions generated from enrichment
+
+**Depends on:** sales-revenue-skill, prospect-research-to-cadence-skill, hubspot-revops-skill
+
+**MCP Tools:** Google Calendar, Epiphan CRM (HubSpot + Clari), Apollo (enrichment)
+
+**Triggers:** "call prep", "prep me for", "demo prep", "discovery prep", "meddic brief", "prep my next call"
+
+**Impact:** 45 min/day saved | eliminates 15-20 min demo prep per call
+
+---
+
+#### deal-momentum-analyzer-skill
+**Location:** `active/deal-momentum-analyzer-skill/` | **Version:** 1.0.0
+
+Deal health scoring + next-best-action engine. Scores every open deal on 6 momentum signals (days in stage, activity recency, stakeholder breadth, call momentum, MEDDIC completeness, close date integrity). Runs daily at 7am CST via scheduled task.
+
+**Key Features:**
+- 6-signal momentum scoring (0-100) with GREEN/YELLOW/RED classification
+- Next-best-action engine: prescribes specific recovery actions per deal
+- Auto-drafts re-engagement emails for RED deals via Gmail
+- Trend tracking: compares to previous run
+- Integrates into SOD/morning brief workflow
+- Scheduled daily at 7am CST (weekdays)
+
+**Depends on:** hubspot-revops-skill, sales-revenue-skill, meddic-call-prep-auto-skill, portfolio-artifact-skill
+
+**MCP Tools:** Epiphan CRM (HubSpot deals + Clari calls), Apollo (multi-threading), Gmail (draft emails), Google Calendar (check-in booking)
+
+**Scheduled Task:** `deal-momentum-daily` — runs weekdays at 7:00 AM CST
+
+**Triggers:** "deal health", "deal momentum", "pipeline review", "stalled deals", "morning brief", "SOD"
+
+**Impact:** $18K/mo from recovered pipeline | 5-10% stalled deal recovery rate
+
+---
+
+#### phone-verification-waterfall-skill
+**Location:** `active/phone-verification-waterfall-skill/` | **Version:** 1.0.0
+
+Ensures Tim always has 50+ verified-phone leads for daily dials. Uses Apollo → Clay waterfall enrichment, applies Golden Rules filter, outputs ICP-scored callable queue. Scheduled Monday 6:15 AM.
+
+**Key Features:**
+- Apollo people_match + enrichment for phone verification
+- Clay find-and-enrich + add-contact-data-points for waterfall backup
+- Golden Rules filter (excludes customers, channel, product-usage contacts)
+- ICP scoring by vertical
+- Callable lead queue ranked by propensity and ICP fit
+- Scheduled Monday 6:15 AM CST
+
+**Depends on:** prospect-research-to-cadence, hubspot-revops, sales-revenue
+
+**MCP Tools:** Epiphan CRM (hubspot_search_contacts), Apollo (people_match), Clay (find-and-enrich-contacts-at-company, add-contact-data-points)
+
+**Scheduled Task:** `phone-verification-waterfall` — runs Mondays at 6:15 AM CST
+
+**Triggers:** "verify phones", "phone waterfall", "callable leads", "who can I call", "dial list", "enrich phones"
+
+**Impact:** 50+ verified leads per week | eliminates cold-calling dead ends
+
+---
+
+#### portfolio-deal-linker-skill
+**Location:** `active/portfolio-deal-linker-skill/` | **Version:** 1.0.0
+
+Auto-attributes closed HubSpot deals to the skills and automations that influenced them. Builds living GTME portfolio evidence for Tim's VP Business Development transition — revenue influenced, time saved, automation coverage, cost per deal.
+
+**Key Features:**
+- Detects newly closed deals daily (won + lost)
+- Multi-touch attribution: primary (first touch), assist (middle), recovery (stalled → won)
+- Aggregates rolling 30-day metrics: revenue influenced, deals recovered, time saved, automation coverage
+- Generates monthly GTME Evidence Report with VP BD transition narrative
+- Links to prospect-research-to-cadence (origination), meddic-call-prep-auto (influence), deal-momentum-analyzer (recovery)
+
+**Depends on:** portfolio-artifact-skill, deal-momentum-analyzer-skill, prospect-research-to-cadence-skill, meddic-call-prep-auto-skill, hubspot-revops-skill
+
+**MCP Tools:** Epiphan CRM (HubSpot deals + Clari), Apollo (sequence history), Gmail (outreach history)
+
+**Scheduled Task:** `portfolio-deal-linker-daily` — runs weekdays at 7:07 AM CST
+
+**Triggers:** "portfolio update", "deal closed", "gtme evidence", "what did I influence", "career evidence", "transition tracker"
+
+**Impact:** Career-critical for VP BD transition — auto-builds evidence of revenue influenced, operational leverage, and systems thinking
+
+---
+
+#### trading-alert-scheduler-skill
+**Location:** `active/trading-alert-scheduler-skill/` | **Version:** 1.0.0
+
+Daily pre-market trading digest. Scans watchlist tickers for regime changes, technical setups, and options flow anomalies. Checks IBKR positions for risk/expiry/Greeks health. Delivers one prioritized action list — no intraday distractions during 50-call BDR days.
+
+**Key Features:**
+- Markov 7-state regime detection on SPY
+- 5-methodology confluence scoring per ticker (Elliott Wave, Wyckoff, Fibonacci, Turtle, Markov)
+- Only surfaces actionable setups (confluence ≥ 0.4)
+- IBKR position health: expiry, delta, margin, concentration alerts
+- Editable watchlist via `reference/watchlist.json`
+- Scannable in under 3 minutes
+
+**Depends on:** trading-signals-skill, ibkr-api-skill
+
+**Tools:** Web Search (market data, news, options flow), IBKR API (positions, P&L, margin)
+
+**Scheduled Task:** `trading-alert-daily` — runs weekdays at 7:09 AM CST
+
+**Triggers:** "market digest", "trading alerts", "pre-market scan", "watchlist check", "what's setting up", "check my positions"
+
+**Impact:** 30 min/day saved + fewer missed setups from not watching screens
 
 ---
 

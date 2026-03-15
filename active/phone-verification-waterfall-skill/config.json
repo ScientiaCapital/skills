@@ -1,0 +1,81 @@
+{
+  "name": "phone-verification-waterfall",
+  "version": "1.0.0",
+  "category": "Business",
+  "subcategory": "Sales Operations",
+  "dependencies": [
+    "prospect-research-to-cadence-skill",
+    "sales-revenue-skill",
+    "hubspot-revops-skill"
+  ],
+  "mcp_tools": [
+    "hubspot_search_contacts",
+    "hubspot_get_contact",
+    "identify_company",
+    "apollo_people_match",
+    "find-and-enrich-contacts-at-company",
+    "add-contact-data-points",
+    "find-and-enrich-list-of-contacts",
+    "get-existing-search"
+  ],
+  "external_apis": [
+    "HubSpot REST API (contacts batch update)",
+    "Apollo API (people match)",
+    "Clay API (contact enrichment)"
+  ],
+  "triggers": [
+    "verify phones",
+    "phone waterfall",
+    "callable leads",
+    "who can I call",
+    "dial list",
+    "always have someone to call",
+    "phone check",
+    "enrich phones"
+  ],
+  "scheduled_runs": {
+    "task_id": "phone-waterfall-monday-6-15am",
+    "cron": "15 6 * * 1",
+    "description": "Every Monday at 6:15 AM (between prospect-enrich at 6:00 and prospect-refresh at 6:30)",
+    "timezone": "user_local"
+  },
+  "impact": {
+    "time_saved_daily_min": 45,
+    "dials_enabled_daily": 50,
+    "revenue_lift_monthly": "$18K",
+    "description": "Maintains always-on callable inventory via Apollo + Clay waterfall. Eliminates 'nobody to call' downtime. Success rate: 65-70% phone verification across cold prospects."
+  },
+  "success_metrics": {
+    "phone_verification_rate_pct": "65-70",
+    "apollo_success_rate_pct": "40-50",
+    "clay_waterfall_rate_pct": "30-40",
+    "execution_time_sec": 480,
+    "min_callable_leads": 50
+  },
+  "cost_profile": {
+    "apollo": "included",
+    "clay_credits_per_month": "150-300",
+    "hubspot": "included",
+    "total_monthly_usd": 200
+  },
+  "golden_rules_enforced": true,
+  "excluded_contact_filters": [
+    "lifecyclestage = 'customer'",
+    "first_conversion CONTAINS ['Pearl', 'setup', 'Connect', 'signup']",
+    "company.device_count >= 1",
+    "is_channel = true",
+    "hubspot_owner_id IN ['82625923', '423155215', 'Ron*', 'Anthony*']"
+  ],
+  "icp_verticals": {
+    "higher_education": 90,
+    "courts_legal": 85,
+    "government": 80,
+    "corporate_av": 80,
+    "healthcare": 75,
+    "houses_of_worship": 70,
+    "k12_schools": 65
+  },
+  "author": "Tim Knottenbelt (BDR/Application Engineer, Epiphan Video)",
+  "created": "2026-03-15",
+  "last_updated": "2026-03-15"
+}

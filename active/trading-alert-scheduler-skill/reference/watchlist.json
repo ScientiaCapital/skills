@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-03-15",
+  "core": ["SPY", "QQQ", "IWM", "TLT", "GLD", "SLV", "USO", "VIX"],
+  "individual": ["AAPL", "MSFT", "NVDA", "TSLA", "AMZN", "META", "GOOG", "AMD", "PLTR", "COIN"],
+  "crypto_proxy": ["BITO", "MSTR"],
+  "sector_etf": ["XLF", "XLE", "XLK", "ARKK", "SMH"],
+  "notes": "Edit this file to add/remove tickers from the daily scan"
+}

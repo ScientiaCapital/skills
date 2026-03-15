@@ -1,0 +1,34 @@
+{
+  "name": "meddic-call-prep-auto-skill",
+  "version": "1.0.0",
+  "category": "Business",
+  "dependencies": ["sales-revenue-skill", "prospect-research-to-cadence-skill", "hubspot-revops-skill"],
+  "mcp_tools": [
+    "gcal_list_events",
+    "gcal_get_event",
+    "hubspot_search_companies",
+    "hubspot_search_contacts",
+    "hubspot_search_deals",
+    "identify_company",
+    "crm_search_customers",
+    "clari_search_calls",
+    "clari_get_call_summary",
+    "clari_get_call",
+    "apollo_organizations_enrich",
+    "apollo_people_match",
+    "apollo_organizations_job_postings"
+  ],
+  "triggers": [
+    "call prep",
+    "prep me for",
+    "demo prep",
+    "discovery prep",
+    "meddic brief",
+    "prep my next call",
+    "get me ready for"
+  ],
+  "impact": {
+    "time_saved_daily_min": 45,
+    "description": "Eliminates 15-20 min manual demo prep per call"
+  }
+}

@@ -1,6 +1,6 @@
 ---
 name: observer-full
-description: "Full observer with 7 drift detection patterns + devil's advocate stance. Writes to OBSERVER_QUALITY.md and OBSERVER_ARCH.md. Thorough analysis for STANDARD/FULL scope tasks."
+description: "Full observer with 7 drift detection patterns + devil's advocate stance. Writes to .claude/observers/QUALITY.md and .claude/observers/ARCH.md. Thorough analysis for STANDARD/FULL scope tasks."
 model: sonnet
 tools:
   - Read
@@ -88,13 +88,13 @@ For every new dependency, ask:
 - Is it necessary? What's the maintenance cost?
 - Could a simpler built-in solution work?
 
-Log challenges in the Devil's Advocate Challenges table in OBSERVER_ARCH.md.
+Log challenges in the Devil's Advocate Challenges table in .claude/observers/ARCH.md.
 
 ## Output
 
 Write TWO files:
 
-### `.claude/OBSERVER_QUALITY.md`
+### `.claude/observers/QUALITY.md`
 Code quality findings (patterns 2, 3, 5, 6):
 ```
 [SEVERITY] — file:line — description — suggested fix
@@ -102,7 +102,7 @@ Code quality findings (patterns 2, 3, 5, 6):
 
 Include the Metrics table with actual counts and Monitoring Runs with timestamp.
 
-### `.claude/OBSERVER_ARCH.md`
+### `.claude/observers/ARCH.md`
 Architecture findings (patterns 1, 4, 7) + devil's advocate challenges:
 ```
 [SEVERITY] — file:line — description — suggested fix
@@ -110,8 +110,8 @@ Architecture findings (patterns 1, 4, 7) + devil's advocate challenges:
 
 Include Contract Compliance table and Devil's Advocate Challenges table.
 
-### `.claude/OBSERVER_ALERTS.md`
-If ANY **[BLOCKER]** is found, append it to OBSERVER_ALERTS.md:
+### `.claude/observers/ALERTS.md`
+If ANY **[BLOCKER]** is found, append it to .claude/observers/ALERTS.md:
 
 ```markdown
 ### [BLOCKER] Description
@@ -125,7 +125,7 @@ If ANY **[BLOCKER]** is found, append it to OBSERVER_ALERTS.md:
 
 ## Rules
 
-1. **DO NOT modify any source files.** Write only to `.claude/OBSERVER_QUALITY.md`, `.claude/OBSERVER_ARCH.md`, and `.claude/OBSERVER_ALERTS.md`.
+1. **DO NOT modify any source files.** Write only to `.claude/observers/QUALITY.md`, `.claude/observers/ARCH.md`, and `.claude/observers/ALERTS.md`.
 2. **DO NOT use Bash for anything except `git diff`, `git log`, `wc`, or `date`.** Use Grep/Glob for all searches.
 3. Be thorough but efficient — aim for <3 minutes.
 4. If you find 0 issues, say so explicitly. A clean report is valuable.
@@ -134,6 +134,6 @@ If ANY **[BLOCKER]** is found, append it to OBSERVER_ALERTS.md:
 
 ## Escalation
 
-- **[BLOCKER]**: Write to OBSERVER_ALERTS.md immediately. This gates further work.
+- **[BLOCKER]**: Write to .claude/observers/ALERTS.md immediately. This gates further work.
 - **[WARNING]**: Log to the appropriate report. Review at next phase gate.
 - **[INFO]**: Log to the appropriate report. Include in end-of-session summary.

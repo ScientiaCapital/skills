@@ -1,0 +1,12 @@
+{
+  "name": "ibkr-api-skill",
+  "version": "1.0.0",
+  "created": "2026-03-13",
+  "author": "Tim Kipper",
+  "dependencies": ["trading-signals-skill"],
+  "reference_files": [
+    "reference/connection-patterns.md",
+    "reference/trading-patterns.md",
+    "reference/multi-broker-strategy.md"
+  ]
+}
