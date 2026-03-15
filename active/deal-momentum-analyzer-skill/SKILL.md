@@ -1,10 +1,10 @@
 ---
 name: "deal-momentum-analyzer"
-description: "Deal health scoring + next-best-action for every open deal. Pulls HubSpot deals, Clari call history, and activity data to flag stalled deals, predict close probability, and recommend specific recovery actions. Runs daily at 7am CST or on-demand. Use when: 'deal health', 'pipeline review', 'stalled deals', 'deal momentum', 'which deals need attention', 'morning brief', 'SOD'."
+description: "Deal health scoring + next-best-action for every open deal. Pulls HubSpot deals, CRM activity history, and engagement data to flag stalled deals, predict close probability, and recommend specific recovery actions. Runs daily at 7am CST or on-demand. Use when: 'deal health', 'pipeline review', 'stalled deals', 'deal momentum', 'which deals need attention', 'morning brief', 'SOD'."
 ---
 
 <objective>
-Score every open deal on momentum (not just stage) using multi-signal analysis: days in stage, activity recency, stakeholder engagement, Clari call sentiment, and MEDDIC completeness. Surfaces the 3-5 deals most likely to slip and prescribes specific next-best-actions to recover them. Target: recover 5-10% of stalled pipeline monthly (~$18K/mo at current pipeline levels).
+Score every open deal on momentum (not just stage) using multi-signal analysis: days in stage, activity recency, stakeholder engagement, call/activity sentiment, and MEDDIC completeness. Surfaces the 3-5 deals most likely to slip and prescribes specific next-best-actions to recover them. Target: recover 5-10% of stalled pipeline monthly (~$18K/mo at current pipeline levels).
 </objective>
 
 <quick_start>
@@ -40,7 +40,7 @@ Scheduled task pulls all open deals → scores momentum → delivers prioritized
 SCHEDULED (7am CST)          ANALYSIS                    OUTPUT
 ─────────────────────────────────────────────────────────────────
 HubSpot: all open deals  →  Score each deal on     →  Prioritized dashboard
-Clari: recent calls      →  6 momentum signals     →  Next-best-action per deal
+CRM: activity history    →  6 momentum signals     →  Next-best-action per deal
 Activity: emails/calls   →  Classify G/Y/R         →  Gmail draft (optional)
                           →  Compare to last run    →  Calendar blocks (optional)
 ```
@@ -126,7 +126,7 @@ Stage medians (calibrate from Tim's historical data):
 | 0 active contacts | 0 |
 
 ### Signal 4: Call Momentum (15 points)
-| Clari signal | Points |
+| Activity signal | Points |
 |-------------|--------|
 | Call in last 7 days + positive sentiment | 15 |
 | Call in last 7 days + neutral | 10 |

@@ -8,11 +8,11 @@
     "hubspot_get_deal",
     "hubspot_search_contacts",
     "hubspot_get_company",
-    "clari_search_calls",
+    "ask_agent",
     "apollo_emailer_campaigns_search",
     "gmail_search_messages"
   ],
-  "triggers": [
+  "activation_triggers": [
     "portfolio update",
     "deal closed",
     "link deal to portfolio",

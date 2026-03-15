@@ -9,16 +9,14 @@
     "hubspot_search_companies",
     "hubspot_search_contacts",
     "hubspot_search_deals",
-    "identify_company",
     "crm_search_customers",
-    "clari_search_calls",
-    "clari_get_call_summary",
-    "clari_get_call",
+    "analytics_search_by_email",
+    "ask_agent",
     "apollo_organizations_enrich",
     "apollo_people_match",
     "apollo_organizations_job_postings"
   ],
-  "triggers": [
+  "activation_triggers": [
     "call prep",
     "prep me for",
     "demo prep",

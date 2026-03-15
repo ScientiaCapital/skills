@@ -13,10 +13,11 @@
     "apollo_emailer_campaigns_add_contact_ids",
     "hubspot_search_companies",
     "hubspot_search_contacts",
-    "identify_company",
+    "crm_search_customers",
+    "analytics_search_by_email",
     "gmail_create_draft"
   ],
-  "triggers": [
+  "activation_triggers": [
     "research prospect",
     "prospect [company]",
     "build cadence for",

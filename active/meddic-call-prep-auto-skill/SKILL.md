@@ -1,10 +1,10 @@
 ---
 name: "meddic-call-prep-auto"
-description: "Auto-generate MEDDIC-structured call prep scripts from prospect context. Pulls HubSpot deal + contact data, Apollo enrichment, Clari call history, and calendar context to build a complete demo/discovery brief in 60 seconds. Use when: 'call prep', 'prep me for', 'demo prep', 'discovery prep', 'meddic brief', 'prep [company]', 'get me ready for [company]'."
+description: "Auto-generate MEDDIC-structured call prep scripts from prospect context. Pulls HubSpot deal + contact data, Apollo enrichment, CRM activity history, and calendar context to build a complete demo/discovery brief in 60 seconds. Use when: 'call prep', 'prep me for', 'demo prep', 'discovery prep', 'meddic brief', 'prep [company]', 'get me ready for [company]'."
 ---
 
 <objective>
-Eliminate 15-20 minutes of manual demo prep per call. Auto-generates a MEDDIC-structured briefing by pulling context from HubSpot (deal stage, properties, notes), Apollo (contact enrichment, org data), Clari (prior call recordings + summaries), and Google Calendar (meeting details + attendees). Outputs a single actionable brief with talking points, objection prep, and competitive intel.
+Eliminate 15-20 minutes of manual demo prep per call. Auto-generates a MEDDIC-structured briefing by pulling context from HubSpot (deal stage, properties, notes), Apollo (contact enrichment, org data), CRM activity history (via ask_agent), and Google Calendar (meeting details + attendees). Outputs a single actionable brief with talking points, objection prep, and competitive intel.
 </objective>
 
 <quick_start>
@@ -30,7 +30,7 @@ Eliminate 15-20 minutes of manual demo prep per call. Auto-generates a MEDDIC-st
 <success_criteria>
 - Complete MEDDIC brief generated in under 60 seconds
 - All 6 MEDDIC dimensions populated (even if some are "UNKNOWN — ask this")
-- Prior conversation context included if Clari recordings exist
+- Prior conversation context included from CRM activity history
 - Competitive displacement angle identified if relevant
 - Attendee roles mapped to MEDDIC roles (champion, economic buyer, etc.)
 - 3 personalized discovery questions generated from enrichment data
@@ -47,7 +47,7 @@ TRIGGER              CONTEXT GATHER              SYNTHESIZE              OUTPUT
 "call prep X"  →  Calendar: meeting details  →  Map attendees to   →  MEDDIC Brief
                →  HubSpot: deal + contact    →  MEDDIC roles       →  Talking Points
                →  Apollo: enrichment         →  Identify gaps       →  Questions
-               →  Clari: prior calls         →  Competitive angle   →  Objection Prep
+               →  CRM: activity history    →  Competitive angle   →  Objection Prep
                →  Epiphan CRM: device check  →  Pain hypothesis     →  Next Steps
 ```
 
@@ -171,7 +171,7 @@ MEDDIC SCORECARD:
 └───────────────────────┴──────────┴──────────────────────────┘
 
 PRIOR CONVERSATION CONTEXT:
-[Clari summary or "No prior calls found"]
+[CRM activity summary or "No prior activity found"]
 - Key commitments: [...]
 - Objections raised: [...]
 - Follow-ups promised: [...]
@@ -209,7 +209,7 @@ When trigger is "demo prep" instead of "call prep", append:
 
 ## Demo Flow (RECAP → AGENDA → SHOW VALUE → SUMMARIZE → NEXT STEPS)
 
-1. **RECAP** (2 min): "Last time we discussed [Clari summary]. You mentioned [pain]. Did I capture that right?"
+1. **RECAP** (2 min): "Last time we discussed [prior activity summary]. You mentioned [pain]. Did I capture that right?"
 2. **AGENDA** (1 min): "Today I'll show you [feature aligned to pain], then we'll discuss [decision criteria]."
 3. **SHOW VALUE** (10 min): Demo path aligned to their vertical:
    - Higher Ed: Multi-room capture → CMS auto-publish → room scheduling

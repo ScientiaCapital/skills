@@ -5,7 +5,7 @@
   "dependencies": ["trading-signals-skill", "ibkr-api-skill"],
   "mcp_tools": [],
   "web_search_required": true,
-  "triggers": [
+  "activation_triggers": [
     "market digest",
     "trading alerts",
     "pre-market scan",

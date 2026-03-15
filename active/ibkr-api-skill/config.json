@@ -1,9 +1,33 @@
 {
   "name": "ibkr-api-skill",
   "version": "1.0.0",
+  "category": "Business",
   "created": "2026-03-13",
   "author": "Tim Kipper",
   "dependencies": ["trading-signals-skill"],
+  "mcp_tools": [
+    "get_portfolio",
+    "get_account_summary",
+    "switch_account",
+    "get_market_data",
+    "get_historical_data",
+    "place_order",
+    "check_shortable_shares",
+    "get_margin_requirements",
+    "get_borrow_rates",
+    "short_selling_analysis",
+    "get_connection_status"
+  ],
+  "activation_triggers": [
+    "IBKR",
+    "Interactive Brokers",
+    "IB Gateway",
+    "portfolio positions",
+    "account balances",
+    "place trade",
+    "ib_async",
+    "TWS API"
+  ],
   "reference_files": [
     "reference/connection-patterns.md",
     "reference/trading-patterns.md",

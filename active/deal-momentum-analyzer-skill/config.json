@@ -10,14 +10,13 @@
     "hubspot_get_deal",
     "hubspot_get_company",
     "hubspot_get_contact",
-    "clari_search_calls",
-    "clari_get_call_summary",
+    "ask_agent",
     "apollo_mixed_people_api_search",
     "apollo_people_match",
     "gmail_create_draft",
     "gcal_create_event"
   ],
-  "triggers": [
+  "activation_triggers": [
     "deal health",
     "deal momentum",
     "pipeline review",

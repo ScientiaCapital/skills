@@ -11,7 +11,8 @@
   "mcp_tools": [
     "hubspot_search_contacts",
     "hubspot_get_contact",
-    "identify_company",
+    "crm_search_customers",
+    "analytics_search_by_email",
     "apollo_people_match",
     "find-and-enrich-contacts-at-company",
     "add-contact-data-points",
@@ -23,7 +24,7 @@
     "Apollo API (people match)",
     "Clay API (contact enrichment)"
   ],
-  "triggers": [
+  "activation_triggers": [
     "verify phones",
     "phone waterfall",
     "callable leads",
