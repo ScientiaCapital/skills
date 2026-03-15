@@ -218,12 +218,23 @@ All phases delivered. See [ARCHIVE.md](./ARCHIVE.md).
 
 ## Next Up
 
-All P1-P6 backlog items complete. No active work remaining.
+All P1-P9 backlog items complete. Library is clean and production-ready.
 
+**Completed milestones:**
 - [x] Auto-healing for broken skills (/heal-skill) — ✅ shipped as skill #38
 - [x] Skill usage analytics — ✅ shipped (PostToolUse hook + reporting script)
 - [x] Integration tests for skill activation — ✅ shipped (scripts/test-skills.sh)
-- [x] P6 observer debt cleanup — ✅ shipped (bare excepts, template, contract)
+- [x] P6 observer debt cleanup — ✅ shipped
+- [x] P7 langgraph-agents v2.0.0 + trading-signals v2.1 — ✅ shipped
+- [x] P8 workflow wiring sprint — ✅ shipped (7 workflow skills wired to MCP)
+- [x] P9 full library audit — ✅ shipped (46/46 pass, all DA findings resolved)
+
+**Potential P10 ideas (no priority assigned):**
+- [ ] Add reference docs to 3 empty-ref workflow skills (deal-momentum, meddic-call-prep, portfolio-deal-linker)
+- [ ] Split crm-integration-skill into per-CRM skills if it grows past 500 lines again
+- [ ] Rebuild dist/ zips with latest changes
+- [ ] Explore new hook events: TaskCompleted, ConfigChange, Elicitation
+- [ ] Skill usage analytics review — identify unused skills for potential retirement
 
 ---
 
