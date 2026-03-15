@@ -78,7 +78,7 @@ For each closed deal, determine which skills/automations contributed:
 | Deal was flagged by momentum analyzer | deal-momentum-analyzer | Check if deal appeared in RED/YELLOW actions |
 | Contact enriched via Apollo | prospect-research-to-cadence | Apollo contact create date vs deal create date |
 | Outreach email was drafted | prospect-research-to-cadence | Gmail draft history for contact email |
-| Clari call exists | meddic-call-prep-auto | `clari_search_calls` for company |
+| Activity history exists | meddic-call-prep-auto | `ask_agent` — query activity timeline for company |
 | Manual prospecting (no automation match) | Tim (manual) | Fallback — still counts for portfolio |
 
 ### Attribution Model
