@@ -351,7 +351,7 @@ WEDNESDAY MORNING SEQUENCE (mid-week refresh):
 ### Epiphan CRM (primary data source)
 - `hubspot_search_contacts` — Pull leads with phone = null, apply Golden Rules filters
 - `hubspot_get_contact` — Retrieve full contact details if needed
-- `identify_company` — Check company against Epiphan customer database (device_count, channel flag)
+- `crm_search_customers` — Check company against Epiphan customer database (device_count, channel flag)
 
 ### Apollo (phone verification stage 2)
 - `apollo_people_match` — Look up person by name + email + company, return verified phone

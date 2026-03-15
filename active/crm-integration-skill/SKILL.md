@@ -394,7 +394,7 @@ def resolve_conflict(close_record, hubspot_record, strategy):
 | `hubspot_get_company` | Fetch company details by HubSpot ID |
 | `hubspot_get_contact` | Fetch contact details by HubSpot ID |
 | `hubspot_get_deal` | Fetch deal details by HubSpot ID |
-| `identify_company` | Fuzzy-match company names (handles transcription errors) |
+| `crm_search_customers` | Search customers (fuzzy-match company names) |
 | `crm_get_customer` | Get customer details by CRM ID |
 | `crm_search_customers` | Search customers by company name or email |
 | `crm_get_order` | Get order details by order ID |
@@ -425,9 +425,7 @@ def resolve_conflict(close_record, hubspot_record, strategy):
 ### Call Data & Intelligence
 | Tool | Purpose |
 |------|---------|
-| `clari_search_calls` | Search recorded sales calls (Clari Copilot) |
-| `clari_get_call_summary` | Get call summary + action items |
-| `clari_get_call` | Get full call details with transcript |
+| `ask_agent` | AI agent for complex CRM/analytics queries — activity history, engagement timelines, deal intelligence |
 
 </integration_points>
 
@@ -470,8 +468,8 @@ def resolve_conflict(close_record, hubspot_record, strategy):
 **User wants HubSpot:**
 → Use Epiphan CRM MCP tools for direct integration
 → Available tools: hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_company, hubspot_get_contact, hubspot_get_deal
-→ Company identification: identify_company (fuzzy matching)
-→ Call data: clari_search_calls, clari_get_call_summary
+→ Company identification: crm_search_customers (fuzzy matching)
+→ Activity data: ask_agent (CRM/analytics AI queries)
 → Enrichment: Clay MCP for waterfall enrichment before writeback to HubSpot
 → Reference: `reference/hubspot-patterns.md`
 

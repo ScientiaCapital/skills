@@ -189,10 +189,9 @@ WHERE lifecyclestage NOT IN ('customer')
 
 | MCP Connector | Tools Available |
 |---------------|----------------|
-| **Epiphan CRM** | hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_company, hubspot_get_contact, hubspot_get_deal, identify_company (fuzzy matching), crm_get_customer, crm_search_customers, crm_get_order, crm_get_customer_orders, analytics_get_device, analytics_search_by_email |
-| **Clay MCP** (prefix: `mcp__00505aa5-49d3-494d-889e-139e05c54d74__`) | find-and-enrich-company, find-and-enrich-contacts-at-company, find-and-enrich-list-of-contacts, add-contact-data-points, add-company-data-points, get-existing-search |
+| **Epiphan CRM** | hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_company, hubspot_get_contact, hubspot_get_deal, crm_search_customers, crm_get_customer, crm_get_order, crm_get_customer_orders, analytics_get_device, analytics_search_by_email, ask_agent (AI queries) |
+| **Clay MCP** | find-and-enrich-company, find-and-enrich-contacts-at-company, find-and-enrich-list-of-contacts, add-contact-data-points, add-company-data-points, get-existing-search |
 | **Apollo** | apollo_people_match, apollo_contacts_create, apollo_contacts_search, apollo_organizations_enrich, apollo_organizations_search, apollo_emailer_campaigns_* |
-| **Clari** | clari_search_calls, clari_get_call_summary, clari_get_call |
 
 ---
 
