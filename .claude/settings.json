@@ -1,5 +1,17 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash scripts/hooks/morning-pipeline.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Write|Edit|Bash",
@@ -7,6 +19,16 @@
           {
             "type": "command",
             "command": "bash -c 'INPUT=$(cat); if echo \"$INPUT\" | grep -q \"OBSERVER_QUALITY\\|OBSERVER_ARCH\"; then exit 0; fi; FILE_PATH=$(echo \"$INPUT\" | jq -r \".tool_input.file_path // empty\" 2>/dev/null || echo \"\"); if [ -n \"$FILE_PATH\" ] && [ \"${FILE_PATH#$(pwd)/}\" = \"$FILE_PATH\" ]; then exit 0; fi; OBSERVER_FILE=\".claude/OBSERVER_QUALITY.md\"; if [ -f \"$OBSERVER_FILE\" ]; then STILL_TEMPLATE=$(grep -c \"_not yet run_\" \"$OBSERVER_FILE\" 2>/dev/null || echo 0); if [ \"$STILL_TEMPLATE\" -gt 0 ]; then echo \"** OBSERVER NOT ACTIVE ** The observer has not run yet this session. Before making code changes, spawn an observer agent: Use Task tool with subagent_type=observer-lite (for MINIMAL/SMALL scope) or subagent_type=observer-full (for STANDARD/FULL scope). See CLAUDE.md for scope classification.\" >&2; exit 2; fi; fi'"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__claude_ai_Apollo_io__apollo_contacts_create|mcp__claude_ai_Apollo_io__apollo_emailer_campaigns_add_contact_ids|mcp__claude_ai_Clay__find-and-enrich-contacts-at-company",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "GOLDEN RULES ENFORCEMENT — Before processing this contact/company through Apollo or Clay:\n\n1. Has the company been checked against Epiphan CRM (crm_search_customers or hubspot_search_companies)? If CRM check was not done earlier in this conversation, add system message: 'CRM check recommended before enrichment — run crm_search_customers first'\n2. Is the contact at an existing Epiphan customer (device_count >= 1)? → DENY with reason\n3. Is the company a channel partner (is_channel = true)? → DENY with reason\n4. Is the deal owned by AEs with hubspot_owner_id IN (82625923, 423155215) — Lex Evans, Phil Sanders, Ron, Anthony? → DENY with reason\n5. Does first_conversion contain 'Pearl', 'setup', 'Connect', 'signup'? → DENY (product user, not prospect)\n\nIf this is the first contact action and no CRM check was done, return 'allow' but add system message reminding to verify Golden Rules. If a prior CRM check confirmed the company is clean, return 'allow'. If any rule is violated based on known context, return 'deny' with the specific rule.",
+            "timeout": 15
           }
         ]
       }
@@ -27,6 +49,44 @@
           {
             "type": "command",
             "command": "bash scripts/log-skill-usage.sh"
+          },
+          {
+            "type": "command",
+            "command": "bash scripts/hooks/log-workflow-result.sh"
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__claude_ai_Apollo_io__apollo_people_match|mcp__claude_ai_Apollo_io__apollo_people_bulk_match",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check the Apollo people_match result. If the contact is MISSING a phone number (all phone fields are null, empty, or not returned), add a system message: 'Phone missing from Apollo — use Clay find-and-enrich-contacts-at-company with dataPoints [{type: \"Email\"}] for phone waterfall enrichment. Tim needs verified phones for 50+ daily dials. Cost: Clay credits.' If phone IS present, do nothing.",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Check if the user's prompt mentions an upcoming meeting, call, demo, or discussion with a specific company or person. Look for patterns: 'meeting with [X]', 'call with [X]', 'demo for [X]', 'prep for [X]', 'talking to [X]', 'presenting to [X]', 'my [time] meeting'. If a company or meeting context is detected, add a system message: 'Meeting context detected — consider running meddic-call-prep-auto skill for a MEDDIC brief with HubSpot deal context + Apollo enrichment + calendar details.' If no meeting context found, do nothing and return no output.",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before stopping, quickly check the conversation: 1) Were any workflow skills invoked (prospect-research, call-prep, deal-momentum, portfolio-linker, trading-alerts)? 2) Are there uncommitted git changes? 3) Were any deals flagged as RED/stalled? 4) Were prospects researched but not yet loaded into Apollo sequences? If ANY of these are true, return 'block' with a brief reminder of what needs attention. If none apply or the user explicitly asked to stop, return 'approve'.",
+            "timeout": 10
           }
         ]
       }
