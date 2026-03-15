@@ -73,7 +73,7 @@
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Check if the user's prompt mentions an upcoming meeting, call, demo, or discussion with a specific company or person. Look for patterns: 'meeting with [X]', 'call with [X]', 'demo for [X]', 'prep for [X]', 'talking to [X]', 'presenting to [X]', 'my [time] meeting'. If a company or meeting context is detected, add a system message: 'Meeting context detected — consider running meddic-call-prep-auto skill for a MEDDIC brief with HubSpot deal context + Apollo enrichment + calendar details.' If no meeting context found, do nothing and return no output.",
+            "prompt": "ONLY respond if the user's prompt clearly mentions an upcoming meeting, call, demo, or discussion with a specific company name. Patterns: 'meeting with [Company]', 'call with [Company]', 'demo for [Company]', 'prep for [Company]'. If detected, return ONLY: 'Meeting detected — consider: call prep [company]'. If NO meeting context found, return NOTHING — empty response, no output, no explanation. Silence is correct when there is no meeting.",
             "timeout": 5
           }
         ]
