@@ -1,12 +1,44 @@
 # Skills Library Planning
 
-**Current Sprint:** P5 Complete — All 6 Tasks Shipped
-**Date:** 2026-02-22
+**Current Sprint:** P9 Complete — Full Library Audit & Fixes
+**Date:** 2026-03-15
 **Constraint:** M4 24GB RAM - max 5-6 parallel agents
 
 ---
 
 ## Active Work
+
+### P9: Full Library Audit & Fixes (COMPLETE)
+
+**Date:** 2026-03-15
+**Scope:** STANDARD — observer-full + 3 explore agents + DA audit. 8 files modified.
+
+| Task | Status |
+|------|--------|
+| Fix blocking UserPromptSubmit hook (.claude/settings.json) | Done |
+| Structural audit all 46 skills (SKILL.md + config.json) | Done — 46/46 PASS |
+| Tool reference validation (fictional/broken MCP refs) | Done — 45/46 clean, 1 fixed |
+| Quality and consistency audit (index sync, scripts, DA) | Done |
+| Observer-full drift detection (7 patterns) | Done — all prior alerts resolved |
+| Verify DA audit blockers fixed (identify_company, clari_*, triggers) | Done — all 3 fixed |
+| Hooks best-practices alignment (vs code.claude.com docs) | Done |
+| Fix all issues + simplify | Done |
+
+**Deliverables:**
+- Removed broken `UserPromptSubmit` prompt hook (was blocking all input)
+- Fixed stale Clay UUID prefix `mcp__00505aa5...` → `mcp__claude_ai_Clay__` (crm-integration)
+- Added `<objective>`, `<quick_start>`, `<success_criteria>` XML sections to ibkr-api-skill
+- Extracted clay-enrichment-patterns.md reference file (crm-integration 626 → 496 lines)
+- Updated Stop hook to canonical `decision: "block"` format per official docs
+- Added ibkr-api-skill to DEPENDENCY_GRAPH.md (45 → 46 count)
+- Added ibkr-api-skill section to SKILLS_INDEX.md Quick Lookup + detailed listing
+- Cleaned up ALERTS.md (5 stale alerts → all resolved)
+- Set up Context7 CLI + Skills (replaced quota-exhausted MCP)
+- All 323 tests passing, all 46 skills green
+
+### P8: Workflow Wiring Sprint (COMPLETE)
+
+**Date:** 2026-03-15
 
 ### P7: LangGraph Agents v2.0.0 + Trading-Signals v2.1 (COMPLETE)
 

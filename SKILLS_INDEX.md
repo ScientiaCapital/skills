@@ -46,6 +46,7 @@
 | B2B content marketing | [content-marketing](#content-marketing-skill) | Business |
 | Executive data analysis, dashboards | [data-analysis](#data-analysis-skill) | Business |
 | Expert trading partner: Options, Stocks, Crypto, Commodities, VIX, Forex | [trading-signals](#trading-signals-skill) | Business |
+| IBKR portfolio, trades, multi-account management | [ibkr-api](#ibkr-api-skill) | Business |
 | Create visual Miro boards | [miro](#miro-skill) | Business |
 | HubSpot SQL analytics, lead scoring, forecasting | [hubspot-revops](#hubspot-revops-skill) | Business |
 | Apollo research → outreach → sequence load | [prospect-research-to-cadence](#prospect-research-to-cadence-skill) | Business |
@@ -940,6 +941,23 @@ Auto-attributes closed HubSpot deals to the skills and automations that influenc
 **Triggers:** "portfolio update", "deal closed", "gtme evidence", "what did I influence", "career evidence", "transition tracker"
 
 **Impact:** Career-critical for VP BD transition — auto-builds evidence of revenue influenced, operational leverage, and systems thinking
+
+---
+
+#### ibkr-api-skill
+**Location:** `active/ibkr-api-skill/` | **Version:** 1.0.0
+
+Interactive Brokers API integration for portfolio management, account queries, and trade execution across multiple account types (Roth IRA, personal brokerage, business).
+
+**Key Features:**
+- TWS API via ib_async (recommended) or Client Portal REST API
+- Multi-account management (Roth IRA restrictions enforced)
+- IBKR MCP Server installed (ArjunDivecha/ibkr-mcp-server)
+- 11 MCP tools: get_portfolio, get_account_summary, switch_account, place_order, etc.
+
+**Reference Files (2):** connection-patterns, trading-patterns
+
+**Triggers:** "IBKR", "Interactive Brokers", "IB Gateway", "TWS API", "ib_async", "portfolio positions", "account balances", "place trades"
 
 ---
 

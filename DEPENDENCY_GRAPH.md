@@ -1,7 +1,7 @@
 # Skill Dependency Graph
 
 > Last validated: 2026-03-15
-> Total skills: 45
+> Total skills: 46
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -87,6 +87,7 @@ graph TB
         DMA[deal-momentum-analyzer]
         PDL[portfolio-deal-linker]
         TAS[trading-alert-scheduler]
+        IBKR[ibkr-api]
 
         RES --> GTP
         GTP --> SR
@@ -160,7 +161,7 @@ graph TB
 | **Core** | workflow-enforcer-skill, project-context, workflow-orchestrator, cost-metering, portfolio-artifact | Session lifecycle management |
 | **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix, heal-skill, frontend-ui | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
-| **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro, prospect-research-to-cadence, phone-verification-waterfall, meddic-call-prep-auto, deal-momentum-analyzer, portfolio-deal-linker, trading-alert-scheduler | GTM & revenue operations |
+| **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro, prospect-research-to-cadence, phone-verification-waterfall, meddic-call-prep-auto, deal-momentum-analyzer, portfolio-deal-linker, trading-alert-scheduler, ibkr-api | GTM & revenue operations |
 | **Strategy** | business-model-canvas, blue-ocean-strategy | Business model design |
 
 ### Count by Cluster

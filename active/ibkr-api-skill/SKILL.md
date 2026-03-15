@@ -3,9 +3,23 @@ name: ibkr-api-skill
 description: Interactive Brokers (IBKR) API integration for portfolio management, account queries, and trade execution across multiple account types (Roth IRA, personal brokerage, business). Use when the user mentions IBKR, Interactive Brokers, IB Gateway, TWS API, Client Portal API, brokerage API, portfolio positions, account balances, placing trades via API, multi-account trading, IRA trading restrictions, or wants to build/debug code that connects to Interactive Brokers. Also triggers on "ib_async", "ib_insync", "ibapi", or any IBKR endpoint reference.
 ---
 
-# IBKR API Skill
+<objective>
+Build and manage Interactive Brokers (IBKR) integrations for portfolio queries, trade execution, and multi-account management across Roth IRA, personal brokerage, and business accounts using TWS API (ib_async) or Client Portal REST API.
+</objective>
 
-Expert guide for building Python integrations with Interactive Brokers across multiple account types.
+<quick_start>
+1. Install: `pip install ib_async`
+2. Start IB Gateway on port 7497 (paper) or 7496 (live)
+3. Connect: `ib = IB(); await ib.connectAsync('127.0.0.1', 7497, clientId=1)`
+4. Query: `positions = ib.positions()` / `summary = await ib.accountSummaryAsync()`
+</quick_start>
+
+<success_criteria>
+- API connection established and authenticated
+- Portfolio positions and balances retrieved across all linked accounts
+- IRA restrictions enforced on write operations
+- Credentials stored securely (never hardcoded)
+</success_criteria>
 
 ## Quick Decision: Which API?
 

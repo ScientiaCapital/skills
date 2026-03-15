@@ -67,25 +67,13 @@
         ]
       }
     ],
-    "UserPromptSubmit": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "prompt",
-            "prompt": "ONLY respond if the user's prompt clearly mentions an upcoming meeting, call, demo, or discussion with a specific company name. Patterns: 'meeting with [Company]', 'call with [Company]', 'demo for [Company]', 'prep for [Company]'. If detected, return ONLY: 'Meeting detected — consider: call prep [company]'. If NO meeting context found, return NOTHING — empty response, no output, no explanation. Silence is correct when there is no meeting.",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
     "Stop": [
       {
         "matcher": "*",
         "hooks": [
           {
             "type": "prompt",
-            "prompt": "Check the conversation briefly: Were workflow skills run? Uncommitted changes? RED deals flagged? If any need attention AND the user did NOT explicitly say stop/exit/done, output a short reminder of what needs saving. Otherwise output nothing.",
+            "prompt": "Check the conversation briefly: Were workflow skills run? Uncommitted changes? RED deals flagged? If any need attention AND the user did NOT explicitly say stop/exit/done, respond with JSON: {\"decision\": \"block\", \"reason\": \"Brief reminder of what needs saving\"}. If everything is clean or user said stop/exit/done, respond with empty JSON: {}.",
             "timeout": 10
           }
         ]
