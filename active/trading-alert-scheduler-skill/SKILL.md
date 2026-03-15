@@ -66,12 +66,17 @@ For each ticker, use web search to pull:
 - Any overnight news/catalysts
 
 ### 1b. IBKR Portfolio Positions
-Use IBKR API skill tools to pull:
-- All open positions across accounts (Roth IRA, personal brokerage, business)
-- Current P&L per position
-- Options positions: strike, expiry, current Greeks
-- Margin utilization
-- Cash available
+Use IBKR MCP server tools (`ArjunDivecha/ibkr-mcp-server`, installed at `~/Desktop/tk_projects/ibkr-mcp-server/`):
+
+| Tool | Data Pulled |
+|------|------------|
+| `get_portfolio` | All open positions + P&L across accounts (Roth IRA, personal brokerage, THK Enterprises) |
+| `get_account_summary` | Balances, margin utilization, buying power, cash available |
+| `switch_account` | Toggle between accounts for per-account view |
+| `get_margin_requirements` | Current margin needs per position |
+
+**Prerequisites:** IB Gateway must be running on port 7497 (paper) or 7496 (live).
+**If IBKR not connected:** Skip this section — web search covers market data. Portfolio section shows "IBKR not connected — start IB Gateway to enable portfolio checks."
 
 ### 1c. Market Internals
 Web search for:
@@ -122,7 +127,7 @@ For tickers with options positions or high confluence:
 - Earnings dates within 14 days
 
 ### 2d. Position Health Check
-For each open IBKR position:
+For each open IBKR position (via `get_portfolio` + `get_account_summary`):
 
 | Check | Alert Threshold |
 |-------|----------------|
@@ -219,7 +224,7 @@ Net Delta: [+/-XX] | Net Theta: [+/-$XX/day] | IVR avg: [XX%]
 
 ## Required Tools
 - **Web Search:** Pre-market data, news, economic calendar, options flow (primary data source)
-- **IBKR MCP (optional):** Portfolio positions, account balances, order status — requires IBKR MCP server (e.g., `rcontesti/IB_MCP` or `xiao81/IBKR-MCP-Server`) connected to running IB Gateway. If not available, web search covers market data; portfolio section shows "IBKR not connected" placeholder.
+- **IBKR MCP** (`ArjunDivecha/ibkr-mcp-server`): get_portfolio, get_account_summary, switch_account, get_market_data, get_historical_data, get_margin_requirements, check_shortable_shares, get_borrow_rates, short_selling_analysis, get_connection_status — requires IB Gateway on port 7497 (paper) or 7496 (live). If not connected, web search covers market data.
 - **Scheduling:** CronCreate `"53 6 * * 1-5"` for session-based 7am CST runs (3-day auto-expire)
 
 ## Data Sources (via web search)

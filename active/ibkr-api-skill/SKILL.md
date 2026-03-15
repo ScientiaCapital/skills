@@ -143,16 +143,41 @@ This skill complements the `trading-signals-skill`:
 - **ibkr-api** → executes trades, queries positions, manages accounts
 - Pipeline: Signal generation → Position sizing → IRA validation → Order execution
 
-## Community MCP Servers (Experimental)
+## IBKR MCP Server (Installed)
 
-Several community-built IBKR MCP servers exist on GitHub:
-- `code-rabi/interactive-brokers-mcp` — Full trading + market data
-- `ArjunDivecha/ibkr-mcp-server` — Multi-account + short analysis
-- `GaoChX/ibkr-mcp-server` — FastMCP 2.0 + StreamableHTTP
+**ArjunDivecha/ibkr-mcp-server** is installed and configured:
+- **Location:** `~/Desktop/tk_projects/ibkr-mcp-server/`
+- **Claude Code:** Added to `~/.claude.json` (user scope)
+- **Claude Desktop:** Added to `claude_desktop_config.json`
+- **Mode:** Paper trading (port 7497), live trading disabled
+- **Safety:** Order cap 1,000 shares, confirmation required
+
+### Available MCP Tools
+
+| Tool | Purpose | Account Types |
+|------|---------|---------------|
+| `get_portfolio` | Positions + P&L | All accounts |
+| `get_account_summary` | Balances, margin, buying power | All accounts |
+| `switch_account` | Toggle Roth IRA / Personal / THK | Multi-account |
+| `get_market_data` | Real-time quotes | N/A |
+| `get_historical_data` | Historical OHLCV | N/A |
+| `place_order` | Orders with safety checks | All (IRA restrictions enforced) |
+| `check_shortable_shares` | Short availability | Personal/Business only |
+| `get_margin_requirements` | Margin needs per security | Personal/Business only |
+| `get_borrow_rates` | Borrow costs for shorts | Personal/Business only |
+| `short_selling_analysis` | Full short analysis package | Personal/Business only |
+| `get_connection_status` | IB Gateway health check | N/A |
+
+### To Activate
+1. Start IB Gateway → port 7497 (paper) or 7496 (live)
+2. Enable API: Config → API → Settings → "ActiveX and Socket Clients"
+3. Add 127.0.0.1 to Trusted IPs
+4. Restart Claude Code / Claude Desktop
+
+### Other Community MCP Servers
+- `code-rabi/interactive-brokers-mcp` — Client Portal REST API
+- `xiao81/IBKR-MCP-Server` — TWS API focused
 - `Hellek1/ib-mcp` — Read-only via ib_async (safest)
-
-**Status**: All experimental/community-driven. No official IBKR MCP server exists.
-**Recommendation**: Build custom integration using ib_async directly; evaluate MCP servers for Claude Desktop convenience layer.
 
 ## Multi-Broker Aggregation
 
