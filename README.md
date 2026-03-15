@@ -1,6 +1,6 @@
 # Skills Library
 
-46 production-ready Claude Code skills. AI-native engineering, GTM, sales automation, and trading.
+47 production-ready Claude Code skills. AI-native engineering, GTM, sales automation, and trading.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@
 ./scripts/deploy.sh
 ```
 
-## Skills (46)
+## Skills (47)
 
 ### Core (5)
 | Skill | What It Does |
@@ -83,19 +83,20 @@
 | **trading-signals** | 5 TA methodologies, 25+ options strategies, regime detection |
 | **ibkr-api** | Interactive Brokers API: portfolio, trades, multi-account |
 
-### Strategy (2)
+### Strategy (3)
 | Skill | What It Does |
 |-------|-------------|
 | **business-model-canvas** | 9-block business model design |
 | **blue-ocean-strategy** | Blue ocean market differentiation |
+| **jobs-to-be-done** | JTBD + ODI analysis for sales discovery and strategy |
 
 ## Project Structure
 
 ```
 skills/
-├── active/              # 44 trigger-activated skills
+├── active/              # 45 trigger-activated skills
 ├── stable/              # 2 always-loaded core skills
-├── dist/                # 46 zip files for Claude Desktop
+├── dist/                # 47 zip files for Claude Desktop
 ├── scripts/
 │   ├── deploy.sh           # Deploy to ~/.claude/skills/
 │   ├── rebuild-zips.sh     # Rebuild dist/*.zip

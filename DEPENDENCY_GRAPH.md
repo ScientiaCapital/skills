@@ -1,7 +1,7 @@
 # Skill Dependency Graph
 
 > Last validated: 2026-03-15
-> Total skills: 46
+> Total skills: 47
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -121,6 +121,7 @@ graph TB
     subgraph Strategy["Strategy (Business Design)"]
         BMC[business-model-canvas]
         BOS[blue-ocean-strategy]
+        JTBD[jobs-to-be-done]
     end
 
     %% Cross-cluster dependencies
@@ -162,7 +163,7 @@ graph TB
 | **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix, heal-skill, frontend-ui | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
 | **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro, prospect-research-to-cadence, phone-verification-waterfall, meddic-call-prep-auto, deal-momentum-analyzer, portfolio-deal-linker, trading-alert-scheduler, ibkr-api | GTM & revenue operations |
-| **Strategy** | business-model-canvas, blue-ocean-strategy | Business model design |
+| **Strategy** | business-model-canvas, blue-ocean-strategy, jobs-to-be-done | Business model design + innovation |
 
 ### Count by Cluster
 
@@ -172,8 +173,8 @@ graph TB
 | Dev Tools | 15 |
 | Infrastructure | 8 |
 | Business | 15 |
-| Strategy | 2 |
-| **Total** | **45** |
+| Strategy | 3 |
+| **Total** | **46** |
 
 ---
 
@@ -359,6 +360,7 @@ Skills with no explicit dependencies (standalone):
 | content-marketing | Business | Standalone content creation |
 | business-model-canvas | Strategy | Standalone framework |
 | blue-ocean-strategy | Strategy | Standalone framework |
+| jobs-to-be-done | Strategy | Standalone framework |
 | docker-compose | Dev Tools | Local dev setup |
 | data-analysis | Business | Can combine with any data source |
 

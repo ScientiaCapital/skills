@@ -1,9 +1,9 @@
 # Skills Index
 
 > Last updated: 2026-03-15
-> Total skills: 46 (2 stable, 44 active)
+> Total skills: 47 (2 stable, 45 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 46 skills have `config.json` with version tracking
+> **100% config.json coverage** — All 47 skills have `config.json` with version tracking
 
 ## Architecture
 
@@ -57,6 +57,7 @@
 | Pre-market trading digest — watchlist + IBKR positions | [trading-alert-scheduler](#trading-alert-scheduler-skill) | Business |
 | Design business models (9 blocks) | [business-model-canvas](#business-model-canvas-skill) | Strategy |
 | Blue ocean market differentiation | [blue-ocean-strategy](#blue-ocean-strategy-skill) | Strategy |
+| Jobs To Be Done + ODI analysis | [jobs-to-be-done](#jobs-to-be-done-skill) | Strategy |
 | Track and manage API costs | [cost-metering](#cost-metering-skill) | Core |
 | Auto-extract GTME metrics from sessions | [portfolio-artifact](#portfolio-artifact-skill) | Core |
 | Track project context across sessions | [project-context](#project-context-skill) | Core |
@@ -1041,6 +1042,31 @@ Blue Ocean Strategy (Chan Kim & Renée Mauborgne) for creating uncontested marke
 
 ---
 
+#### jobs-to-be-done-skill
+**Location:** `active/jobs-to-be-done-skill/`
+
+Jobs To Be Done analysis using Christensen's theory and Ulwick's Outcome-Driven Innovation (ODI) methodology.
+
+| Component | Purpose |
+|-----------|---------|
+| Job Statement | [When___], [I want to___], [so I can___] |
+| Job Map | 8 universal steps of every job |
+| Outcome Statements | Direction + Metric + Object |
+| Forces of Progress | Push/Pull/Anxiety/Habit analysis |
+| Hiring/Firing | Competitive landscape through job lens |
+| Switch Interview | Timeline-based discovery template |
+| Opportunity Algorithm | ODI importance vs satisfaction scoring (0-100) |
+
+**Key Features:**
+- Dual-mode: Sales discovery AND strategic innovation
+- BDR Quick Reference for live discovery calls
+- Opportunity scoring (0-100, consistent with Blue Ocean/BMC)
+- Worked example: video conferencing for hybrid teams
+
+**Triggers:** "jobs to be done", "JTBD", "ODI", "forces of progress", "outcome statements", "why customers switch"
+
+---
+
 ## Folder Structure
 
 ```
@@ -1065,6 +1091,7 @@ skills/
 │   ├── heal-skill/
 │   ├── gtm-pricing-skill/
 │   ├── hubspot-revops-skill/
+│   ├── jobs-to-be-done-skill/
 │   ├── langgraph-agents-skill/
 │   ├── miro-skill/
 │   ├── openrouter-skill/
