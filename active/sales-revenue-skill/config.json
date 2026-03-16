@@ -9,7 +9,10 @@
   ],
   "integrates_with": [
     "crm-integration-skill",
-    "hubspot-revops-skill"
+    "hubspot-revops-skill",
+    "challenger-sale-skill",
+    "never-split-the-difference-skill",
+    "jobs-to-be-done-skill"
   ],
   "activation_triggers": [
     "cold email",

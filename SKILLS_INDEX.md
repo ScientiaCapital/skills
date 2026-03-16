@@ -1,9 +1,9 @@
 # Skills Index
 
 > Last updated: 2026-03-15
-> Total skills: 47 (2 stable, 45 active)
+> Total skills: 49 (2 stable, 47 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 47 skills have `config.json` with version tracking
+> **100% config.json coverage** — All 49 skills have `config.json` with version tracking
 
 ## Architecture
 
@@ -58,6 +58,8 @@
 | Design business models (9 blocks) | [business-model-canvas](#business-model-canvas-skill) | Strategy |
 | Blue ocean market differentiation | [blue-ocean-strategy](#blue-ocean-strategy-skill) | Strategy |
 | Jobs To Be Done + ODI analysis | [jobs-to-be-done](#jobs-to-be-done-skill) | Strategy |
+| Challenger Sale methodology (Teach-Tailor-Take Control) | [challenger-sale](#challenger-sale-skill) | Strategy |
+| FBI negotiation (tactical empathy, calibrated questions) | [never-split-the-difference](#never-split-the-difference-skill) | Strategy |
 | Track and manage API costs | [cost-metering](#cost-metering-skill) | Core |
 | Auto-extract GTME metrics from sessions | [portfolio-artifact](#portfolio-artifact-skill) | Core |
 | Track project context across sessions | [project-context](#project-context-skill) | Core |
@@ -1064,6 +1066,28 @@ Jobs To Be Done analysis using Christensen's theory and Ulwick's Outcome-Driven 
 - Worked example: video conferencing for hybrid teams
 
 **Triggers:** "jobs to be done", "JTBD", "ODI", "forces of progress", "outcome statements", "why customers switch"
+
+---
+
+#### challenger-sale-skill
+**Location:** `active/challenger-sale-skill/`
+
+The Challenger Sale methodology — Teach-Tailor-Take Control framework for B2B sales. Build commercial insights that reframe customer thinking, tailor messages to stakeholder types, and handle objections with constructive tension.
+
+**Triggers:** `challenger sale`, `commercial teaching`, `constructive tension`, `teach tailor take control`, `insight selling`, `commercial insight`, `challenger rep`
+
+**Integrates with:** jobs-to-be-done, blue-ocean-strategy, business-model-canvas, never-split-the-difference, sales-revenue
+
+---
+
+#### never-split-the-difference-skill
+**Location:** `active/never-split-the-difference-skill/`
+
+Chris Voss FBI negotiation framework — tactical empathy, calibrated questions, mirroring, labeling, accusation audits, and the Ackerman bargaining model. Applied to B2B sales, deal negotiation, and business development communication.
+
+**Triggers:** `never split the difference`, `tactical empathy`, `calibrated questions`, `mirroring`, `labeling`, `accusation audit`, `ackerman model`, `chris voss`
+
+**Integrates with:** challenger-sale, jobs-to-be-done, blue-ocean-strategy, business-model-canvas, sales-revenue
 
 ---
 

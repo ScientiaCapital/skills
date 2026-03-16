@@ -457,3 +457,18 @@ Canvas is successful when:
 - "9 building blocks"
 - "Osterwalder canvas"
 </activation_triggers>
+
+<integration_points>
+## Strategy Skill Cluster
+
+BMC integrates with 4 other strategy skills for first-principles thinking:
+
+| Skill | Connection |
+|-------|-----------|
+| **JTBD** | Customer Segments block should be defined by the jobs they're hiring for, not demographics |
+| **Blue Ocean** | ERRC grid outputs feed directly into Value Propositions (Create/Raise = new value props) |
+| **Challenger Sale** | Customer Segments × Value Propositions = your stakeholder tailoring matrix |
+| **NSTTD** | Customer Relationships block benefits from tactical empathy — how you engage each segment |
+
+**Pipeline:** JTBD (what job?) → Blue Ocean (where's the space?) → **BMC (how to deliver?)** → Challenger (what insight?) → NSTTD (how to communicate?)
+</integration_points>

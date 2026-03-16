@@ -4,7 +4,7 @@
   "category": "Business",
   "created": "2026-03-13",
   "author": "Tim Kipper",
-  "dependencies": ["trading-signals-skill"],
+  "depends_on": ["trading-signals-skill"],
   "mcp_tools": [
     "get_portfolio",
     "get_account_summary",

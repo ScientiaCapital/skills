@@ -1,0 +1,29 @@
+{
+  "name": "never-split-the-difference-skill",
+  "version": "1.0.0",
+  "category": "Strategy",
+  "activation_triggers": [
+    "never split the difference",
+    "tactical empathy",
+    "calibrated questions",
+    "mirroring technique",
+    "labeling technique",
+    "accusation audit",
+    "ackerman model",
+    "chris voss",
+    "hostage negotiation",
+    "deal negotiation",
+    "price negotiation",
+    "negotiation strategy",
+    "that's right moment",
+    "black swan negotiation",
+    "FM DJ voice"
+  ],
+  "integrates_with": [
+    "challenger-sale-skill",
+    "jobs-to-be-done-skill",
+    "blue-ocean-strategy-skill",
+    "business-model-canvas-skill",
+    "sales-revenue-skill"
+  ]
+}

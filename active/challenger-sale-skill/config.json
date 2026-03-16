@@ -1,0 +1,27 @@
+{
+  "name": "challenger-sale-skill",
+  "version": "1.0.0",
+  "category": "Strategy",
+  "activation_triggers": [
+    "challenger sale",
+    "commercial teaching",
+    "constructive tension",
+    "teach tailor take control",
+    "insight selling",
+    "commercial insight",
+    "challenger rep",
+    "reframe customer thinking",
+    "rational drowning",
+    "warmer pitch",
+    "assertive redirect",
+    "challenger methodology",
+    "B2B challenger"
+  ],
+  "integrates_with": [
+    "never-split-the-difference-skill",
+    "jobs-to-be-done-skill",
+    "blue-ocean-strategy-skill",
+    "business-model-canvas-skill",
+    "sales-revenue-skill"
+  ]
+}

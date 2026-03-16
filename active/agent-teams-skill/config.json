@@ -1,7 +1,7 @@
 {
   "name": "agent-teams",
   "version": "1.2.0",
-  "category": "dev-tools",
+  "category": "Dev Tools",
   "activation_triggers": ["set up agent team", "parallel development", "coordinate Claude sessions", "team of agents", "spawn agents", "agent coordination"],
   "constraints": {
     "max_agents": 6,

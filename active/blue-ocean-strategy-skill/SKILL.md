@@ -73,7 +73,6 @@ Low  │    │ /      \ │ /      *    ← Industry Average
 </core_concepts>
 
 <errc_framework>
-
 ## The Four Actions Framework (ERRC)
 
 | Action | Question | Purpose |
@@ -132,7 +131,6 @@ Low  │    │ /      \ │ /      *    ← Industry Average
 </errc_framework>
 
 <six_paths_framework>
-
 ## Six Paths to Blue Oceans
 
 ### Path 1: Look Across Alternative Industries
@@ -251,7 +249,6 @@ Example: Apple iTunes
 </six_paths_framework>
 
 <strategy_canvas_analysis>
-
 ## Building a Strategy Canvas
 
 ### Step 1: Identify Competitive Factors
@@ -314,7 +311,6 @@ Apply ERRC to create a divergent value curve:
 </strategy_canvas_analysis>
 
 <scoring_algorithm>
-
 ## Blue Ocean Index
 
 ### Opportunity Score (0-100)
@@ -372,7 +368,6 @@ def calculate_blue_ocean_index(analysis):
 </scoring_algorithm>
 
 <example_session>
-
 ## Example: AI-Powered Legal Tech for Small Business
 
 **User:** Apply blue ocean strategy to the legal services market for small businesses
@@ -464,8 +459,7 @@ Risk dashboard          0         0            4 (Create)
 
 </example_session>
 
-<success_criteria>
-Analysis is successful when:
+<success_criteria>Analysis is successful when:
 - Strategy Canvas clearly shows divergent value curve from competitors
 - ERRC Grid identifies at least 2 factors per quadrant
 - Six Paths Framework exploration reveals 2+ actionable opportunities
@@ -489,3 +483,18 @@ Analysis is successful when:
 - "six paths framework"
 - "noncustomers analysis"
 </activation_triggers>
+
+<integration_points>
+## Strategy Skill Cluster
+
+Blue Ocean integrates with 4 other strategy skills for first-principles thinking:
+
+| Skill | Connection |
+|-------|-----------|
+| **JTBD** | Underserved outcomes (ODI score >15) are candidates for "Create" and "Raise" in your ERRC grid |
+| **BMC** | Blue Ocean value curves map directly to the Value Proposition and Customer Segments blocks |
+| **Challenger Sale** | ERRC "Create" factors become commercial insights for the Challenger teaching pitch |
+| **NSTTD** | When presenting a Blue Ocean strategy to skeptical stakeholders, use accusation audits and tactical empathy |
+
+**Pipeline:** JTBD (what job?) → **Blue Ocean (where's the space?)** → BMC (how to deliver?) → Challenger (what insight?) → NSTTD (how to communicate?)
+</integration_points>

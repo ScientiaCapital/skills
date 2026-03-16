@@ -7,7 +7,8 @@
   "depends_on": [],
   "integrates_with": [
     "api-testing-skill",
-    "workflow-orchestrator-skill"
+    "workflow-orchestrator-skill",
+    "frontend-ui-skill"
   ],
   "activation_triggers": [
     "design API",

@@ -2,7 +2,7 @@
   "name": "prospect-research-to-cadence-skill",
   "version": "1.0.0",
   "category": "Business",
-  "dependencies": ["sales-revenue-skill", "hubspot-revops-skill", "research-skill"],
+  "depends_on": ["sales-revenue-skill", "hubspot-revops-skill", "research-skill"],
   "mcp_tools": [
     "apollo_organizations_enrich",
     "apollo_organizations_job_postings",

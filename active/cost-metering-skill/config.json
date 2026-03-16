@@ -11,6 +11,7 @@
     "alert_warn": 0.8,
     "alert_block": 0.95
   },
+  "integrates_with": ["trading-signals-skill", "hubspot-revops-skill"],
   "storage_path": "~/.claude/daily-cost.json",
   "log_path": "~/.claude/cost-log.jsonl"
 }

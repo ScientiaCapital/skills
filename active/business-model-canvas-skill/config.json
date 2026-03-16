@@ -6,7 +6,11 @@
   "requires": [],
   "depends_on": [],
   "integrates_with": [
-    "miro-skill"
+    "miro-skill",
+    "jobs-to-be-done-skill",
+    "blue-ocean-strategy-skill",
+    "challenger-sale-skill",
+    "never-split-the-difference-skill"
   ],
   "activation_triggers": [
     "business model canvas",

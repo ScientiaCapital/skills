@@ -2,6 +2,12 @@
   "name": "jobs-to-be-done-skill",
   "version": "1.0.0",
   "category": "Strategy",
+  "integrates_with": [
+    "blue-ocean-strategy-skill",
+    "business-model-canvas-skill",
+    "challenger-sale-skill",
+    "never-split-the-difference-skill"
+  ],
   "activation_triggers": [
     "jobs to be done",
     "JTBD",

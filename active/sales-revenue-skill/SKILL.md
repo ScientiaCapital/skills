@@ -231,6 +231,34 @@ E - Explore (understand the root)
 R - Respond (address specifically)
 ```
 
+<methodology_integration>
+## Methodology Integration
+
+Sales-revenue integrates with the strategy skill cluster for first-principles selling:
+
+**Discovery Calls:**
+- Use **JTBD Forces of Progress** to identify what's pushing the prospect to switch
+- Use **Challenger's Teach-Tailor-Take Control** to structure the conversation around a commercial insight
+- Use **NSTTD calibrated questions** ("What does success look like?") instead of closed questions
+
+**Cold Outreach:**
+- Lead with a **Challenger reframe** (not product features)
+- Open with an **NSTTD accusation audit** ("You probably get dozens of vendor emails...")
+- Frame the CTA as a **no-oriented question** ("Would it be out of the question to...?")
+- Under 100 words, technically precise
+
+**Objection Handling:**
+- Use **NSTTD labeling** to name the objection: "It seems like timing is a concern..."
+- Apply **Challenger's assertive redirect** to steer back to value
+- Use **calibrated questions** to make them solve YOUR problem: "How am I supposed to do that?"
+
+**Price Negotiations:**
+- Use the **Ackerman model** (65% → 85% → 95% → 100% with precise final number)
+- Anchor with **Challenger rational drowning** (quantify the problem before discussing price)
+
+See: `challenger-sale-skill`, `never-split-the-difference-skill`, `jobs-to-be-done-skill`
+</methodology_integration>
+
 | Objection | Response Framework (Epiphan) |
 |-----------|-------------------|
 | "Too expensive" | Acknowledge -> "Compared to Extron SMP or Blackmagic?" -> Show Total Cost of Ownership (Pearl-2 vs legacy + integration) |

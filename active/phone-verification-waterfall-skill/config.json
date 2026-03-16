@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "category": "Business",
   "subcategory": "Sales Operations",
-  "dependencies": [
+  "depends_on": [
     "prospect-research-to-cadence-skill",
     "sales-revenue-skill",
     "hubspot-revops-skill"

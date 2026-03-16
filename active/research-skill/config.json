@@ -7,7 +7,8 @@
   "depends_on": [],
   "integrates_with": [
     "gtm-pricing-skill",
-    "workflow-orchestrator-skill"
+    "workflow-orchestrator-skill",
+    "miro-skill"
   ],
   "activation_triggers": [
     "research company",

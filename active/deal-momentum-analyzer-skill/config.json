@@ -2,7 +2,7 @@
   "name": "deal-momentum-analyzer-skill",
   "version": "1.0.0",
   "category": "Business",
-  "dependencies": ["hubspot-revops-skill", "sales-revenue-skill", "meddic-call-prep-auto-skill", "portfolio-artifact-skill"],
+  "depends_on": ["hubspot-revops-skill", "sales-revenue-skill", "meddic-call-prep-auto-skill", "portfolio-artifact-skill"],
   "mcp_tools": [
     "hubspot_search_deals",
     "hubspot_search_companies",

@@ -2,7 +2,7 @@
   "name": "trading-alert-scheduler-skill",
   "version": "1.0.0",
   "category": "Business",
-  "dependencies": ["trading-signals-skill", "ibkr-api-skill"],
+  "depends_on": ["trading-signals-skill", "ibkr-api-skill"],
   "mcp_tools": [],
   "web_search_required": true,
   "activation_triggers": [

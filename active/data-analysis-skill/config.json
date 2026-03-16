@@ -6,11 +6,12 @@
   "requires": [],
   "depends_on": [],
   "integrates_with": [
-    "hubspot-revops-skill"
+    "hubspot-revops-skill",
+    "trading-signals-skill"
   ],
   "activation_triggers": [
     "analyze data",
-    "dashboard",
+    "analytics dashboard",
     "investor presentation",
     "SaaS metrics"
   ]

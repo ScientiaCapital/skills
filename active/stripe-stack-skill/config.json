@@ -6,7 +6,8 @@
   "requires": ["stripe-api", "next-js", "supabase"],
   "depends_on": [],
   "integrates_with": [
-    "supabase-sql-skill"
+    "supabase-sql-skill",
+    "frontend-ui-skill"
   ],
   "activation_triggers": [
     "stripe",

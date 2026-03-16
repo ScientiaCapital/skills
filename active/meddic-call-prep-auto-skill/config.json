@@ -2,7 +2,7 @@
   "name": "meddic-call-prep-auto-skill",
   "version": "1.0.0",
   "category": "Business",
-  "dependencies": ["sales-revenue-skill", "prospect-research-to-cadence-skill", "hubspot-revops-skill"],
+  "depends_on": ["sales-revenue-skill", "prospect-research-to-cadence-skill", "hubspot-revops-skill"],
   "mcp_tools": [
     "gcal_list_events",
     "gcal_get_event",

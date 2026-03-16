@@ -402,3 +402,18 @@ When coordinating a meeting with both in-room and remote participants, I want to
 - [ ] Hiring/Firing table maps competitive landscape through job lens
 - [ ] JTBD Opportunity Index calculated (0-100 composite score)
 </success_criteria>
+
+<integration_points>
+## Strategy Skill Cluster
+
+JTBD integrates with 4 other strategy skills for first-principles thinking:
+
+| Skill | Connection |
+|-------|-----------|
+| **Blue Ocean** | Underserved outcomes (ODI >15) are candidates for Blue Ocean "Create" and "Raise" factors |
+| **BMC** | Job statements define Customer Segments; outcome statements define Value Propositions |
+| **Challenger Sale** | The Reframe step IS the underserved outcome the prospect doesn't know they have. Use ODI scoring to identify the insight. |
+| **NSTTD** | Calibrated questions ("What does success look like?") are job-discovery questions. Forces of Progress map to the emotional dynamics NSTTD addresses. |
+
+**Pipeline:** **JTBD (what job?)** → Blue Ocean (where's the space?) → BMC (how to deliver?) → Challenger (what insight?) → NSTTD (how to communicate?)
+</integration_points>

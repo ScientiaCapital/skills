@@ -7,7 +7,8 @@
   "depends_on": [],
   "integrates_with": [
     "supabase-sql-skill",
-    "workflow-orchestrator-skill"
+    "workflow-orchestrator-skill",
+    "frontend-ui-skill"
   ],
   "activation_triggers": [
     "auth",

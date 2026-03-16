@@ -1,7 +1,7 @@
 # Skill Dependency Graph
 
 > Last validated: 2026-03-15
-> Total skills: 47
+> Total skills: 49
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -122,6 +122,13 @@ graph TB
         BMC[business-model-canvas]
         BOS[blue-ocean-strategy]
         JTBD[jobs-to-be-done]
+        CS[challenger-sale]
+        NSTTD[never-split-the-difference]
+        JTBD --> CS
+        JTBD --> NSTTD
+        BOS --> CS
+        BMC --> CS
+        CS --> NSTTD
     end
 
     %% Cross-cluster dependencies
@@ -163,7 +170,7 @@ graph TB
 | **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix, heal-skill, frontend-ui | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
 | **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro, prospect-research-to-cadence, phone-verification-waterfall, meddic-call-prep-auto, deal-momentum-analyzer, portfolio-deal-linker, trading-alert-scheduler, ibkr-api | GTM & revenue operations |
-| **Strategy** | business-model-canvas, blue-ocean-strategy, jobs-to-be-done | Business model design + innovation |
+| **Strategy** | business-model-canvas, blue-ocean-strategy, jobs-to-be-done, challenger-sale, never-split-the-difference | Business model design + innovation + sales methodology |
 
 ### Count by Cluster
 
@@ -172,9 +179,9 @@ graph TB
 | Core | 5 |
 | Dev Tools | 15 |
 | Infrastructure | 8 |
-| Business | 15 |
-| Strategy | 3 |
-| **Total** | **46** |
+| Business | 16 |
+| Strategy | 5 |
+| **Total** | **49** |
 
 ---
 
@@ -361,6 +368,8 @@ Skills with no explicit dependencies (standalone):
 | business-model-canvas | Strategy | Standalone framework |
 | blue-ocean-strategy | Strategy | Standalone framework |
 | jobs-to-be-done | Strategy | Standalone framework |
+| challenger-sale | Strategy | Teach-Tailor-Take Control methodology |
+| never-split-the-difference | Strategy | FBI negotiation framework |
 | docker-compose | Dev Tools | Local dev setup |
 | data-analysis | Business | Can combine with any data source |
 
@@ -390,7 +399,7 @@ grep -l "DEPENDENCY_GRAPH" *.md
 ### Last Validated
 
 - **Date:** 2026-03-15
-- **Skill Count:** 45 (2 stable, 43 active)
+- **Skill Count:** 49 (2 stable, 47 active)
 - **Mermaid:** Renders correctly
 - **Cross-links:** SKILLS_INDEX.md, README.md
 

@@ -2,7 +2,7 @@
   "name": "portfolio-deal-linker-skill",
   "version": "1.0.0",
   "category": "Business",
-  "dependencies": ["portfolio-artifact-skill", "deal-momentum-analyzer-skill", "prospect-research-to-cadence-skill", "meddic-call-prep-auto-skill", "hubspot-revops-skill"],
+  "depends_on": ["portfolio-artifact-skill", "deal-momentum-analyzer-skill", "prospect-research-to-cadence-skill", "meddic-call-prep-auto-skill", "hubspot-revops-skill"],
   "mcp_tools": [
     "hubspot_search_deals",
     "hubspot_get_deal",
