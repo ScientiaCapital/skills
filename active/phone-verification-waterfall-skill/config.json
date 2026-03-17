@@ -65,7 +65,7 @@
     "first_conversion CONTAINS ['Pearl', 'setup', 'Connect', 'signup']",
     "company.device_count >= 1",
     "is_channel = true",
-    "hubspot_owner_id IN ['82625923', '423155215', 'Ron*', 'Anthony*']"
+    "hubspot_owner_id IN ['82625923', '423155215', '190030668']"
   ],
   "icp_verticals": {
     "higher_education": 90,

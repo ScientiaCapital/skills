@@ -25,7 +25,7 @@ Automate the full prospect research → outreach pipeline. Takes a company name,
 
 <success_criteria>
 - Company enriched with firmographics, tech stack, news, and Epiphan use case angle
-- 3-5 decision-maker contacts identified (VP/Director/Dean level = economic buyers)
+- 3-5 ATL decision-maker contacts identified per approved title patterns (VP/Director/Dean/Chief/Provost = economic buyers; Managers flagged as GRAY for manual review)
 - Personalized 3-touch email sequence drafted per contact
 - Call script with MEDDIC discovery hooks generated
 - Draft presented for Tim's approval BEFORE any sequence loading
@@ -78,18 +78,30 @@ Clay acts as a **waterfall fallback** — it aggregates 50+ data providers. Use 
 - Company `device_count >= 1` in Epiphan CRM
 - `engagement_overview` contains product usage
 - `is_channel = true`
-- `hubspot_owner_id` IN ('82625923', '423155215') — These are AEs (Lex Evans, Phil Sanders). Also exclude Ron and Anthony's deals.
+- `hubspot_owner_id` IN ('82625923', '423155215', '190030668') — AEs: Lex Evans, Ron Epstein, Phillip Sandler
 
 **OPERATING PRINCIPLE:** NEVER chase deals or opportunities attached to AEs Lex, Phil, Ron, or Anthony. Tim is NET-NEW only.
 
 ### 1c. Contact Discovery
 Use `apollo_mixed_people_api_search` with filters:
-- **Titles:** VP, Director, Dean, Manager of AV/IT/Media/Instructional Technology
+- **Titles (ATL-only):** VP, Director, Dean, CIO, CTO, CFO, Provost, Superintendent, Court Administrator, City Manager, Senior Pastor
+- **Gray Zone Titles (flag for review):** Manager (AV/Facilities/IT) — include ONLY if Apollo confirms reports to Director+ AND has delegated budget >$25K
+- **Exclude (NEVER ATL):** Warehouse Manager, Network Manager, Systems Administrator, AV Technician, Graphic Design Instructor, Program Administrator, Web Designer, Classroom Support, Lab Coordinator, Maintenance, Building Engineer, Multimedia Services Manager, Video Production Specialist, Streaming Crew
 - **Seniority:** director, vp, c_suite
 - **Departments:** IT, engineering, operations, education
 - **Limit:** 3-5 contacts per company
 
 For each contact, run `apollo_people_match` to get verified email + phone.
+
+### ATL/BTL Classification (applied to each discovered contact)
+Classify each contact using approved title patterns (CLAUDE.md § ATL/BTL Classification v1.0):
+- **ATL:** Chief, VP, Director, Dean, Provost, Superintendent, Court Administrator, City Manager, Senior Pastor, Executive Pastor
+- **BTL:** Technician, Specialist, Coordinator, Support, Administrator (Systems/Network/Database), Engineer (AV/Network/Systems), Operator, Instructor/Professor/Faculty, Designer, Assistant, Clerk (non-Court Admin), Volunteer, Intern, Student, Resident, Help Desk
+- **NEVER ATL:** Warehouse Manager, Network Manager, Systems Administrator, AV Technician, Graphic Design Instructor, Program Administrator, Web Designer, Classroom Support, Lab Coordinator, Maintenance, Building Engineer, Multimedia Services Manager, Video Production Specialist, Streaming Crew
+- **GRAY:** Manager (AV/Facilities/IT) — ATL only if reports to Director+ AND has delegated budget >$25K. Flag for Tim's manual review before sequence load
+
+Tag each contact: `atl_btl_tier = 'ATL' | 'BTL' | 'GRAY'`
+Only ATL contacts are auto-approved for sequence loading. GRAY contacts require Tim's explicit approval. BTL contacts are deprioritized (included in batch but called last).
 
 For contacts where `apollo_people_match` returns no phone number, fall back to Clay's `find-and-enrich-contacts-at-company` for phone waterfall.
 
@@ -156,7 +168,7 @@ COMPANY INTEL:
 
 CONTACTS (ready for sequence):
 ┌──────────────────────────────────────────┐
-│ 1. [Name] — [Title]                      │
+│ 1. [Name] — [Title] [ATL/GRAY/BTL]       │
 │    Email: [...] | Phone: [...]           │
 │    LinkedIn: [...]                        │
 │    Personalization hook: [...]            │
@@ -210,4 +222,5 @@ On approval:
 - `sales-revenue-skill` — Email templates, lead scoring tiers, MEDDIC framework
 - `hubspot-revops-skill` — Golden Rules filter logic, HubSpot query patterns
 - `research-skill` — Competitive intelligence, firmographic research patterns
+- `CLAUDE.md § ATL/BTL Classification v1.0` — Approved title keyword patterns for ATL/BTL/Gray classification (2026-03-17)
 </dependencies>

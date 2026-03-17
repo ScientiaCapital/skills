@@ -127,8 +127,8 @@ WHERE lifecyclestage NOT IN ('customer')
   AND device_count < 1
   AND is_channel = false
 
--- Target only Lex, Phil, Ron, Anthony (AE territories)
-  AND hubspot_owner_id IN (82625923, 423155215)
+-- Target only AE territories (Lex Evans, Ron Epstein, Phillip Sandler)
+  AND hubspot_owner_id IN (82625923, 423155215, 190030668)
 
 -- Optionally segment by company size, industry, location
 ```

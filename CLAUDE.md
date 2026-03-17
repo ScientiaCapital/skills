@@ -39,6 +39,21 @@ skills/
     └── SKILL_TEST_MATRIX.md  # Activation test results
 ```
 
+## HubSpot Configuration
+
+- **Portal ID:** `21530819`
+- **Contact Record URL format:** `https://app.hubspot.com/contacts/21530819/record/0-1/{contactId}`
+- **Company Record URL format:** `https://app.hubspot.com/contacts/21530819/record/0-2/{companyId}`
+- **Deal Record URL format:** `https://app.hubspot.com/contacts/21530819/record/0-3/{dealId}`
+
+Always use portal ID `21530819` when generating HubSpot links. Never use `4366444`.
+
+## Email & Draft Staging
+
+- **Default send-from:** `tkipper@epiphan.com`
+- **Gmail Draft Workflow:** When building call lists, ALWAYS create Gmail drafts via `gmail_create_draft` for every lead. Tim's workflow: call → open draft → review/edit → send.
+- **Never use:** robert@epiphan.com or any other sender
+
 ## For Individual Projects
 
 To use a skill in another project, either:
@@ -59,6 +74,75 @@ To use a skill in another project, either:
 ## Available Skills
 
 See SKILLS_INDEX.md for the complete list.
+
+---
+
+## ATL / BTL Decision-Maker Classification — Epiphan Video
+**Last Updated: 2026-03-17** | **Approved by: Tim Kipper** | **Version: 1.0**
+
+> **Core Principle:** ATL = the person who can sign a purchase order or approve budget for AV/video equipment. If they need someone else's approval to spend, they're BTL. "Manager" is NOT automatically ATL — it depends on whether they hold P&L / budget authority.
+
+### Universal ATL Title Keywords (Cross-Vertical — Budget Authority)
+Chief (CIO, CTO, CFO, COO) • Vice President (VP, AVP, SVP, EVP) • President • Provost • Vice Provost •
+Superintendent • Director (of IT, Technology, Facilities, Academic Technology, Procurement, Materials Mgmt,
+Medical Education, Court Administration) • Dean • Court Administrator • Clerk of Court (Federal) •
+City Manager • County Manager • Senior Pastor • Executive Pastor
+
+### Universal BTL Title Keywords (No Budget Authority)
+Technician • Specialist • Coordinator • Support • Administrator (Systems/Network/Database) •
+Engineer (AV/Network/Systems) • Operator • Instructor/Professor/Faculty •
+Designer (Learning/Instructional/Graphic) • Assistant • Clerk (non-Court Admin) •
+Volunteer • Intern • Student • Resident • Help Desk
+
+### NEVER ATL (Regardless of Vertical)
+Warehouse Manager • Network Manager • Systems Administrator • AV Technician •
+Graphic Design Instructor • Program Administrator • Web Designer •
+Classroom Support • Lab Coordinator • Maintenance • Building Engineer •
+Multimedia Services Manager • Video Production Specialist • Streaming Crew
+
+### Gray Zone — Requires Manual Review
+- **Manager (AV/Facilities/IT)** — ATL only if reports to Director+ AND has delegated budget authority >$25K
+- **Department Chair** — ATL at small institutions; BTL at large universities
+- **Director of Educational Technology** — depends on reporting line (Provost = ATL; IT VP = maybe BTL)
+- **Program Director** — ATL only if department-level budget holder; BTL if coordination role
+
+### Vertical-Specific ATL Patterns
+
+**Higher Ed (ICP 90):** CIO • VP of IT • AVP for IT • Provost • VP Academic Affairs • Vice Provost Teaching & Learning • Director of Academic/Instructional Technology • Director of IT Services • Dean • CTO
+
+**Courts/Legal (ICP 85):** Clerk of Court • Court Administrator • Director of Court Administration • Court Executive Director • Chief Judge • Director of Finance & Administration
+
+**Government (ICP 80):** City Manager • Deputy City Manager • IT Director/CIO • Director of Procurement • County Administrator • Director of Finance
+
+**Corporate AV (ICP 80):** VP of Facilities • VP of IT/CIO • VP of Corporate Communications • VP of Operations • Director of Facilities Operations • Director of IT Infrastructure • Director of Corporate Events • Procurement Director
+
+**Healthcare (ICP 75):** CFO • CIO • COO • VP of Operations • Hospital Administrator • Director of Materials Management • Surgical Services Director • Director of Medical Education
+
+**Houses of Worship (ICP 70):** Senior Pastor • Executive Pastor • Church Board/Elders • Finance Committee Chair • Building/Facilities Committee Chair
+
+**K-12 (ICP 65):** Superintendent • CTO/Director of Technology Services • Director of Instructional Technology • Business/Finance Director • Assistant Superintendent of Operations • Building Principal (<$10K)
+
+### Full Reference
+See `atl-btl-classification-draft.html` in skills folder for complete vertical breakdowns with BTL lists, gray zone rules, and examples.
+
+### ATL/BTL Remediation Backlog (from 2026-03-17 Audit)
+See `atl-btl-audit-report.html` for full findings. 7 issues across 20 tasks and 5 skills.
+
+**Phase 1 — This Week (by 2026-03-21): ✅ COMPLETED 2026-03-17**
+- [x] Patch `phone-verification-waterfall/SKILL.md` — Added ATL/BTL Classification Gate (Stage 1), NEVER ATL filter, ATL-first sorting (Stage 5), tier badges + counts in output
+- [x] Patch `prospect-research-to-cadence/SKILL.md` — Stage 1c: replaced "Manager of AV/IT/Media" with ATL-only title patterns; added ATL/BTL Classification subsection with full 16-item BTL list, 14-item NEVER ATL list, $25K Gray Zone gate
+- [x] Patch `sales-revenue/SKILL.md` — Added ATL/BTL Gate (Pre-Sequence) with full keyword lists (ATL 10, GRAY w/$25K threshold, BTL 16, NEVER 14); updated ENRICHER agent row for ATL-first discovery
+
+**Phase 2 — Next 2 Weeks (by 2026-04-01): ✅ COMPLETED 2026-03-17**
+- [x] Add ATL/BTL filter to `bdr-v3-prospect-enrich` scheduled task — Updated prompt with full ATL/BTL Classification Gate (ATL-first enrichment priority, NEVER ENRICH hard skip, tier tagging in notes)
+- [x] Add ATL/BTL filter to `bdr-v3-prospect-refresh` scheduled task — Updated prompt with ATL/BTL gate (ATL/GRAY-only Gmail drafts, NEVER PROSPECT hard filter, tier badges in output)
+- [x] Patch `meddic-call-prep-auto/SKILL.md` — Stage 2 Economic Buyer: added full ATL/BTL validation with all keyword lists (ATL 10, BTL 16, NEVER 14), $25K Gray Zone gate, EB identification logic, discovery questions for BTL-only calls
+- [x] Patch `deal-momentum-analyzer/SKILL.md` — Signal 3 (Stakeholder Breadth): ATL-tier requirement for full 15 points; 6-tier scoring table; penalty flag for deals with 0 ATL contacts; all keyword lists complete
+
+**Phase 3 — Next Month (by 2026-04-17): ✅ COMPLETED 2026-03-17**
+- [x] Add ATL coverage metric to `bdr-v3-friday-pipeline` — Updated prompt with ATL Coverage % calculation, 80% target, per-deal ATL/GRAY/BTL breakdown table, ⚠️ flag for deals with 0 ATL, full keyword lists (ATL 10, BTL 16, NEVER 14)
+- [x] Add ATL coverage metric to `bdr-v3-friday-sequence-audit` — Updated prompt with ATL Targeting % per sequence, 60% target, NEVER ATL removal alerts, per-sequence ATL/GRAY/BTL table, full keyword lists
+- [x] Add ATL/BTL breakdown to `bdr-v3-callable-lead-count` daily health check — Updated prompt with separate ATL/GRAY/BTL/NEVER ATL counts, ATL Runway metric (15 ATL dials/day), alert thresholds (ATL < 15 ⚠️, total < 50 🚨, NEVER ATL > 0 🔍)
 
 ---
 

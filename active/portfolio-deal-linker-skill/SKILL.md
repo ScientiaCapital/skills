@@ -50,7 +50,7 @@ deals (won + lost)        →  originated/influenced it  →  Update weekly dige
 Use `hubspot_search_deals` with filters:
 - `dealstage` IN ('closedwon', 'closedlost')
 - `closedate` >= last run timestamp (stored in `~/.claude/portfolio/last-run.json`)
-- Exclude channel deals (`is_channel = true`) and owned by IDs '82625923', '423155215'
+- Exclude channel deals (`is_channel = true`) and owned by AE IDs '82625923', '423155215', '190030668' (Lex Evans, Ron Epstein, Phillip Sandler)
 
 For each deal, pull:
 | Field | Purpose |

@@ -47,10 +47,21 @@ Activity: emails/calls   →  Classify G/Y/R         →  Gmail draft (optional)
 
 ## Stage 1: Data Collection
 
-### 1a. Pull All Open Deals
-Use `hubspot_search_deals` with filters:
-- `dealstage` NOT IN closed-won, closed-lost
-- Sort by `closedate` ascending (nearest close dates first)
+### 1a. Pull All Open Deals (Owner OR Collaborator)
+Use `search_crm_objects` (HubSpot MCP) with **two OR-ed filter groups** to capture both owned and collaborated deals:
+
+**FilterGroup 1 — Tim is COLLABORATOR:**
+- `hs_all_collaborator_owner_ids` CONTAINS_TOKEN `87486452`
+- `hs_is_closed` EQ `false`
+
+**FilterGroup 2 — Tim is OWNER:**
+- `hubspot_owner_id` EQ `87486452`
+- `hs_is_closed` EQ `false`
+
+**Properties to request:**
+`dealname`, `dealstage`, `amount`, `hubspot_owner_id`, `hs_lastmodifieddate`, `notes_last_updated`, `closedate`, `pipeline`, `createdate`, `hs_all_collaborator_owner_ids`, `num_associated_contacts`, `hs_deal_stage_probability`
+
+Sort by `hs_lastmodifieddate` DESCENDING. Limit 100.
 
 For each deal, capture:
 | Field | HubSpot Property |
@@ -60,19 +71,20 @@ For each deal, capture:
 | Stage | `dealstage` |
 | Close date | `closedate` |
 | Create date | `createdate` |
-| Last activity | `notes_last_updated` or `hs_last_activity_date` |
+| Last activity | `notes_last_updated` or `hs_lastmodifieddate` |
 | Owner | `hubspot_owner_id` |
+| Collaborators | `hs_all_collaborator_owner_ids` |
 | Associated contacts | via associations |
 | Associated company | via associations |
 
-### 1a-bis. AE Exclusion Filter
-Tim focuses on NET-NEW pipeline. **Exclude all deals owned by Account Executives:**
+### 1a-bis. Deal Role Tagging
+After pulling deals, tag each deal with Tim's role:
+- **OWNER** — `hubspot_owner_id` = `87486452` → Tim owns the deal directly
+- **COLLABORATOR** — `hs_all_collaborator_owner_ids` contains `87486452` but `hubspot_owner_id` ≠ `87486452` → Tim is helping close (AE-owned or SE-owned deal)
 
-- `hubspot_owner_id` NOT IN ('82625923', '423155215') — Exclude AE-owned deals (Lex Evans, Phil Sanders, Ron, Anthony)
+**Display both types** in the momentum report. Collaborator deals where an AE owns them (owner IDs 82625923 Lex Evans, 423155215 Ron Epstein, 190030668 Phillip Sandler) are deals Tim sourced or is actively supporting — they ARE his pipeline contribution and must be tracked.
 
-**Rationale:** Deals already owned by AEs are outside Tim's scope. For handoff context only, use the single-deal lookup: "deal health [deal name]"
-
-**Validation:** After pulling deals, verify the Owner field against the AE blocklist to prevent AE deals from scoring.
+**Exclude from scoring** only deals where Tim is NEITHER owner NOR collaborator (i.e., deals that somehow appeared but have no Tim involvement).
 
 ### 1b. Pull Activity History
 For each deal's associated company, use `ask_agent`:
@@ -118,12 +130,23 @@ Stage medians (calibrate from Tim's historical data):
 | > 21 days | 0 |
 
 ### Signal 3: Stakeholder Breadth (15 points)
+**ATL/BTL Validation Required (see CLAUDE.md § ATL/BTL Classification v1.0):**
+For each deal's associated contacts, classify by title before scoring:
+- **ATL:** Chief, VP, Director, Dean, Provost, Superintendent, Court Administrator, City Manager, Senior Pastor, Executive Pastor
+- **GRAY:** Manager (AV/Facilities/IT) — only counts as ATL-equivalent if confirmed budget >$25K
+- **BTL:** Technician, Specialist, Coordinator, Support, Administrator (Systems/Network/Database), Engineer, Operator, Instructor/Faculty, Designer, Assistant, Clerk (non-Court Admin), Volunteer, Intern, Student, Resident, Help Desk
+- **NEVER ATL:** Warehouse Manager, Network Manager, Systems Administrator, AV Technician, Graphic Design Instructor, Program Administrator, Web Designer, Classroom Support, Lab Coordinator, Maintenance, Building Engineer, Multimedia Services Manager, Video Production Specialist, Streaming Crew
+
 | Contacts engaged | Points |
 |-----------------|--------|
-| 3+ contacts, including EB | 15 |
-| 2+ contacts | 10 |
-| 1 contact (champion only) | 5 |
+| 3+ contacts, including at least 1 ATL-tier contact (confirmed EB) | 15 |
+| 2+ contacts with at least 1 ATL-tier | 12 |
+| 2+ contacts but ALL are BTL/GRAY (no confirmed ATL) | 7 |
+| 1 contact (champion only, regardless of tier) | 5 |
+| 1+ contacts but ALL are NEVER ATL titles | 2 |
 | 0 active contacts | 0 |
+
+**Penalty flag:** If a deal has 0 ATL-tier contacts, add a ⚠️ flag in the report: "NO ECONOMIC BUYER IDENTIFIED — deal at risk of stalling at Decision Maker stage. Action: ask champion to intro Director+/VP+."
 
 ### Signal 4: Call Momentum (15 points)
 | Activity signal | Points |

@@ -23,14 +23,11 @@ Used by phone-verification-waterfall-skill and prospect-research-to-cadence-skil
 - **Reason:** Channel partners (resellers, integrators) have a separate sales process. BDR should not prospect these.
 
 ### 5. Account Executive Ownership
-- Contact `hubspot_owner_id` IN (`'82625923'`, `'423155215'`)
-  - 82625923 = Lex Finkle (AE)
-  - 423155215 = Phil Hutchins (AE)
+- Contact `hubspot_owner_id` IN (`'82625923'`, `'423155215'`, `'190030668'`)
+  - 82625923 = Lex Evans (AE)
+  - 423155215 = Ron Epstein (AE)
+  - 190030668 = Phillip Sandler (AE)
 - **Reason:** These leads are owned by Account Executives. No BDR lead theft.
-
-### 6. Other Account Executive Ownership (Pending Verification)
-- Contact `hubspot_owner_id` matches pattern `'Ron*'` OR `'Anthony*'`
-- **Reason:** Likely Account Executives (Ron, Anthony). Verify exact IDs and add to filter when confirmed.
 
 ---
 
@@ -43,7 +40,7 @@ WHERE
   phone IS NULL
   AND phone != ''
   AND lifecyclestage != 'customer'
-  AND hubspot_owner_id NOT IN ('82625923', '423155215')
+  AND hubspot_owner_id NOT IN ('82625923', '423155215', '190030668')
   AND first_conversion NOT LIKE '%Pearl%'
   AND first_conversion NOT LIKE '%setup%'
   AND first_conversion NOT LIKE '%Connect%'

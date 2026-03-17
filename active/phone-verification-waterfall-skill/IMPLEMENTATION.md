@@ -23,10 +23,9 @@ PY
 
 ### 2. Confirm HubSpot Owner IDs
 The skill references these AE IDs for exclusion:
-- 82625923 (Lex Finkle)
-- 423155215 (Phil Hutchins)
-- Ron* (pattern)
-- Anthony* (pattern)
+- 82625923 (Lex Evans)
+- 423155215 (Ron Epstein)
+- 190030668 (Phillip Sandler)
 
 **Verify these are correct:**
 ```bash

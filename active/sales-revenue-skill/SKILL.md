@@ -62,6 +62,15 @@ Apollo Discovery → Lead Scoring → ICP Filtering → Apollo Sequences → Cla
 | SILVER | Content download (whitepapers), free guide download, Facebook Lead Ads from video/streaming content | Week 1 | Standard Apollo sequence | First conversion contains 'setup', 'Pearl', 'Connect', 'signup'; product usage in engagement_overview |
 | BRONZE | Webinar/lecture symposium attendance, newsletter signup | Nurture | Drip campaign + nurture flow | |
 
+### ATL/BTL Gate (Pre-Sequence)
+Before adding ANY contact to an Apollo sequence, classify by title:
+- **ATL (auto-approve for sequence):** Chief, VP, Director, Dean, Provost, Superintendent, Court Administrator, City Manager, Senior Pastor, Executive Pastor
+- **GRAY (require Tim's review):** Manager (AV/Facilities/IT) — only if confirmed reports to Director+ with budget >$25K
+- **BTL (deprioritize):** Technician, Specialist, Coordinator, Support, Administrator (Systems/Network/Database), Engineer (AV/Network/Systems), Operator, Instructor/Professor/Faculty, Designer (Learning/Instructional/Graphic), Assistant, Clerk (non-Court Admin), Volunteer, Intern, Student, Resident, Help Desk
+- **NEVER sequence (hard block):** Warehouse Manager, Network Manager, Systems Administrator, AV Technician, Graphic Design Instructor, Program Administrator, Web Designer, Classroom Support, Lab Coordinator, Maintenance, Building Engineer, Multimedia Services Manager, Video Production Specialist, Streaming Crew
+
+See CLAUDE.md § ATL/BTL Classification v1.0 for full vertical-specific patterns.
+
 ### Lead Scoring (0-100) — Epiphan Video
 
 ```python
@@ -81,7 +90,7 @@ scoring_factors = {
 |-------|------|----------|--------|
 | RESEARCHER | Company intel, tech stack (Extron SMP EOL?, Blackmagic, Crestron, vMix, Teradek presence) | Clay MCP | Enriched company data + competitor intel |
 | QUALIFIER | ICP fit scoring (vertical + device readiness) | Epiphan CRM MCP + ask_agent | 0-100 score + tier |
-| ENRICHER | Contact discovery (IT/AV Director/Manager, Procurement) | Apollo MCP | Verified emails, org chart, buying signals |
+| ENRICHER | Contact discovery — ATL-first: VP/Director/Dean/CIO/CTO/Provost (ATL), then Manager (GRAY — flag for review). Exclude NEVER-ATL titles per CLAUDE.md § ATL/BTL v1.0 | Apollo MCP | Verified emails, org chart, buying signals, ATL/BTL tier |
 | WRITER | Personalized Apollo sequences (Pearl pain points, CMS integrations) | Apollo MCP | Multi-step email campaign |
 | ANALYZER | Reply intent (demo request vs nurture vs disqualify) | Gmail MCP + Epiphan CRM MCP | Route to next action |
 | ROUTER | Orchestration (add to sequence, update HubSpot, schedule follow-up) | Calendar MCP + Epiphan CRM MCP | Next-best-action |
@@ -325,6 +334,7 @@ See: `challenger-sale-skill`, `never-split-the-difference-skill`, `jobs-to-be-do
 - **Enrichment:** Apollo MCP (contact discovery), Clay MCP (company intel + competitor tech stack)
 - **Discovery Tools:** Gmail MCP (reply detection), Google Calendar MCP (schedule follow-ups)
 - **Channel Partners:** AVI-SPL, Diversified, CTI, CCS Presentation Systems, Ford AV (cross-check is_channel=true to exclude)
+- **ATL/BTL Classification:** See CLAUDE.md § ATL/BTL Classification v1.0 — approved title patterns for decision-maker identification across all 7 ICP verticals (2026-03-17)
 - **Related Skills:** lead-qualification-skill, demo-script-skill, objection-handling-skill
 - **Products:** Pearl-2, Pearl Mini, Pearl Nano, Pearl Nexus, EC20 PTZ, Epiphan Connect
 - **Verticals:** Higher Ed (90), Courts/Legal (85), Government (80), Corporate AV (80), Healthcare (75), Houses of Worship (70), K-12 (65)
@@ -339,7 +349,7 @@ See: `challenger-sale-skill`, `never-split-the-difference-skill`, `jobs-to-be-do
 - `company.device_count >= 1` — Has active devices, route to AE/CSM
 - `engagement_overview` contains product usage data — Already engaged, notify AE
 - `is_channel = true` — Channel partner, route to channel manager
-- `hubspot_owner_id IN ('82625923', '423155215')` — Owned by AE Lex, Phil, Ron, Anthony (respect ownership)
+- `hubspot_owner_id IN ('82625923', '423155215', '190030668')` — Owned by AE Lex Evans, Ron Epstein, Phillip Sandler (respect ownership)
 
 **Action:** Before adding to Apollo sequence, query Epiphan CRM MCP to validate lead state.
 

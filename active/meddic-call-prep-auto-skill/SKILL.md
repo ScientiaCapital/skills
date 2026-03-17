@@ -99,7 +99,7 @@ Extract: what was discussed, commitments made, objections raised, next steps pro
   - `lifecyclestage = 'customer'` → Route to AE/account manager, not Tim's call
   - `device_count >= 1` → Existing customer, route to account manager
   - `is_channel = true` → Channel partner, route to channel manager
-  - `hubspot_owner_id` IN ('82625923', '423155215') → AE-owned deal, not Tim's to prep
+  - `hubspot_owner_id` IN ('82625923', '423155215', '190030668') → AE-owned deal (Lex Evans, Ron Epstein, Phillip Sandler), not Tim's to prep
 
 **Exception:** If Tim explicitly says 'prep me for [company]' and the company is flagged, generate the brief but add a ⚠️ WARNING banner at the top: 'This is an EXISTING customer/channel partner/AE deal. Coordinate with the owner before reaching out.'
 
@@ -114,8 +114,13 @@ Map gathered context into MEDDIC framework:
 
 ### E — Economic Buyer
 - **Known:** Map attendees by seniority → VP/Director/Dean = likely EB
+- **ATL/BTL Validation (MANDATORY — see CLAUDE.md § ATL/BTL Classification v1.0):**
+  - **Confirmed EB (ATL tier):** Title matches Chief (CIO, CTO, CFO, COO), VP (AVP, SVP, EVP), President, Provost, Vice Provost, Superintendent, Director (of IT, Technology, Facilities, Academic Technology, Procurement, Materials Mgmt, Medical Education, Court Administration), Dean, Court Administrator, Clerk of Court (Federal), City Manager, County Manager, Senior Pastor, Executive Pastor → Mark EB as ✅ IDENTIFIED
+  - **Gray Zone — confirm budget authority:** Manager (AV/Facilities/IT) — only ATL if reports to Director+ AND has delegated budget >$25K. Ask: "Does [name] control the budget for this purchase, or do they need approval from someone above them?"
+  - **NOT an EB (BTL tier):** Technician, Specialist, Coordinator, Support, Administrator (Systems/Network/Database), Engineer (AV/Network/Systems), Operator, Instructor/Professor/Faculty, Designer (Learning/Instructional/Graphic), Assistant, Clerk (non-Court Admin), Volunteer, Intern, Student, Resident, Help Desk → Mark EB as ⚠️ NOT IDENTIFIED — need to find the person who signs the PO
+  - **NEVER an EB:** Warehouse Manager, Network Manager, Systems Administrator, AV Technician, Graphic Design Instructor, Program Administrator, Web Designer, Classroom Support, Lab Coordinator, Maintenance, Building Engineer, Multimedia Services Manager, Video Production Specialist, Streaming Crew → These roles CANNOT approve budget. Do not list them as potential EBs.
 - **Unknown attendees:** Flag for discovery ("Who controls the budget for this?")
-- **Signal:** If only technical staff on call, EB isn't engaged yet
+- **Signal:** If only BTL/technical staff on call, EB isn't engaged yet — flag as ⚠️ and add discovery question: "Who would sign off on this purchase?"
 
 ### D — Decision Criteria
 - **Known:** From prior call notes, form submissions, or deal properties
