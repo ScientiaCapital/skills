@@ -37,7 +37,7 @@ When to activate: user asks about negotiation, tactical empathy, calibrated ques
 - [ ] Mirroring used to get prospect to elaborate without direct questions
 - [ ] Labels accurately name the other side's emotions/concerns
 - [ ] Negotiation avoids compromise (splitting the difference = both sides lose)
-- [ ] Ackerman model used for any price negotiation (65% → 85% → 95% → 100%)
+- [ ] Ackerman model used for price negotiation (seller: anchor 130%+, concede down; buyer: 65% → 85% → 95% → 100%)
 - [ ] Black Swan discovery attempted — unknown unknowns surfaced
 </success_criteria>
 
@@ -164,29 +164,36 @@ This is Chris Voss's single highest-response-rate email template.
 <ackerman_model>
 # The Ackerman Bargaining System
 
-## Setup
-1. Set your target price (your actual goal)
-2. Calculate: 65% → 85% → 95% → 100% of target
-3. Prepare a non-monetary concession for the final round
+## Setup — Seller's Ackerman (You Are the Seller)
+1. Set your target price (what you want to close at)
+2. **Anchor HIGH** — your first price should be above target (120-150% of target)
+3. Concede DOWN in decreasing increments toward your target
+4. Prepare a non-monetary concession for the final round
 
-## Execution
+**Critical:** The classic Ackerman (65%→85%→95%→100%) is the BUYER's model. As a seller, you flip it — anchor high and concede down.
 
-| Round | Offer | Why |
+## Seller's Execution
+
+| Round | Price | Why |
 |-------|-------|-----|
-| 1 | 65% of target | Extreme anchor — sets their expectations |
-| 2 | 85% of target | Show "willingness" — 20% jump feels generous |
-| 3 | 95% of target | Smaller jump — signals you're near your limit |
-| 4 | 100% of target | Use a precise number ($47,823 not $48,000) + add non-monetary item |
+| 1 | 130-150% of target | High anchor — sets their reference point |
+| 2 | 115% of target | Show "willingness" — meaningful concession |
+| 3 | 105% of target | Smaller concession — signals you're near floor |
+| 4 | 100% of target | Precise number ($48,217 not $48,000) + add non-monetary item |
 
-**Why the precise number:** $47,823 signals research and calculation. $48,000 signals a round estimate you'd negotiate down from.
+**Why the precise number:** $48,217 signals calculation and a real floor. $48,000 signals a round number they'll negotiate down from.
 
-**The non-monetary item:** At your final offer, include something non-monetary ("We can also include [training/extended warranty/priority support]"). This signals: "I've given everything I have in dollars."
+**The non-monetary item:** At your final price, throw in something non-monetary ("We'll include on-site installation and training"). This signals: "I've gone as low as I can on price."
 
-## Example (selling $50K solution, target: $48K)
-- First offer: $31,200 (65%)
-- Second: $40,800 (85%)
-- Third: $45,600 (95%)
-- Final: $47,823 (precise) + "We'll include on-site training"
+## Example (selling Pearl-2 fleet, target: $48K)
+- List price: $62,000 (130% anchor)
+- First concession: $55,200 (115%) — "I can do this if we close this quarter"
+- Second: $50,400 (105%) — "This is pushing it, let me check with my manager"
+- Final: $48,217 (precise) + "We'll include on-site installation and 1 year priority support"
+
+## Buyer's Ackerman (When You Are Buying)
+If negotiating as the buyer (e.g., vendor contracts), use the classic model:
+- Open at 65% of your target → 85% → 95% → 100% with precise final number
 </ackerman_model>
 
 <email_templates>
@@ -242,6 +249,20 @@ Have you given up on [solving their specific problem]?
 Would it be a terrible idea to schedule 15 minutes next week?
 ```
 (Invites "No, that wouldn't be terrible" = "Yes, let's schedule it")
+
+## 5. Voicemail Script (FM DJ Voice)
+Use the late-night FM DJ voice — slow, calm, downward inflection. Under 30 seconds.
+```
+"[Name], this is Tim from Epiphan Video. [Pause]
+
+I've been talking to [vertical] teams about [specific challenge] and
+your name came up as someone who might be dealing with the same thing.
+
+Not sure if it's relevant — but if it is, I'm at [number].
+
+Either way, no worries."
+```
+**Why it works:** Accusation audit is embedded ("not sure if it's relevant"). The "either way, no worries" removes pressure (no-oriented). FM DJ voice builds trust on a channel where 85%+ of dials land.
 </email_templates>
 
 <integration_points>
@@ -294,9 +315,16 @@ Front-run their likely concerns:
 - "Who else needs to weigh in on this?"
 - "How do you typically budget for courtroom technology?"
 
+**Procurement:**
+- "What procurement vehicle does your court typically use for technology purchases?" (state contract, co-op like NASPO/AEPA, or formal RFP?)
+- "What's the threshold that triggers a formal bidding process?" (critical — a $18K pilot may require different procurement than a $5K eval)
+
 **Stalled/Objection:**
 - "What would need to be true for this to make sense before the next fiscal year?"
 - "How am I supposed to meet those requirements with the timeline you've described?" (makes them solve your problem)
+
+**Competitor:**
+- "What would you need to see from us that you're not getting from your current Zoom setup?"
 
 ### Labels to Deploy
 - "It seems like reliability during live proceedings is non-negotiable for your team."

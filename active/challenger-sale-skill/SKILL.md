@@ -68,7 +68,7 @@ Demonstrate you understand their world. NO product mentions.
 ## Step 2: The Reframe
 Introduce an insight that challenges their current assumption.
 - Pattern: "Most [personas] believe [common assumption]. But [data/evidence] shows [surprising reality]."
-- "Most teams think their biggest cost is hardware. But our research shows 73% of total cost is in the hours your staff spends troubleshooting consumer-grade encoding during live events."
+- "Most teams think their biggest cost is hardware. But what we hear from AV teams managing large deployments is that the majority of total cost is actually staff time — troubleshooting, re-recording, and fielding complaints."
 
 ## Step 3: Rational Drowning
 Data and evidence that makes the problem undeniable. Stack 2-3 proof points.
@@ -216,15 +216,17 @@ JTBD (What job?) → Blue Ocean (Where's the space?) → BMC (How to deliver?)
 You're managing AV across dozens of classrooms — maybe multiple buildings or campuses — with faculty who just want to walk in and teach. Meanwhile, students expect every lecture recorded reliably, and your team is the one on the hook when something doesn't capture. The pressure to deliver consistent hybrid delivery at scale is real, and it only grows each semester.
 
 ### Step 2: The Reframe
-Most institutions think their biggest lecture capture cost is hardware. But our research across 200+ universities shows 68% of total cost is staff time — troubleshooting software encoders, rebooting crashed PCs, and re-recording failed sessions. The hardware line item is the visible cost; the invisible cost is your team's hours.
+Most institutions think their biggest lecture capture cost is hardware. But what we consistently hear from AV teams managing 50+ rooms is that the majority of total cost is staff time — troubleshooting software encoders, rebooting crashed PCs, and re-recording failed sessions. The hardware line item is the visible cost; the invisible cost is your team's hours.
 
 ### Step 3: Rational Drowning
-- Average software encoder crash rate: 12% of scheduled sessions
-- Staff troubleshooting time per incident: 45 minutes
-- At 50 rooms x 4 sessions/day x 180 teaching days: ~36,000 sessions/year
-- 12% failure rate = ~4,320 incidents
-- At 45 min per incident, only ~10% need hands-on intervention = ~432 incidents = ~324 staff-hours lost annually
-- At $42/hr fully loaded cost: **$13,600/year in invisible labor** — before you count the re-recording sessions, faculty complaints, or student escalations
+Walk them through the math using THEIR numbers (ask during discovery or estimate conservatively):
+- "How often do your software encoders crash or fail to record?" (typical range we hear: 5-15% of sessions)
+- "How long does it take your team to troubleshoot each incident?" (typical: 30-60 min)
+- At 50 rooms × 4 sessions/day × 180 teaching days: ~36,000 sessions/year
+- Even at a conservative 5% failure rate = ~1,800 incidents requiring some response
+- Not all are hands-on, but ask: "How many of those does your team physically respond to?"
+- Multiply their answer × their avg troubleshooting time × their loaded labor rate
+- **Key:** Let THEM fill in the numbers. The math is more powerful when it's their data, not yours. Never cite research you can't produce.
 
 ### Step 4: Emotional Impact
 Your AV team is the one getting the call at 8 AM Monday when Professor Chen's Friday lecture didn't record. The faculty member isn't calling the software vendor — they're calling your team. And when a semester's worth of recordings is spotty, it's your department's credibility on the line with the Provost, not the vendor's.
@@ -239,30 +241,34 @@ This is exactly what Pearl-2 was built for — a dedicated hardware encoder that
 
 | Stakeholder | Reframe Angle | Key Metric | CTA |
 |-------------|--------------|------------|-----|
-| **VP Academic Affairs** | "Cost of failed recordings = student complaints + accreditation risk" | $13.6K/yr hidden cost, 12% failure rate | Executive briefing |
-| **AV Director** | "Your team spends 324 hrs/yr on problems that shouldn't exist" | Staff hours recovered, single-pane management | Working session |
+| **VP Academic Affairs** | "Cost of failed recordings = student complaints + accreditation risk" | Staff hours lost, failure rate | Executive briefing |
+| **AV Director** | "Your team is troubleshooting problems that shouldn't exist" | Staff hours recovered, single-pane management | Working session |
 | **IT Security** | "No software agent = no attack surface, no OS patches to manage" | Zero endpoint footprint, HTTPS only | Reference call |
-| **Procurement** | "5-year TCO is 40% lower than software + PC refresh cycles" | TCO comparison, 5-year warranty option | Formal quote |
+| **Procurement** | "Compare 5-year TCO: hardware appliance vs software + PC refresh" | TCO comparison worksheet | Formal quote |
+
+### Competitive Reframe
+When prospect says "We're also talking to Panopto/Echo360/Kaltura":
+> "Those are strong platforms for content management. The question is what sits in the classroom doing the capture. Most CMS platforms rely on a software agent running on a PC — that's the layer where failures happen. Pearl integrates with Panopto, Kaltura, YuJa, and Canvas natively. The difference is what happens when the PC freezes mid-lecture."
+
+### LMS Integration Note
+First question every Higher Ed buyer asks: "Does it work with our LMS?"
+Pearl-2 integrates with Canvas, Blackboard, Moodle, Kaltura, Panopto, YuJa, and Echo360 via LTI/REST/RTMP. Lead with this in the Warmer if you know their stack.
 
 ### Cold Email (Challenger Style)
 
 ```
-Subject: Lecture capture costs at [University]
+Subject: Lecture capture at [University]
 
 [Name],
 
-Most AV teams assume their biggest lecture capture expense is hardware.
-But across 200+ universities we've studied, 68% of total cost is staff
-time — troubleshooting software crashes, re-recording failed sessions,
-fielding faculty complaints.
+Most AV teams managing 50+ classrooms tell us the same thing — their
+biggest lecture capture cost isn't hardware. It's staff time
+troubleshooting software crashes and re-recording failed sessions.
 
-At 50 classrooms, that's roughly 324 staff-hours and $13.6K/year in
-invisible labor.
+The pattern we see at R1 institutions: they're removing the software
+layer entirely and moving to appliance-based capture.
 
-Leading R1 institutions are solving this by removing the software layer
-entirely.
-
-Worth 15 minutes to compare notes?
+Worth 15 minutes to compare notes on what's working?
 
 [Signature]
 ```
