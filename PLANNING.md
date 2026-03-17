@@ -1,12 +1,55 @@
 # Skills Library Planning
 
-**Current Sprint:** P9 Complete — Full Library Audit & Fixes
-**Date:** 2026-03-15
+**Current Sprint:** P11 — Worked Examples + Metadata Refresh
+**Date:** 2026-03-17
 **Constraint:** M4 24GB RAM - max 5-6 parallel agents
 
 ---
 
 ## Active Work
+
+### P11: Worked Examples + Metadata Refresh (IN PROGRESS)
+
+**Date:** 2026-03-17
+**Scope:** STANDARD — parallel agents + DA audit + code review.
+
+| Task | Status |
+|------|--------|
+| Full pipeline test: JTBD→Blue Ocean→BMC→Challenger→NSTTD cold email | In Progress |
+| Add example_session to challenger-sale-skill (Higher Ed Pearl-2) | In Progress |
+| Add example_session + Negotiation One Sheet to NSTTD (Courts/Legal) | In Progress |
+| Update PLANNING.md (P10 + P11 entries) | In Progress |
+| Update observer files (QUALITY.md + ARCH.md → 49-skill state) | In Progress |
+| DA audit of new examples | Pending |
+| Code review + test suite | Pending |
+
+### P10: Strategy Cluster + Tech Debt Cleanup (COMPLETE)
+
+**Date:** 2026-03-16
+**Scope:** FULL — observer-full + 4 build agents + 3 simplify agents + DA audit + code reviewer. 34 files modified.
+
+| Task | Status |
+|------|--------|
+| Create challenger-sale-skill (Teach-Tailor-Take Control) | Done |
+| Create never-split-the-difference-skill (tactical empathy, Ackerman) | Done |
+| Cross-reference 5 strategy skills (JTBD ↔ Blue Ocean ↔ BMC ↔ Challenger ↔ NSTTD) | Done |
+| Add methodology_integration to sales-revenue-skill | Done |
+| Fix dependencies→depends_on key in 7 workflow skills | Done |
+| Fix "strategy canvas" trigger collision (miro vs blue-ocean) | Done |
+| Fix "dashboard" trigger collision (frontend-ui vs data-analysis) | Done |
+| Fix 7 one-way integrates_with references | Done |
+| Fix agent-teams category casing (dev-tools→Dev Tools) | Done |
+| Bulk up gtm-pricing-skill (80→332 lines) | Done |
+| Update SKILLS_INDEX, DEPENDENCY_GRAPH, CLAUDE.md, README (47→49) | Done |
+| Full DA audit + code review of all 49 skills | Done |
+| Simplify pass (3 parallel review agents) | Done |
+
+**Deliverables:**
+- 2 new skills: challenger-sale-skill, never-split-the-difference-skill
+- 5-skill strategy cluster with first-principles pipeline (JTBD → Blue Ocean → BMC → Challenger → NSTTD)
+- All tech debt from code review audit resolved
+- All 344 tests passing, 49 zips rebuilt, deployed
+- Commit: `1e2898f`
 
 ### P9: Full Library Audit & Fixes (COMPLETE)
 
@@ -218,23 +261,20 @@ All phases delivered. See [ARCHIVE.md](./ARCHIVE.md).
 
 ## Next Up
 
-All P1-P9 backlog items complete. Library is clean and production-ready.
+All P1-P11 backlog items complete. Library at 49 skills, all production-ready.
 
 **Completed milestones:**
-- [x] Auto-healing for broken skills (/heal-skill) — ✅ shipped as skill #38
-- [x] Skill usage analytics — ✅ shipped (PostToolUse hook + reporting script)
-- [x] Integration tests for skill activation — ✅ shipped (scripts/test-skills.sh)
-- [x] P6 observer debt cleanup — ✅ shipped
-- [x] P7 langgraph-agents v2.0.0 + trading-signals v2.1 — ✅ shipped
-- [x] P8 workflow wiring sprint — ✅ shipped (7 workflow skills wired to MCP)
-- [x] P9 full library audit — ✅ shipped (46/46 pass, all DA findings resolved)
+- [x] P9: Full library audit — 46/46 pass, all DA findings resolved
+- [x] P10: Strategy cluster (5 skills) + tech debt cleanup — 49/49 pass
+- [x] P11: Worked examples + metadata refresh
 
-**Potential P10 ideas (no priority assigned):**
+**Remaining low-priority items (no sprint assigned):**
+- [ ] config.json `name` field inconsistency (~12 with `-skill` suffix, ~35 without) — cosmetic
+- [ ] 18 config.json files missing optional `description` field
 - [ ] Add reference docs to 3 empty-ref workflow skills (deal-momentum, meddic-call-prep, portfolio-deal-linker)
-- [ ] Split crm-integration-skill into per-CRM skills if it grows past 500 lines again
-- [ ] Rebuild dist/ zips with latest changes
+- [ ] Split crm-integration-skill if it grows past 500 lines again (currently 496)
 - [ ] Explore new hook events: TaskCompleted, ConfigChange, Elicitation
-- [ ] Skill usage analytics review — identify unused skills for potential retirement
+- [ ] Strategy cluster shared reference file (reduce 5 pipeline diagram copies to 1)
 
 ---
 

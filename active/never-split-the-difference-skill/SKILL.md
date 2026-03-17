@@ -270,6 +270,71 @@ JTBD (What job?) → Blue Ocean (Where's the space?) → BMC (How does the model
 5. **Max 100 words** for cold outreach
 </integration_points>
 
+<example_session>
+## Example: State Court System — Tactical Empathy for Remote Testimony Deal
+
+**User:** Prepare NSTTD negotiation strategy for a discovery call with a state court IT director evaluating remote testimony video solutions
+
+### Accusation Audit (Pre-Call)
+Front-run their likely concerns:
+1. "You're probably thinking we're just another AV vendor who doesn't understand courtroom compliance requirements."
+2. "I imagine the last thing you need is a technology change during an active docket."
+3. "You might be wondering if we've actually worked with courts before, or if we're trying to sell you something designed for classrooms."
+[Pause — let them correct you. They'll soften and share their real concern.]
+
+### Calibrated Questions by Stage
+
+**Discovery (uncover the real problem):**
+- "What does a successful remote testimony session look like for your judges?"
+- "How does your team currently handle it when video quality drops mid-testimony?"
+- "What's the biggest challenge with your current setup?"
+
+**Decision Process:**
+- "What does your evaluation process look like for technology changes?"
+- "Who else needs to weigh in on this?"
+- "How do you typically budget for courtroom technology?"
+
+**Stalled/Objection:**
+- "What would need to be true for this to make sense before the next fiscal year?"
+- "How am I supposed to meet those requirements with the timeline you've described?" (makes them solve your problem)
+
+### Labels to Deploy
+- "It seems like reliability during live proceedings is non-negotiable for your team."
+- "It sounds like you've had a difficult experience with video technology in the past."
+- "It looks like the real concern isn't cost — it's risk to proceedings if something fails."
+- "It seems like your judges have strong opinions about how testimony technology should work."
+
+### "That's Right" Target Summary
+[Deliver this summary until they say "That's right":]
+"So what I'm hearing is: your courts need video testimony that works every single time, with no dropped calls and no quality degradation. Your judges won't tolerate technical interruptions during proceedings. Your IT team is stretched thin and can't babysit a complex software stack. And any solution has to meet your state's specific evidentiary standards for remote testimony. The real risk isn't picking the wrong vendor — it's deploying something that fails during a live hearing."
+
+### Negotiation One Sheet
+
+| Field | Value |
+|-------|-------|
+| **Goal** | Pilot program: 3 courtrooms, 90-day evaluation, $18K |
+| **Best alternative** | They continue with current (unreliable) Zoom setup |
+| **Worst case** | They do nothing; judges continue complaining |
+| **Summary** | They need bulletproof remote testimony that meets evidentiary standards without adding IT burden |
+| **Labels** | "It seems like reliability is everything." / "It sounds like your judges are frustrated." |
+| **Calibrated Qs** | "What does success look like?" / "How do we get from here to a pilot?" |
+| **Non-Cash Offers** | On-site installation support, 30-day money-back, direct line to engineering |
+
+### Cold Email (Accusation Audit Style)
+
+Subject: Remote testimony at [Court System]
+
+[Name],
+
+You probably get pitched by AV vendors who've never set foot in a courtroom.
+
+Fair enough. But I've been talking to court IT teams across [state] and hearing the same frustration: Zoom drops mid-testimony, recording quality doesn't meet evidentiary standards, and judges blame IT.
+
+Would it be out of the question to spend 15 minutes comparing notes on what other courts are doing?
+
+[Signature]
+</example_session>
+
 <anti_patterns>
 # Anti-Patterns
 

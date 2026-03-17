@@ -61,10 +61,8 @@ Golden Rules Pass   →                            →                          
 Criteria (ALL must match):
 - phone IS NULL OR phone = '' (empty string)
 - lifecyclestage != 'customer'
-- NOT hubspot_owner_id IN (82625923, 423155215)
-  (Exclude: Lex Evans, Phil Sanders)
-- NOT (hubspot_owner_id LIKE 'Ron%' OR hubspot_owner_id LIKE 'Anthony%')
-  (Exclude: Ron and Anthony HubSpot owner IDs pending verification — use name-based matching as fallback until IDs confirmed)
+- NOT hubspot_owner_id IN (82625923, 423155215, 190030668)
+  (Exclude AEs: Lex Evans, Ron Epstein, Phillip Sandler)
 
 Golden Rules Hard Gate (SKIP if ANY match):
 - first_conversion contains ['Pearl', 'setup', 'Connect', 'signup']
@@ -76,6 +74,24 @@ Golden Rules Hard Gate (SKIP if ANY match):
 - engagement_overview contains ['Pearl', 'trial', 'demo', 'customer']
   (Existing touchpoints)
 ```
+
+### ATL/BTL Classification Gate (applied after Golden Rules)
+Classify each contact by job title using approved ATL/BTL definitions (see CLAUDE.md § ATL/BTL Classification v1.0):
+
+**ATL Title Keywords (budget authority — PRIORITY DIAL):**
+Chief (CIO, CTO, CFO, COO) • VP (AVP, SVP, EVP) • President • Provost • Vice Provost • Superintendent • Director (of IT, Technology, Facilities, Academic Technology, Procurement, Materials Mgmt, Medical Education, Court Administration) • Dean • Court Administrator • Clerk of Court • City Manager • County Manager • Senior Pastor • Executive Pastor
+
+**BTL Title Keywords (no budget authority — LOWER PRIORITY):**
+Technician • Specialist • Coordinator • Support • Administrator (Systems/Network/Database) • Engineer (AV/Network/Systems) • Operator • Instructor/Professor/Faculty • Designer • Assistant • Clerk (non-Court Admin) • Volunteer • Intern • Student • Resident • Help Desk
+
+**NEVER ATL — Auto-classify BTL regardless of other signals:**
+Warehouse Manager • Network Manager • Systems Administrator • AV Technician • Graphic Design Instructor • Program Administrator • Web Designer • Classroom Support • Lab Coordinator • Maintenance • Building Engineer • Multimedia Services Manager • Video Production Specialist • Streaming Crew
+
+**Gray Zone — Flag for manual review:**
+Manager (AV/Facilities/IT) — ATL only if reports to Director+ AND has delegated budget >$25K
+Department Chair • Program Director • Director of Educational Technology
+
+Tag each contact: `atl_btl_tier = 'ATL' | 'BTL' | 'GRAY'`
 
 **Output:** Unsorted list of 100+ contacts with:
 - contact_id (HubSpot)
@@ -216,7 +232,8 @@ Log event to company:
 
 **Build final output sorted by:**
 
-1. **ICP Vertical Score (primary):**
+1. **ATL/BTL Tier (primary):** ATL contacts first, then GRAY, then BTL
+2. **ICP Vertical Score (secondary):**
    ```
    Higher Ed ..................... 90
    Courts/Legal ................... 85
@@ -227,7 +244,7 @@ Log event to company:
    K-12 Schools ................... 65
    ```
 
-2. **Intent Signals (secondary):**
+3. **Intent Signals (tertiary):**
    - Hiring active AV/IT roles: +15 points
    - Recent facility expansion news: +10 points
    - Tech stack shows obsolete AV (Extron, Matrox replacement signal): +12 points
@@ -235,7 +252,7 @@ Log event to company:
    - Website mentions studio/control room/broadcast: +8 points
    - Recent funding/acquisition: +5 points
 
-3. **Engagement Recency (tertiary):**
+4. **Engagement Recency (quaternary):**
    - Touched within 30 days: top of queue
    - Touched 31-60 days: middle
    - No recent touch: bottom (but still callable)
@@ -254,16 +271,19 @@ Apollo Matches:            {X} ({X%})
 Clay Enrichments:          {Y} ({Y%})
 Total Verified Phones:     {X+Y} ({(X+Y)%})
 HubSpot Updated:           {X+Y}
+ATL Contacts:              {A} ({A%})
+Gray Zone:                 {G} ({G%})
+BTL Contacts:              {B} ({B%})
 
-READY TO DIAL (sorted ICP score + intent):
+READY TO DIAL (sorted ATL first, then ICP score + intent):
 
- #  │ NAME              │ TITLE            │ COMPANY           │ PHONE        │ ICP  │ VERTICAL     │ INTENT SIGNAL
-────┼──────────────────┼──────────────────┼──────────────────┼──────────────┼──────┼──────────────┼─────────────────
-  1 │ Jane Smith       │ VP IT/AV         │ Stanford Univ    │ (650)xxx-xxx │ 93   │ Higher Ed    │ New AV role + hiring
-  2 │ Mike Johnson     │ Dir Technology   │ Federal Courts   │ (202)xxx-xxx │ 87   │ Courts/Legal │ Extron aging out
-  3 │ Sarah Chen       │ Manager IT       │ UCSF Medical     │ (415)xxx-xxx │ 78   │ Healthcare   │ Facility upgrade
-  4 │ David Lee        │ AV Manager       │ Cisco Corp       │ (408)xxx-xxx │ 82   │ Corp AV      │ Meeting room reno
-  5 │ ...              │ ...              │ ...              │ ...          │ ...  │ ...          │ ...
+ #  │ NAME              │ TIER │ TITLE            │ COMPANY           │ PHONE        │ ICP  │ VERTICAL     │ INTENT SIGNAL
+────┼──────────────────┼──────┼──────────────────┼──────────────────┼──────────────┼──────┼──────────────┼─────────────────
+  1 │ Jane Smith       │ ATL  │ VP IT/AV         │ Stanford Univ    │ (650)xxx-xxx │ 93   │ Higher Ed    │ New AV role + hiring
+  2 │ Mike Johnson     │ ATL  │ Dir Technology   │ Federal Courts   │ (202)xxx-xxx │ 87   │ Courts/Legal │ Extron aging out
+  3 │ Sarah Chen       │ GRAY │ Manager IT       │ UCSF Medical     │ (415)xxx-xxx │ 78   │ Healthcare   │ Facility upgrade
+  4 │ David Lee        │ BTL  │ AV Technician    │ Cisco Corp       │ (408)xxx-xxx │ 82   │ Corp AV      │ Meeting room reno
+  5 │ ...              │ ...  │ ...              │ ...              │ ...          │ ...  │ ...          │ ...
 
 ═══════════════════════════════════════════════════════════════════════════════
 DIALER QUICK LINKS:
@@ -272,11 +292,13 @@ DIALER QUICK LINKS:
 - Import to Aircall:   [sync button]
 - By Company:          [grouped view]
 - By Vertical:         [vertical view]
+- By ATL/BTL Tier:     [tier view]
 
 NEXT STEPS:
-1. Sort queue by your preferred intent weight (default: ICP score)
-2. Import to your dialpad tool
-3. Dial 50+ per day, log outcomes, let Sales Engagement cadences trigger
+1. Prioritize ATL contacts first (decision-makers with budget authority)
+2. Review GRAY zone contacts for manual budget authority verification
+3. Import to your dialpad tool
+4. Dial 50+ per day, log outcomes, let Sales Engagement cadences trigger
 
 ═══════════════════════════════════════════════════════════════════════════════
 ```
@@ -372,6 +394,7 @@ WEDNESDAY MORNING SEQUENCE (mid-week refresh):
 - `prospect-research-to-cadence-skill` — Lead quality gates, Golden Rules filter, ICP scoring
 - `sales-revenue-skill` — ICP vertical definitions, intent signal weighting
 - `hubspot-revops-skill` — HubSpot bulk operations, contact filtering patterns, owner ID mapping
+- `CLAUDE.md § ATL/BTL Classification v1.0` — Approved title keyword patterns for ATL/BTL/Gray classification (2026-03-17)
 
 ## Upstream & Downstream Scheduled Tasks
 - `bdr-v3-prospect-enrich` — Monday 6:00 AM firmographic refresh (runs before phone waterfall)
@@ -432,8 +455,7 @@ WEDNESDAY MORNING SEQUENCE (mid-week refresh):
 | `first_conversion` | contains 'Pearl' OR 'setup' OR 'Connect' | SKIP |
 | Company `device_count` | >= 1 | SKIP |
 | Company `is_channel` | true | SKIP |
-| `hubspot_owner_id` | 82625923, 423155215 | SKIP (Lex Evans, Phil Sanders) |
-| `hubspot_owner_id` | Matches 'Ron\*' OR 'Anthony\*' | SKIP (Ron & Anthony — pending ID verification) |
+| `hubspot_owner_id` | 82625923, 423155215, 190030668 | SKIP (AEs: Lex Evans, Ron Epstein, Phillip Sandler) |
 
 **Rationale:**
 - Customers are in a different sales motion (success, upsell, retention)
@@ -469,23 +491,10 @@ CLAY STAGE (4 min):
 SYNC STAGE (30 sec):
   HubSpot batch updated 159 contacts (118 Apollo + 41 Clay)
   Tagged phone_source = 'apollo' or 'clay'
-  Created audit trail entries
 
 QUEUE STAGE (30 sec):
   Sorted 159 by ICP score (Higher Ed first, K-12 last)
-  Boosted intent signal scores (hiring, facility expansion)
   Output: Callable queue ready for 50+ dials
 
-TOTAL TIME: 7 minutes 30 seconds
-CALLABLE LEADS: 159 verified phones
-SUCCESS RATE: 64.4% (159/247)
+TOTAL TIME: 7 min 30 sec | CALLABLE: 159 verified | SUCCESS: 64.4%
 ```
-
-Tim's view at 6:15 AM:
-```
-✅ Phone Waterfall Complete
-   159 leads verified and ready to call
-   Top prospect: Jane Smith (Stanford, VP IT, 93 ICP) — call now
-   Your dial list is queued in Dialpad
-```
-

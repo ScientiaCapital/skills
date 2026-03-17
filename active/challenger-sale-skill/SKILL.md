@@ -207,6 +207,67 @@ JTBD (What job?) → Blue Ocean (Where's the space?) → BMC (How to deliver?)
 5. Max 100 words for cold outreach
 </integration_points>
 
+<example_session>
+## Example: Higher Ed Lecture Capture — Commercial Teaching Pitch
+
+**User:** Build a Challenger teaching pitch for a Higher Ed AV Director evaluating lecture capture for 50+ classrooms
+
+### Step 1: The Warmer
+You're managing AV across dozens of classrooms — maybe multiple buildings or campuses — with faculty who just want to walk in and teach. Meanwhile, students expect every lecture recorded reliably, and your team is the one on the hook when something doesn't capture. The pressure to deliver consistent hybrid delivery at scale is real, and it only grows each semester.
+
+### Step 2: The Reframe
+Most institutions think their biggest lecture capture cost is hardware. But our research across 200+ universities shows 68% of total cost is staff time — troubleshooting software encoders, rebooting crashed PCs, and re-recording failed sessions. The hardware line item is the visible cost; the invisible cost is your team's hours.
+
+### Step 3: Rational Drowning
+- Average software encoder crash rate: 12% of scheduled sessions
+- Staff troubleshooting time per incident: 45 minutes
+- At 50 rooms x 4 sessions/day x 180 teaching days: ~36,000 sessions/year
+- 12% failure rate = ~4,320 incidents
+- At 45 min per incident, only ~10% need hands-on intervention = ~432 incidents = ~324 staff-hours lost annually
+- At $42/hr fully loaded cost: **$13,600/year in invisible labor** — before you count the re-recording sessions, faculty complaints, or student escalations
+
+### Step 4: Emotional Impact
+Your AV team is the one getting the call at 8 AM Monday when Professor Chen's Friday lecture didn't record. The faculty member isn't calling the software vendor — they're calling your team. And when a semester's worth of recordings is spotty, it's your department's credibility on the line with the Provost, not the vendor's.
+
+### Step 5: A New Way
+What leading R1 universities are doing is eliminating the software layer entirely — moving to appliance-based capture that records regardless of what happens to the campus network or the classroom PC. No software agent on the podium machine means no OS updates breaking the encoder, no antivirus quarantining the capture process, no PC reboots mid-lecture.
+
+### Step 6: Your Solution
+This is exactly what Pearl-2 was built for — a dedicated hardware encoder that captures, streams, and records simultaneously with zero PC dependency. When the network drops, it keeps recording locally. When the LMS goes down, it buffers and uploads later. Faculty walk in, press one button (or it auto-starts on schedule), and the lecture is captured. Your team manages 50+ rooms from a single web dashboard instead of remoting into 50 PCs.
+
+### Stakeholder Tailoring
+
+| Stakeholder | Reframe Angle | Key Metric | CTA |
+|-------------|--------------|------------|-----|
+| **VP Academic Affairs** | "Cost of failed recordings = student complaints + accreditation risk" | $13.6K/yr hidden cost, 12% failure rate | Executive briefing |
+| **AV Director** | "Your team spends 324 hrs/yr on problems that shouldn't exist" | Staff hours recovered, single-pane management | Working session |
+| **IT Security** | "No software agent = no attack surface, no OS patches to manage" | Zero endpoint footprint, HTTPS only | Reference call |
+| **Procurement** | "5-year TCO is 40% lower than software + PC refresh cycles" | TCO comparison, 5-year warranty option | Formal quote |
+
+### Cold Email (Challenger Style)
+
+```
+Subject: Lecture capture costs at [University]
+
+[Name],
+
+Most AV teams assume their biggest lecture capture expense is hardware.
+But across 200+ universities we've studied, 68% of total cost is staff
+time — troubleshooting software crashes, re-recording failed sessions,
+fielding faculty complaints.
+
+At 50 classrooms, that's roughly 324 staff-hours and $13.6K/year in
+invisible labor.
+
+Leading R1 institutions are solving this by removing the software layer
+entirely.
+
+Worth 15 minutes to compare notes?
+
+[Signature]
+```
+</example_session>
+
 <anti_patterns>
 # Anti-Patterns
 
