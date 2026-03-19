@@ -86,7 +86,37 @@ After pulling deals, tag each deal with Tim's role:
 
 **Exclude from scoring** only deals where Tim is NEITHER owner NOR collaborator (i.e., deals that somehow appeared but have no Tim involvement).
 
-### 1b. Pull Activity History
+### 1b. Clari Call Intelligence (Signal 4 Data Source)
+
+Pull recent Clari call data for contacts associated with each deal:
+
+| Tool | Purpose |
+|------|---------|
+| `clari_search_calls` | Find calls involving deal contacts (filter by attendeeEmail, last 30 days) |
+| `clari_get_call_summary` | Get AI summary + action items for each relevant call |
+
+For each deal's associated contacts:
+1. Search Clari calls: `clari_search_calls(attendeeEmail=contact_email, daysBack=30)`
+2. For calls found: `clari_get_call_summary(callId=call_id)` 
+3. Extract:
+   - **Call sentiment**: positive/neutral/negative from AI summary
+   - **Discovery completeness**: were MEDDIC questions asked?
+   - **Competitor mentions**: any competitor names in summary
+   - **Action items**: unresolved action items = stall risk
+   - **Last call date**: recency signal for Signal 4 scoring
+
+**Signal 4 Enhancement (Call Momentum — 15 points):**
+| Sub-signal | Points | Criteria |
+|-----------|--------|----------|
+| Clari call in last 7 days | 5 | Recent engagement confirmed |
+| Positive sentiment | 4 | AI summary = positive/constructive |
+| MEDDIC questions asked | 3 | Discovery topics covered in transcript |
+| No unresolved action items | 2 | All action items closed |
+| No competitor mentions | 1 | Clean competitive position |
+
+If no Clari data found, fall back to HubSpot activity recency (existing logic). Never score 0 just because Clari is empty.
+
+### 1c. Pull Activity History
 For each deal's associated company, use `ask_agent`:
 - Query: "Show all activity, notes, and engagement for [company] deals in last 30 days"
 - Extracts: call notes, email activity, meeting outcomes, deal stage changes
@@ -149,6 +179,8 @@ For each deal's associated contacts, classify by title before scoring:
 **Penalty flag:** If a deal has 0 ATL-tier contacts, add a ⚠️ flag in the report: "NO ECONOMIC BUYER IDENTIFIED — deal at risk of stalling at Decision Maker stage. Action: ask champion to intro Director+/VP+."
 
 ### Signal 4: Call Momentum (15 points)
+Uses Clari call data as primary signal source (see Stage 1b: Clari Call Intelligence).
+
 | Activity signal | Points |
 |-------------|--------|
 | Call in last 7 days + positive sentiment | 15 |
@@ -156,6 +188,10 @@ For each deal's associated contacts, classify by title before scoring:
 | Call in last 14 days | 7 |
 | No calls in 14+ days | 0 |
 | Negative sentiment on last call | -5 (penalty) |
+
+**Data sources:**
+- Primary: Clari call summaries (via `clari_search_calls` + `clari_get_call_summary`)
+- Fallback: HubSpot activity recency if no Clari data available
 
 ### Signal 5: MEDDIC Completeness (15 points)
 Estimate from available data:
@@ -282,6 +318,7 @@ When Tim says "morning brief" or "SOD", this report is included as the pipeline 
 <dependencies>
 ## Required MCP Tools
 - **Epiphan CRM MCP:** hubspot_search_deals, hubspot_search_companies, hubspot_search_contacts, hubspot_get_deal, hubspot_get_company, hubspot_get_contact, ask_agent (activity history, stage velocity medians, pipeline coverage, deal conversion benchmarks)
+- **Epiphan Clari MCP:** clari_search_calls, clari_get_call_summary (for call sentiment analysis and momentum scoring)
 - **Apollo MCP:** apollo_mixed_people_api_search, apollo_people_match (for multi-threading actions)
 - **Gmail MCP:** gmail_create_draft (for re-engagement email actions)
 - **Google Calendar MCP:** gcal_create_event (for booking check-in calls)

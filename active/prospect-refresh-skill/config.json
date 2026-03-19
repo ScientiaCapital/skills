@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "prospect-refresh-skill",
+  "description": "Monday ICP prospect search + Gmail draft creation. Finds NET NEW prospects across all verticals using Apollo.",
+  "category": "BDR Automation",
+  "activation_triggers": ["prospect refresh", "search new ICP", "new prospects", "ICP search", "net new prospects"],
+  "tags": ["bdr", "automation", "prospecting"],
+  "author": "Tim Kipper"
+}

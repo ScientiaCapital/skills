@@ -1,0 +1,9 @@
+{
+  "version": "1.1.0",
+  "name": "prospect-enrich-skill",
+  "description": "Mon-Fri 6:00 AM — Daily batch enrichment of phoneless contacts using Apollo + Clay. DEMO REQUEST first, then ATL-first priority.",
+  "category": "BDR Automation",
+  "activation_triggers": ["prospect enrich", "enrich phoneless", "enrich contacts", "phoneless enrichment"],
+  "tags": ["bdr", "automation", "enrichment"],
+  "author": "Tim Kipper"
+}

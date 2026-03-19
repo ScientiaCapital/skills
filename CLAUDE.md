@@ -1,6 +1,6 @@
 # Tim's Skills Library
 
-49 production-ready skills for Claude Code and Claude Desktop. Engineering, GTM, sales automation, and trading.
+67 production-ready skills for Claude Code and Claude Desktop. Engineering, GTM, sales automation, BDR pipeline automation, and trading.
 
 ## How to Use This Folder
 
@@ -15,18 +15,18 @@ When working in this folder, Claude should:
 skills/
 ├── CLAUDE.md               # You're reading this
 ├── README.md               # Quick start + skill catalog
-├── SKILLS_INDEX.md         # Detailed skill documentation (49 skills)
+├── SKILLS_INDEX.md         # Detailed skill documentation (67 skills)
 ├── DEPENDENCY_GRAPH.md     # Visual skill relationships
-├── PLANNING.md             # Current sprint (P9)
+├── PLANNING.md             # Current sprint (P11)
 ├── BACKLOG.md              # Future work
 ├── ARCHIVE.md              # Completed sprints
-├── active/                 # 47 trigger-activated skills
+├── active/                 # 65 trigger-activated skills
 ├── stable/                 # 2 always-loaded core skills
-├── dist/                   # 49 zip files for Claude Desktop
+├── dist/                   # 67 zip files for Claude Desktop
 ├── scripts/
 │   ├── deploy.sh           # Deploy to ~/.claude/skills/
 │   ├── rebuild-zips.sh     # Rebuild dist/*.zip
-│   ├── test-skills.sh      # Integration tests (323 checks)
+│   ├── test-skills.sh      # Integration tests (470 checks)
 │   ├── log-skill-usage.sh  # PostToolUse hook target
 │   ├── skill-analytics-report.sh  # Usage reporting
 │   └── hooks/              # SessionStart + workflow hooks

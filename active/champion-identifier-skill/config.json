@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "champion-identifier-skill",
+  "description": "Analyze LinkedIn profiles in target accounts to identify potential internal champions. Evaluates role, career path, mutual connections, interests, and suggests personalization approach. Use when you need to find who will champion your solution internally.",
+  "category": "Sales Intelligence",
+  "activation_triggers": ["find champion", "internal champion", "who will champion", "champion identification"],
+  "tags": ["sales", "gtm"],
+  "author": "Tim Kipper"
+}

@@ -1,6 +1,6 @@
 # Skills Library
 
-49 production-ready Claude Code skills. AI-native engineering, GTM, sales automation, and trading.
+67 production-ready Claude Code skills. AI-native engineering, GTM, sales automation, and trading.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@
 ./scripts/deploy.sh
 ```
 
-## Skills (49)
+## Skills (67)
 
 ### Core (5)
 | Skill | What It Does |
@@ -77,6 +77,32 @@
 | **portfolio-deal-linker** | Link engineering output to revenue impact |
 | **trading-alert-scheduler** | Daily pre-market digest with regime detection |
 
+### BDR Automation — Daily Pipeline (5)
+| Skill | What It Does |
+|-------|-------------|
+| **prospect-enrich** | Mon-Fri 6:00 AM — phoneless contact enrichment (DEMO REQUEST first) |
+| **prospect-refresh** | Monday 6:30 AM — net-new ICP prospect search + Gmail drafts |
+| **sequence-load** | Monday 7:15 AM — auto-load into Apollo sequences |
+| **callable-lead-count** | M-F 7:25 AM — ATL/BTL inventory + runway metrics |
+| **morning-brief** | M-F 7:30 AM — calendar + dials + deals + drafts briefing |
+
+### Sales Intelligence (13)
+| Skill | What It Does |
+|-------|-------------|
+| **champion-identifier** | Find internal champions at target accounts |
+| **cold-email-sequence-generator** | 7-14 email sequences with A/B subject lines |
+| **contact-hunter** | Multi-source contact info extraction |
+| **email-template-generator** | Professional email templates by scenario |
+| **inbound-lead-qualifier** | Score inbound leads by ICP + intent + urgency |
+| **intent-signal-aggregator** | Monitor buyer intent signals (jobs, funding, tech changes) |
+| **linkedin-sales-navigator-alt** | LinkedIn prospect list building + tracking |
+| **lookalike-customer-finder** | Find 100+ companies matching best customers |
+| **meeting-intelligence-system** | Extract decisions/actions from meeting transcripts |
+| **personalization-at-scale** | Personalized first lines for 100s of prospects |
+| **pipeline-health-analyzer** | Forecast accuracy + stall prediction |
+| **sales-methodology-implementer** | MEDDIC/BANT/Sandler/Challenger/SPIN frameworks |
+| **social-selling-content-generator** | 30+ LinkedIn posts for prospect attraction |
+
 ### Business — Trading & Brokerage (2)
 | Skill | What It Does |
 |-------|-------------|
@@ -96,13 +122,13 @@
 
 ```
 skills/
-├── active/              # 47 trigger-activated skills
+├── active/              # 65 trigger-activated skills
 ├── stable/              # 2 always-loaded core skills
-├── dist/                # 49 zip files for Claude Desktop
+├── dist/                # 67 zip files for Claude Desktop
 ├── scripts/
 │   ├── deploy.sh           # Deploy to ~/.claude/skills/
 │   ├── rebuild-zips.sh     # Rebuild dist/*.zip
-│   ├── test-skills.sh      # Integration tests (323 checks)
+│   ├── test-skills.sh      # Integration tests (470 checks)
 │   ├── log-skill-usage.sh  # PostToolUse hook target
 │   ├── skill-analytics-report.sh  # Usage reporting
 │   └── hooks/              # SessionStart + workflow hooks

@@ -1,7 +1,7 @@
 # Skill Dependency Graph
 
-> Last validated: 2026-03-15
-> Total skills: 49
+> Last validated: 2026-03-19
+> Total skills: 67
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -118,6 +118,48 @@ graph TB
         TRD --> TAS
     end
 
+    subgraph BDRAuto["BDR Automation (Daily Pipeline)"]
+        PE[prospect-enrich]
+        PR[prospect-refresh]
+        SL[sequence-load]
+        CLC[callable-lead-count]
+        MB[morning-brief]
+
+        PE --> PVW
+        PE --> PR
+        PR --> SL
+        SL --> CLC
+        CLC --> MB
+        DMA --> MB
+        HR --> PE
+        HR --> CLC
+    end
+
+    subgraph SalesIntel["Sales Intelligence (Imported)"]
+        CI[champion-identifier]
+        CESG[cold-email-sequence-gen]
+        CH[contact-hunter]
+        ETG[email-template-gen]
+        ILQ[inbound-lead-qualifier]
+        ISA[intent-signal-aggregator]
+        LSNA[linkedin-sales-nav-alt]
+        LCF[lookalike-customer-finder]
+        MIS[meeting-intelligence]
+        PAS[personalization-at-scale]
+        PHA[pipeline-health-analyzer]
+        SMI[sales-methodology-impl]
+        SSCG[social-selling-content-gen]
+
+        %% Sales Intelligence cross-refs
+        PHA -.-> DMA
+        SMI -.-> MCA
+        CI -.-> PRC
+        CESG -.-> PRC
+        PAS -.-> PR
+        LCF -.-> HR
+        ISA -.-> DMA
+    end
+
     subgraph Strategy["Strategy (Business Design)"]
         BMC[business-model-canvas]
         BOS[blue-ocean-strategy]
@@ -170,6 +212,8 @@ graph TB
 | **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix, heal-skill, frontend-ui | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
 | **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro, prospect-research-to-cadence, phone-verification-waterfall, meddic-call-prep-auto, deal-momentum-analyzer, portfolio-deal-linker, trading-alert-scheduler, ibkr-api | GTM & revenue operations |
+| **BDR Automation** | prospect-enrich, prospect-refresh, sequence-load, callable-lead-count, morning-brief | Daily pipeline automation (scheduled Mon-Fri) |
+| **Sales Intelligence** | champion-identifier, cold-email-sequence-generator, contact-hunter, email-template-generator, inbound-lead-qualifier, intent-signal-aggregator, linkedin-sales-navigator-alt, lookalike-customer-finder, meeting-intelligence-system, personalization-at-scale, pipeline-health-analyzer, sales-methodology-implementer, social-selling-content-generator | Sales tooling (imported from Claude Desktop) |
 | **Strategy** | business-model-canvas, blue-ocean-strategy, jobs-to-be-done, challenger-sale, never-split-the-difference | Business model design + innovation + sales methodology |
 
 ### Count by Cluster
@@ -180,8 +224,10 @@ graph TB
 | Dev Tools | 15 |
 | Infrastructure | 8 |
 | Business | 16 |
+| BDR Automation | 5 |
+| Sales Intelligence | 13 |
 | Strategy | 5 |
-| **Total** | **49** |
+| **Total** | **67** |
 
 ---
 
@@ -247,12 +293,20 @@ unsloth-training → runpod-deployment → [groq-inference | openrouter]
 research → gtm-pricing → sales-revenue → crm-integration → hubspot-revops
 ```
 
+### BDR Daily Pipeline (Monday Full Chain)
+```
+06:00 prospect-enrich → 06:15 phone-waterfall → 06:30 prospect-refresh → 07:15 sequence-load
+                                                                                    ↓
+07:00 deal-momentum ──────────────────────────────────────────────────► 07:25 callable-lead-count → 07:30 morning-brief
+07:00 portfolio-linker ─────────────────────────────────────────────────────────────────────────────────────↗
+07:00 trading-alerts ───────────────────────────────────────────────────────────────────────────────────────↗
+```
+
 ### Automated Deal Flow
 ```
 prospect-research-to-cadence → phone-verification-waterfall → meddic-call-prep-auto → deal-momentum-analyzer → portfolio-deal-linker
          ↑                            ↑                            ↑                         ↑                        ↑
    [Apollo + Epiphan CRM]    [Apollo + Clay]        [Clari + Calendar]        [HubSpot + Clari]         [Attribution engine]
-                        (scheduled Monday 6:15am CST)             (scheduled daily 7am CST)   (scheduled daily 7am CST)
 ```
 
 ### Trading Alerts (Standalone)
@@ -398,8 +452,8 @@ grep -l "DEPENDENCY_GRAPH" *.md
 
 ### Last Validated
 
-- **Date:** 2026-03-15
-- **Skill Count:** 49 (2 stable, 47 active)
+- **Date:** 2026-03-19
+- **Skill Count:** 67 (2 stable, 65 active)
 - **Mermaid:** Renders correctly
 - **Cross-links:** SKILLS_INDEX.md, README.md
 

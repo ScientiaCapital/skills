@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "intent-signal-aggregator-skill",
+  "description": "Monitor buyer intent signals across the web including job postings, tech changes, funding rounds, and leadership changes. Alerts when prospects show buying signals and prioritizes \"hot\" accounts. Use for timing-based prospecting.",
+  "category": "Sales Intelligence",
+  "activation_triggers": ["intent signals", "buyer intent", "buying signals", "hot accounts"],
+  "tags": ["sales", "gtm"],
+  "author": "Tim Kipper"
+}

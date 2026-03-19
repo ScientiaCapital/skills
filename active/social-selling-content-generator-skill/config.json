@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "social-selling-content-generator-skill",
+  "description": "Generate 30+ LinkedIn posts that attract your target prospects. Creates industry insights, thought leadership, engagement prompts, and comment strategies. Use when building personal brand to attract inbound leads through social selling.",
+  "category": "Sales Intelligence",
+  "activation_triggers": ["social selling", "LinkedIn content", "thought leadership posts", "attract prospects"],
+  "tags": ["sales", "gtm"],
+  "author": "Tim Kipper"
+}

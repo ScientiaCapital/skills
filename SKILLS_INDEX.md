@@ -1,9 +1,9 @@
 # Skills Index
 
-> Last updated: 2026-03-15
-> Total skills: 49 (2 stable, 47 active)
+> Last updated: 2026-03-19
+> Total skills: 67 (2 stable, 65 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 49 skills have `config.json` with version tracking
+> **100% config.json coverage** — All 67 skills have `config.json` with version tracking
 
 ## Architecture
 
@@ -67,6 +67,24 @@
 | Enterprise SaaS frontend (Tailwind v4, shadcn, Next.js) | [frontend-ui](#frontend-ui-skill) | Dev Tools |
 | Enforce workflow discipline | [workflow-enforcer-skill](#workflow-enforcer-skill) | Core |
 | Orchestrate full-day workflows with cost tracking | [workflow-orchestrator](#workflow-orchestrator-skill) | Core |
+| Daily callable lead inventory + ATL runway | [callable-lead-count](#callable-lead-count-skill) | BDR Automation |
+| Morning briefing: calendar + dials + deals + drafts | [morning-brief](#morning-brief-skill) | BDR Automation |
+| Daily phoneless contact enrichment (Apollo + Clay) | [prospect-enrich](#prospect-enrich-skill) | BDR Automation |
+| Weekly net-new ICP prospect search | [prospect-refresh](#prospect-refresh-skill) | BDR Automation |
+| Auto-load prospects into Apollo sequences | [sequence-load](#sequence-load-skill) | BDR Automation |
+| Find internal champions at target accounts | [champion-identifier](#champion-identifier-skill) | Sales Intelligence |
+| 7-14 cold email sequences with A/B testing | [cold-email-sequence-generator](#cold-email-sequence-generator-skill) | Sales Intelligence |
+| Multi-source contact info extraction | [contact-hunter](#contact-hunter-skill) | Sales Intelligence |
+| Professional email templates by scenario | [email-template-generator](#email-template-generator-skill) | Sales Intelligence |
+| Score inbound leads by ICP + intent + urgency | [inbound-lead-qualifier](#inbound-lead-qualifier-skill) | Sales Intelligence |
+| Monitor buyer intent signals across the web | [intent-signal-aggregator](#intent-signal-aggregator-skill) | Sales Intelligence |
+| LinkedIn prospect list building + tracking | [linkedin-sales-navigator-alt](#linkedin-sales-navigator-alt-skill) | Sales Intelligence |
+| Find 100+ companies matching best customers | [lookalike-customer-finder](#lookalike-customer-finder-skill) | Sales Intelligence |
+| Extract decisions/actions from meeting transcripts | [meeting-intelligence-system](#meeting-intelligence-system-skill) | Sales Intelligence |
+| Personalized first lines for 100s of prospects | [personalization-at-scale](#personalization-at-scale-skill) | Sales Intelligence |
+| Forecast accuracy + stall prediction for pipeline | [pipeline-health-analyzer](#pipeline-health-analyzer-skill) | Sales Intelligence |
+| Implement MEDDIC/BANT/Sandler/Challenger/SPIN | [sales-methodology-implementer](#sales-methodology-implementer-skill) | Sales Intelligence |
+| 30+ LinkedIn posts for prospect attraction | [social-selling-content-generator](#social-selling-content-generator-skill) | Sales Intelligence |
 
 ---
 
@@ -986,6 +1004,235 @@ Daily pre-market trading digest. Scans watchlist tickers for regime changes, tec
 **Triggers:** "market digest", "trading alerts", "pre-market scan", "watchlist check", "what's setting up", "check my positions"
 
 **Impact:** 30 min/day saved + fewer missed setups from not watching screens
+
+---
+
+### BDR Automation (Daily Pipeline)
+
+#### prospect-enrich-skill
+**Location:** `active/prospect-enrich-skill/` | **Version:** 1.1.0
+
+Mon-Fri 6:00 AM — Daily batch enrichment of phoneless HubSpot contacts using Apollo + Clay. DEMO REQUEST tier (hand-raisers) enriched first, then ATL-first priority. Golden Rules + ATL/BTL Classification Gate. AE-owned contact exclusion.
+
+**Key Features:**
+- DEMO REQUEST tier: contacts with first_conversion containing demo/pricing keywords — highest priority
+- ATL/BTL/GRAY/NEVER classification before enrichment (saves Apollo credits)
+- AE owner exclusion (IDs 82625923, 423155215)
+- Apollo → Clay waterfall for phone misses
+- Branded HTML report with Epiphan colors
+
+**Depends on:** hubspot-revops-skill
+**Feeds into:** phone-verification-waterfall-skill, prospect-refresh-skill
+
+**Scheduled Task:** `prospect-enrich` — Mon-Fri 6:00 AM ET
+
+**Triggers:** "run prospect enrich", "enrich phoneless contacts"
+
+---
+
+#### prospect-refresh-skill
+**Location:** `active/prospect-refresh-skill/` | **Version:** 1.0.0
+
+Monday 6:30 AM — Weekly net-new prospect search across all 7 ICP verticals using Apollo People API. Deduplicates against HubSpot. Creates personalized Gmail drafts for each prospect with vertical-specific templates.
+
+**Key Features:**
+- 7 ICP verticals: Higher Ed (90), Courts (85), Gov (80), Corporate AV (80), Healthcare (75), HoW (70), K-12 (65)
+- ATL-first targeting with seniority filters
+- HubSpot dedup (email + company + name fuzzy match)
+- 6 vertical-specific email templates
+- Gmail draft creation (one per prospect, DO NOT SEND)
+- HTML report with sortable columns + HubSpot/Apollo links
+
+**Depends on:** prospect-enrich-skill, hubspot-revops-skill
+**Feeds into:** sequence-load-skill
+
+**Scheduled Task:** `prospect-refresh` — Monday 6:30 AM ET
+
+**Triggers:** "run prospect refresh", "search new ICP prospects"
+
+---
+
+#### sequence-load-skill
+**Location:** `active/sequence-load-skill/` | **Version:** 1.0.0
+
+Monday 7:15 AM — Auto-load net-new prospects from prospect-refresh into Apollo outreach sequences. Validates Golden Rules, confirms phone numbers, checks for duplicate enrollments.
+
+**Key Features:**
+- Reads prospect-refresh HTML output for batch enrollment
+- Dedup against HubSpot + Apollo (avoid re-enrollment)
+- Maps prospects to vertical-specific Apollo sequences (BDR_HigherEd_1, etc.)
+- Creates Apollo contacts if new, syncs to HubSpot
+- Enrollment report with per-sequence breakdown
+
+**Depends on:** prospect-refresh-skill
+**Feeds into:** callable-lead-count-skill, morning-brief-skill
+
+**Scheduled Task:** `sequence-load` — Monday 7:15 AM ET
+
+**Triggers:** "load prospects into sequences", "enroll new leads"
+
+---
+
+#### callable-lead-count-skill
+**Location:** `active/callable-lead-count-skill/` | **Version:** 1.0.0
+
+M-F 7:25 AM — Daily callable lead inventory with ATL/BTL breakdown. Calculates ATL Runway metric (days of ATL dials at 15/day target). Alerts if inventory falls below thresholds.
+
+**Key Features:**
+- Full ATL/BTL/GRAY/NEVER classification of callable contacts
+- ATL Runway = ATL count ÷ 15 dials/day
+- Alert thresholds: ATL < 15 (⚠️), total < 50 (🚨), NEVER > 0 (🔍)
+- Day-over-day trend tracking
+- Top companies by lead density
+- JSON output for morning-brief integration
+
+**Depends on:** hubspot-revops-skill
+**Feeds into:** morning-brief-skill
+
+**Scheduled Task:** `callable-lead-count` — M-F 7:25 AM ET
+
+**Triggers:** "show callable leads", "lead inventory check", "ATL runway"
+
+---
+
+#### morning-brief-skill
+**Location:** `active/morning-brief-skill/` | **Version:** 1.0.0
+
+M-F 7:30 AM — Tim's daily briefing: calendar, HubSpot hot leads, deal momentum, Clari call summaries, and Gmail drafts for each priority lead. Single-page HTML brief for quick review before 50+ daily dials.
+
+**Key Features:**
+- Calendar integration: meetings, focus blocks, available dial windows
+- 15-20 hot leads sorted ATL-first with deal + activity enrichment
+- Supabase cooldown filter (skip leads in disposition cooldown)
+- Deal momentum scores per associated deal
+- Clari call summaries (last 7 days)
+- Gmail draft per lead (3 templates: High Momentum, New Lead, Warm Lead)
+- Branded HTML brief with sections: Calendar, Dial List, Pipeline, Call Highlights, Health Metrics, Tasks
+
+**Depends on:** callable-lead-count-skill, deal-momentum-analyzer-skill, hubspot-revops-skill
+
+**Scheduled Task:** `morning-brief` — M-F 7:30 AM ET
+
+**Triggers:** "show morning brief", "today's dial list", "morning brief"
+
+---
+
+### Sales Intelligence (Imported)
+
+#### champion-identifier-skill
+**Location:** `active/champion-identifier-skill/` | **Version:** 1.0.0
+
+Analyze LinkedIn profiles in target accounts to identify potential internal champions. Evaluates role, career path, mutual connections, interests, and suggests personalization approach.
+
+**Triggers:** "find champion", "internal champion", "who will champion"
+
+---
+
+#### cold-email-sequence-generator-skill
+**Location:** `active/cold-email-sequence-generator-skill/` | **Version:** 1.0.0
+
+Generate personalized cold email sequences (7-14 emails) with A/B test subject lines, follow-up timing, and social proof integration. Multi-touch campaigns optimized for response rates.
+
+**Triggers:** "cold email sequence", "email campaign", "outbound sequence", "lead gen emails"
+
+---
+
+#### contact-hunter-skill
+**Location:** `active/contact-hunter-skill/` | **Version:** 1.0.0
+
+Search and extract contact information from multiple sources: names, phone numbers, emails, job titles, LinkedIn profiles. Aggregates and enriches contact data. Complements Apollo/Clay for edge cases.
+
+**Triggers:** "find contact info", "contact hunter", "extract contacts", "who works at"
+
+---
+
+#### email-template-generator-skill
+**Location:** `active/email-template-generator-skill/` | **Version:** 1.0.0
+
+Generate professional email templates for sales outreach, customer support, follow-ups, and apologies. Tone-appropriate with subject line variations.
+
+**Triggers:** "email template", "write email", "sales email", "follow-up email"
+
+---
+
+#### inbound-lead-qualifier-skill
+**Location:** `active/inbound-lead-qualifier-skill/` | **Version:** 1.0.0
+
+Score inbound leads (form fills, demo requests) by ICP fit, intent, and urgency. Auto-generates qualification questions, routes to right rep, and suggests personalized first touch.
+
+**Triggers:** "qualify inbound", "score lead", "inbound lead", "demo request scoring"
+
+---
+
+#### intent-signal-aggregator-skill
+**Location:** `active/intent-signal-aggregator-skill/` | **Version:** 1.0.0
+
+Monitor buyer intent signals: job postings, tech changes, funding rounds, leadership changes. Alerts when prospects show buying signals and prioritizes "hot" accounts.
+
+**Triggers:** "intent signals", "buyer intent", "buying signals", "hot accounts"
+
+---
+
+#### linkedin-sales-navigator-alt-skill
+**Location:** `active/linkedin-sales-navigator-alt-skill/` | **Version:** 1.0.0
+
+Build targeted prospect lists by analyzing LinkedIn profiles: job titles, companies, locations, recent activity. Identifies decision-makers, tracks job changes for warm outreach.
+
+**Triggers:** "linkedin prospects", "sales navigator", "decision maker search", "job change alerts"
+
+---
+
+#### lookalike-customer-finder-skill
+**Location:** `active/lookalike-customer-finder-skill/` | **Version:** 1.0.0
+
+Input best customers, find 100+ companies matching the profile. Uses firmographic data, tech stack, growth signals, and similarity scoring.
+
+**Triggers:** "lookalike companies", "similar companies", "target account list", "expand to new markets"
+
+---
+
+#### meeting-intelligence-system-skill
+**Location:** `active/meeting-intelligence-system-skill/` | **Version:** 1.0.0
+
+Analyze meeting transcripts to extract decisions, action items, blockers, sentiment. Generate structured summaries and follow-up emails.
+
+**Triggers:** "meeting notes", "transcript analysis", "meeting summary", "action items from meeting"
+
+---
+
+#### personalization-at-scale-skill
+**Location:** `active/personalization-at-scale-skill/` | **Version:** 1.0.0
+
+Generate unique personalized first lines for 100s of prospects using company news, LinkedIn activity, mutual connections. Saves 10+ hours of manual research per campaign.
+
+**Triggers:** "personalize at scale", "first lines", "personalized outreach", "batch personalization"
+
+---
+
+#### pipeline-health-analyzer-skill
+**Location:** `active/pipeline-health-analyzer-skill/` | **Version:** 1.0.0
+
+Analyze pipeline health, identify stalled deals, predict close probability. Forecast accuracy improvement and revenue leakage prevention. Supplements deal-momentum-analyzer with broader pipeline analytics.
+
+**Triggers:** "pipeline health", "forecast accuracy", "deal slippage", "revenue leakage"
+
+---
+
+#### sales-methodology-implementer-skill
+**Location:** `active/sales-methodology-implementer-skill/` | **Version:** 1.0.0
+
+Implement MEDDIC, BANT, Sandler, Challenger, SPIN across teams. Framework-specific questions, deal scoring, training materials, certification tracking.
+
+**Triggers:** "sales methodology", "implement MEDDIC", "BANT framework", "Sandler training", "SPIN selling"
+
+---
+
+#### social-selling-content-generator-skill
+**Location:** `active/social-selling-content-generator-skill/` | **Version:** 1.0.0
+
+Generate 30+ LinkedIn posts that attract target prospects. Industry insights, thought leadership, engagement prompts, and comment strategies for building personal brand.
+
+**Triggers:** "social selling", "LinkedIn content", "thought leadership posts", "attract prospects"
 
 ---
 

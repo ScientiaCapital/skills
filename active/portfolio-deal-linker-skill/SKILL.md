@@ -190,6 +190,52 @@ leverage / systems thinking / revenue ownership] at VP BD scale."
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
+## Stage 4: Comp Plan Attainment Tracker
+
+Calculate daily progress against Tim's 2026 BDR comp plan targets.
+
+### March 2026 Targets (Ramp 50%)
+| Metric | Monthly Target | Stretch (126%+) | Daily Run Rate |
+|--------|---------------|-----------------|----------------|
+| Deals created | 12 | 16+ | 0.6/day |
+| Pipeline generated | $357,000 | $450,000+ | $17,850/day |
+| Revenue (closed-won) | $125,000 | $157,000+ | $6,250/day |
+
+### Calculation Logic
+1. Query HubSpot for deals created this month where Tim is owner (87486452) or collaborator
+2. Sum `amount` for pipeline generated
+3. Sum `amount` where `dealstage` = 'closedwon' for revenue
+4. Calculate:
+   - **Pipeline attainment %** = total pipeline / monthly target × 100
+   - **Revenue attainment %** = total closed-won / monthly target × 100  
+   - **Deal count attainment %** = deals created / monthly target × 100
+   - **Accelerator zone**: <100% = base, 100-110% = 1.0x, 111-125% = 1.25x, 126%+ = 1.5x
+   - **Days remaining** = business days left in month
+   - **Required daily run rate** = (target - achieved) / days remaining
+
+### Output Format (append to daily portfolio report)
+```
+📊 COMP PLAN TRACKER — March 2026 (Ramp 50%)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Pipeline:  $XXX,XXX / $357,000  (XX% — Zone: BASE/1.0x/1.25x/1.5x)
+Revenue:   $XX,XXX / $125,000   (XX% — Zone: BASE/1.0x/1.25x/1.5x)
+Deals:     X / 12               (XX%)
+Days left: X business days
+Gap to stretch: $XXX,XXX pipeline | $XX,XXX revenue | X deals
+Daily run rate needed: $X,XXX pipeline | $X,XXX revenue
+```
+
+### Monthly Target Lookup (for future months)
+| Month | Deals | Pipeline | Revenue | Phase |
+|-------|-------|----------|---------|-------|
+| March | 12 | $357K | $125K | Ramp 50% |
+| April | 16 | $464K | $163K | Ramp 65% |
+| May | 20 | $607K | $212K | Ramp 85% |
+| June | 24 | $714K | $250K | Full (H1) |
+| July+ | 24 | $714K | $475-600K | Full (H2) |
+
+Dynamically select targets based on current month.
+
 </workflow>
 
 <scheduled_automation>

@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "email-template-generator-skill",
+  "description": "Generate professional email templates for various business scenarios including sales outreach, customer support, internal communications, follow-ups, and apologies. Creates personalized, tone-appropriate templates with subject lines and formatting. Use when users need to write business emails, cold outreach, or professional communications.",
+  "category": "Sales Intelligence",
+  "activation_triggers": ["email template", "write email", "sales email", "follow-up email"],
+  "tags": ["sales", "gtm"],
+  "author": "Tim Kipper"
+}

@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "sequence-load-skill",
+  "description": "Monday auto-load of weekly prospect refresh results into Apollo outreach sequences.",
+  "category": "BDR Automation",
+  "activation_triggers": ["sequence load", "load sequences", "enroll leads", "Apollo sequences", "auto enroll"],
+  "tags": ["bdr", "automation", "sequences"],
+  "author": "Tim Kipper"
+}

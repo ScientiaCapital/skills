@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "sales-methodology-implementer-skill",
+  "description": "Implement proven sales methodologies (MEDDIC, BANT, Sandler, Challenger, SPIN) across your team. Generate framework-specific questions, score deals, train reps, and enforce consistent qualification. Use when implementing or optimizing sales processes.",
+  "category": "Sales Intelligence",
+  "activation_triggers": ["sales methodology", "implement MEDDIC", "BANT framework", "Sandler training", "SPIN selling"],
+  "tags": ["sales", "gtm"],
+  "author": "Tim Kipper"
+}

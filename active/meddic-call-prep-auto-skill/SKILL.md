@@ -79,7 +79,23 @@ Extract: deal stage, deal amount, lifecycle stage, prior notes, form submissions
 | `apollo_people_match` | Each attendee — title, seniority, department |
 | `apollo_organizations_job_postings` | Active AV/IT hiring = buying signal |
 
-### 1d. Prior Conversation Context
+### 1d. Clari Conversation History
+| Tool | Purpose |
+|------|---------|
+| `clari_search_calls` | Find prior calls with this prospect (by attendeeEmail, last 90 days) |
+| `clari_get_call_summary` | Get AI summary, action items, key moments for each call |
+
+For each attendee email:
+1. `clari_search_calls(attendeeEmail=attendee_email, daysBack=90)`
+2. For up to 3 most recent calls: `clari_get_call_summary(callId=call_id)`
+3. Extract:
+   - **Prior conversation topics**: What was discussed last time?
+   - **Unresolved action items**: What did we promise to follow up on?
+   - **Competitor mentions**: Were Extron, Blackmagic, Crestron, vMix, Teradek mentioned?
+   - **Objections raised**: Price, features, integration concerns?
+   - **MEDDIC gaps from prior call**: Which dimensions were NOT covered?
+
+### 1e. Prior Conversation Context
 | Tool | Purpose |
 |------|---------|
 | `ask_agent` | Query activity history, deal notes, and engagement timeline from CRM data warehouse |
@@ -89,7 +105,25 @@ Query `ask_agent` with: "Show recent activity, notes, and engagement history for
 
 Extract: what was discussed, commitments made, objections raised, next steps promised.
 
-### 1e. Epiphan CRM Check
+### 1f. Competitive Intelligence Context
+Check for stored competitive intel from the bdr-v3-competitive-intel daily task:
+1. Search Gmail for recent competitive intel reports: `gmail_search_messages(q="subject:competitive-intel from:me newer_than:7d")`
+2. If company or competitor was mentioned in recent Clari extractions, pull the relevant battlecard context
+3. Integrate into MEDDIC brief:
+   - **If competitor mentioned in Clari calls**: Include displacement talking points
+   - **If no competitor mentioned**: Include proactive competitive positioning for top 2 competitors in prospect's vertical
+   - **Specific objection rebuttals**: Map Clari objections to prepared responses
+
+**Competitive Quick Reference (by vertical):**
+| Vertical | Primary Competitor | Displacement Angle |
+|----------|-------------------|-------------------|
+| Higher Ed | Extron SMP (discontinued) | Extron EOL → Pearl migration path |
+| Corporate AV | Crestron | Pearl = simpler, no programmer needed |
+| Houses of Worship | vMix | Pearl = hardware reliability, no PC crashes |
+| Healthcare | Blackmagic | Pearl = HIPAA-friendly, Connect cloud mgmt |
+| Courts/Legal | Teradek | Pearl = all-in-one, no separate encoder needed |
+
+### 1g. Epiphan CRM Check
 | Tool | Purpose |
 |------|---------|
 | `crm_search_customers` | Existing customer match — devices, orders, channel relationship |
@@ -182,9 +216,21 @@ PRIOR CONVERSATION CONTEXT:
 - Follow-ups promised: [...]
 
 COMPETITIVE INTEL:
-- Current solution: [if known]
-- Displacement angle: [Extron exit / Matrox exit / manual process]
-- Competitor mentions: [from prior calls]
+🆚 COMPETITOR STATUS
+[Detection result from Clari calls or CRM]
+
+If competitor detected:
+```
+Competitor detected: [name] (from Clari call on [date])
+Displacement angle: [specific talking point]
+Objection prep: [specific rebuttal to raised objection]
+Key differentiator: [most relevant Pearl advantage]
+```
+
+If no competitor detected:
+```
+No competitor identified — lead with [vertical-specific value prop]
+```
 
 DISCOVERY QUESTIONS (ask these):
 1. [Personalized question based on trigger/enrichment]
@@ -229,6 +275,8 @@ When trigger is "demo prep" instead of "call prep", append:
 - **Google Calendar MCP:** gcal_list_events, gcal_get_event
 - **Epiphan CRM MCP:** hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_deal, crm_search_customers, analytics_search_by_email, ask_agent (activity history queries)
 - **Apollo MCP:** apollo_organizations_enrich, apollo_people_match, apollo_organizations_job_postings
+- **Clari MCP (NEW):** clari_search_calls, clari_get_call_summary
+- **Gmail MCP:** gmail_search_messages (for competitive intel reports)
 
 ## Sibling Skills Referenced
 - `sales-revenue-skill` — MEDDIC framework, objection handling (LAER), demo flow

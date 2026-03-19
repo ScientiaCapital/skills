@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "callable-lead-count-skill",
+  "description": "Daily callable lead inventory with ATL/BTL breakdown. Health check for 50+ daily dials.",
+  "category": "BDR Automation",
+  "activation_triggers": ["callable leads", "lead inventory", "ATL runway", "lead count", "how many leads", "dial inventory"],
+  "tags": ["bdr", "automation", "daily"],
+  "author": "Tim Kipper"
+}

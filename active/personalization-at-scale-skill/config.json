@@ -1,0 +1,9 @@
+{
+  "version": "1.0.0",
+  "name": "personalization-at-scale-skill",
+  "description": "Generate unique personalized first lines for hundreds of prospects using company news, LinkedIn activity, and mutual connections. Saves 10+ hours of manual research per campaign. Use when you need personalized outreach at volume.",
+  "category": "Sales Intelligence",
+  "activation_triggers": ["personalize at scale", "first lines", "personalized outreach", "batch personalization"],
+  "tags": ["sales", "gtm"],
+  "author": "Tim Kipper"
+}
