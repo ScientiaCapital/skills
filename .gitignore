@@ -64,3 +64,23 @@ costs/*.json
 .env
 .env.local
 .env.*.local
+
+# Operational outputs (session artifacts, not project code)
+BDR_*.md
+DEDUP_*.md
+README_DEDUP*.md
+DAILY-BRIEFING-*.md
+FRESH-CAPITAL-*.md
+OXY-*.md
+POSITION-TRACKER-*.md
+phone-waterfall-report-*.md
+callable_lead_log.txt
+trading-digest-*.pdf
+jean-coaching-dashboard-spec.pdf
+Tim_Kipper_*.pdf
+
+# Drafts (not production skills)
+drafts/
+
+# Memory (project-level, not code)
+memory/
