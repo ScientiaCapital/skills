@@ -1,5 +1,5 @@
 {
-  "name": "security",
+  "name": "security-skill",
   "version": "1.0.0",
   "category": "Dev Tools",
   "description": "Application security patterns: auth, secrets, OWASP top 10, input validation, RLS",

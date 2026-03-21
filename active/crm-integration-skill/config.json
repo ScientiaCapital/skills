@@ -1,9 +1,11 @@
 {
-  "name": "crm-integration",
+  "name": "crm-integration-skill",
   "version": "1.0.0",
   "category": "Business",
   "description": "Unified CRM integration patterns for Close CRM, HubSpot, and Salesforce",
-  "requires": ["close-api-or-hubspot-oauth-or-salesforce-jwt"],
+  "requires": [
+    "close-api-or-hubspot-oauth-or-salesforce-jwt"
+  ],
   "depends_on": [],
   "integrates_with": [
     "hubspot-revops-skill",

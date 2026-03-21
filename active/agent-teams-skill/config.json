@@ -1,8 +1,15 @@
 {
-  "name": "agent-teams",
+  "name": "agent-teams-skill",
   "version": "1.2.0",
   "category": "Dev Tools",
-  "activation_triggers": ["set up agent team", "parallel development", "coordinate Claude sessions", "team of agents", "spawn agents", "agent coordination"],
+  "activation_triggers": [
+    "set up agent team",
+    "parallel development",
+    "coordinate Claude sessions",
+    "team of agents",
+    "spawn agents",
+    "agent coordination"
+  ],
   "constraints": {
     "max_agents": 6,
     "ram_per_agent_mb": 1500,
@@ -31,6 +38,12 @@
   "monitoring": {
     "poll_interval_seconds": 30,
     "timeout_minutes": 60,
-    "status_values": ["STARTING", "IN_PROGRESS", "DONE", "ERROR"]
-  }
+    "status_values": [
+      "STARTING",
+      "IN_PROGRESS",
+      "DONE",
+      "ERROR"
+    ]
+  },
+  "description": "Orchestrate teams of parallel Claude Code sessions working on the same codebase. Handles task decomposition, agent coordination, context isolation, and merge strategies. Builds on worktree-manager for infrastructure."
 }

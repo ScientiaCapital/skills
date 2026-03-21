@@ -1,5 +1,5 @@
 {
-  "name": "planning-prompts",
+  "name": "planning-prompts-skill",
   "version": "1.0.0",
   "category": "Dev Tools",
   "description": "Hierarchical project planning and meta-prompt creation for Claude-to-Claude workflows",

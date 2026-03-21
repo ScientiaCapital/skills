@@ -1,5 +1,5 @@
 {
-  "name": "workflow-orchestrator",
+  "name": "workflow-orchestrator-skill",
   "version": "2.0.0",
   "category": "Core",
   "description": "Dual-team workflow orchestration with Builder + Observer teams, cost tracking, model routing, security gates, and devil's advocate pattern",

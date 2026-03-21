@@ -1,5 +1,5 @@
 {
-  "name": "project-context",
+  "name": "project-context-skill",
   "version": "1.0.0",
   "category": "Core",
   "description": "Maintains project context and progress tracking across Claude sessions",

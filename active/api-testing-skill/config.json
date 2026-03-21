@@ -1,9 +1,11 @@
 {
-  "name": "api-testing",
+  "name": "api-testing-skill",
   "version": "1.0.0",
   "category": "Dev Tools",
   "description": "Tool-based API testing with Postman and Bruno, including CI/CD integration",
-  "requires": ["postman-or-bruno"],
+  "requires": [
+    "postman-or-bruno"
+  ],
   "depends_on": [
     "api-design-skill",
     "testing-skill"

@@ -1,5 +1,5 @@
 {
-  "name": "phone-verification-waterfall",
+  "name": "phone-verification-waterfall-skill",
   "version": "1.0.0",
   "category": "Business",
   "subcategory": "Sales Operations",
@@ -78,5 +78,6 @@
   },
   "author": "Tim Knottenbelt (BDR/Application Engineer, Epiphan Video)",
   "created": "2026-03-15",
-  "last_updated": "2026-03-15"
+  "last_updated": "2026-03-15",
+  "description": "Always-on callable lead pipeline for BDRs: HubSpot lead pull → Apollo phone lookup → Clay waterfall enrichment → HubSpot sync → callable queue. Ensures 50+ daily dials by maintaining verified phone inventory. Runs scheduled Mon & Wed 6:15 AM (between prospect-enrich 6:00 and prospect-refresh 6:30). Use when: 'verify phones', 'phone waterfall', 'callable leads', 'who can I call', 'dial list', 'always have someone to call', 'phone check', 'enrich phones'."
 }

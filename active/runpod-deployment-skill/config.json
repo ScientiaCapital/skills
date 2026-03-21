@@ -1,9 +1,12 @@
 {
-  "name": "runpod-deployment",
+  "name": "runpod-deployment-skill",
   "version": "1.0.0",
   "category": "Infrastructure",
   "description": "Expert-level RunPod deployment patterns for GPU serverless workloads",
-  "requires": ["runpod-account", "github-actions"],
+  "requires": [
+    "runpod-account",
+    "github-actions"
+  ],
   "depends_on": [],
   "integrates_with": [
     "unsloth-training-skill"

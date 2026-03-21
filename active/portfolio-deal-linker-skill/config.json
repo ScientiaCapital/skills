@@ -2,7 +2,13 @@
   "name": "portfolio-deal-linker-skill",
   "version": "1.0.0",
   "category": "Business",
-  "depends_on": ["portfolio-artifact-skill", "deal-momentum-analyzer-skill", "prospect-research-to-cadence-skill", "meddic-call-prep-auto-skill", "hubspot-revops-skill"],
+  "depends_on": [
+    "portfolio-artifact-skill",
+    "deal-momentum-analyzer-skill",
+    "prospect-research-to-cadence-skill",
+    "meddic-call-prep-auto-skill",
+    "hubspot-revops-skill"
+  ],
   "mcp_tools": [
     "hubspot_search_deals",
     "hubspot_get_deal",
@@ -30,5 +36,6 @@
   },
   "impact": {
     "description": "Career-critical for VP BD transition — auto-builds evidence of revenue influenced, operational leverage, and systems thinking"
-  }
+  },
+  "description": "Auto-update GTME portfolio when HubSpot deals close. Links deal outcomes (won/lost, revenue, cycle time) to the skills, automations, and outreach that influenced them — building VP BD transition evidence automatically. Runs daily at 7am CST or on-demand. Use when: 'portfolio update', 'deal closed', 'link deal to portfolio', 'gtme evidence', 'what did I influence', 'career evidence', 'transition tracker'."
 }

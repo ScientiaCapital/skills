@@ -1,5 +1,5 @@
 {
-  "name": "langgraph-agents",
+  "name": "langgraph-agents-skill",
   "version": "2.0.0",
   "category": "Infrastructure",
   "description": "Multi-agent systems with LangGraph: supervisor, swarm, handoff, router, functional API, Deep Agents, MCP integration, guardrails, testing, observability, deployment",

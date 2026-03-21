@@ -1,10 +1,32 @@
 {
-  "name": "portfolio-artifact",
+  "name": "portfolio-artifact-skill",
   "version": "1.0.0",
   "category": "Core",
-  "depends_on": ["workflow-orchestrator-skill", "cost-metering-skill", "git-workflow-skill"],
-  "activation_triggers": ["capture metrics", "portfolio report", "what did I ship", "weekly summary"],
+  "depends_on": [
+    "workflow-orchestrator-skill",
+    "cost-metering-skill",
+    "git-workflow-skill"
+  ],
+  "activation_triggers": [
+    "capture metrics",
+    "portfolio report",
+    "what did I ship",
+    "weekly summary"
+  ],
   "storage_path": "~/.claude/portfolio/",
-  "metrics": ["commits", "features", "fixes", "lines_added", "lines_removed", "cost", "tests_added"],
-  "report_types": ["executive", "weekly", "sprint"]
+  "metrics": [
+    "commits",
+    "features",
+    "fixes",
+    "lines_added",
+    "lines_removed",
+    "cost",
+    "tests_added"
+  ],
+  "report_types": [
+    "executive",
+    "weekly",
+    "sprint"
+  ],
+  "description": "Auto-extract GTME metrics from work sessions. Lines shipped, bugs fixed, PRs merged, cost per feature. Weekly digests and executive summaries. Use when: capture metrics, portfolio report, what did I ship, weekly summary."
 }

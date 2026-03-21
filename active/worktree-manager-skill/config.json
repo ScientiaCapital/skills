@@ -1,8 +1,12 @@
 {
-  "name": "worktree-manager",
+  "name": "worktree-manager-skill",
   "version": "1.2.0",
   "category": "Dev Tools",
-  "activation_triggers": ["create worktree", "parallel development", "cleanup worktrees"],
+  "activation_triggers": [
+    "create worktree",
+    "parallel development",
+    "cleanup worktrees"
+  ],
   "terminal": "ghostty",
   "terminalPreference": "auto",
   "enableNumberedTabs": true,
@@ -15,9 +19,16 @@
   },
   "portsPerWorktree": 2,
   "worktreeBase": "~/tmp/worktrees",
-  "defaultCopyDirs": [".agents"],
-  "envFilePriority": [".env.local", ".env", ".env.example"],
+  "defaultCopyDirs": [
+    ".agents"
+  ],
+  "envFilePriority": [
+    ".env.local",
+    ".env",
+    ".env.example"
+  ],
   "maxConcurrentWorktrees": 3,
   "memoryWarningThresholdGB": 6,
-  "autoCleanupOnMerge": true
+  "autoCleanupOnMerge": true,
+  "description": "Parallel development with git worktrees and Claude Code agents. Handles Ghostty terminal launching, port allocation, and global registry. Use when creating worktrees, managing parallel development, or launching agents in isolated workspaces."
 }

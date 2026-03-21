@@ -2,7 +2,11 @@
   "name": "prospect-research-to-cadence-skill",
   "version": "1.0.0",
   "category": "Business",
-  "depends_on": ["sales-revenue-skill", "hubspot-revops-skill", "research-skill"],
+  "depends_on": [
+    "sales-revenue-skill",
+    "hubspot-revops-skill",
+    "research-skill"
+  ],
   "mcp_tools": [
     "apollo_organizations_enrich",
     "apollo_organizations_job_postings",
@@ -30,5 +34,6 @@
     "time_saved_daily_min": 90,
     "revenue_lift_monthly": "$12K",
     "description": "Eliminates manual research bottleneck — Apollo enrichment + personalized outreach + sequence load in one workflow"
-  }
+  },
+  "description": "End-to-end prospect research pipeline: Apollo enrichment → personalized email + call scripts → draft review → Apollo sequence load. Eliminates manual research bottleneck. Use when: 'research prospect', 'prospect [company]', 'build cadence for', 'outreach for [company]', 'research-to-cadence', 'enrich and sequence', 'new prospect batch'."
 }

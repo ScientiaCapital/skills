@@ -2,7 +2,12 @@
   "name": "deal-momentum-analyzer-skill",
   "version": "1.0.0",
   "category": "Business",
-  "depends_on": ["hubspot-revops-skill", "sales-revenue-skill", "meddic-call-prep-auto-skill", "portfolio-artifact-skill"],
+  "depends_on": [
+    "hubspot-revops-skill",
+    "sales-revenue-skill",
+    "meddic-call-prep-auto-skill",
+    "portfolio-artifact-skill"
+  ],
   "mcp_tools": [
     "hubspot_search_deals",
     "hubspot_search_companies",
@@ -35,5 +40,6 @@
     "recovered_pipeline_monthly": "$18K",
     "recovery_rate": "5-10% of stalled deals",
     "description": "Surfaces at-risk deals with specific recovery actions before they slip"
-  }
+  },
+  "description": "Deal health scoring + next-best-action for every open deal. Pulls HubSpot deals, CRM activity history, and engagement data to flag stalled deals, predict close probability, and recommend specific recovery actions. Runs daily at 7am CST or on-demand. Use when: 'deal health', 'pipeline review', 'stalled deals', 'deal momentum', 'which deals need attention', 'morning brief', 'SOD'."
 }

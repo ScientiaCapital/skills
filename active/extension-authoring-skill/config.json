@@ -1,5 +1,5 @@
 {
-  "name": "extension-authoring",
+  "name": "extension-authoring-skill",
   "version": "1.1.0",
   "category": "Dev Tools",
   "description": "Comprehensive guide for authoring Claude Code extensions: skills, hooks, commands, subagents",

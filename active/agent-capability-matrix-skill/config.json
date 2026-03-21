@@ -1,13 +1,22 @@
 {
-  "name": "agent-capability-matrix",
+  "name": "agent-capability-matrix-skill",
   "version": "1.0.0",
   "category": "Dev Tools",
-  "depends_on": ["workflow-orchestrator-skill"],
-  "activation_triggers": ["which agent", "route task", "agent for this", "best agent", "capability matrix"],
+  "depends_on": [
+    "workflow-orchestrator-skill"
+  ],
+  "activation_triggers": [
+    "which agent",
+    "route task",
+    "agent for this",
+    "best agent",
+    "capability matrix"
+  ],
   "total_agents_cataloged": 70,
   "model_tiers": {
     "fast": "haiku",
     "standard": "sonnet",
     "premium": "opus"
-  }
+  },
+  "description": "Map task types to the best agent, skill, model, and fallback. Route any task to the right tool. Use when: which agent, route task, agent for this, best agent, capability matrix."
 }

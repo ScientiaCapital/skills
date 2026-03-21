@@ -1,9 +1,16 @@
 {
-  "name": "cost-metering",
+  "name": "cost-metering-skill",
   "version": "1.1.0",
   "category": "Core",
-  "depends_on": ["workflow-orchestrator-skill"],
-  "activation_triggers": ["cost check", "budget status", "how much spent", "optimize costs"],
+  "depends_on": [
+    "workflow-orchestrator-skill"
+  ],
+  "activation_triggers": [
+    "cost check",
+    "budget status",
+    "how much spent",
+    "optimize costs"
+  ],
   "budget_defaults": {
     "monthly": 100,
     "daily": 5,
@@ -11,7 +18,11 @@
     "alert_warn": 0.8,
     "alert_block": 0.95
   },
-  "integrates_with": ["trading-signals-skill", "hubspot-revops-skill"],
+  "integrates_with": [
+    "trading-signals-skill",
+    "hubspot-revops-skill"
+  ],
   "storage_path": "~/.claude/daily-cost.json",
-  "log_path": "~/.claude/cost-log.jsonl"
+  "log_path": "~/.claude/cost-log.jsonl",
+  "description": "Track and manage API costs across sessions. Budget alerts, model routing for cost optimization, spend reports. Use when: cost check, budget status, how much spent, optimize costs, cost tracking."
 }

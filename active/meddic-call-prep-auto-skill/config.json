@@ -2,7 +2,11 @@
   "name": "meddic-call-prep-auto-skill",
   "version": "1.0.0",
   "category": "Business",
-  "depends_on": ["sales-revenue-skill", "prospect-research-to-cadence-skill", "hubspot-revops-skill"],
+  "depends_on": [
+    "sales-revenue-skill",
+    "prospect-research-to-cadence-skill",
+    "hubspot-revops-skill"
+  ],
   "mcp_tools": [
     "gcal_list_events",
     "gcal_get_event",
@@ -28,5 +32,6 @@
   "impact": {
     "time_saved_daily_min": 45,
     "description": "Eliminates 15-20 min manual demo prep per call"
-  }
+  },
+  "description": "Auto-generate MEDDIC-structured call prep scripts from prospect context. Pulls HubSpot deal + contact data, Apollo enrichment, CRM activity history, and calendar context to build a complete demo/discovery brief in 60 seconds. Use when: 'call prep', 'prep me for', 'demo prep', 'discovery prep', 'meddic brief', 'prep [company]', 'get me ready for [company]'."
 }

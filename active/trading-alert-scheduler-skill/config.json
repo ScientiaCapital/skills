@@ -2,7 +2,10 @@
   "name": "trading-alert-scheduler-skill",
   "version": "1.0.0",
   "category": "Business",
-  "depends_on": ["trading-signals-skill", "ibkr-api-skill"],
+  "depends_on": [
+    "trading-signals-skill",
+    "ibkr-api-skill"
+  ],
   "mcp_tools": [],
   "web_search_required": true,
   "activation_triggers": [
@@ -25,5 +28,6 @@
   "impact": {
     "time_saved_daily_min": 30,
     "description": "No IBKR distraction during 50-call BDR days + fewer missed setups"
-  }
+  },
+  "description": "Market signals → daily digest delivered before market open. Scans watchlist tickers for regime changes, technical setups, options flow anomalies, and IBKR position health — then delivers a prioritized action list. No IBKR distraction during 50-call BDR days. Use when: 'market digest', 'trading alerts', 'pre-market scan', 'watchlist check', 'what's setting up', 'trading morning brief', 'market open prep'."
 }

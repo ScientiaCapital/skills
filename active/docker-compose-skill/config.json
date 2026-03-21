@@ -1,8 +1,14 @@
 {
-  "name": "docker-compose",
+  "name": "docker-compose-skill",
   "version": "1.0.0",
   "category": "Dev Tools",
-  "activation_triggers": ["docker compose", "local dev", "postgres container", "redis local", "dev environment"],
+  "activation_triggers": [
+    "docker compose",
+    "local dev",
+    "postgres container",
+    "redis local",
+    "dev environment"
+  ],
   "defaultPostgresVersion": "16-alpine",
   "defaultRedisVersion": "7-alpine",
   "defaultMongoVersion": "7",
@@ -23,5 +29,6 @@
     "interval": "5s",
     "timeout": "5s",
     "retries": 5
-  }
+  },
+  "description": "Local dev environments with Docker Compose - multi-service setups, databases, hot reload, debugging. Use when: docker compose, local dev, postgres container, redis local, dev environment."
 }

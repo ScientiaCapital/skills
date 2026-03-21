@@ -1,9 +1,11 @@
 {
-  "name": "testing",
+  "name": "testing-skill",
   "version": "1.0.0",
   "category": "Dev Tools",
   "description": "Comprehensive testing: TDD workflow, test pyramid, mocking patterns, coverage strategies",
-  "requires": ["vitest-or-jest"],
+  "requires": [
+    "vitest-or-jest"
+  ],
   "depends_on": [],
   "integrates_with": [
     "api-testing-skill",
