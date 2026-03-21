@@ -61,8 +61,7 @@ Golden Rules Pass   →                            →                          
 Criteria (ALL must match):
 - phone IS NULL OR phone = '' (empty string)
 - lifecyclestage != 'customer'
-- NOT hubspot_owner_id IN (82625923, 423155215, 190030668)
-  (Exclude AEs: Lex Evans, Ron Epstein, Phillip Sandler)
+- AE-owned (82625923, 423155215, 190030668): EXCLUDE if <90d activity. KEEP as STALE AE LEAD if >90d inactive (Tim reviews ATL/BTL + value). Ron=all, Lex/Phil=NA only.
 
 Golden Rules Hard Gate (SKIP if ANY match):
 - first_conversion contains ['Pearl', 'setup', 'Connect', 'signup']
@@ -455,7 +454,7 @@ WEDNESDAY MORNING SEQUENCE (mid-week refresh):
 | `first_conversion` | contains 'Pearl' OR 'setup' OR 'Connect' | SKIP |
 | Company `device_count` | >= 1 | SKIP |
 | Company `is_channel` | true | SKIP |
-| `hubspot_owner_id` | 82625923, 423155215, 190030668 | SKIP (AEs: Lex Evans, Ron Epstein, Phillip Sandler) |
+| `hubspot_owner_id` | 82625923, 423155215, 190030668 | 90-day stale exception: KEEP if no activity >90d (Tim reviews ATL/BTL + value). SKIP if <90d. Ron=all, Lex/Phil=NA only. |
 
 **Rationale:**
 - Customers are in a different sales motion (success, upsell, retention)

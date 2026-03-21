@@ -65,7 +65,11 @@ limit: 100
 - **EXCLUDE:** `device_count >= 1` (device owner)
 - **EXCLUDE:** `engagement_overview` contains product usage (product-only engager)
 - **EXCLUDE:** `is_channel = true` (channel partner)
-- **EXCLUDE:** `hubspot_owner_id IN (82625923, 423155215)` — AE-owned contacts (do not prospect)
+- **AE-OWNED (90-Day Stale Exception):** `hubspot_owner_id IN (82625923, 423155215, 190030668)`
+  - If `hs_lastmodifieddate` > 90 days ago → **KEEP** but tag as `STALE AE LEAD` with ATL/BTL tier + deal value. Tim reviews.
+  - Ron Epstein (423155215): 90-day rule applies to ALL leads
+  - Lex Evans (82625923) & Phillip Sandler (190030668): 90-day rule applies to NA contacts only (USA/Canada). Non-NA → still exclude.
+  - If last activity < 90 days → **EXCLUDE** (AE actively working)
 - **EXCLUDE:** `first_conversion ILIKE '%setup%'` — product setup forms only (not sales interest)
 - **Keep:** Geo filter to USA/Canada only
 

@@ -79,8 +79,10 @@ Clay acts as a **waterfall fallback** — it aggregates 50+ data providers. Use 
 - `engagement_overview` contains product usage
 - `is_channel = true`
 - `hubspot_owner_id` IN ('82625923', '423155215', '190030668') — AEs: Lex Evans, Ron Epstein, Phillip Sandler
+  → **90-Day Stale Exception:** If `hs_lastmodifieddate` > 90 days ago → SURFACE as `STALE AE LEAD` with ATL/BTL tier + deal value. Tim reviews to re-engage, push to demo, or help close.
+  → Ron Epstein: all leads. Lex & Phil: NA only. <90 days → still exclude.
 
-**OPERATING PRINCIPLE:** NEVER chase deals or opportunities attached to AEs Lex, Phil, Ron, or Anthony. Tim is NET-NEW only.
+**OPERATING PRINCIPLE:** Tim is NET-NEW first, but can re-engage STALE AE leads (90+ days inactive) to recover pipeline value.
 
 ### 1c. Contact Discovery
 Use `apollo_mixed_people_api_search` with filters:

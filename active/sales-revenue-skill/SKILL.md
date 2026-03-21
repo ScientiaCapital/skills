@@ -349,7 +349,7 @@ See: `challenger-sale-skill`, `never-split-the-difference-skill`, `jobs-to-be-do
 - `company.device_count >= 1` — Has active devices, route to AE/CSM
 - `engagement_overview` contains product usage data — Already engaged, notify AE
 - `is_channel = true` — Channel partner, route to channel manager
-- `hubspot_owner_id IN ('82625923', '423155215', '190030668')` — Owned by AE Lex Evans, Ron Epstein, Phillip Sandler (respect ownership)
+- `hubspot_owner_id IN ('82625923', '423155215', '190030668')` — AEs: Lex Evans, Ron Epstein, Phillip Sandler → **90-day stale exception**: if no activity >90d, surface as STALE AE LEAD for Tim (ATL/BTL + deal value). Ron=all, Lex/Phil=NA only. <90d=respect ownership.
 
 **Action:** Before adding to Apollo sequence, query Epiphan CRM MCP to validate lead state.
 

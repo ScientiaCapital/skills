@@ -79,6 +79,25 @@ Always use portal ID `21530819` when generating HubSpot links. Never use `436644
 - **Gmail Draft Workflow:** When building call lists, ALWAYS create Gmail drafts via `gmail_create_draft` for every lead. Tim's workflow: call → open draft → review/edit → send.
 - **Never use:** robert@epiphan.com or any other sender
 
+## Golden Rules — Lead Qualification Gates
+
+These apply to ALL BDR skills that touch contacts (enrichment, outreach, call lists, sequences):
+
+1. **Customers:** `lifecyclestage = 'customer'` or `device_count >= 1` → **EXCLUDE**
+2. **Channel Partners:** `is_channel = true` → **EXCLUDE**
+3. **Product-only Engagers:** `first_conversion` contains setup forms (not demo/pricing) → **EXCLUDE**
+4. **AE-Owned Contacts (90-Day Stale Exception):**
+   - `hubspot_owner_id` IN `82625923` (Lex Evans), `423155215` (Ron Epstein), `190030668` (Phillip Sandler)
+   - **If last activity > 90 days ago** → **SURFACE** to Tim as `STALE AE LEAD`. Show ATL/BTL tier, deal value, recommended action (re-engage, push to demo, or help close). Tim decides.
+   - **Ron Epstein (423155215):** 90-day stale rule applies to ALL his leads
+   - **Lex Evans (82625923) & Phillip Sandler (190030668):** 90-day stale rule applies to **North America only** (USA/Canada). Non-NA contacts with <90 day activity → still exclude.
+   - **If last activity < 90 days** → **EXCLUDE** (AE actively working)
+5. **Geo:** USA/Canada only (unless specified)
+
+> **Updated 2026-03-21:** Changed AE-owned from hard-exclude to 90-day stale exception. Tim Kipper (BDR) can review and re-engage stale AE leads to push toward demo or closed-won.
+
+---
+
 ## For Individual Projects
 
 To use a skill in another project, either:
