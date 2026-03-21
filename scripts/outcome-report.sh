@@ -92,9 +92,14 @@ echo "$FILTERED" | jq -r '.skill' 2>/dev/null | sort -u | while read -r skill; d
     [ -z "$skill" ] && continue
     SKILL_DATA=$(echo "$FILTERED" | jq -c "select(.skill == \"$skill\")")
 
-    RUNS=$(echo "$SKILL_DATA" | grep -c '"skill"' 2>/dev/null || echo "0")
-    SUCCESS=$(echo "$SKILL_DATA" | jq -r '.status' 2>/dev/null | grep -c '^success$' || echo "0")
-    PARTIAL=$(echo "$SKILL_DATA" | jq -r '.status' 2>/dev/null | grep -c '^partial$' || echo "0")
+    STATUSES=$(echo "$SKILL_DATA" | jq -r '.status' 2>/dev/null)
+    [ -z "$STATUSES" ] && continue
+
+    RUNS=$(echo "$STATUSES" | wc -l | tr -d '[:space:]')
+    SUCCESS=$(echo "$STATUSES" | grep -c '^success$' 2>/dev/null || true)
+    PARTIAL=$(echo "$STATUSES" | grep -c '^partial$' 2>/dev/null || true)
+    SUCCESS=${SUCCESS:-0}; PARTIAL=${PARTIAL:-0}
+    [ "$RUNS" -eq 0 ] && continue
     RATE=$(( (SUCCESS + PARTIAL) * 100 / RUNS ))
 
     # Average runtime
