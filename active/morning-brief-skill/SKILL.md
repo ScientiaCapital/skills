@@ -450,6 +450,15 @@ INSERT INTO disposition (
 3. sequence-load (Monday 7:15 AM) — auto-enroll in sequences
 4. callable-lead-count (M-F 7:25 AM) — inventory health check
 
+**Stage 11: Emit Outcome Sidecar**
+Write to `~/.claude/skill-analytics/last-outcome-morning-brief.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"morning-brief","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[est ms],
+ "metrics":{"dial_list_count":[leads listed],"deals_scored":[deals in pipeline table],
+ "drafts_created":[Gmail drafts],"atl_runway_days":[ATL runway]},"session_id":"[YYYY-MM-DD]"}
+```
+
 **Downstream (Feeds from this brief):**
 - Tim's manual dialing workflow (7:30 AM - 5:00 PM)
 - Disposition logging to Supabase (cooldown tracking)

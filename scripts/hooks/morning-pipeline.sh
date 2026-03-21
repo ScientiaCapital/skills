@@ -24,6 +24,22 @@ PENDING=""
 [ "$LAST_PORTFOLIO" != "$TODAY" ] && PENDING="${PENDING} portfolio-linker"
 [ "$LAST_TRADING" != "$TODAY" ] && PENDING="${PENDING} trading-alerts"
 
+# Skill health report staleness check (>7 days old)
+REPO_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
+HEALTH_FILE="$REPO_DIR/.claude/observers/SKILL_HEALTH.md"
+if [ -f "$HEALTH_FILE" ]; then
+    HEALTH_DATE=$(head -5 "$HEALTH_FILE" | grep -o '20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]' | head -1)
+    if [ -n "$HEALTH_DATE" ]; then
+        HEALTH_TS=$(date -jf "%Y-%m-%d" "$HEALTH_DATE" +%s 2>/dev/null || date -d "$HEALTH_DATE" +%s 2>/dev/null || echo "0")
+        NOW_TS=$(date +%s)
+        DAYS_OLD=$(( (NOW_TS - HEALTH_TS) / 86400 ))
+        [ "$DAYS_OLD" -gt 7 ] && PENDING="${PENDING} skill-health"
+    fi
+else
+    # No health report exists yet
+    PENDING="${PENDING} skill-health"
+fi
+
 if [ -n "$PENDING" ]; then
   cat <<EOF
 Morning workflows pending:${PENDING}

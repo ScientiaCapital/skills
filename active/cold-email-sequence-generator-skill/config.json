@@ -1,9 +1,20 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "cold-email-sequence-generator-skill",
   "description": "Generate personalized cold email sequences (7-14 emails) with A/B test subject lines, follow-up timing recommendations, and integrated social proof. Creates multi-touch campaigns optimized for response rates. Use when users need outbound email campaigns, sales sequences, or lead generation emails.",
   "category": "Sales Intelligence",
   "activation_triggers": ["cold email sequence", "email campaign", "outbound sequence", "lead gen emails"],
   "tags": ["sales", "gtm"],
-  "author": "Tim Kipper"
+  "author": "Tim Kipper",
+  "variants": {
+    "enabled": true,
+    "experiment_id": "cold-email-subject-style-001",
+    "active": ["control", "concise"],
+    "definitions": {
+      "control": { "weight": 50, "description": "Standard 7-email framework" },
+      "concise": { "weight": 50, "description": "5-email, 50-word max per email", "prompt_suffix": "Limit to 5 emails. Keep each email under 50 words. Shorter = higher reply rates." }
+    },
+    "start_date": "2026-03-21",
+    "end_date": "2026-04-04"
+  }
 }

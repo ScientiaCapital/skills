@@ -35,6 +35,16 @@
     ],
     "PostToolUse": [
       {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash scripts/log-outcome.sh",
+            "timeout": 3
+          }
+        ]
+      },
+      {
         "matcher": "Write|Edit",
         "hooks": [
           {

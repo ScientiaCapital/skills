@@ -17,7 +17,7 @@ skills/
 ├── README.md               # Quick start + skill catalog
 ├── SKILLS_INDEX.md         # Detailed skill documentation (67 skills)
 ├── DEPENDENCY_GRAPH.md     # Visual skill relationships
-├── PLANNING.md             # Current sprint (P11)
+├── PLANNING.md             # Current sprint (P12)
 ├── BACKLOG.md              # Future work
 ├── ARCHIVE.md              # Completed sprints
 ├── active/                 # 65 trigger-activated skills
@@ -26,18 +26,43 @@ skills/
 ├── scripts/
 │   ├── deploy.sh           # Deploy to ~/.claude/skills/
 │   ├── rebuild-zips.sh     # Rebuild dist/*.zip
-│   ├── test-skills.sh      # Integration tests (470 checks)
-│   ├── log-skill-usage.sh  # PostToolUse hook target
+│   ├── test-skills.sh      # Integration tests (537 checks, T1-T9)
+│   ├── test-outcomes.sh    # Infrastructure tests (T10-T14)
+│   ├── log-skill-usage.sh  # PostToolUse hook target (activations)
+│   ├── log-outcome.sh      # PostToolUse hook target (outcomes)
+│   ├── log-feedback.sh     # Feedback logger
+│   ├── validate-outcome.sh # Outcome schema validator
+│   ├── outcome-report.sh   # Outcome analytics CLI
+│   ├── variant-assigner.sh # Deterministic A/B variant assignment
 │   ├── skill-analytics-report.sh  # Usage reporting
+│   ├── skill-health-report.sh     # Skill health CLI ($0 cost)
 │   └── hooks/              # SessionStart + workflow hooks
 ├── templates/              # Skill starter templates
 └── .claude/
     ├── settings.json       # Hooks config (PreToolUse, PostToolUse, Stop)
     ├── settings.local.json # Permissions + observer hooks
-    ├── observers/          # QUALITY.md, ARCH.md, ALERTS.md
+    ├── agents/             # skill-health-observer.md, observer-lite.md, observer-full.md
+    ├── commands/           # skill-feedback.md, skill-health.md + 8 workflow commands
+    ├── observers/          # QUALITY.md, ARCH.md, ALERTS.md, SKILL_HEALTH.md
     ├── rules/              # coding.md
     └── SKILL_TEST_MATRIX.md  # Activation test results
 ```
+
+## Self-Improvement Infrastructure (P12)
+
+Autoresearch-style framework for skill outcome tracking, health scoring, and A/B variant testing.
+
+**Outcome Logging:** Pilot skills write sidecar JSON to `~/.claude/skill-analytics/last-outcome-{skill-name}.json`. A PostToolUse hook auto-captures these into `~/.claude/skill-analytics/outcomes.jsonl`. Schema: `{ts, skill, version, variant, status, runtime_ms, metrics{}, error, session_id}`. 90-day rotation.
+
+**Feedback:** `/skill-feedback <skill> <status> <notes>` — manual outcome recording for any skill. Writes to both `outcomes.jsonl` and `feedback.jsonl`.
+
+**Health Observer:** `/skill-health` spawns a Haiku agent to score per-skill health (success rate, consistency, data volume). `/skill-health --quick` runs bash-only report ($0). Output: `.claude/observers/SKILL_HEALTH.md`. Morning pipeline nudges if report >7 days stale.
+
+**A/B Variants:** Optional `variants` key in `config.json`. Deterministic hash-based assignment via `scripts/variant-assigner.sh`. Pilot: `cold-email-sequence-generator-skill` (control vs concise). Outcomes track variant for per-variant analysis.
+
+**Important:** Sidecar paths MUST stay outside the repo directory (`~/.claude/skill-analytics/`) — the PreToolUse observer hook bypasses writes to external paths.
+
+---
 
 ## HubSpot Configuration
 

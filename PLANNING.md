@@ -1,27 +1,33 @@
 # Skills Library Planning
 
-**Current Sprint:** P11 — Worked Examples + Metadata Refresh
-**Date:** 2026-03-17
+**Current Sprint:** P12 — Autoresearch Self-Improving Skills
+**Date:** 2026-03-21
 **Constraint:** M4 24GB RAM - max 5-6 parallel agents
 
 ---
 
 ## Active Work
 
-### P11: Worked Examples + Metadata Refresh (IN PROGRESS)
+### P12: Autoresearch Self-Improving Skills (IN PROGRESS)
 
-**Date:** 2026-03-17
-**Scope:** STANDARD — parallel agents + DA audit + code review.
+**Date:** 2026-03-21
+**Scope:** FULL — 5 phases, DA audit, 10 new files, 8 edits.
+**Inspired by:** Karpathy's autoresearch (immutable eval + mutable strategy + greedy hill climbing)
 
 | Task | Status |
 |------|--------|
-| Full pipeline test: JTBD→Blue Ocean→BMC→Challenger→NSTTD cold email | In Progress |
-| Add example_session to challenger-sale-skill (Higher Ed Pearl-2) | In Progress |
-| Add example_session + Negotiation One Sheet to NSTTD (Courts/Legal) | In Progress |
-| Update PLANNING.md (P10 + P11 entries) | In Progress |
-| Update observer files (QUALITY.md + ARCH.md → 49-skill state) | In Progress |
-| DA audit of new examples | Pending |
-| Code review + test suite | Pending |
+| Phase 1: Outcome logging (log-outcome.sh, validate, report, hook, 2 pilot skills) | Complete |
+| Phase 2: Feedback capture (/skill-feedback + log-feedback.sh) | Complete |
+| Phase 3: Skill health observer (agent, CLI, slash command, morning pipeline) | Complete |
+| Phase 4: A/B variants (variant-assigner.sh, cold-email pilot, T9, test-outcomes.sh T10-T14) | Complete |
+| Phase 5: Metadata updates (CLAUDE.md, BACKLOG.md, PLANNING.md) | In Progress |
+
+**Test Results:** 537 per-skill tests (T1-T9) + 8 infrastructure tests (T10-T14) = 545 total, all passing.
+
+### P11: Worked Examples + Metadata Refresh (COMPLETE)
+
+**Date:** 2026-03-17
+**Scope:** STANDARD — 49→67 skills, BDR automation pipeline, sales intelligence imports.
 
 ### P10: Strategy Cluster + Tech Debt Cleanup (COMPLETE)
 

@@ -243,6 +243,17 @@ Contacts that matched NEVER ENRICH titles — credits NOT spent.
 - Highest-value DEMO REQUESTs
 - Recommended next steps
 
+**Stage 8: Emit Outcome Sidecar**
+As the final step, write the following JSON to `~/.claude/skill-analytics/last-outcome-prospect-enrich.json`:
+```json
+{"ts":"[current UTC ISO8601]","skill":"prospect-enrich","version":"1.1.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"contacts_processed":[Stage 1 total],"phones_found":[Apollo+Clay hits],
+ "phone_match_rate_pct":[phones/contacts*100],"atl_count":[ATL tier],"demo_request_count":[DEMO tier],
+ "credits_used":[Apollo batch count]},"session_id":"[date YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated. Do not include contact names or emails in any field.
+
 **Next Steps:** Results feed into `phone-verification-waterfall-skill` for phoneless re-check and `prospect-refresh-skill` for net-new ICP search.
 
 </workflow>

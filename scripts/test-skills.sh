@@ -248,6 +248,49 @@ test_activation_triggers() {
     pass "$name: activation_triggers valid ($trigger_count triggers)"
 }
 
+# T9: Variant config validation (if variants key exists in config.json)
+test_variant_schema() {
+    local skill_dir="$1" name="$2"
+    local config="$skill_dir/config.json"
+    [[ ! -f "$config" ]] && return 0
+
+    # Skip if no variants key
+    if [[ $(jq 'has("variants")' "$config" 2>/dev/null) != "true" ]]; then
+        pass "$name: variants (none)"
+        return 0
+    fi
+
+    local errors=()
+
+    # Required subfields
+    [[ $(jq '.variants | has("enabled")' "$config" 2>/dev/null) != "true" ]] && errors+=("missing variants.enabled")
+    [[ $(jq '.variants | has("active")' "$config" 2>/dev/null) != "true" ]] && errors+=("missing variants.active")
+    [[ $(jq '.variants | has("definitions")' "$config" 2>/dev/null) != "true" ]] && errors+=("missing variants.definitions")
+
+    # Check active is a non-empty array
+    local active_count
+    active_count=$(jq '.variants.active | length' "$config" 2>/dev/null || echo "0")
+    [[ "$active_count" -eq 0 ]] && errors+=("variants.active is empty")
+
+    # Check each active variant has a definition
+    if [[ ${#errors[@]} -eq 0 ]]; then
+        local orphans
+        orphans=$(jq -r '.variants.active[] as $v | select(.variants.definitions[$v] == null) | $v' "$config" 2>/dev/null || echo "")
+        # Better check: iterate active variants and verify definition exists
+        for v in $(jq -r '.variants.active[]' "$config" 2>/dev/null); do
+            if [[ $(jq ".variants.definitions | has(\"$v\")" "$config" 2>/dev/null) != "true" ]]; then
+                errors+=("active variant '$v' has no definition")
+            fi
+        done
+    fi
+
+    if [[ ${#errors[@]} -gt 0 ]]; then
+        fail "$name: variant schema: ${errors[*]}"
+        return 1
+    fi
+    pass "$name: variant schema valid"
+}
+
 # --- Run per-skill tests (returns 1 if any test failed) ---
 
 run_skill_tests() {
@@ -263,6 +306,7 @@ run_skill_tests() {
     test_line_count      "$skill_dir" "$name" || skill_ok=false
     test_integrates_with "$skill_dir" "$name" || skill_ok=false
     test_activation_triggers "$skill_dir" "$name" || skill_ok=false
+    test_variant_schema  "$skill_dir" "$name" || skill_ok=false
 
     $skill_ok
 }

@@ -29,6 +29,15 @@ All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 
 ---
 
+## P12: Self-Improvement Infrastructure — Future Work
+
+- [ ] **Extend outcome emit to all 67 skills** — currently only 3 pilots (prospect-enrich, morning-brief, cold-email-sequence-generator). Effort: MEDIUM.
+- [ ] **Auto-variant promotion** — when a variant has statistically significant better success rate over 2 weeks, auto-update weight split. Effort: HIGH.
+- [ ] **Observer-driven prompt rewriting** — health observer proposes SKILL.md edits for underperforming skills, human approves. Effort: HIGH.
+- [ ] **Dashboard UI** — web-based visualization of outcomes.jsonl + SKILL_HEALTH.md. Effort: MEDIUM. Currently CLI-only.
+
+---
+
 ## P4: Tech Debt (from Observer/Test Findings)
 
 - [x] **trading-signals routing orphan audit** — 4 orphaned files (swarm-consensus, chinese-llm-stack, turtle-trading, wyckoff) added to routing table. 18/18 coverage. Completed 2026-03-13.

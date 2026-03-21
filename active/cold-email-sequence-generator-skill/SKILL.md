@@ -15,6 +15,18 @@ Craft personalized, value-driven cold email sequences (5-14 emails) with A/B tes
 **Output:** Full email sequence with subject lines (A/B), body copy, timing, personalization variables, and performance benchmarks
 </quick_start>
 
+<variant_support>
+This skill supports A/B variants via config.json.
+1. Read this skill's `config.json` — check if `variants.enabled` is true
+2. If enabled, run: `bash scripts/variant-assigner.sh cold-email-sequence-generator-skill $(date +%s)`
+3. Apply the `prompt_suffix` from the assigned variant's definition to modify the workflow
+4. Record the variant name in the outcome sidecar (see final stage below)
+
+**Current experiment:** `cold-email-subject-style-001`
+- `control`: Standard 7-email framework
+- `concise`: 5-email framework, 50-word max per email
+</variant_support>
+
 <success_criteria>
 - [ ] Sequence type selected (Classic 7-email, Fast-Track 5, Long-Play 12-14, Event-Based, Re-Engagement)
 - [ ] Each email has A/B subject lines, body copy, and clear single CTA
@@ -247,5 +259,15 @@ Adjust sequences by **Industry** (swap case studies, use industry terminology), 
 - [ ] CRM integration working
 - [ ] A/B tests configured
 - [ ] Daily send limits set (avoid spam flags)
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-cold-email-sequence-generator.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"cold-email-sequence-generator","version":"1.1.0",
+ "variant":"[assigned variant or default]","status":"[success|partial|error]",
+ "metrics":{"sequences_created":1,"emails_generated":[count],"ab_variants_written":[count]},
+ "session_id":"[YYYY-MM-DD]"}
+```
 
 </workflow>
