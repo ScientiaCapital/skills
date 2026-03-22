@@ -360,4 +360,15 @@ See: `challenger-sale-skill`, `never-split-the-difference-skill`, `jobs-to-be-do
 - `reference/outreach.md` - Email templates, Apollo sequences, Pearl messaging by vertical
 - `reference/revenue-ops.md` - Metrics, dashboards, forecasting, pipeline health
 - `reference/discovery.md` - MEDDIC scorecard, Pearl demo scripts, objection library (video capture specific)
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-sales-revenue.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"sales-revenue","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"emails_generated":[n],"calls_scripted":[n],"leads_qualified":[n],"pipeline_value":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
 </core_content>

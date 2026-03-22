@@ -436,3 +436,14 @@ Before deploying:
 - [ ] Admin routes protected
 - [ ] Rate limiting on auth endpoints
 </checklist>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-security.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"security","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"vulnerabilities_found":[n],"fixes_applied":[n],"audit_checks_passed":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

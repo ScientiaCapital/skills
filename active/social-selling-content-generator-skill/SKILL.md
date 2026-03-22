@@ -244,4 +244,15 @@ How accurate is your forecast?
 
 Remember: Social selling is about being helpful at scale!
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-social-selling-content-generator.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"social-selling-content-generator","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"posts_generated":[n],"content_types":[n],"comment_strategies":[n],"weeks_of_content":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </workflow>

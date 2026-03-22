@@ -486,14 +486,14 @@ CLAY STAGE (4 min):
   Waterfall returned phones for 41 additional contacts (31.8%)
   → Synced 41 to HubSpot
   → Final miss: 88 (no phone found)
-
 SYNC STAGE (30 sec):
   HubSpot batch updated 159 contacts (118 Apollo + 41 Clay)
   Tagged phone_source = 'apollo' or 'clay'
-
 QUEUE STAGE (30 sec):
   Sorted 159 by ICP score (Higher Ed first, K-12 last)
   Output: Callable queue ready for 50+ dials
 
 TOTAL TIME: 7 min 30 sec | CALLABLE: 159 verified | SUCCESS: 64.4%
 ```
+## Emit Outcome Sidecar
+Write `~/.claude/skill-analytics/last-outcome-phone-verification-waterfall.json`: `{"ts":"[UTC ISO8601]","skill":"phone-verification-waterfall","version":"1.0.0","variant":"default","status":"[success|partial|error]","runtime_ms":[ms],"metrics":{"contacts_processed":[n],"apollo_verified":[n],"clay_verified":[n],"total_callable":[n],"verification_rate_pct":[n]},"error":null,"session_id":"[YYYY-MM-DD]"}`

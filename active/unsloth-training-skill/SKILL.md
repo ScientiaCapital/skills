@@ -463,4 +463,15 @@ reward_funcs = [correctness_reward, brevity_reward, speakable_reward]
 ```
 
 3. See `reference/domain-examples.md` for complete Voice AI reward patterns.
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-unsloth-training.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"unsloth-training","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"models_trained":[n],"epochs_completed":[n],"exports_generated":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
 </example_session>

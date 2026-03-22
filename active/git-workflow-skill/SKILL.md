@@ -489,3 +489,7 @@ For detailed patterns, load the appropriate reference:
 
 **To load:** Ask for the specific topic or check if context suggests it.
 </references>
+
+## Emit Outcome Sidecar
+Write to `~/.claude/skill-analytics/last-outcome-git-workflow.json`:
+`{"ts":"[UTC ISO8601]","skill":"git-workflow","version":"1.0.0","variant":"default","status":"[success|partial|error]","runtime_ms":[ms],"metrics":{"commits_created":[n],"prs_opened":[n],"branches_managed":[n]},"error":null,"session_id":"[YYYY-MM-DD]"}`

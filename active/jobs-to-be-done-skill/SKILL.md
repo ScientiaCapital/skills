@@ -417,3 +417,14 @@ JTBD integrates with 4 other strategy skills for first-principles thinking:
 
 **Pipeline:** **JTBD (what job?)** → Blue Ocean (where's the space?) → BMC (how to deliver?) → Challenger (what insight?) → NSTTD (how to communicate?)
 </integration_points>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-jobs-to-be-done.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"jobs-to-be-done","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"job_statements_created":[n],"outcome_statements":[n],"odi_scores_calculated":[n],"underserved_outcomes":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

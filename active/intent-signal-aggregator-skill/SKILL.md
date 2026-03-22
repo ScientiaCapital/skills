@@ -120,4 +120,15 @@ You are an expert at identifying buyer intent signals that indicate a company is
 
 Remember: Intent signals are about TIMING. Same prospect, different time = different outcome!
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-intent-signal-aggregator.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"intent-signal-aggregator","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"accounts_scanned":[n],"signals_detected":[n],"hot_accounts":[n],"signal_types":{"funding":[n],"hiring":[n],"leadership":[n],"tech_stack":[n]}},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </workflow>

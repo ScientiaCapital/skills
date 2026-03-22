@@ -483,4 +483,8 @@ EMOTIONS (Cartesia):
   confirmation -> grateful
   complaint -> sympathetic
 ```
+
+## Emit Outcome Sidecar
+Write to `~/.claude/skill-analytics/last-outcome-voice-ai.json`:
+`{"ts":"[UTC ISO8601]","skill":"voice-ai","version":"1.0.0","variant":"default","status":"[success|partial|error]","runtime_ms":[ms],"metrics":{"agents_built":[n],"endpoints_configured":[n],"latency_targets_met":[n]},"error":null,"session_id":"[YYYY-MM-DD]"}`
 </quick_reference>

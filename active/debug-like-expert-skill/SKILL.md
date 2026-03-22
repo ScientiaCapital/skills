@@ -307,3 +307,14 @@ For deeper topics, see reference files:
 - Balancing research time vs experimentation
 
 </advanced_topics>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-debug-like-expert.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"debug-like-expert","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"hypotheses_tested":[n],"root_cause_found":[bool],"fix_verified":[bool]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

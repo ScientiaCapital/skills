@@ -309,13 +309,26 @@ associations: [
 
 ---
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-sequence-load.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"sequence-load","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"contacts_loaded":[n],"sequences_updated":[n],"duplicates_skipped":[n],"phone_validation_failures":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
+---
+
 ## Skill Metadata
 
-**Version:** 1.0  
-**Last Updated:** 2026-03-19  
-**Author:** Tim Kipper  
-**Status:** Production  
-**Integration:** Apollo + HubSpot (portal 21530819)  
-**Tier:** P1 (Core BDR Automation)  
-**Triggers:** Scheduled (Monday 7:15 AM) + Manual ("Load sequences")  
+**Version:** 1.0
+**Last Updated:** 2026-03-19
+**Author:** Tim Kipper
+**Status:** Production
+**Integration:** Apollo + HubSpot (portal 21530819)
+**Tier:** P1 (Core BDR Automation)
+**Triggers:** Scheduled (Monday 7:15 AM) + Manual ("Load sequences")
 **Dependencies:** prospect-refresh (6:30 AM) → sequence-load (7:15 AM) → morning-brief (7:30 AM)

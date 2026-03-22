@@ -494,3 +494,7 @@ def resolve_conflict(close_record, hubspot_record, strategy):
 <clay_mcp_pattern>
 See `reference/clay-enrichment-patterns.md` for Clay MCP waterfall enrichment workflow, tool prefix reference, cost considerations, env setup, and example session.
 </clay_mcp_pattern>
+
+## Emit Outcome Sidecar
+Write to `~/.claude/skill-analytics/last-outcome-crm-integration.json`:
+`{"ts":"[UTC ISO8601]","skill":"crm-integration","version":"1.0.0","variant":"default","status":"[success|partial|error]","runtime_ms":[ms],"metrics":{"integrations_configured":[n],"records_synced":[n]},"error":null,"session_id":"[YYYY-MM-DD]"}`

@@ -431,3 +431,14 @@ For detailed operations, see:
 iTerm2 notifications, web session handoff (`/teleport`), ralph-loop for autonomous sessions, and daily workflow protocols.
 
 See `reference/advanced-workflows.md` for iTerm2 setup, teleport handoff, ralph-loop patterns, terminal strategy, and daily workflow protocol.
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-worktree-manager.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"worktree-manager","version":"1.2.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"worktrees_created":[n],"agents_launched":[n],"worktrees_cleaned":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

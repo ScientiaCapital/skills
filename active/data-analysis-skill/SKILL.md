@@ -481,3 +481,7 @@ fig.write_image("mrr_chart.png", scale=2)
 - `reference/saas-metrics.md` - Complete SaaS KPI definitions
 - `reference/streamlit-patterns.md` - Production dashboard patterns
 - `reference/data-wrangling.md` - Format-specific extraction guides
+
+## Emit Outcome Sidecar
+Write to `~/.claude/skill-analytics/last-outcome-data-analysis.json`:
+`{"ts":"[UTC ISO8601]","skill":"data-analysis","version":"1.0.0","variant":"default","status":"[success|partial|error]","runtime_ms":[ms],"metrics":{"datasets_analyzed":[n],"charts_generated":[n],"insights_extracted":[n]},"error":null,"session_id":"[YYYY-MM-DD]"}`

@@ -151,3 +151,14 @@ START: What do I need to do?
 **Cross-references:** [subagent-teams](../subagent-teams-skill/SKILL.md) for in-session parallel agents, [agent-teams](../agent-teams-skill/SKILL.md) for worktree-isolated parallel agents.
 
 **Deep dive:** See `reference/matrix-table.md`, `reference/selection-flowchart.md`
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-agent-capability-matrix.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"agent-capability-matrix","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"tasks_routed":[n],"agents_matched":[n],"fallbacks_used":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

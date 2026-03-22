@@ -228,4 +228,15 @@ Economic Buyer (Decision): [Name, Title]
 4. Give value before asking for introductions
 5. Document champion interactions in CRM
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-champion-identifier.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"champion-identifier","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"profiles_analyzed":[n],"champions_identified":[n],"atl_count":[n],"confidence_high":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </workflow>

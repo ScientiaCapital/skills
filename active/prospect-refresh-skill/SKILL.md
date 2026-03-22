@@ -356,13 +356,26 @@ contentType: "text/plain"
 
 ---
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-prospect-refresh.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"prospect-refresh","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"prospects_found":[n],"drafts_created":[n],"atl_count":[n],"verticals_searched":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
+---
+
 ## Skill Metadata
 
-**Version:** 1.0  
-**Last Updated:** 2026-03-19  
-**Author:** Tim Kipper  
-**Status:** Production  
-**Integration:** Apollo + HubSpot (portal 21530819) + Gmail  
-**Tier:** P1 (Core BDR Automation)  
-**Triggers:** Scheduled (Monday 6:30 AM) + Manual ("Run prospect refresh")  
+**Version:** 1.0
+**Last Updated:** 2026-03-19
+**Author:** Tim Kipper
+**Status:** Production
+**Integration:** Apollo + HubSpot (portal 21530819) + Gmail
+**Tier:** P1 (Core BDR Automation)
+**Triggers:** Scheduled (Monday 6:30 AM) + Manual ("Run prospect refresh")
 **Dependencies:** prospect-enrich (runs 6:00 AM), feeds into sequence-load (7:15 AM)

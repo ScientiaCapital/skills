@@ -248,4 +248,15 @@ For each stage, analyze:
 
 Remember: A healthy pipeline is constantly flowing. Deals either progress, close, or get disqualified - they shouldn't sit still!
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-pipeline-health-analyzer.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"pipeline-health-analyzer","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"deals_analyzed":[n],"stalled_deals":[n],"at_risk_deals":[n],"forecast_accuracy_pct":[n],"actions_recommended":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </workflow>

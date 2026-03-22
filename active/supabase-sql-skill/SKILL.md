@@ -155,3 +155,14 @@ Always end with dependencies note if tables are referenced:
 
 - `reference/rls-patterns.md` - Common RLS policy patterns for Supabase
 - `reference/function-patterns.md` - Trigger functions, atomic operations
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-supabase-sql.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"supabase-sql","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"migrations_written":[n],"tables_modified":[n],"rls_policies_created":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

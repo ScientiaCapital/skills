@@ -285,3 +285,14 @@ GOOGLE_API_KEY=       # Gemini fallback
 - `reference/tool-use-patterns.md` - Function calling and Compound Beta
 - `reference/reasoning-models.md` - Thinking models and reasoning_format
 - `reference/cost-optimization.md` - Batch API, caching, provider routing
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-groq-inference.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"groq-inference","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"requests_made":[n],"tokens_used":[n],"models_used":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

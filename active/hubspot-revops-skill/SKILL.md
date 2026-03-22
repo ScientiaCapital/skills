@@ -232,3 +232,14 @@ WHERE lifecyclestage NOT IN ('customer')
 
 > **Reference:** See `reference/enrichment-pipelines.md` for ML scoring and Clay integration.
 > **Reference:** See `reference/architecture.md` for deployment patterns and cost estimates.
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-hubspot-revops.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"hubspot-revops","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"queries_executed":[n],"reports_generated":[n],"insights_found":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

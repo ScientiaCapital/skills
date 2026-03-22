@@ -262,3 +262,14 @@ Private templates and examples available at:
 | `workflows/go-live-checklist.md` | Test → Production migration |
 
 </reference_index>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-stripe-stack.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"stripe-stack","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"webhooks_configured":[n],"products_created":[n],"checkout_flows_built":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

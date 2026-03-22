@@ -417,4 +417,15 @@ Why they score lower:
 
 Remember: Your best future customers look a lot like your best current customers!
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-lookalike-customer-finder.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"lookalike-customer-finder","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"seed_customers_analyzed":[n],"lookalikes_found":[n],"icp_dimensions_scored":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </workflow>

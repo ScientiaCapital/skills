@@ -151,4 +151,15 @@ Ensure all templates:
 
 Generate effective, conversion-optimized email templates that users can immediately customize and send.
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-email-template-generator.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"email-template-generator","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"templates_generated":[n],"email_types":[n],"personalization_tokens":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </workflow>

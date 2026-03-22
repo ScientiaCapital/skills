@@ -400,4 +400,15 @@ Load these on demand when you need deeper guidance:
 | `reference/worktree-integration.md` | Coordinating with worktree-manager, port allocation, terminal strategies |
 | `reference/prompt-templates.md` | Need ready-to-use spawn prompts for the 4 team patterns |
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-agent-teams.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"agent-teams","version":"1.2.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"agents_spawned":[n],"tasks_delegated":[n],"merges_completed":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </routing>

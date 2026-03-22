@@ -267,4 +267,15 @@ When Tim says "EOD", include portfolio attribution summary for any deals closed 
 - `prospect-research-to-cadence-skill` — Origination attribution (Apollo sequence enrollment)
 - `meddic-call-prep-auto-skill` — Influence attribution (call prep generated for deal)
 - `hubspot-revops-skill` — HubSpot query patterns, deal stage definitions
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-portfolio-deal-linker.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"portfolio-deal-linker","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"deals_linked":[n],"skills_attributed":[n],"revenue_tracked_usd":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
 </dependencies>

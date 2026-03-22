@@ -444,3 +444,14 @@ client = OpenAI(
 
 4. Cost estimate: ~$0.44/hr compute, scale-to-zero when idle.
 </example_session>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-runpod-deployment.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"runpod-deployment","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"pods_configured":[n],"deployments_created":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

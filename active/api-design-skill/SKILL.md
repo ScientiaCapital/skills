@@ -401,3 +401,14 @@ For detailed patterns, load the appropriate reference:
 **To load:** Ask for the specific topic or check if context suggests it.
 </references>
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-api-design.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"api-design","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"endpoints_designed":[n],"patterns_applied":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+

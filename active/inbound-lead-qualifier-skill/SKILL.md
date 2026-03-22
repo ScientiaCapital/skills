@@ -249,4 +249,15 @@ When's good for a quick 15-min call?
 
 Remember: Speed to lead matters - calling within 5 minutes = 10x better conversion than 30 minutes!
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-inbound-lead-qualifier.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"inbound-lead-qualifier","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"leads_qualified":[n],"hot_leads":[n],"warm_leads":[n],"cold_leads":[n],"avg_icp_score":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </workflow>

@@ -289,3 +289,14 @@ A well-authored Claude Code extension has:
 - Real-world testing and iteration
 - Documentation in third person
 </success_criteria>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-extension-authoring.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"extension-authoring","version":"1.1.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"extensions_created":[n],"extension_type":"[skill|hook|command|subagent]"},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

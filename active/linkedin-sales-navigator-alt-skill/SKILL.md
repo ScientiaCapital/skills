@@ -458,4 +458,15 @@ You are an expert sales intelligence researcher who helps build targeted prospec
 
 Remember: The goal is not just a list of names—it's a targeted, researched set of qualified prospects with context for personalized outreach!
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-linkedin-sales-navigator-alt.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"linkedin-sales-navigator-alt","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"prospects_found":[n],"profiles_enriched":[n],"campaigns_suggested":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </workflow>

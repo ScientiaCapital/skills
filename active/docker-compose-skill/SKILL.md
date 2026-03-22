@@ -165,3 +165,14 @@ services:
 - `reference/services.md` - Database, cache, queue service configs
 - `reference/networking.md` - Ports, networks, volumes
 - `reference/dev-workflow.md` - Development workflow commands
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-docker-compose.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"docker-compose","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"services_configured":[n],"containers_running":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

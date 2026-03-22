@@ -155,3 +155,14 @@ cat ~/.claude/cost-log.jsonl | jq -s '{
 ```
 
 **Deep dive:** See `reference/cost-tracking-guide.md`, `reference/budget-templates.md`
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-cost-metering.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"cost-metering","version":"1.1.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"sessions_tracked":[n],"total_cost_usd":[n],"budget_alerts":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

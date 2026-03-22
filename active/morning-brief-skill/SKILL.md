@@ -456,7 +456,7 @@ Write to `~/.claude/skill-analytics/last-outcome-morning-brief.json`:
 {"ts":"[UTC ISO8601]","skill":"morning-brief","version":"1.0.0","variant":"default",
  "status":"[success|partial|error]","runtime_ms":[est ms],
  "metrics":{"dial_list_count":[leads listed],"deals_scored":[deals in pipeline table],
- "drafts_created":[Gmail drafts],"atl_runway_days":[ATL runway]},"session_id":"[YYYY-MM-DD]"}
+ "drafts_created":[Gmail drafts],"atl_runway_days":[ATL runway]},"error":null,"session_id":"[YYYY-MM-DD]"}
 ```
 
 **Downstream (Feeds from this brief):**

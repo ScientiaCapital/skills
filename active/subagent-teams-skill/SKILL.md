@@ -353,3 +353,14 @@ Format: file:line — issue — suggestion
 - **Background agents can't see each other** — design tasks to be independently completable
 
 **Deep dive:** See `reference/task-tool-guide.md`, `reference/team-patterns.md`, `reference/prompt-templates.md`
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-subagent-teams.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"subagent-teams","version":"1.1.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"agents_spawned":[n],"tasks_completed":[n],"tasks_failed":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

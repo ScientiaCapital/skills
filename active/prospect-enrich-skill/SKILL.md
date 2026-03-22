@@ -254,7 +254,7 @@ As the final step, write the following JSON to `~/.claude/skill-analytics/last-o
  "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
  "metrics":{"contacts_processed":[Stage 1 total],"phones_found":[Apollo+Clay hits],
  "phone_match_rate_pct":[phones/contacts*100],"atl_count":[ATL tier],"demo_request_count":[DEMO tier],
- "credits_used":[Apollo batch count]},"session_id":"[date YYYY-MM-DD]"}
+ "credits_used":[Apollo batch count]},"error":null,"session_id":"[date YYYY-MM-DD]"}
 ```
 Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated. Do not include contact names or emails in any field.
 

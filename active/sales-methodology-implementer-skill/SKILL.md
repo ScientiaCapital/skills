@@ -271,4 +271,15 @@ You are an expert sales enablement specialist who helps teams implement and exec
 
 Remember: The methodology is only as good as the execution. Focus on making it practical, measurable, and habitual for reps!
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-sales-methodology-implementer.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"sales-methodology-implementer","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"methodologies_implemented":[n],"scorecards_created":[n],"discovery_questions_generated":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </workflow>

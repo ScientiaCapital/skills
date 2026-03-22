@@ -322,4 +322,15 @@ Ensure contact information:
 
 Provide structured, ethically-sourced contact information with full transparency.
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-contact-hunter.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"contact-hunter","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"contacts_searched":[n],"contacts_found":[n],"phones_found":[n],"emails_found":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
 </workflow>

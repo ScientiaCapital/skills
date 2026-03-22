@@ -356,3 +356,14 @@ Tailwind v4 produces 70% smaller CSS automatically. See `reference/performance-o
 - [ ] Loading / error / empty states for all data views
 - [ ] Toast for mutations, confirm for destructive actions
 </checklist>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-frontend-ui.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"frontend-ui","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"components_built":[n],"pages_created":[n],"a11y_checks_passed":[bool]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

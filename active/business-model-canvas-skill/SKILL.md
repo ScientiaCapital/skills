@@ -472,3 +472,7 @@ BMC integrates with 4 other strategy skills for first-principles thinking:
 
 **Pipeline:** JTBD (what job?) → Blue Ocean (where's the space?) → **BMC (how to deliver?)** → Challenger (what insight?) → NSTTD (how to communicate?)
 </integration_points>
+
+## Emit Outcome Sidecar
+Write to `~/.claude/skill-analytics/last-outcome-business-model-canvas.json`:
+`{"ts":"[UTC ISO8601]","skill":"business-model-canvas","version":"1.0.0","variant":"default","status":"[success|partial|error]","runtime_ms":[ms],"metrics":{"canvases_created":[n],"blocks_filled":[n],"hypotheses_generated":[n]},"error":null,"session_id":"[YYYY-MM-DD]"}`

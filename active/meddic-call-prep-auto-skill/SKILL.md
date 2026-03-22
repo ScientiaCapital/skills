@@ -283,3 +283,14 @@ When trigger is "demo prep" instead of "call prep", append:
 - `prospect-research-to-cadence-skill` — Shares enrichment logic, Golden Rules filter
 - `hubspot-revops-skill` — HubSpot query patterns, deal stage definitions
 </dependencies>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-meddic-call-prep-auto.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"meddic-call-prep-auto","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"calls_prepped":[n],"meddic_fields_filled":[n],"contacts_enriched":[n],"economic_buyers_identified":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

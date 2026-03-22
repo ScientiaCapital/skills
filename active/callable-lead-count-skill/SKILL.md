@@ -303,6 +303,19 @@ recent_engagers = count(hs_analytics_num_page_views > 0)
 
 ---
 
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-callable-lead-count.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"callable-lead-count","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"atl_count":[n],"gray_count":[n],"btl_count":[n],"total_callable":[n],"never_atl_flagged":[n],"atl_runway_days":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+
+---
+
 ## Skill Metadata
 
 **Version:** 1.0  

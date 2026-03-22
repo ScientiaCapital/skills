@@ -330,3 +330,14 @@ When Tim says "morning brief" or "SOD", this report is included as the pipeline 
 - `meddic-call-prep-auto-skill` — Generates full call prep when action = "book a call"
 - `portfolio-artifact-skill` — Captures deal recovery metrics for GTME portfolio
 </dependencies>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-deal-momentum-analyzer.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"deal-momentum-analyzer","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"deals_scored":[n],"green_count":[n],"yellow_count":[n],"red_count":[n],"blockers_flagged":[n],"avg_momentum_score":[n],"drafts_created":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

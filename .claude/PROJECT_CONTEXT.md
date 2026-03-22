@@ -1,43 +1,51 @@
 # Project Context: skills
 
-**Updated:** 2026-03-13
+**Updated:** 2026-03-22
 **Branch:** main
-**Tech Stack:** Claude Code Skills Library (39 skills, Markdown/YAML/TypeScript)
+**Tech Stack:** Claude Code Skills Library (67 skills, Markdown/Bash, P12 autoresearch framework)
 
 ---
 
 ## Status
 
-39 production-ready skills (2 stable, 37 active). Two major upgrades shipped today: langgraph-agents v2.0.0 (14 reference files, 3 CRITICALs + 7 WARNINGs fixed, 4 new reference files) and trading-signals v2.1 (18 reference files, daily workflow automation, backtesting patterns).
+67 production-ready skills (2 stable, 65 active). P12 autoresearch self-improving framework complete — all 67 skills now emit outcome sidecars to `~/.claude/skill-analytics/outcomes.jsonl`. 545/545 tests passing (537 T1-T9 + 8 T10-T14). A/B variant pilot active on cold-email-sequence-generator (control vs concise).
 
 ## Recent Commits
 
 ```
-c8f8f5f docs: end-of-day state sync + observer import fixes
-61a760b feat: langgraph-agents v2.0.0 — deep enhancement + 4 new reference files
-fec475f fix: update all model references to current Anthropic lineup
-c1fb164 feat: trading-signals v2.1 — deep reference enhancement + daily workflow
-3685b79 feat: trading-signals v2.0 — expert trading partner upgrade
+a896242 chore: config.json tech debt — add 18 descriptions, normalize 36 names
+ee8c7eb feat: Golden Rules 90-day stale AE exception
+da4a13b fix: outcome-report.sh grep-c arithmetic bug
+6ae85ba feat: P12 autoresearch self-improving skills framework
+e237ae8 chore: move orphaned draft to drafts/, gitignore operational artifacts
 ```
 
-## Done (This Session — Mar 13)
+## Done (This Session — Mar 22)
 
-- [x] langgraph-agents v2.0.0: Fixed 3 CRITICALs (create_supervisor/create_swarm imports, get_tools(), MultiServerMCPClient)
-- [x] langgraph-agents v2.0.0: Fixed 7 WARNINGs (ChatOllama, RedisStore, cross-refs, fictitious langchain.middleware APIs)
-- [x] langgraph-agents v2.0.0: 4 new reference files (guardrails, testing, observability, deployment)
-- [x] langgraph-agents v2.0.0: 7 existing reference file updates (durable execution, time travel, handoff/router patterns, etc.)
-- [x] trading-signals v2.1: 2 new reference files (daily-trading-workflow, backtesting-patterns)
-- [x] trading-signals v2.1: Deepened 10 reference files with production patterns
-- [x] Observer: All BLOCKERs resolved, 2 WARNINGs fixed post-review, reports archived
-- [x] All 274 tests pass, 40 zips rebuilt, gitleaks clean, pushed to remote
+- [x] Audited P12 autoresearch framework (3 explore agents): 0 critical bugs, clean implementation
+- [x] Fixed cold-email-sequence-generator: added `runtime_ms`, renamed `ab_variants_written` → `subject_variants_generated`, added `error` field
+- [x] Fixed prospect-enrich + morning-brief: added `error` field to outcome schemas
+- [x] Added outcome emission sections to all 64 remaining skills (5 parallel agents)
+- [x] Handled 500-line limit: blue-ocean extracted example to reference/, 4 skills used compact format
+- [x] DA post-flight caught sidecar naming inconsistency: 45 skills had `-skill` suffix, stripped for consistency with pilot convention
+- [x] All 545 tests passing, 67/67 skills have outcome emission (100% coverage)
 
-## Tomorrow
+## Near-Limit Skills (Watch List)
 
-Tomorrow: trading-signals routing orphan audit via skill-creator | solo opus | Est: 30min, $2 | Observer notes: 5/18 reference files lack routing table entries
+| Skill | Lines | Notes |
+|-------|-------|-------|
+| crm-integration-skill | 500 | AT LIMIT — any addition requires extraction to reference/ |
+| phone-verification-waterfall-skill | 499 | 1 line from limit |
+| git-workflow-skill | 495 | 5 lines from limit |
+| voice-ai-skill | 490 | 10 lines from limit |
+
+## Uncommitted Work
+
+67 SKILL.md files modified (outcome emission sections added) + 1 new file (blue-ocean reference/example-session.md). Ready to commit.
 
 ## Blockers
 
-None. Observer alerts: 0 active blockers. 1 RISK logged to backlog (routing orphan accumulation).
+None. All tests pass. No observer alerts.
 
 ---
 

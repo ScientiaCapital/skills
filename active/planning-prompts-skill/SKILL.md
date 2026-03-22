@@ -394,4 +394,15 @@ Skill succeeds when:
 - Handoffs preserve full context for resumption
 - Context limits respected (auto-handoff at 10%)
 - All work documented with deviations noted
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-planning-prompts.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"planning-prompts","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"plans_created":[n],"prompts_generated":[n],"chains_built":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
 </success_criteria>

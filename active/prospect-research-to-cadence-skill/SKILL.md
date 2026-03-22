@@ -226,3 +226,14 @@ On approval:
 - `research-skill` — Competitive intelligence, firmographic research patterns
 - `CLAUDE.md § ATL/BTL Classification v1.0` — Approved title keyword patterns for ATL/BTL/Gray classification (2026-03-17)
 </dependencies>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-prospect-research-to-cadence.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"prospect-research-to-cadence","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"prospects_researched":[n],"emails_drafted":[n],"sequences_loaded":[n],"atl_count":[n],"icp_avg_score":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

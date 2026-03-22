@@ -374,3 +374,14 @@ Would it be out of the question to spend 15 minutes comparing notes on what othe
 - **Skipping the accusation audit** — Front-running negatives is the single most effective way to lower defenses.
 - **Being a pushover** — Tactical empathy is assertive, not passive. You're understanding their world while still advocating for yours.
 </anti_patterns>
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-never-split-the-difference.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"never-split-the-difference","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"tactics_applied":[n],"labels_created":[n],"accusation_audits":[n],"calibrated_questions":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

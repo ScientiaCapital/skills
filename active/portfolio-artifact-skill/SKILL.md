@@ -184,3 +184,14 @@ echo "Today: +$ADDED/-$REMOVED lines, $COMMITS commits ($FEATS features, $FIXES 
 | agent-teams | Tracks multi-agent session costs |
 
 **Deep dive:** See `reference/metrics-guide.md`, `reference/report-templates.md`
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-portfolio-artifact.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"portfolio-artifact","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"metrics_captured":[n],"artifacts_generated":[n],"reports_created":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.

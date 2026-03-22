@@ -209,4 +209,15 @@ Each node maps to a LangGraph agent. The pipeline is sequential but nodes can ru
 **Workflow & Backtesting:**
 - `reference/daily-trading-workflow.md` — /loop + Desktop scheduled tasks for pre-market, open, intraday, EOD
 - `reference/backtesting-patterns.md` — Walk-forward, Monte Carlo, ensemble, combinatorial alpha discovery
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-trading-signals.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"trading-signals","version":"2.1.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"signals_generated":[n],"tickers_analyzed":[n],"frameworks_applied":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
 </reference_files>

@@ -266,8 +266,9 @@ As the final step, write to `~/.claude/skill-analytics/last-outcome-cold-email-s
 ```json
 {"ts":"[UTC ISO8601]","skill":"cold-email-sequence-generator","version":"1.1.0",
  "variant":"[assigned variant or default]","status":"[success|partial|error]",
- "metrics":{"sequences_created":1,"emails_generated":[count],"ab_variants_written":[count]},
- "session_id":"[YYYY-MM-DD]"}
+ "runtime_ms":[estimated ms from start],
+ "metrics":{"sequences_created":1,"emails_generated":[count],"subject_variants_generated":[count]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
 
 </workflow>

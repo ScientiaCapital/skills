@@ -387,3 +387,14 @@ Original: Long-form blog post (2000 words)
 - `reference/blog-templates.md` - Article structures by type
 - `reference/seo-checklist.md` - Comprehensive SEO guide
 - `reference/video-scripts.md` - Video content frameworks
+
+## Emit Outcome Sidecar
+
+As the final step, write to `~/.claude/skill-analytics/last-outcome-content-marketing.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"content-marketing","version":"1.0.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"content_pieces_created":[n],"platforms_targeted":[n],"repurpose_formats":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
