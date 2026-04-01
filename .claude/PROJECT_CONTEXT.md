@@ -1,6 +1,6 @@
 # Project Context: skills
 
-**Updated:** 2026-03-22
+**Updated:** 2026-04-01
 **Branch:** main
 **Tech Stack:** Claude Code Skills Library (67 skills, Markdown/Bash, P12 autoresearch framework)
 
@@ -8,27 +8,34 @@
 
 ## Status
 
-67 production-ready skills (2 stable, 65 active). P12 autoresearch self-improving framework complete — all 67 skills now emit outcome sidecars to `~/.claude/skill-analytics/outcomes.jsonl`. 545/545 tests passing (537 T1-T9 + 8 T10-T14). A/B variant pilot active on cold-email-sequence-generator (control vs concise).
+67 production-ready skills (2 stable, 65 active). P12 autoresearch self-improving framework complete — all 67 skills now emit outcome sidecars to `~/.claude/skill-analytics/outcomes.jsonl`. A/B variant pilot active on cold-email-sequence-generator (control vs concise). Skill #68 (batch-send-drafts) planned + DA-reviewed, blocked on gws CLI OAuth auth.
 
 ## Recent Commits
 
 ```
+9cced08 feat: add outcome emission to all 67 skills (autoresearch expansion)
 a896242 chore: config.json tech debt — add 18 descriptions, normalize 36 names
 ee8c7eb feat: Golden Rules 90-day stale AE exception
 da4a13b fix: outcome-report.sh grep-c arithmetic bug
 6ae85ba feat: P12 autoresearch self-improving skills framework
-e237ae8 chore: move orphaned draft to drafts/, gitignore operational artifacts
 ```
 
-## Done (This Session — Mar 22)
+## Done (This Session — Apr 1)
 
-- [x] Audited P12 autoresearch framework (3 explore agents): 0 critical bugs, clean implementation
-- [x] Fixed cold-email-sequence-generator: added `runtime_ms`, renamed `ab_variants_written` → `subject_variants_generated`, added `error` field
-- [x] Fixed prospect-enrich + morning-brief: added `error` field to outcome schemas
-- [x] Added outcome emission sections to all 64 remaining skills (5 parallel agents)
-- [x] Handled 500-line limit: blue-ocean extracted example to reference/, 4 skills used compact format
-- [x] DA post-flight caught sidecar naming inconsistency: 45 skills had `-skill` suffix, stripped for consistency with pilot convention
-- [x] All 545 tests passing, 67/67 skills have outcome emission (100% coverage)
+- [x] Researched batch Gmail draft sending — identified gap (Gmail MCP has no send capability)
+- [x] Evaluated gws CLI (googleworkspace/cli) as solution — confirmed it exposes `drafts.send`
+- [x] Designed batch-send-drafts-skill with Plan agent (6-stage workflow, state persistence, rate limiting)
+- [x] DA Review #1: Found 3 blockers (no flock on macOS, gws not installed, Workspace OAuth risk), 4 high, 4 medium, 3 low — all mitigated in plan
+- [x] DA Review #2 (final gate): Conditional pass, 2 conditions resolved (config.json schema, permissions pattern)
+- [x] Installed gws CLI v0.22.5 via brew + google-cloud-sdk
+- [x] Auth blocked — gws auth setup needs gcloud auth login first, session ended before completing browser OAuth flow
+- [x] Plan saved to ~/.claude/plans/cheeky-floating-moler.md — ready to resume
+
+## Next Steps
+
+1. **Complete gws OAuth auth** — `gcloud auth login` → `gws auth setup` → `gws auth login` → test one draft send
+2. **If auth works** — implement batch-send-drafts-skill per plan (Phase 1-4, ~2 hours)
+3. **If auth blocked by Workspace admin** — manual OAuth via Google Cloud Console, or ask IT
 
 ## Near-Limit Skills (Watch List)
 
@@ -39,13 +46,9 @@ e237ae8 chore: move orphaned draft to drafts/, gitignore operational artifacts
 | git-workflow-skill | 495 | 5 lines from limit |
 | voice-ai-skill | 490 | 10 lines from limit |
 
-## Uncommitted Work
-
-67 SKILL.md files modified (outcome emission sections added) + 1 new file (blue-ocean reference/example-session.md). Ready to commit.
-
 ## Blockers
 
-None. All tests pass. No observer alerts.
+- **batch-send-drafts-skill:** gws CLI OAuth auth not yet completed (gcloud auth login needed)
 
 ---
 
