@@ -27,7 +27,6 @@
   "activation_triggers": [
     "verify phones",
     "phone waterfall",
-    "callable leads",
     "who can I call",
     "dial list",
     "always have someone to call",
