@@ -110,6 +110,18 @@ per_page: 10
 
 ---
 
+### Stage S — Suppression Gate
+
+Before sequence enrollment, exclude suppressed contacts:
+- **EXCLUDE** if `bdr_suppression_until` IS SET AND `bdr_suppression_until` > TODAY
+- **INCLUDE** if `bdr_suppression_until` IS NOT SET (never suppressed)
+- **INCLUDE** if `bdr_suppression_until` < TODAY (cooling period expired)
+
+HubSpot filter: `propertyName: "bdr_suppression_until", operator: "NOT_HAS_PROPERTY"` OR `operator: "LT", value: TODAY_ISO`
+Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_suppression_until)
+
+---
+
 ## Stage 4: Map Prospects to Target Sequences
 
 **MCP Tool:** `apollo_emailer_campaigns_search`

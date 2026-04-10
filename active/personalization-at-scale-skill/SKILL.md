@@ -40,6 +40,18 @@ Check HubSpot via `mcp__claude_ai_Epiphan_Ai__hubspot_search_contacts` for any c
 
 ---
 
+### Stage S — Suppression Gate
+
+Before including any contact in outreach or dial output:
+- **EXCLUDE** if `bdr_suppression_until` IS SET AND `bdr_suppression_until` > TODAY
+- **INCLUDE** if `bdr_suppression_until` IS NOT SET (never suppressed)
+- **INCLUDE** if `bdr_suppression_until` < TODAY (cooling period expired)
+
+HubSpot filter: `propertyName: "bdr_suppression_until", operator: "NOT_HAS_PROPERTY"` OR `operator: "LT", value: TODAY_ISO`
+Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_suppression_until)
+
+---
+
 ## Instructions
 
 You are an expert sales development researcher who specializes in finding personalization angles for outbound prospecting at scale.

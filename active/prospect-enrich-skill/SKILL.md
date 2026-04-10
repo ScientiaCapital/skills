@@ -84,6 +84,18 @@ These are **HIGH-INTENT demo requests** — active hand-raisers. Tag them as **D
 
 ---
 
+### Stage S — Suppression Gate
+
+Before spending enrichment credits, exclude suppressed contacts:
+- **EXCLUDE** if `bdr_suppression_until` IS SET AND `bdr_suppression_until` > TODAY
+- **INCLUDE** if `bdr_suppression_until` IS NOT SET (never suppressed)
+- **INCLUDE** if `bdr_suppression_until` < TODAY (cooling period expired)
+
+HubSpot filter: `propertyName: "bdr_suppression_until", operator: "NOT_HAS_PROPERTY"` OR `operator: "LT", value: TODAY_ISO`
+Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_suppression_until)
+
+---
+
 ## Stage 3: ATL/BTL Classification Gate (MANDATORY)
 
 **Apply BEFORE enrichment to set processing priority order.**

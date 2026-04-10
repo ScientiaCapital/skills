@@ -91,6 +91,18 @@ limit: 100
 
 ---
 
+### Stage S — Suppression Gate
+
+Exclude suppressed contacts before inventory count and dial queue:
+- **EXCLUDE** if `bdr_suppression_until` IS SET AND `bdr_suppression_until` > TODAY
+- **INCLUDE** if `bdr_suppression_until` IS NOT SET (never suppressed)
+- **INCLUDE** if `bdr_suppression_until` < TODAY (cooling period expired)
+
+HubSpot filter: `propertyName: "bdr_suppression_until", operator: "NOT_HAS_PROPERTY"` OR `operator: "LT", value: TODAY_ISO`
+Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_suppression_until)
+
+---
+
 ## Stage 3: Classify by ATL/BTL Tier
 
 **MCP Tool:** N/A (logic-based classification using jobtitle)

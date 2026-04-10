@@ -106,6 +106,18 @@ Tag each contact: `atl_btl_tier = 'ATL' | 'BTL' | 'GRAY'`
 
 </Stage 1>
 
+### Stage S — Suppression Gate
+
+Before phone enrichment spend, exclude suppressed contacts:
+- **EXCLUDE** if `bdr_suppression_until` IS SET AND `bdr_suppression_until` > TODAY
+- **INCLUDE** if `bdr_suppression_until` IS NOT SET (never suppressed)
+- **INCLUDE** if `bdr_suppression_until` < TODAY (cooling period expired)
+
+HubSpot filter: `propertyName: "bdr_suppression_until", operator: "NOT_HAS_PROPERTY"` OR `operator: "LT", value: TODAY_ISO`
+Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_suppression_until)
+
+---
+
 ## Stage 2: Apollo Phone Lookup
 
 **For each contact from Stage 1, run in parallel batches:**
@@ -456,13 +468,6 @@ WEDNESDAY MORNING SEQUENCE (mid-week refresh):
 | Company `is_channel` | true | SKIP |
 | `hubspot_owner_id` | 82625923, 423155215, 190030668 | 90-day stale exception: KEEP if no activity >90d (Tim reviews ATL/BTL + value). SKIP if <90d. Ron=all, Lex/Phil=NA only. |
 
-**Rationale:**
-- Customers are in a different sales motion (success, upsell, retention)
-- Product engagers are warm leads for a different sequence
-- Device owners are existing relationships or renewals
-- Channel partners have their own sales process
-- AE-owned leads belong to Account Executives (no BDR lead theft)
-
 </Golden Rules>
 
 ---
@@ -470,16 +475,13 @@ WEDNESDAY MORNING SEQUENCE (mid-week refresh):
 ## Example: Phone Waterfall in Action
 
 **Monday 6:15 AM kick-off:**
-
 ```
 INPUT: HubSpot query finds 247 contacts with phone = null and meeting Golden Rules
-
 APOLLO STAGE (2 min):
   Batched 247 into 5 parallel requests
   Success: 118 phones verified (47.8%)
   → Synced 118 to HubSpot immediately
   → Remaining: 129 needs Clay
-
 CLAY STAGE (4 min):
   Batched 129 into company+title groups
   Ran find-and-enrich-contacts-at-company for each company
@@ -492,7 +494,6 @@ SYNC STAGE (30 sec):
 QUEUE STAGE (30 sec):
   Sorted 159 by ICP score (Higher Ed first, K-12 last)
   Output: Callable queue ready for 50+ dials
-
 TOTAL TIME: 7 min 30 sec | CALLABLE: 159 verified | SUCCESS: 64.4%
 ```
 ## Emit Outcome Sidecar

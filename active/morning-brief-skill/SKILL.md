@@ -133,6 +133,18 @@ FOR each contact IN hot_leads_list:
 
 ---
 
+### Stage S — Suppression Gate
+
+Additionally filter by HubSpot-level suppression (complements Supabase cooldown):
+- **EXCLUDE** if `bdr_suppression_until` IS SET AND `bdr_suppression_until` > TODAY
+- **INCLUDE** if `bdr_suppression_until` IS NOT SET (never suppressed)
+- **INCLUDE** if `bdr_suppression_until` < TODAY (cooling period expired)
+
+HubSpot filter: `propertyName: "bdr_suppression_until", operator: "NOT_HAS_PROPERTY"` OR `operator: "LT", value: TODAY_ISO`
+Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_suppression_until)
+
+---
+
 ## Stage 4: Enrich Leads with Deal + Activity Data
 
 **For each remaining lead, enrich:**

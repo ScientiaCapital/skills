@@ -31,6 +31,18 @@ Generate professional, tone-appropriate email templates for any business scenari
 
 When a user requests an email template or needs help writing business emails:
 
+### Stage S — Suppression Gate
+
+If generating templates for a BDR prospect list, check each contact before templating:
+- **EXCLUDE** if `bdr_suppression_until` IS SET AND `bdr_suppression_until` > TODAY
+- **INCLUDE** if `bdr_suppression_until` IS NOT SET (never suppressed)
+- **INCLUDE** if `bdr_suppression_until` < TODAY (cooling period expired)
+
+HubSpot filter: `propertyName: "bdr_suppression_until", operator: "NOT_HAS_PROPERTY"` OR `operator: "LT", value: TODAY_ISO`
+Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_suppression_until)
+
+---
+
 1. **Identify Email Type**:
    - Sales/Cold outreach
    - Customer support response

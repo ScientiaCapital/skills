@@ -137,6 +137,18 @@ filterGroups: [
 
 ---
 
+### Stage S — Suppression Gate
+
+Before enrichment, remove suppressed contacts:
+- **EXCLUDE** if `bdr_suppression_until` IS SET AND `bdr_suppression_until` > TODAY
+- **INCLUDE** if `bdr_suppression_until` IS NOT SET (never suppressed)
+- **INCLUDE** if `bdr_suppression_until` < TODAY (cooling period expired)
+
+HubSpot filter: `propertyName: "bdr_suppression_until", operator: "NOT_HAS_PROPERTY"` OR `operator: "LT", value: TODAY_ISO`
+Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_suppression_until)
+
+---
+
 ## Stage 5: Enrich Top 30 Results
 
 **MCP Tool:** `apollo_organizations_enrich` (for company data)
