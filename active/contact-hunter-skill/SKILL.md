@@ -1,92 +1,125 @@
 ---
 name: contact-hunter-skill
-description: Search and extract contact information for people or companies including names, phone numbers, emails, job titles, and LinkedIn profiles. Aggregates data from multiple sources and provides enriched contact details. Use when users need to find contact information, build prospect lists, or enrich existing contact data.
+description: Find and enrich contact information for specific people or companies using HubSpot, Apollo, and Clay MCP tools. Applies Golden Rules qualification gates before returning results. Use when you need to find contacts at target accounts with verified emails and phones for BDR outreach.
 ---
 
 # Contact Hunter
 
 <objective>
-Search and extract contact information for people or companies by aggregating data from multiple sources (LinkedIn, company websites, Apollo, Hunter.io, etc.). Provides structured search queries, email pattern detection, data enrichment guidance, and export-ready contact cards with full attribution and compliance notes.
+Find, enrich, and qualify contact information for specific people or companies using live MCP tool calls to HubSpot, Apollo, and Clay. Returns contact cards with email, phone, title, ATL/BTL tier, and suppression status — ready for the BDR dial list or sequence load.
 </objective>
 
 <quick_start>
-**Trigger:** "Find the VP of Sales at [Company]" or "Get contact info for [Name] at [Company]"
+**Trigger:** "Find the VP of Sales at [Company]" or "Get contact info for [Name] at [Company]" or "Hunt contacts at [Company]"
 **Input:** Person name, company, job title, location, or LinkedIn URL
-**Output:** Structured contact cards with email, phone, LinkedIn, verification steps, and export formats (CSV/JSON/vCard)
+**Output:** Qualified contact cards with email, phone, LinkedIn, ATL/BTL tier, suppression status, and HubSpot record link
+**MCP Tools:** `mcp__claude_ai_Epiphan_Ai__hubspot_search_contacts`, `mcp__claude_ai_Apollo_io__apollo_contacts_search`, `mcp__claude_ai_Clay__find-and-enrich-contacts-at-company`
 </quick_start>
 
 <success_criteria>
-- [ ] Search type identified (person, company, role, email verification, bulk enrichment)
-- [ ] Structured search queries provided for LinkedIn, Google, company website
-- [ ] Email pattern detected with confidence level
-- [ ] Contact card populated with all available fields and source attribution
-- [ ] Verification steps included (cross-reference, format validation)
-- [ ] Compliance guidelines followed (public data only, GDPR/CAN-SPAM)
+- [ ] Golden Rules filter applied — customers, channel partners, AE-owned <90d, non-NA excluded
+- [ ] HubSpot searched first (check if contact already exists)
+- [ ] Apollo waterfall run if HubSpot returns no result
+- [ ] Clay enrichment run for phone/LinkedIn if Apollo has email only
+- [ ] ATL/BTL tier assigned per title keyword
+- [ ] bdr_suppression_until checked — suppressed contacts excluded
+- [ ] Contact card output with HubSpot record URL
 </success_criteria>
 
 <workflow>
 
-## Instructions
+## Stage G — Golden Rules Gate (run BEFORE any search)
 
-When a user needs to find contact information:
+Disqualify any contact or company matching these criteria before spending enrichment credits:
 
-1. **Identify Search Type**:
-   - **Person search**: Find specific individual
-   - **Company search**: Find people at a company
-   - **Role search**: Find people with specific job title
-   - **Email verification**: Validate and enrich existing email
-   - **Bulk enrichment**: Enrich list of contacts
+1. **Customers:** `lifecyclestage = customer` OR `device_count >= 1` → **EXCLUDE**
+2. **Channel Partners:** `is_channel = true` → **EXCLUDE**
+3. **AE-Owned (Active):** `hubspot_owner_id` IN `[82625923, 423155215, 190030668]` AND last activity < 90 days → **EXCLUDE**
+4. **Geo Gate:** Non-USA/Canada contacts → **EXCLUDE** (unless explicitly requested)
 
-2. **Gather Search Parameters**:
-   - Person name (first, last)
-   - Company name
-   - Job title / role
-   - Location (city, state, country)
-   - Industry
-   - LinkedIn URL (if available)
-   - Email domain
-   - Any other identifying information
+If the target company is already a customer, stop and notify Tim. Do not enrich.
 
-3. **Search Strategy**:
+## Stage 1: Search HubSpot First
 
-   **Sources to Check** (suggest to user):
-   - LinkedIn (manual search with user's account)
-   - Company website (About, Team, Contact pages)
-   - GitHub (for developers)
-   - Twitter/X profiles
-   - Professional directories
-   - Public databases
-   - ZoomInfo (if user has access)
-   - Apollo.io (if user has access)
-   - Hunter.io (if user has access)
-   - RocketReach (if user has access)
+**MCP Tool:** `mcp__claude_ai_Epiphan_Ai__hubspot_search_contacts`
 
-   **⚠️ Important**: This skill GUIDES the search process. It doesn't directly access paid APIs. Instead, it:
-   - Provides structured search queries
-   - Suggests where to look
-   - Helps organize found information
-   - Validates and formats results
+```
+Search by: company name OR person name OR email domain
+Filter: USA/Canada only, NOT lifecyclestage=customer, NOT is_channel=true
+Return: contactId, firstName, lastName, email, phone, jobtitle, hubspot_owner_id,
+        lifecyclestage, device_count, bdr_suppression_until, last_activity_date
+```
 
-4. **Search Instructions Format**:
-   ```
-   🔍 CONTACT SEARCH: [Name/Company]
+If contact found in HubSpot → jump to Stage 3 (ATL/BTL classification).
+If not found → continue to Stage 2.
 
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   📋 SEARCH PARAMETERS
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+## Stage 2: Apollo Enrichment Waterfall
 
-   Target: John Smith
-   Company: Acme Corp
-   Title: VP of Engineering
-   Location: San Francisco, CA
+**MCP Tool:** `mcp__claude_ai_Apollo_io__apollo_contacts_search`
 
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-   🎯 RECOMMENDED SEARCH QUERIES
-   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
+Search by: person_title OR organization_name
+Filters: country IN [US, CA], seniority IN [director, vp, c_suite, owner]
+Limit: 10 results
+```
 
-   LinkedIn:
-   1. Search: "John Smith VP Engineering Acme Corp"
-   2. Use company filter: "Acme Corp"
+If Apollo has email but no phone → run Clay enrichment:
+
+**MCP Tool:** `mcp__claude_ai_Clay__find-and-enrich-contacts-at-company`
+
+```
+company: [company name]
+title_keywords: [from search parameters]
+enrich_phone: true
+```
+
+## Stage 3: ATL/BTL Classification
+
+Assign tier using CLAUDE.md ATL/BTL keyword rules:
+- **ATL**: Chief, VP, President, Director, Dean, Superintendent, Provost → prioritize
+- **NEVER ATL**: AV Technician, Network Manager, Systems Administrator → skip
+- **GRAY**: Manager + reports to Director + budget >$25K → surface for manual review
+
+## Stage 4: Suppression Check
+
+Before including any contact in output:
+- Check `bdr_suppression_until` property
+- **EXCLUDE** if `bdr_suppression_until` IS SET AND > TODAY
+- **INCLUDE** if property IS NOT SET or date < TODAY
+
+## Stage 5: Output Contact Cards
+
+For each contact that passed Stages G–4, output:
+
+```
+┌─────────────────────────────────────────────────────┐
+│ JOHN SMITH  [ATL — VP]                              │
+│ VP of Engineering @ Acme Corp                       │
+├─────────────────────────────────────────────────────┤
+│ Email:    john.smith@acme.com   (Apollo, verified)  │
+│ Phone:    +1 (415) 555-0123     (Clay waterfall)    │
+│ LinkedIn: linkedin.com/in/johnsmith                 │
+│ Location: San Francisco, CA                         │
+├─────────────────────────────────────────────────────┤
+│ HubSpot:  https://app.hubspot.com/contacts/21530819/│
+│           record/0-1/{contactId}                    │
+│ Owner:    Unowned (eligible for BDR outreach)       │
+│ Suppressed: No                                      │
+└─────────────────────────────────────────────────────┘
+```
+
+**Bulk output** (CSV format for sequence-load):
+```
+First,Last,Title,Company,Email,Phone,LinkedIn,ATL_Tier,HubSpot_ID
+John,Smith,VP Engineering,Acme Corp,john.smith@acme.com,+14155550123,linkedin.com/in/johnsmith,ATL,{id}
+```
+
+**Summary line after each hunt:**
+`Found: [N] contacts | [A] ATL | [G] Gray | [B] BTL | [X] excluded by Golden Rules | [S] suppressed`
+
+---
+
+**Compliance:** All data sourced from HubSpot (existing CRM records), Apollo (public professional data), or Clay (verified enrichment). No scraping. Follow CAN-SPAM for outreach.
    3. Use title filter: "VP of Engineering"
    4. Location: "San Francisco Bay Area"
 

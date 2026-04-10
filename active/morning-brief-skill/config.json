@@ -4,6 +4,7 @@
   "description": "Daily briefing with calendar, CRM priority dial list, deal momentum summary, and Gmail drafts for each lead.",
   "category": "BDR Automation",
   "activation_triggers": ["morning brief", "today's dial list", "daily briefing", "SOD", "start of day"],
+  "depends_on": ["prospect-enrich-skill", "prospect-refresh-skill", "sequence-load-skill", "callable-lead-count-skill"],
   "tags": ["bdr", "automation", "daily"],
   "author": "Tim Kipper"
 }

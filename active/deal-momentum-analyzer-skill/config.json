@@ -19,16 +19,14 @@
     "apollo_mixed_people_api_search",
     "apollo_people_match",
     "gmail_create_draft",
-    "gcal_create_event"
+    "mcp__claude_ai_Google_Calendar__create_event"
   ],
   "activation_triggers": [
     "deal health",
     "deal momentum",
     "pipeline review",
     "stalled deals",
-    "which deals need attention",
-    "morning brief",
-    "SOD"
+    "which deals need attention"
   ],
   "schedule": {
     "name": "deal-momentum-daily",
@@ -41,5 +39,5 @@
     "recovery_rate": "5-10% of stalled deals",
     "description": "Surfaces at-risk deals with specific recovery actions before they slip"
   },
-  "description": "Deal health scoring + next-best-action for every open deal. Pulls HubSpot deals, CRM activity history, and engagement data to flag stalled deals, predict close probability, and recommend specific recovery actions. Runs daily at 7am CST or on-demand. Use when: 'deal health', 'pipeline review', 'stalled deals', 'deal momentum', 'which deals need attention', 'morning brief', 'SOD'."
+  "description": "Deal health scoring + next-best-action for every open deal. Pulls HubSpot deals, CRM activity history, and engagement data to flag stalled deals, predict close probability, and recommend specific recovery actions. Runs daily at 7am CST or on-demand. Use when: 'deal health', 'pipeline review', 'stalled deals', 'deal momentum', 'which deals need attention'."
 }

@@ -34,7 +34,7 @@ Generate Tim's daily briefing (Monday-Friday 7:30 AM) with calendar, HubSpot hot
 
 ## Stage 1: Pull Tim's Calendar for Today
 
-**MCP Tool:** `gcal_list_events`
+**MCP Tool:** `mcp__claude_ai_Google_Calendar__list_events`
 
 ```
 calendarId: "primary"

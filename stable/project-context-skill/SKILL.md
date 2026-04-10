@@ -52,7 +52,7 @@ If `pwd` is unavailable (Claude Desktop environment):
 1. Check if user already specified a project in their message
 2. If not, ASK: "Which project are you working on today?"
 3. Use the projects list at `reference/projects-list.md` if available
-4. Load: `/Users/tmkipper/Desktop/tk_projects/{project-name}/.claude/PROJECT_CONTEXT.md`
+4. Load: `/Users/tmk/Desktop/tk_projects/{project-name}/.claude/PROJECT_CONTEXT.md`
 
 **To switch projects**: User says "switch to [project-name]" or "working on [project]"
 
