@@ -1,0 +1,37 @@
+{
+  "name": "call-recording-analyzer",
+  "version": "1.0.0",
+  "category": "Business",
+  "subcategory": "Sales Operations",
+  "description": "Gong/Chorus-style call analysis using Clari data. Scores calls against MEDDIC, flags missed discovery questions, extracts competitor mentions, calculates talk ratio, identifies coaching moments.",
+  "depends_on": [],
+  "integrates_with": [
+    "deal-momentum-analyzer-skill",
+    "morning-brief-skill",
+    "meddic-call-prep-auto-skill"
+  ],
+  "mcp_tools": [
+    "clari_search_calls",
+    "clari_get_call",
+    "clari_get_call_summary",
+    "hubspot_search_companies",
+    "hubspot_search_contacts",
+    "hubspot_search_deals",
+    "ask_agent",
+    "gmail_create_draft"
+  ],
+  "activation_triggers": [
+    "analyze call",
+    "call review",
+    "score my call",
+    "what did I miss",
+    "call coaching",
+    "review transcript",
+    "Clari scorecard",
+    "how did my call go",
+    "review my last call"
+  ],
+  "author": "Tim Kipper",
+  "created": "2026-04-09",
+  "last_updated": "2026-04-09"
+}

@@ -1,0 +1,40 @@
+{
+  "name": "ae-handoff-brief",
+  "version": "1.0.0",
+  "category": "Business",
+  "subcategory": "Sales Operations",
+  "description": "Auto-generate structured AE handoff briefs (MEDDIC scorecard, call history, competitive intel, demo flow) when Tim books a demo for Phil Sandler or Lex Evans.",
+  "depends_on": [
+    "deal-momentum-analyzer-skill",
+    "meddic-call-prep-auto-skill"
+  ],
+  "integrates_with": [
+    "call-recording-analyzer-skill"
+  ],
+  "mcp_tools": [
+    "hubspot_search_companies",
+    "hubspot_search_contacts",
+    "hubspot_search_deals",
+    "hubspot_get_deal",
+    "clari_search_calls",
+    "clari_get_call_summary",
+    "enrich_contact",
+    "gmail_create_draft",
+    "gmail_search_messages",
+    "get_upcoming_meetings",
+    "ask_agent"
+  ],
+  "activation_triggers": [
+    "handoff to Phil",
+    "handoff to Lex",
+    "ae brief",
+    "hand off",
+    "prep handoff",
+    "pass to AE",
+    "book demo for AE",
+    "demo booked for"
+  ],
+  "author": "Tim Kipper",
+  "created": "2026-04-09",
+  "last_updated": "2026-04-09"
+}

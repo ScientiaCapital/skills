@@ -1,9 +1,9 @@
 # Skills Index
 
-> Last updated: 2026-03-19
-> Total skills: 67 (2 stable, 65 active)
+> Last updated: 2026-04-09
+> Total skills: 70 (2 stable, 68 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 67 skills have `config.json` with version tracking
+> **100% config.json coverage** — All 70 skills have `config.json` with version tracking
 
 ## Architecture
 
@@ -53,6 +53,9 @@
 | Always have verified phones for dials | [phone-verification-waterfall](#phone-verification-waterfall-skill) | Business |
 | Auto-generate MEDDIC call prep briefs | [meddic-call-prep-auto](#meddic-call-prep-auto-skill) | Business |
 | Deal health scoring + next-best-action (scheduled daily) | [deal-momentum-analyzer](#deal-momentum-analyzer-skill) | Business |
+| AE handoff brief: MEDDIC + call history + demo flow | [ae-handoff-brief](#ae-handoff-brief-skill) | Business |
+| Call transcript analysis: MEDDIC scoring + coaching | [call-recording-analyzer](#call-recording-analyzer-skill) | Business |
+| Identify + recover stalled/dead deals, clean pipeline | [dead-deal-recovery](#dead-deal-recovery-skill) | Business |
 | Auto-link closed deals to GTME portfolio evidence | [portfolio-deal-linker](#portfolio-deal-linker-skill) | Business |
 | Pre-market trading digest — watchlist + IBKR positions | [trading-alert-scheduler](#trading-alert-scheduler-skill) | Business |
 | Design business models (9 blocks) | [business-model-canvas](#business-model-canvas-skill) | Strategy |
@@ -1416,6 +1419,69 @@ skills/
 ---
 
 ## Consolidation History
+
+#### ae-handoff-brief-skill
+**Location:** `active/ae-handoff-brief-skill/` | **Version:** 1.0.0
+
+Auto-generate structured AE handoff briefs when Tim books a demo for Phil Sandler or Lex Evans. Packages MEDDIC scorecard (6 dimensions with gaps flagged), all prior Clari call summaries, competitive landscape, ATL/BTL contact validation, and a vertical-specific demo flow recommendation into a single document scannable in 60 seconds.
+
+**Key Features:**
+- Parallel data gather: HubSpot deals, Clari call history (90 days), Apollo enrichment, CRM activity
+- MEDDIC scorecard: all 6 dimensions with known intel + explicit gap + AE coaching question
+- ATL/BTL validation: flags if no economic buyer is on the demo invite (RED FLAG)
+- Vertical-specific demo flow (Higher Ed, Courts, Corporate AV, Government, Healthcare, HoW, K-12)
+- Objection forecast based on discovery data
+- Delivers: Gmail draft to AE + HubSpot deal note
+
+**Depends on:** deal-momentum-analyzer-skill, meddic-call-prep-auto-skill
+**Integrates with:** call-recording-analyzer-skill
+**MCP Tools:** Epiphan CRM (HubSpot + Clari), Apollo (enrich_contact), Gmail (create_draft), Google Calendar
+
+**Triggers:** "handoff to Phil", "handoff to Lex", "ae brief", "hand off", "prep handoff", "pass to AE", "demo booked for"
+
+---
+
+#### call-recording-analyzer-skill
+**Location:** `active/call-recording-analyzer-skill/` | **Version:** 1.0.0
+
+Gong/Chorus-style call transcript analysis using Clari data. Scores every call against MEDDIC framework (0-100), flags missed discovery questions, extracts competitor mentions, calculates talk-to-listen ratio, identifies coaching moments. Feeds deal-momentum-analyzer Signal 4 and morning-brief.
+
+**Key Features:**
+- MEDDIC scoring: 6 dimensions, 100-point scale with STRONG/ADEQUATE/WEAK/MISSED classification
+- ATL/BTL validation of all call attendees — flags if no economic buyer on call
+- Talk ratio: target prospect 60%+; flags premature pitching
+- Question quality: categorizes Open-ended/Calibrated/Closed/Leading/Feature dump
+- Competitive intel extraction: Extron, Blackmagic, Kaltura, Panopto, YuJa, Echo360, etc.
+- Coaching moments: timestamps + what happened + what to do differently
+- Batch mode: "review today's calls" analyzes all same-day calls
+
+**Integrates with:** deal-momentum-analyzer-skill, morning-brief-skill, meddic-call-prep-auto-skill
+**MCP Tools:** Epiphan Clari (search_calls, get_call, get_call_summary), Epiphan CRM (HubSpot), Gmail
+
+**Triggers:** "analyze call", "call review", "score my call", "what did I miss", "call coaching", "review my last call", "Clari scorecard"
+
+---
+
+#### dead-deal-recovery-skill
+**Location:** `active/dead-deal-recovery-skill/` | **Version:** 1.0.0
+
+Prevent pipeline rot by systematically identifying and triaging stalled/dying deals. Scores every open deal on 5 death signals, classifies as HEALTHY/RECOVERABLE/DEAD, generates 3-touch recovery email campaigns (Day 0 check-in, Day 4 value bomb, Day 10 break-up), and formally disqualifies dead weight with root cause documentation.
+
+**Key Features:**
+- 5-signal health scoring: activity recency, champion engagement, close date integrity, MEDDIC completeness, stakeholder breadth
+- Root cause mapping: GHOST, NO_CHAMPION, SINGLE_THREADED, BUDGET_STALL, COMPETITOR_WIN, TIMING, UNQUALIFIED
+- Recovery campaign: 3 Gmail drafts (tactical empathy, Challenger reframe, no-oriented break-up)
+- Disqualification checklist: 7-step protocol before closing any deal as Lost
+- Monthly lost deal review: win rate by vertical, loss by root cause, MEDDIC correlation
+- Integrates into morning-brief for daily stall threshold alerts
+
+**Depends on:** meddic-call-prep-auto-skill, pipeline-health-analyzer-skill
+**Integrates with:** deal-momentum-analyzer-skill, morning-brief-skill, challenger-sale-skill
+**MCP Tools:** Epiphan CRM (HubSpot + Clari), Gmail (recovery drafts), Apollo (enrich_contact)
+
+**Triggers:** "dead deals", "stalled deals", "clean pipeline", "pipeline cleanup", "zombie deals", "pipeline hygiene", "deal recovery", "lost deal review"
+
+---
 
 On 2025-12-25, 14 skills were consolidated into 5 comprehensive skills:
 

@@ -86,6 +86,9 @@ graph TB
         MCA[meddic-call-prep-auto]
         DMA[deal-momentum-analyzer]
         PDL[portfolio-deal-linker]
+        AEH[ae-handoff-brief]
+        CRA[call-recording-analyzer]
+        DDR[dead-deal-recovery]
         TAS[trading-alert-scheduler]
         IBKR[ibkr-api]
 
@@ -211,7 +214,7 @@ graph TB
 | **Core** | workflow-enforcer-skill, project-context, workflow-orchestrator, cost-metering, portfolio-artifact | Session lifecycle management |
 | **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix, heal-skill, frontend-ui | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
-| **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro, prospect-research-to-cadence, phone-verification-waterfall, meddic-call-prep-auto, deal-momentum-analyzer, portfolio-deal-linker, trading-alert-scheduler, ibkr-api | GTM & revenue operations |
+| **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro, prospect-research-to-cadence, phone-verification-waterfall, meddic-call-prep-auto, deal-momentum-analyzer, portfolio-deal-linker, trading-alert-scheduler, ibkr-api, ae-handoff-brief, call-recording-analyzer, dead-deal-recovery | GTM & revenue operations |
 | **BDR Automation** | prospect-enrich, prospect-refresh, sequence-load, callable-lead-count, morning-brief | Daily pipeline automation (scheduled Mon-Fri) |
 | **Sales Intelligence** | champion-identifier, cold-email-sequence-generator, contact-hunter, email-template-generator, inbound-lead-qualifier, intent-signal-aggregator, linkedin-sales-navigator-alt, lookalike-customer-finder, meeting-intelligence-system, personalization-at-scale, pipeline-health-analyzer, sales-methodology-implementer, social-selling-content-generator | Sales tooling (imported from Claude Desktop) |
 | **Strategy** | business-model-canvas, blue-ocean-strategy, jobs-to-be-done, challenger-sale, never-split-the-difference | Business model design + innovation + sales methodology |
@@ -389,6 +392,15 @@ The orchestrator routes to 13+ skills based on task type:
 | deal-momentum-analyzer | hubspot-revops | HubSpot query patterns, stage definitions |
 | deal-momentum-analyzer | meddic-call-prep-auto | Call prep for recovery actions |
 | deal-momentum-analyzer | portfolio-artifact | Deal recovery metrics for GTME portfolio |
+| ae-handoff-brief | deal-momentum-analyzer | Deal health context for AE |
+| ae-handoff-brief | meddic-call-prep-auto | Shared MEDDIC synthesis logic |
+| ae-handoff-brief | call-recording-analyzer | Call-by-call MEDDIC scores + coaching data |
+| call-recording-analyzer | deal-momentum-analyzer | Feeds Signal 4 (call momentum) |
+| call-recording-analyzer | morning-brief | Yesterday's call scores + unresolved actions |
+| call-recording-analyzer | meddic-call-prep-auto | Prior call gaps inform next prep |
+| dead-deal-recovery | deal-momentum-analyzer | Shares deal health scoring (RED deals go deeper) |
+| dead-deal-recovery | meddic-call-prep-auto | Recovery call MEDDIC prep |
+| dead-deal-recovery | morning-brief | Daily stall threshold alerts |
 | portfolio-deal-linker | portfolio-artifact | Base metrics + weekly digest format |
 | portfolio-deal-linker | deal-momentum-analyzer | Recovery attribution (RED/YELLOW → won) |
 | portfolio-deal-linker | prospect-research-to-cadence | Origination attribution (Apollo sequences) |

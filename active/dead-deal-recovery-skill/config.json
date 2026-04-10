@@ -1,0 +1,46 @@
+{
+  "name": "dead-deal-recovery",
+  "version": "1.0.0",
+  "category": "Business",
+  "subcategory": "Pipeline Management",
+  "description": "Identify stalled/dying deals, classify as HEALTHY/RECOVERABLE/DEAD, execute 3-touch recovery campaigns, and formally disqualify dead weight. Keeps pipeline honest.",
+  "depends_on": [
+    "meddic-call-prep-auto-skill",
+    "pipeline-health-analyzer-skill"
+  ],
+  "integrates_with": [
+    "deal-momentum-analyzer-skill",
+    "morning-brief-skill",
+    "challenger-sale-skill",
+    "never-split-the-difference-skill"
+  ],
+  "mcp_tools": [
+    "hubspot_search_deals",
+    "hubspot_get_deal",
+    "hubspot_search_contacts",
+    "hubspot_search_companies",
+    "ask_agent",
+    "clari_search_calls",
+    "clari_get_call_summary",
+    "gmail_create_draft",
+    "enrich_contact"
+  ],
+  "activation_triggers": [
+    "dead deals",
+    "stalled deals",
+    "clean pipeline",
+    "pipeline cleanup",
+    "disqualify deals",
+    "deal graveyard",
+    "zombie deals",
+    "which deals should I kill",
+    "pipeline hygiene",
+    "deal recovery",
+    "win back",
+    "lost deal review",
+    "close out stale deals"
+  ],
+  "author": "Tim Kipper",
+  "created": "2026-04-09",
+  "last_updated": "2026-04-09"
+}
