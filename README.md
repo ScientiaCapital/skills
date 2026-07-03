@@ -1,6 +1,6 @@
 # Skills Library
 
-86 production-ready Claude Code skills. AI-native engineering, GTM, sales automation, and trading.
+87 production-ready Claude Code skills. AI-native engineering, GTM, sales automation, and trading.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@
 ./scripts/deploy.sh
 ```
 
-## Skills (86)
+## Skills (87)
 
 ### Core (5)
 | Skill | What It Does |

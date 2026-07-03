@@ -1,9 +1,9 @@
 # Skills Index
 
 > Last updated: 2026-07-03
-> Total skills: 82 (2 stable, 80 active)
+> Total skills: 87 (2 stable, 85 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 86 skills have `config.json` with version tracking
+> **100% config.json coverage** — All 87 skills have `config.json` with version tracking
 > **Naming note:** `nooks-autopilot`, `sdr-dial-lists`, `sdr-call-coaching`, and `epiphan-call-playbook` deliberately omit the `-skill` suffix — they are live-automation names (P14 harvest exceptions to the kebab-case `-skill` convention).
 
 ## Architecture
@@ -1718,3 +1718,15 @@ Chris Orlob's 5-step discovery framework (business problem → cause analysis �
 Friday 5:30 PM weekly KPI report for Tim's SDR pod. Pulls Nooks dials/connects + HubSpot meetings-booked and pipeline-created per rep (Tim, Edgar, Vasil), calculates attainment vs weekly targets, outputs GREEN/YELLOW/RED scorecards with week-over-week trend arrows, HTML report, and compact Slack DM to Tim. MEASURES the team; sdr-call-coaching COACHES.
 
 **Integrates with:** sdr-call-coaching, morning-brief-skill, callable-lead-count-skill, nooks-autopilot
+
+---
+
+## P16: GTM Brain (1 skill — 2026-07-03)
+
+### gtm-brain-skill
+**Category:** Sales Intelligence
+**Triggers:** "gtm brain" / "relationship graph" / "log outcome to graph" / "what worked with" / "account map" / "contact history" / "sequence performance" / "graph intelligence"
+**Purpose:** Neo4j-backed relationship graph (AuraDB Free — GTM Knowledge Graph). Reads and writes Contact, Account, Deal, Outcome, and Sequence nodes. Surfaces what messaging, personas, and sequences worked across verticals. Integrates with: epiphan-call-playbook, sdr-call-coaching, nooks-autopilot, morning-brief-skill, sdr-dial-lists, meddic-call-prep-auto-skill.
+**Reference files:** reference/graph-schema.md · reference/cypher-patterns.md
+**Script:** scripts/brain.py (Python neo4j driver; reads creds from skills/.env)
+**Graph endpoint:** neo4j+s://23a749c7.databases.neo4j.io (AURA_INSTANCEID: 23a749c7)

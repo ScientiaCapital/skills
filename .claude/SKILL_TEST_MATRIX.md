@@ -181,6 +181,14 @@ Legend: ✅ = confirmed · ⚠️ = conflict (resolved — see Conflict Log) · 
 
 ---
 
+## Sales Intelligence (1) — P16 New
+
+| # | Skill | Trigger Phrase | YAML | Activation | Notes |
+|---|-------|---------------|------|------------|-------|
+| 87 | gtm-brain-skill | "gtm brain" / "relationship graph" / "log outcome to graph" / "what worked with" | ✅ | ✅ | NEW P16; Neo4j AuraDB; brain.py script; schema initialized 2026-07-03 |
+
+---
+
 ## Conflict Log (resolved 2026-07-03)
 
 | Conflict | Canonical Handler | Skill Fixed | Trigger Removed |
@@ -207,8 +215,9 @@ Legend: ✅ = confirmed · ⚠️ = conflict (resolved — see Conflict Log) · 
 | Sales Automation | 1 | 1 | 0 |
 | Strategy | 5 | 5 | 0 |
 | Sales Methodology (P15) | 2 | 2 | 0 |
-| Sales Automation P15 | 2 | 2 | 0 |
-| **Total** | **86** | **86** | **0** |
+| Sales Automation (P15) | 2 | 2 | 0 |
+| Sales Intelligence (P16) | 1 | 1 | 0 |
+| **Total** | **87** | **87** | **0** |
 
 ---
 

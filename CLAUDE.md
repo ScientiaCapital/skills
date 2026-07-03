@@ -1,6 +1,6 @@
 # Tim's Skills Library
 
-86 production-ready skills for Claude Code and Claude Desktop. Engineering, GTM, sales automation, BDR pipeline automation, and trading.
+87 production-ready skills for Claude Code and Claude Desktop. Engineering, GTM, sales automation, BDR pipeline automation, and trading.
 
 ## How to Use This Folder
 
@@ -15,7 +15,7 @@ When working in this folder, Claude should:
 skills/
 ├── CLAUDE.md               # You're reading this
 ├── README.md               # Quick start + skill catalog
-├── SKILLS_INDEX.md         # Detailed skill documentation (86 skills)
+├── SKILLS_INDEX.md         # Detailed skill documentation (87 skills)
 ├── DEPENDENCY_GRAPH.md     # Visual skill relationships
 ├── PLANNING.md             # Current sprint (P14)
 ├── BACKLOG.md              # Future work

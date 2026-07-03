@@ -24,12 +24,19 @@
 - [x] All docs updated to 86 (README, CLAUDE.md, SKILLS_INDEX, SKILL_TEST_MATRIX)
 - [x] 689 tests passing, deployed + zips rebuilt
 
+## Done (This Session — Jul 3, P16)
+
+- [x] gtm-brain-skill: Neo4j AuraDB graph skill (87th skill); schema initialized live; write/read smoke test passed
+- [x] SKILL_TEST_MATRIX: 49 ⏳ → 0 ⏳; 5 trigger conflicts found and resolved; 86/86 validated
+- [x] 5 config.json trigger conflicts resolved (pipeline health, discovery call, discovery questions, email template, stalled deals)
+- [x] sdr-email-sms-playbook: soft close phrase bank added (15 phrases); title corrected to Sr. BDR
+
 ## Next Steps
 
 1. **Late July:** review Vasil ramping caveats (sdr-call-coaching/sdr-dial-lists ~2026-07-25); confirm Nyasha's Nooks mailbox; confirm he-dial-queue SDR roster
 2. **batch-send-drafts full automation:** create GCP project at console.cloud.google.com → `gws auth setup --project <id> --login` → upgrade skill to programmatic send
-3. **SKILL_TEST_MATRIX:** 49 skills pending activation re-validation
-4. **Next sprint (P16):** TBD — user has questions
+3. **GTM Brain — populate graph:** start logging real outcomes (calls, emails) after each touch; wire read queries into morning-brief and sdr-dial-lists
+4. **GTM Brain — wire write hooks:** after epiphan-call-playbook disposition, auto-call gtm-brain-skill Stage 4
 
 ## Near-Limit Skills (Watch List)
 

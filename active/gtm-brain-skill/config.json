@@ -1,0 +1,32 @@
+{
+  "name": "gtm-brain-skill",
+  "version": "1.0.0",
+  "category": "Sales Intelligence",
+  "description": "Neo4j relationship intelligence graph. Reads/writes Contact, Account, Deal, Outcome nodes. Surfaces what messaging, sequences, and personas worked across verticals.",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "epiphan-call-playbook",
+    "sdr-call-coaching",
+    "nooks-autopilot",
+    "morning-brief-skill",
+    "sdr-dial-lists",
+    "meddic-call-prep-auto-skill"
+  ],
+  "activation_triggers": [
+    "gtm brain",
+    "relationship graph",
+    "log outcome to graph",
+    "what worked with",
+    "account map",
+    "contact history",
+    "sequence performance",
+    "graph intelligence",
+    "who responded",
+    "atl coverage graph"
+  ],
+  "tags": ["neo4j", "graph", "relationship", "intelligence", "outcomes", "gtm"],
+  "author": "Tim Kipper",
+  "created": "2026-07-03",
+  "last_updated": "2026-07-03"
+}
