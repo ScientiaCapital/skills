@@ -32,7 +32,7 @@ qualifying answer first, then send the info email using the matching template.
 - Touch 1 subject line names the buyer's problem, NOT a product.
 - Exactly one question per email. Zero emails with two asks.
 - SMS is max 2 sentences and always opens with the first name.
-- Every email signs: Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com
+- Every email signs: Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
 - Personalization hook present in Touch 1 and Touch 2 (org name + trigger).
 - Cadence stops the moment a reply lands. No touch fires after engagement.
 </success_criteria>
@@ -81,7 +81,7 @@ the subject line either.
 > Where do you tend to lose the most time right now — capture, switching
 > sources, or getting recordings out the door?
 >
-> Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com
+> Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
 
 ### Courts template
 
@@ -99,7 +99,7 @@ the subject line either.
 > How are you handling it today when a recording drops in the middle of a
 > proceeding?
 >
-> Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com
+> Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
 
 ### Government template
 
@@ -116,7 +116,7 @@ the subject line either.
 >
 > What's your fallback today when nobody's available to run the recording?
 >
-> Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com
+> Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
 
 ### Healthcare template
 
@@ -135,7 +135,7 @@ the subject line either.
 > Where's the friction today — capturing the procedure, switching between
 > sources, or getting the recording to the learners?
 >
-> Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com
+> Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
 
 ### Generic / Corporate AV pattern
 
@@ -154,7 +154,7 @@ Fill-in-the-blank:
 >
 > [One diagnostic question — where do they lose the most time?]
 >
-> Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com
+> Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
 
 ---
 
@@ -178,7 +178,7 @@ Pattern:
 > "is reliability actually the pain, or is it more about getting recordings
 > distributed after the fact?"].
 >
-> Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com
+> Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
 
 Proof-point bank (swap by vertical):
 - **Higher Ed:** peer institution moved N rooms off classroom PCs, zero lost
@@ -217,7 +217,7 @@ max 2 sentences, open with the first name.
 > Is [reliable capture / the recording gap] something on your radar this
 > quarter, or should I circle back later?
 >
-> Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com
+> Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
 
 ---
 
@@ -242,7 +242,7 @@ one-line differentiator. Soft, low-commitment CTA.
 > If it's useful I can send a one-page spec breakdown for your exact room setup —
 > want me to?
 >
-> Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com
+> Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
 
 Value-add bank: spec comparison sheet, Extron SMP EOL migration note, a 90-second
 reliability explainer, a peer-vertical case one-pager, an Epiphan Connect remote-
@@ -268,7 +268,7 @@ gets the response the other four didn't.
 >
 > Either way, thanks for the read.
 >
-> Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com
+> Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
 
 ---
 
@@ -304,7 +304,7 @@ Avoid:
 5. **Personalization hook required in Touch 1 and Touch 2** — org name plus a
    known trigger (budget cycle, new building, accreditation, Extron SMP EOL,
    a failed recording, a job posting for AV staff).
-6. **Every email signs:** `Tim Kipper | GTM Business Development Engineer, Epiphan Video | tkipper@epiphan.com`
+6. **Every email signs:** `Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com`
 7. **Send-from is always tkipper@epiphan.com.** Never any other sender.
 8. **Teach → Tailor → Take Control.** Touch 1 teaches, Touch 2 tailors, 3-5 take
    control.
