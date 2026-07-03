@@ -1,0 +1,25 @@
+{
+  "name": "he-dial-queue-skill",
+  "version": "1.1.0",
+  "category": "BDR Automation",
+  "description": "Builds the Higher-Ed SDR pod's daily tiered dial queue (Tier 1/2/3) from the existing HubSpot pool with Golden Rules + AE-ownership + deal-association suppression, emits a Nooks-ready Google Sheet, and monitors inventory with a capped Apollo top-up gate",
+  "requires": [],
+  "depends_on": ["phone-verification-waterfall-skill"],
+  "integrates_with": [
+    "phone-verification-waterfall-skill",
+    "morning-brief-skill",
+    "callable-lead-count-skill",
+    "nooks-autopilot"
+  ],
+  "activation_triggers": [
+    "build HE dial queue",
+    "refresh pod dial list",
+    "higher-ed dial queue",
+    "daily dial queue",
+    "tier callable leads",
+    "nooks dial list",
+    "higher-ed callable dial inventory"
+  ],
+  "tags": ["higher-ed", "dial-queue", "nooks", "tiering", "suppression", "sdr-pod", "hubspot"],
+  "author": "Tim Kipper"
+}

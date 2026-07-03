@@ -1,0 +1,23 @@
+{
+  "name": "sdr-call-coaching",
+  "version": "1.0.0",
+  "category": "BDR Automation",
+  "description": "Weekly SDR call-coaching loop for Tim (coaching Edgar Marroquin + Vasil Ivanov). Pulls real connected Nooks dials + external Clari calls, scores every coachable call against a 4-dimension rubric (Orlob discovery, opener + take-control, Epiphan spec accuracy, MEDDIC capture), and outputs per-SDR coaching cards + a team trend. Read-only except Slack DM to Tim + optional Gmail draft. Runs Fridays ~11 AM CST.",
+  "requires": [],
+  "depends_on": ["epiphan-call-playbook"],
+  "integrates_with": [
+    "epiphan-call-playbook",
+    "sdr-dial-lists",
+    "nooks-autopilot"
+  ],
+  "activation_triggers": [
+    "SDR call coaching",
+    "coaching cards",
+    "score SDR calls",
+    "review Edgar's calls",
+    "review Vasil's calls",
+    "weekly call review"
+  ],
+  "tags": ["sdr", "coaching", "call-review", "nooks", "clari", "rubric", "scheduled"],
+  "author": "Tim Kipper"
+}

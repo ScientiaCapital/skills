@@ -1,0 +1,26 @@
+{
+  "name": "greenfield-pearl-tracker-skill",
+  "version": "1.0.0",
+  "category": "Sales Enablement",
+  "description": "Find and track greenfield Pearl/EC20 opportunities (new-build, remote production, post-NAB broadcast fly-kit/automation) from live CRM + Clari signals",
+  "requires": [],
+  "depends_on": ["epiphan-ai-mcp-guide-skill"],
+  "integrates_with": [
+    "epiphan-ai-mcp-guide-skill",
+    "deal-momentum-analyzer-skill",
+    "cost-discovery-coach-skill",
+    "blue-ocean-strategy-skill"
+  ],
+  "activation_triggers": [
+    "greenfield opportunities",
+    "new build",
+    "fly kit",
+    "remote production",
+    "broadcast deals",
+    "mobilization",
+    "NAB signals",
+    "find new logos"
+  ],
+  "tags": ["greenfield", "broadcast", "fly-kit", "remote-production", "pipeline", "sdr"],
+  "author": "Tim Kipper"
+}

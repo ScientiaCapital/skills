@@ -1,0 +1,35 @@
+{
+  "name": "cost-discovery-coach-skill",
+  "version": "1.0.0",
+  "category": "Sales Enablement",
+  "description": "Turns the cost-of-inaction calculator's inputs into tight, spec-true discovery questions per vertical (JTBD job + Never-Split calibrated question + Challenger insight)",
+  "requires": [],
+  "depends_on": [
+    "epiphan-ai-mcp-guide-skill"
+  ],
+  "integrates_with": [
+    "jobs-to-be-done-skill",
+    "never-split-the-difference-skill",
+    "challenger-sale-skill",
+    "epiphan-ai-mcp-guide-skill",
+    "greenfield-pearl-tracker-skill"
+  ],
+  "activation_triggers": [
+    "discovery questions",
+    "how to ask",
+    "calculator discovery",
+    "cost of inaction questions",
+    "cost discovery prep",
+    "what do I ask",
+    "qualify the room count"
+  ],
+  "tags": [
+    "discovery",
+    "jtbd",
+    "never-split-the-difference",
+    "challenger",
+    "calculator",
+    "sdr"
+  ],
+  "author": "Tim Kipper"
+}

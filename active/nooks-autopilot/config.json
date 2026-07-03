@@ -1,0 +1,27 @@
+{
+  "name": "nooks-autopilot",
+  "version": "1.0.0",
+  "category": "BDR Automation",
+  "description": "Autonomous BDR/SDR team that hunts leads to a warm reply: sources from HubSpot [AI] lists, qualifies (Golden Rules + Suppression + ATL/BTL + persona match), routes each lead to the right Nooks sequence by play, and (shadow-first) enrolls + monitors for replies to hand each rep a warm contact and their next-best 5 to call",
+  "requires": [],
+  "depends_on": ["sequence-load-skill"],
+  "integrates_with": [
+    "sequence-load-skill",
+    "prospect-research-to-cadence-skill",
+    "prospect-enrich-skill",
+    "phone-verification-waterfall-skill",
+    "morning-brief-skill"
+  ],
+  "activation_triggers": [
+    "run nooks autopilot",
+    "autonomous BDR run",
+    "hunt leads",
+    "enroll into nooks sequences",
+    "shadow enroll",
+    "autopilot dry run",
+    "check for replies",
+    "warm handoffs"
+  ],
+  "tags": ["nooks", "autopilot", "shadow-mode", "sequences", "warm-handoff", "sdr", "hubspot"],
+  "author": "Tim Kipper"
+}

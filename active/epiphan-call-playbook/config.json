@@ -1,0 +1,26 @@
+{
+  "name": "epiphan-call-playbook",
+  "version": "1.0.0",
+  "category": "Sales Enablement",
+  "description": "Canonical Epiphan cold + discovery CALL playbook for Tim's BDR/SDR team (Tim, Edgar, Vasil). Openers, live Orlob discovery flow per vertical, objection handling, spec-accurate talking points by product (Verified Spec Bank), and the close/next-step. Every spec verified via Epiphan AI search_product_catalog / search_product_knowledge.",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "sdr-dial-lists",
+    "sdr-call-coaching",
+    "nooks-autopilot"
+  ],
+  "activation_triggers": [
+    "call script",
+    "cold call",
+    "discovery call",
+    "opener",
+    "objection handling",
+    "talking points",
+    "what to say on the phone",
+    "dial list talking points",
+    "SDR coaching reference"
+  ],
+  "tags": ["playbook", "cold-call", "discovery", "objections", "spec-bank", "challenger", "voss", "orlob"],
+  "author": "Tim Kipper"
+}

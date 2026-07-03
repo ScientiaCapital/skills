@@ -1,0 +1,31 @@
+{
+  "name": "demo-execution-playbook-skill",
+  "version": "1.0.0",
+  "category": "Sales Enablement",
+  "description": "Structured demo execution framework for Epiphan AEs: vertical-specific demo flows, RECAP-AGENDA-SHOW VALUE-SUMMARIZE-NEXT STEPS skeleton, Traffic Light live coaching, LAER objection handling, competitive displacement scripts, and post-demo scorecard",
+  "requires": [],
+  "depends_on": [
+    "epiphan-ai-mcp-guide-skill",
+    "meddic-call-prep-auto-skill",
+    "challenger-sale-skill"
+  ],
+  "integrates_with": [
+    "epiphan-ai-mcp-guide-skill",
+    "meddic-call-prep-auto-skill",
+    "challenger-sale-skill",
+    "ae-handoff-brief-skill",
+    "call-recording-analyzer-skill"
+  ],
+  "activation_triggers": [
+    "demo playbook",
+    "demo flow for",
+    "how should I demo to",
+    "demo checklist",
+    "live demo prep",
+    "what to show",
+    "demo execution",
+    "post-demo scorecard"
+  ],
+  "tags": ["demo", "meddic", "challenger-sale", "objection-handling", "competitive", "vertical", "ae"],
+  "author": "Tim Kipper"
+}

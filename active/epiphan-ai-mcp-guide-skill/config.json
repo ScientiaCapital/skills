@@ -1,0 +1,27 @@
+{
+  "name": "epiphan-ai-mcp-guide-skill",
+  "version": "1.0.0",
+  "category": "Sales Enablement",
+  "description": "Day-one reference for the Epiphan AI + CRM/Clari MCP toolset, golden defaults, caveats, and the 5-vertical persona pack",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "business-pulse-skill",
+    "greenfield-pearl-tracker-skill",
+    "blue-ocean-strategy-skill",
+    "morning-brief-skill",
+    "sales-revenue-skill"
+  ],
+  "activation_triggers": [
+    "epiphan mcp",
+    "epiphan ai tools",
+    "crm tools",
+    "which epiphan tool",
+    "sdr onboarding",
+    "weekly brief",
+    "query dataset",
+    "clari calls"
+  ],
+  "tags": ["epiphan", "mcp", "crm", "clari", "hubspot", "sdr", "enablement"],
+  "author": "Tim Kipper"
+}

@@ -1,0 +1,34 @@
+{
+  "name": "sdr-dial-lists",
+  "version": "1.0.0",
+  "category": "BDR Automation",
+  "description": "Daily SDR dial-list builder for Edgar Marroquin + Vasil Ivanov. Builds each SDR a ranked callable queue every weekday morning with spec-accurate talking points and calibrated discovery questions sourced from epiphan-call-playbook. Read-only except per-SDR Slack DM + optional HTML/XLSX artifact.",
+  "requires": [
+    "python3 (scripts/ dial-list builders)"
+  ],
+  "depends_on": [
+    "epiphan-call-playbook"
+  ],
+  "integrates_with": [
+    "epiphan-call-playbook",
+    "sdr-call-coaching",
+    "nooks-autopilot"
+  ],
+  "activation_triggers": [
+    "build SDR dial lists",
+    "Edgar's call list",
+    "Vasil's dial queue",
+    "feed the SDRs",
+    "SDR morning queue"
+  ],
+  "tags": [
+    "sdr",
+    "dial-list",
+    "bdr",
+    "nooks",
+    "hubspot",
+    "scheduled",
+    "call-queue"
+  ],
+  "author": "Tim Kipper"
+}

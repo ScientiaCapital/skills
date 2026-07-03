@@ -1,0 +1,25 @@
+{
+  "name": "close-plan-generator-skill",
+  "version": "1.0.0",
+  "category": "Sales Enablement",
+  "description": "Generates comprehensive close plans for Epiphan Video deals: MEDDIC stakeholder mapping, decision process, competitive position, reverse-engineered close timeline, risk register, this-week actions, mutual action plan, and a 0-100 close confidence score",
+  "requires": [],
+  "depends_on": ["epiphan-ai-mcp-guide-skill"],
+  "integrates_with": [
+    "deal-momentum-analyzer-skill",
+    "meddic-call-prep-auto-skill",
+    "ae-handoff-brief-skill",
+    "epiphan-ai-mcp-guide-skill"
+  ],
+  "activation_triggers": [
+    "close plan",
+    "build close plan",
+    "close strategy",
+    "closing plan",
+    "deal close checklist",
+    "how do I close",
+    "what's blocking"
+  ],
+  "tags": ["close-plan", "meddic", "stakeholders", "mutual-action-plan", "deal-confidence", "competitive", "ae"],
+  "author": "Tim Kipper"
+}

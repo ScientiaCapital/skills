@@ -1,0 +1,25 @@
+{
+  "name": "business-pulse-skill",
+  "version": "1.0.0",
+  "category": "Sales Enablement",
+  "description": "Live firm-wide sales pulse (revenue vs pace, pipeline, won/lost, BDR activity) with coaching takeaways, from the Epiphan AI MCP",
+  "requires": [],
+  "depends_on": ["epiphan-ai-mcp-guide-skill"],
+  "integrates_with": [
+    "epiphan-ai-mcp-guide-skill",
+    "pipeline-health-analyzer-skill",
+    "sales-revenue-skill",
+    "morning-brief-skill"
+  ],
+  "activation_triggers": [
+    "business pulse",
+    "how are we doing",
+    "pipeline health",
+    "revenue pace",
+    "weekly numbers",
+    "standup brief",
+    "sales snapshot"
+  ],
+  "tags": ["pipeline", "revenue", "pulse", "standup", "coaching", "sdr"],
+  "author": "Tim Kipper"
+}

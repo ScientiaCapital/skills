@@ -1,0 +1,26 @@
+{
+  "name": "post-demo-automation-skill",
+  "version": "1.0.0",
+  "category": "Sales Automation",
+  "description": "Automates the post-demo follow-up sequence for Epiphan AEs: Challenger-style demo recap emails, internal HubSpot MEDDIC debrief notes, next-meeting scheduling, stakeholder expansion for single-threaded deals, and a 5-touch momentum plan with Day-14 BDR escalation",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "meddic-call-prep-auto-skill",
+    "deal-momentum-analyzer-skill",
+    "challenger-sale-skill",
+    "never-split-the-difference-skill",
+    "close-plan-generator-skill",
+    "ae-handoff-brief-skill"
+  ],
+  "activation_triggers": [
+    "post-demo",
+    "demo follow-up",
+    "follow up after demo",
+    "send demo recap",
+    "demo debrief",
+    "what's next after demo"
+  ],
+  "tags": ["post-demo", "ae", "meddic", "challenger", "follow-up", "momentum", "hubspot", "clari"],
+  "author": "Tim Kipper"
+}
