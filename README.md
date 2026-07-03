@@ -1,6 +1,6 @@
 # Skills Library
 
-82 production-ready Claude Code skills. AI-native engineering, GTM, sales automation, and trading.
+86 production-ready Claude Code skills. AI-native engineering, GTM, sales automation, and trading.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@
 ./scripts/deploy.sh
 ```
 
-## Skills (82)
+## Skills (86)
 
 ### Core (5)
 | Skill | What It Does |
@@ -143,7 +143,7 @@
 skills/
 ├── active/              # 80 trigger-activated skills
 ├── stable/              # 2 always-loaded core skills
-├── dist/                # 82 zip files for Claude Desktop (gitignored, rebuild-zips.sh)
+├── dist/                # 86 zip files for Claude Desktop (gitignored, rebuild-zips.sh)
 ├── scripts/
 │   ├── deploy.sh           # Deploy to ~/.claude/skills/
 │   ├── rebuild-zips.sh     # Rebuild dist/*.zip

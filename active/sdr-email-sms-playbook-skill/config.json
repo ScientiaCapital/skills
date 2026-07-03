@@ -1,0 +1,24 @@
+{
+  "name": "sdr-email-sms-playbook-skill",
+  "version": "1.0.0",
+  "category": "Sales Outreach",
+  "description": "5-touch email/SMS cadence for Epiphan BDR outreach. Full templates for Higher Ed, Courts, Gov, Healthcare by touch. Companion to epiphan-call-playbook (phone). Writing rules, subject line patterns, and SMS guidelines.",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "epiphan-call-playbook",
+    "cold-email-sequence-generator-skill",
+    "nooks-autopilot",
+    "batch-send-drafts-skill"
+  ],
+  "activation_triggers": [
+    "email playbook",
+    "email template",
+    "outreach email",
+    "sdr email",
+    "cold email template",
+    "sms outreach",
+    "follow up email",
+    "5 touch cadence"
+  ]
+}

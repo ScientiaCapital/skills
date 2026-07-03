@@ -3,7 +3,7 @@
 > Last updated: 2026-07-03
 > Total skills: 82 (2 stable, 80 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 82 skills have `config.json` with version tracking
+> **100% config.json coverage** — All 86 skills have `config.json` with version tracking
 > **Naming note:** `nooks-autopilot`, `sdr-dial-lists`, `sdr-call-coaching`, and `epiphan-call-playbook` deliberately omit the `-skill` suffix — they are live-automation names (P14 harvest exceptions to the kebab-case `-skill` convention).
 
 ## Architecture
@@ -1669,3 +1669,52 @@ On 2026-01-01, 4 skills were audited and restructured to XML format (<500 lines 
 | crm-integration-skill | 788 lines | 489 lines | Updated with Context7 SDK patterns |
 | voice-ai-skill | 652 lines | 493 lines | Deepgram v5 SDK, Cartesia Sonic-2 |
 | gtm-pricing-skill | 510 lines | 496 lines | Trimmed integration notes |
+
+---
+
+## P15 Skills (2026-07-03) — 4 skills added (82 → 86)
+
+### New Skills
+
+#### batch-send-drafts-skill
+**Location:** `active/batch-send-drafts-skill/` | **Version:** 1.0.0
+**Triggers:** "send staged drafts", "flush draft queue", "batch send drafts", "review my drafts"
+**Category:** Sales Automation
+
+Review and batch-send staged Gmail BDR outreach drafts. Uses Gmail MCP to list all queued drafts, enriches each with vertical/ATL classification, presents a prioritized review table, and generates one-click Gmail deep links per draft so Tim can flush the queue without hunting through Gmail.
+
+**Integrates with:** morning-brief-skill, cold-email-sequence-generator-skill, nooks-autopilot
+
+---
+
+#### orlob-discovery-framework-skill
+**Location:** `active/orlob-discovery-framework-skill/` | **Version:** 1.0.0
+**Triggers:** "discovery framework", "orlob discovery", "discovery questions", "cause analysis", "how to run discovery"
+**Category:** Sales Methodology
+
+Chris Orlob's 5-step discovery framework (business problem → cause analysis → negative impact → future state → close) applied to Epiphan. Includes per-vertical root causes (`reference/epiphan-root-causes.md`), calibrated question bank, MEDDIC integration points, and the 0-3 scoring rubric used by sdr-call-coaching.
+
+**Integrates with:** epiphan-call-playbook, sdr-call-coaching, sdr-dial-lists, meddic-call-prep-auto-skill
+
+---
+
+#### sdr-email-sms-playbook-skill
+**Location:** `active/sdr-email-sms-playbook-skill/` | **Version:** 1.0.0
+**Triggers:** "email playbook", "email template", "outreach email", "cold email template", "sms outreach", "5 touch cadence"
+**Category:** Sales Outreach
+
+5-touch email/SMS cadence for Epiphan BDR outreach. Email/SMS companion to epiphan-call-playbook (phone). Full templates for Higher Ed, Courts, Government, Healthcare cold outreach; follow-up and break-up patterns; subject line rules; SMS guidelines (2 sentences max).
+
+**Integrates with:** epiphan-call-playbook, cold-email-sequence-generator-skill, nooks-autopilot, batch-send-drafts-skill
+
+---
+
+#### weekly-kpi-report-skill
+**Location:** `active/weekly-kpi-report-skill/` | **Version:** 1.0.0
+**Schedule:** Fridays 5:30 PM CST (`0 30 17 * * 5`, America/Chicago)
+**Triggers:** "weekly kpi report", "kpi report", "sdr metrics", "team scorecard"
+**Category:** BDR Analytics
+
+Friday 5:30 PM weekly KPI report for Tim's SDR pod. Pulls Nooks dials/connects + HubSpot meetings-booked and pipeline-created per rep (Tim, Edgar, Vasil), calculates attainment vs weekly targets, outputs GREEN/YELLOW/RED scorecards with week-over-week trend arrows, HTML report, and compact Slack DM to Tim. MEASURES the team; sdr-call-coaching COACHES.
+
+**Integrates with:** sdr-call-coaching, morning-brief-skill, callable-lead-count-skill, nooks-autopilot

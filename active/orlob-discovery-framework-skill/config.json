@@ -1,0 +1,22 @@
+{
+  "name": "orlob-discovery-framework-skill",
+  "version": "1.0.0",
+  "category": "Sales Methodology",
+  "description": "Chris Orlob's 5-step discovery framework applied to Epiphan: business problem → cause analysis → negative impact → future state → close. Per-vertical root causes, calibrated question bank, MEDDIC integration, and the 0-3 scoring rubric used by sdr-call-coaching.",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "epiphan-call-playbook",
+    "sdr-call-coaching",
+    "sdr-dial-lists",
+    "meddic-call-prep-auto-skill"
+  ],
+  "activation_triggers": [
+    "discovery framework",
+    "orlob discovery",
+    "discovery questions",
+    "cause analysis",
+    "business problem discovery",
+    "how to run discovery"
+  ]
+}

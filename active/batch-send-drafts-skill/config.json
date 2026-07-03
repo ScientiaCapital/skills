@@ -1,0 +1,21 @@
+{
+  "name": "batch-send-drafts-skill",
+  "version": "1.0.0",
+  "category": "Sales Automation",
+  "description": "Review and batch-send staged Gmail BDR outreach drafts. Fetches all queued drafts, presents a prioritized review table, and generates one-click Gmail send links.",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "morning-brief-skill",
+    "cold-email-sequence-generator-skill",
+    "nooks-autopilot"
+  ],
+  "activation_triggers": [
+    "send staged drafts",
+    "flush draft queue",
+    "batch send drafts",
+    "review my drafts",
+    "what drafts do I have",
+    "send my outreach"
+  ]
+}

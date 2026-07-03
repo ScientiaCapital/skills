@@ -22,7 +22,7 @@
 | Phase 4: Full quality audit — MCP tool refs, stale identifiers, BDR gates, dedup, line limits | Pending |
 | Phase 5: Verify + deploy + commit | Pending |
 
-**Library:** 82 skills (2 stable, 80 active). Naming exceptions (live-automation names, no `-skill` suffix): `nooks-autopilot`, `sdr-dial-lists`, `sdr-call-coaching`, `epiphan-call-playbook` — directory rename would change the deployed skill name and break scheduled tasks.
+**Library:** 86 skills (2 stable, 84 active). Naming exceptions (live-automation names, no `-skill` suffix): `nooks-autopilot`, `sdr-dial-lists`, `sdr-call-coaching`, `epiphan-call-playbook` — directory rename would change the deployed skill name and break scheduled tasks.
 
 ### P13: Post-Audit Remediation (COMPLETE)
 

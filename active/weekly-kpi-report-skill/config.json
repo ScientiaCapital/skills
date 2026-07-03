@@ -1,0 +1,24 @@
+{
+  "name": "weekly-kpi-report-skill",
+  "version": "1.0.0",
+  "category": "BDR Analytics",
+  "description": "Friday 5:30 PM CST weekly KPI report for Tim's SDR pod. Per-rep scorecards (dials, connects, connect rate, meetings booked, pipeline created) vs weekly targets. Team roll-up, week-over-week trend, Slack DM to Tim, HTML report output.",
+  "requires": [],
+  "depends_on": [],
+  "integrates_with": [
+    "sdr-call-coaching",
+    "morning-brief-skill",
+    "callable-lead-count-skill",
+    "nooks-autopilot"
+  ],
+  "activation_triggers": [
+    "weekly kpi report",
+    "kpi report",
+    "weekly report",
+    "sdr metrics",
+    "team scorecard",
+    "how did the team do this week"
+  ],
+  "tags": ["sdr", "kpi", "scorecard", "nooks", "hubspot", "metrics", "scheduled", "weekly"],
+  "author": "Tim Kipper"
+}

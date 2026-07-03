@@ -1,8 +1,8 @@
 # Skill Activation Test Matrix
 
 **Date:** 2026-07-03
-**Total Skills:** 82 (2 stable, 80 active)
-**Status:** 37/82 validated (carried from 2026-02-22 run) · 45/82 pending re-validation
+**Total Skills:** 86 (2 stable, 84 active)
+**Status:** 37/86 validated (carried from 2026-02-22 run) · 49/86 pending re-validation
 **Note:** Rebuilt for the P14 harvest (70 → 82 skills). Trigger phrases sourced from each skill's `config.json` `activation_triggers`. ✅ marks are carried forward from the 2026-02-22 run only where the tested trigger phrase is unchanged in the current config; all other skills are marked ⏳ pending re-validation — no pass results are claimed for tests that were never run.
 **Naming exceptions:** `nooks-autopilot`, `sdr-dial-lists`, `sdr-call-coaching`, `epiphan-call-playbook` deliberately omit the `-skill` suffix (live-automation names).
 
@@ -176,7 +176,8 @@ Legend: ✅ = passed (2026-02-22 run) · ⏳ = pending re-validation
 | Sales Enablement | 7 | 0 | 7 |
 | Sales Automation | 1 | 0 | 1 |
 | Strategy | 5 | 2 | 3 |
-| **Total** | **82** | **37** | **45** |
+| P15 New | 4 | 0 | 4 |
+| **Total** | **86** | **37** | **49** |
 
 ---
 
@@ -190,6 +191,7 @@ Legend: ✅ = passed (2026-02-22 run) · ⏳ = pending re-validation
 | PASS carried forward for 37 of original 39 | Trigger phrase verified unchanged in current config.json |
 | 2 downgraded to pending | workflow-enforcer-skill ("follow workflow" removed), sales-revenue-skill ("cold email" removed in P13 Phase 3 trigger-conflict cleanup) |
 | Categories realigned to config.json | contact-hunter now BDR Automation; new Sales Enablement + Sales Automation sections |
+| 4 P15 skills added (82 → 86) | batch-send-drafts, orlob-discovery-framework, sdr-email-sms-playbook, weekly-kpi-report |
 
 ---
 
