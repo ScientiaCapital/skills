@@ -13,7 +13,6 @@
   ],
   "activation_triggers": [
     "email playbook",
-    "email template",
     "outreach email",
     "sdr email",
     "cold email template",

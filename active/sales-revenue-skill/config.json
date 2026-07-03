@@ -15,7 +15,6 @@
     "jobs-to-be-done-skill"
   ],
   "activation_triggers": [
-    "discovery call",
     "pipeline analysis",
     "MEDDIC",
     "sales outreach"

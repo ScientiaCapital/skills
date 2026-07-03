@@ -27,7 +27,6 @@
   ],
   "activation_triggers": [
     "dead deals",
-    "stalled deals",
     "clean pipeline",
     "pipeline cleanup",
     "disqualify deals",
