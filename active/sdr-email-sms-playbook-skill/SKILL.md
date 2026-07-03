@@ -33,6 +33,7 @@ qualifying answer first, then send the info email using the matching template.
 - Exactly one question per email. Zero emails with two asks.
 - SMS is max 2 sentences and always opens with the first name.
 - Every email signs: Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com
+- Closes are soft and permission-based — drawn from the Soft Close Phrases bank. No hard "book a call" CTAs on cold touches.
 - Personalization hook present in Touch 1 and Touch 2 (org name + trigger).
 - Cadence stops the moment a reply lands. No touch fires after engagement.
 </success_criteria>
@@ -293,24 +294,49 @@ Avoid:
 
 ---
 
+## Soft Close Phrases
+
+Tentative, permission-based lines for asking to reconnect — open-ended, low-pressure, no pitch. Use one at the end of any touch instead of a hard CTA. Pick the one that fits the tone; don't stack them.
+
+- If it's alright with you, I'd love to hear your take on this — maybe we could connect sometime this week.
+- I don't want to intrude, but if you're open to it, I'd like to swap thoughts on this before too long.
+- Whenever it's convenient for you, I'd be curious to know how you're thinking about this.
+- If you're up for it, I'd appreciate the chance to pick your brain on this at some point.
+- No pressure at all, but I'd value hearing where your head's at on this whenever you have a moment.
+- If you don't mind me asking, I'd like to understand how you're approaching this — maybe we could find some time soon.
+- I'd be grateful for your thoughts here, whenever works for you.
+- If it's not too much trouble, I'd like to learn more about how you see this playing out.
+- Would you be open to sharing your view sometime? I'd like to follow up when it's convenient.
+- If you have a few minutes at some point, I'd genuinely like to hear your perspective.
+- I'm curious how you'd approach this — maybe we could chat whenever your schedule allows.
+- If you're comfortable with it, I'd like to get a better sense of your thinking, perhaps later this week.
+- Whenever suits you, I'd welcome the opportunity to hear more about your perspective.
+- If it works on your end, I'd like to circle back and learn more about how you're seeing things.
+- I'd love to know your thoughts on this, if you're willing to share — happy to follow up whenever's good for you.
+
+---
+
 ## Writing Rules
 
 1. **No product name in Touch 1 subject or body.** Lead with the problem. The
    product enters only once the prospect has engaged (Touch 4 at the earliest,
    or a reply).
 2. **One question per email. Never two.** If you have two, cut to the sharper one.
-3. **SMS: max 2 sentences, always start with the first name.**
-4. **Subject lines: 4-7 words, no ALL CAPS, no "Just checking in."**
-5. **Personalization hook required in Touch 1 and Touch 2** — org name plus a
+3. **Use soft closes, not hard CTAs.** End emails with a phrase from the Soft
+   Close Phrases bank above — tentative, permission-based, no pitch. Never
+   "Book a 30-minute call here" as a first touch.
+4. **SMS: max 2 sentences, always start with the first name.**
+5. **Subject lines: 4-7 words, no ALL CAPS, no "Just checking in."**
+6. **Personalization hook required in Touch 1 and Touch 2** — org name plus a
    known trigger (budget cycle, new building, accreditation, Extron SMP EOL,
    a failed recording, a job posting for AV staff).
-6. **Every email signs:** `Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com`
-7. **Send-from is always tkipper@epiphan.com.** Never any other sender.
-8. **Teach → Tailor → Take Control.** Touch 1 teaches, Touch 2 tailors, 3-5 take
+7. **Every email signs:** `Tim Kipper | Sr. BDR, Epiphan Video | tkipper@epiphan.com`
+8. **Send-from is always tkipper@epiphan.com.** Never any other sender.
+9. **Teach → Tailor → Take Control.** Touch 1 teaches, Touch 2 tailors, 3-5 take
    control.
-9. **Stop on reply.** The moment a qualifying answer lands, kill the cadence and
-   send the tailored info email or route to the call playbook.
-10. **Never just send info.** Earn one qualifying answer first, then the info
+10. **Stop on reply.** The moment a qualifying answer lands, kill the cadence and
+    send the tailored info email or route to the call playbook.
+11. **Never just send info.** Earn one qualifying answer first, then the info
     email.
 
 Competitive hooks to weave in (never as the lead):
