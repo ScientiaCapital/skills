@@ -1,6 +1,6 @@
 # Project Context: skills
 
-**Updated:** 2026-07-03
+**Updated:** 2026-07-03 (end of day)
 **Branch:** main
 **Tech Stack:** Claude Code Skills Library (86 skills, Markdown/Bash, P12 autoresearch framework)
 
@@ -31,12 +31,12 @@
 - [x] 5 config.json trigger conflicts resolved (pipeline health, discovery call, discovery questions, email template, stalled deals)
 - [x] sdr-email-sms-playbook: soft close phrase bank added (15 phrases); title corrected to Sr. BDR
 
-## Next Steps
+## Next Steps (pick up here tomorrow)
 
-1. **Late July:** review Vasil ramping caveats (sdr-call-coaching/sdr-dial-lists ~2026-07-25); confirm Nyasha's Nooks mailbox; confirm he-dial-queue SDR roster
-2. **batch-send-drafts full automation:** create GCP project at console.cloud.google.com → `gws auth setup --project <id> --login` → upgrade skill to programmatic send
-3. **GTM Brain — populate graph:** start logging real outcomes (calls, emails) after each touch; wire read queries into morning-brief and sdr-dial-lists
-4. **GTM Brain — wire write hooks:** after epiphan-call-playbook disposition, auto-call gtm-brain-skill Stage 4
+1. **GTM Brain — start feeding it:** after first dial session, say "import today's Nooks calls" → graph auto-populates. After a few weeks "what worked with Higher Ed IT Directors?" returns real signal.
+2. **GTM Brain — read wire-up:** add Stage 6/7 read queries into morning-brief-skill and sdr-dial-lists (surface "who responded before at this account").
+3. **batch-send-drafts full automation:** create GCP project at console.cloud.google.com → `gws auth setup --project <id> --login`
+4. **Late July (~2026-07-25):** remove Vasil ramping caveats (sdr-call-coaching/sdr-dial-lists); confirm Nyasha Nooks mailbox; confirm he-dial-queue SDR roster
 
 ## Near-Limit Skills (Watch List)
 
