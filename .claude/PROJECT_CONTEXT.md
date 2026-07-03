@@ -1,54 +1,43 @@
 # Project Context: skills
 
-**Updated:** 2026-04-01
+**Updated:** 2026-07-03
 **Branch:** main
-**Tech Stack:** Claude Code Skills Library (67 skills, Markdown/Bash, P12 autoresearch framework)
+**Tech Stack:** Claude Code Skills Library (82 skills, Markdown/Bash, P12 autoresearch framework)
 
 ---
 
 ## Status
 
-67 production-ready skills (2 stable, 65 active). P12 autoresearch self-improving framework complete — all 67 skills now emit outcome sidecars to `~/.claude/skill-analytics/outcomes.jsonl`. A/B variant pilot active on cold-email-sequence-generator (control vs concise). Skill #68 (batch-send-drafts) planned + DA-reviewed, blocked on gws CLI OAuth auth.
+82 production-ready skills (2 stable, 80 active) after P14 harvest. Repo was dormant Apr 9 → Jul 3 while 12 skills were built outside version control (~/.claude/skills + Downloads); all now committed and normalized. P12 analytics capture repaired (user-level SessionStart sweep hook). Full quality audit done — all RED findings remediated, 657/657 tests passing.
 
-## Recent Commits
+## Naming Exceptions (do not "fix")
 
-```
-9cced08 feat: add outcome emission to all 67 skills (autoresearch expansion)
-a896242 chore: config.json tech debt — add 18 descriptions, normalize 36 names
-ee8c7eb feat: Golden Rules 90-day stale AE exception
-da4a13b fix: outcome-report.sh grep-c arithmetic bug
-6ae85ba feat: P12 autoresearch self-improving skills framework
-```
+`nooks-autopilot`, `sdr-dial-lists`, `sdr-call-coaching`, `epiphan-call-playbook` deliberately lack the `-skill` suffix — directory name = deployed skill name = what live scheduled tasks invoke. Renaming breaks automation.
 
-## Done (This Session — Apr 1)
+## Done (This Session — Jul 3, P14)
 
-- [x] Researched batch Gmail draft sending — identified gap (Gmail MCP has no send capability)
-- [x] Evaluated gws CLI (googleworkspace/cli) as solution — confirmed it exposes `drafts.send`
-- [x] Designed batch-send-drafts-skill with Plan agent (6-stage workflow, state persistence, rate limiting)
-- [x] DA Review #1: Found 3 blockers (no flock on macOS, gws not installed, Workspace OAuth risk), 4 high, 4 medium, 3 low — all mitigated in plan
-- [x] DA Review #2 (final gate): Conditional pass, 2 conditions resolved (config.json schema, permissions pattern)
-- [x] Installed gws CLI v0.22.5 via brew + google-cloud-sdk
-- [x] Auth blocked — gws auth setup needs gcloud auth login first, session ended before completing browser OAuth flow
-- [x] Plan saved to ~/.claude/plans/cheeky-floating-moler.md — ready to resume
+- [x] Harvested 12 unversioned skills into active/ (9 deployed-only + 3 June SDR skills from Downloads/epiphan-mcp-guide)
+- [x] Normalized all 12: config.json, XML sections, ≤500 lines (3 parallel agents)
+- [x] Analytics repair: sweep-outcomes.sh + user-level SessionStart hook; 5 June sidecars backfilled; first SKILL_HEALTH.md generated
+- [x] Docs refreshed to 82: README, CLAUDE.md, PLANNING (P13+P14), BACKLOG, SKILLS_INDEX, DEPENDENCY_GRAPH, SKILL_TEST_MATRIX (39→82 rows)
+- [x] Hygiene: 18 root artifacts → work-artifacts/ (gitignored), 3 stale zips deleted, 3 config name fixes
+- [x] Full audit + remediation: 4 nonexistent MCP tools fixed across 6 skills, March ramp targets → dynamic month lookup (3 skills), Stage S gate added to he-dial-queue, 11 stale ~/.agents/skills duplicates deleted, crm-integration + phone-verification-waterfall trimmed (500→411/437)
+- [x] Observer reports refreshed (QUALITY/ARCH/SKILL_HEALTH/P14_AUDIT — 2026-07-03)
 
 ## Next Steps
 
-1. **Complete gws OAuth auth** — `gcloud auth login` → `gws auth setup` → `gws auth login` → test one draft send
-2. **If auth works** — implement batch-send-drafts-skill per plan (Phase 1-4, ~2 hours)
-3. **If auth blocked by Workspace admin** — manual OAuth via Google Cloud Console, or ask IT
+1. **batch-send-drafts-skill (#83)** — still blocked on gws OAuth (`gcloud auth login` → `gws auth setup`); plan at ~/.claude/plans/cheeky-floating-moler.md
+2. **Late July:** review Vasil ramping caveats (sdr-call-coaching/sdr-dial-lists); confirm Nyasha's Nooks mailbox; confirm he-dial-queue SDR roster
+3. **Export cloud-only skills** — sdr-email-sms-playbook, orlob-discovery-framework, weekly-kpi-report exist only as scheduled-task prompts; bring into repo
+4. **SKILL_TEST_MATRIX:** 45 skills pending activation re-validation
 
 ## Near-Limit Skills (Watch List)
 
-| Skill | Lines | Notes |
-|-------|-------|-------|
-| crm-integration-skill | 500 | AT LIMIT — any addition requires extraction to reference/ |
-| phone-verification-waterfall-skill | 499 | 1 line from limit |
-| git-workflow-skill | 495 | 5 lines from limit |
-| voice-ai-skill | 490 | 10 lines from limit |
+git-workflow 495 • morning-brief ~490 • voice-ai 490 • data-analysis 487 • business-model-canvas 478 • unsloth-training 477 • linkedin-sales-navigator-alt 472 • post-demo-automation 409 (extract Stage 3/5 before next edit)
 
 ## Blockers
 
-- **batch-send-drafts-skill:** gws CLI OAuth auth not yet completed (gcloud auth login needed)
+- batch-send-drafts: gws CLI OAuth not completed
 
 ---
 

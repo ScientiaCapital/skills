@@ -1,7 +1,8 @@
 # Skill Dependency Graph
 
-> Last validated: 2026-03-19
-> Total skills: 67
+> Last validated: 2026-07-03
+> Total skills: 82
+> Naming note: `nooks-autopilot`, `sdr-dial-lists`, `sdr-call-coaching`, and `epiphan-call-playbook` deliberately omit the `-skill` suffix (live-automation names, P14 harvest).
 
 Visual map of relationships between skills in this library. Enables skill discovery and understanding of how skills work together.
 
@@ -119,6 +120,15 @@ graph TB
         MCA --> PDL
         PA --> PDL
         TRD --> TAS
+
+        %% P13 Phase 4 promotions (ae-handoff, call-recording, dead-deal)
+        DMA --> AEH
+        MCA --> AEH
+        CRA -.-> AEH
+        CRA -.-> DMA
+        CRA -.-> MCA
+        MCA --> DDR
+        DDR -.-> DMA
     end
 
     subgraph BDRAuto["BDR Automation (Daily Pipeline)"]
@@ -127,6 +137,10 @@ graph TB
         SL[sequence-load]
         CLC[callable-lead-count]
         MB[morning-brief]
+        HDQ[he-dial-queue]
+        NAP[nooks-autopilot]
+        SDL[sdr-dial-lists]
+        SCC[sdr-call-coaching]
 
         PE --> PVW
         PE --> PR
@@ -136,6 +150,56 @@ graph TB
         DMA --> MB
         HR --> PE
         HR --> CLC
+        CRA -.-> MB
+        DDR -.-> MB
+
+        %% P14 harvest — dial queue + autopilot + SDR pod
+        PVW --> HDQ
+        HDQ -.-> CLC
+        HDQ -.-> MB
+        HDQ -.-> NAP
+        SL --> NAP
+        NAP -.-> PRC
+        NAP -.-> PE
+        NAP -.-> PVW
+        NAP -.-> MB
+        SDL -.-> SCC
+        SDL -.-> NAP
+        SCC -.-> NAP
+    end
+
+    subgraph SalesEnable["Sales Enablement (P14 Harvest)"]
+        EMG[epiphan-ai-mcp-guide]
+        BP[business-pulse]
+        CPG[close-plan-generator]
+        CDC[cost-discovery-coach]
+        DEP[demo-execution-playbook]
+        GFT[greenfield-pearl-tracker]
+        ECP[epiphan-call-playbook]
+        PDA[post-demo-automation]
+
+        EMG --> BP
+        EMG --> CPG
+        EMG --> CDC
+        EMG --> DEP
+        EMG --> GFT
+        MCA --> DEP
+        BP -.-> SR
+        BP -.-> MB
+        CPG -.-> DMA
+        CPG -.-> MCA
+        CPG -.-> AEH
+        DEP -.-> AEH
+        DEP -.-> CRA
+        GFT -.-> DMA
+        GFT -.-> CDC
+        PDA -.-> MCA
+        PDA -.-> DMA
+        PDA -.-> CPG
+        PDA -.-> AEH
+        ECP --> SDL
+        ECP --> SCC
+        ECP -.-> NAP
     end
 
     subgraph SalesIntel["Sales Intelligence (Imported)"]
@@ -196,6 +260,22 @@ graph TB
     MIRO -.-> GTP
     DA -.-> HR
     FUI -.-> ST
+
+    %% P13 Phase 4 cross-cluster
+    PHA --> DDR
+    DDR -.-> CS
+    DDR -.-> NSTTD
+
+    %% P14 Sales Enablement cross-cluster
+    CS --> DEP
+    CDC -.-> JTBD
+    CDC -.-> NSTTD
+    CDC -.-> CS
+    PDA -.-> CS
+    PDA -.-> NSTTD
+    BP -.-> PHA
+    GFT -.-> BOS
+    EMG -.-> BOS
 ```
 
 ### Legend
@@ -215,7 +295,8 @@ graph TB
 | **Dev Tools** | extension-authoring, debug-like-expert, planning-prompts, worktree-manager, git-workflow, testing, api-design, security, api-testing, docker-compose, agent-teams, subagent-teams, agent-capability-matrix, heal-skill, frontend-ui | Development workflows |
 | **Infrastructure** | langgraph-agents, groq-inference, openrouter, voice-ai, unsloth-training, runpod-deployment, supabase-sql, stripe-stack | LLM inference & deployment |
 | **Business** | gtm-pricing, research, sales-revenue, crm-integration, hubspot-revops, content-marketing, data-analysis, trading-signals, miro, prospect-research-to-cadence, phone-verification-waterfall, meddic-call-prep-auto, deal-momentum-analyzer, portfolio-deal-linker, trading-alert-scheduler, ibkr-api, ae-handoff-brief, call-recording-analyzer, dead-deal-recovery | GTM & revenue operations |
-| **BDR Automation** | prospect-enrich, prospect-refresh, sequence-load, callable-lead-count, morning-brief | Daily pipeline automation (scheduled Mon-Fri) |
+| **BDR Automation** | prospect-enrich, prospect-refresh, sequence-load, callable-lead-count, morning-brief, he-dial-queue, nooks-autopilot, sdr-dial-lists, sdr-call-coaching | Daily pipeline automation (scheduled Mon-Fri) + live SDR pod automation |
+| **Sales Enablement** | epiphan-ai-mcp-guide, business-pulse, close-plan-generator, cost-discovery-coach, demo-execution-playbook, greenfield-pearl-tracker, epiphan-call-playbook, post-demo-automation | Epiphan AE/SDR enablement (P14 harvest; post-demo-automation is category "Sales Automation" in config) |
 | **Sales Intelligence** | champion-identifier, cold-email-sequence-generator, contact-hunter, email-template-generator, inbound-lead-qualifier, intent-signal-aggregator, linkedin-sales-navigator-alt, lookalike-customer-finder, meeting-intelligence-system, personalization-at-scale, pipeline-health-analyzer, sales-methodology-implementer, social-selling-content-generator | Sales tooling (imported from Claude Desktop) |
 | **Strategy** | business-model-canvas, blue-ocean-strategy, jobs-to-be-done, challenger-sale, never-split-the-difference | Business model design + innovation + sales methodology |
 
@@ -226,11 +307,12 @@ graph TB
 | Core | 5 |
 | Dev Tools | 15 |
 | Infrastructure | 8 |
-| Business | 16 |
-| BDR Automation | 5 |
+| Business | 19 |
+| BDR Automation | 9 |
+| Sales Enablement | 8 |
 | Sales Intelligence | 13 |
 | Strategy | 5 |
-| **Total** | **67** |
+| **Total** | **82** |
 
 ---
 
@@ -411,6 +493,27 @@ The orchestrator routes to 13+ skills based on task type:
 | phone-verification-waterfall | deal-momentum-analyzer | Feeds callable leads for recovery calls |
 | trading-alert-scheduler | trading-signals | Core analysis framework (regime, 5 methodologies) |
 | trading-alert-scheduler | ibkr-api | Portfolio positions, P&L, margin |
+| business-pulse | epiphan-ai-mcp-guide | MCP tool defaults + query patterns |
+| business-pulse | pipeline-health-analyzer / sales-revenue / morning-brief | Pulse metrics feed briefs + analytics |
+| close-plan-generator | epiphan-ai-mcp-guide | Deal/contact data pulls |
+| close-plan-generator | deal-momentum-analyzer / meddic-call-prep-auto / ae-handoff-brief | MEDDIC + momentum context for close plans |
+| cost-discovery-coach | epiphan-ai-mcp-guide | Calculator inputs via MCP |
+| cost-discovery-coach | jobs-to-be-done / never-split-the-difference / challenger-sale / greenfield-pearl-tracker | Question frameworks per vertical |
+| demo-execution-playbook | epiphan-ai-mcp-guide / meddic-call-prep-auto / challenger-sale | Demo prep inputs (depends_on) |
+| demo-execution-playbook | ae-handoff-brief / call-recording-analyzer | Demo flow handoff + post-demo scoring |
+| greenfield-pearl-tracker | epiphan-ai-mcp-guide | CRM + Clari signal queries |
+| greenfield-pearl-tracker | deal-momentum-analyzer / cost-discovery-coach / blue-ocean-strategy | Opportunity scoring + discovery |
+| epiphan-ai-mcp-guide | business-pulse / greenfield-pearl-tracker / blue-ocean-strategy / morning-brief / sales-revenue | Day-one MCP reference hub |
+| epiphan-call-playbook | sdr-dial-lists / sdr-call-coaching / nooks-autopilot | Canonical scripts + Verified Spec Bank |
+| post-demo-automation | meddic-call-prep-auto / deal-momentum-analyzer / challenger-sale / never-split-the-difference / close-plan-generator / ae-handoff-brief | 5-touch momentum plan + debrief notes |
+| he-dial-queue | phone-verification-waterfall | Verified-phone pool (depends_on) |
+| he-dial-queue | morning-brief / callable-lead-count / nooks-autopilot | Tiered queue feeds daily workflow |
+| nooks-autopilot | sequence-load | Sequence enrollment engine (depends_on) |
+| nooks-autopilot | prospect-research-to-cadence / prospect-enrich / phone-verification-waterfall / morning-brief | Qualification + sourcing + warm handoffs |
+| sdr-dial-lists | epiphan-call-playbook | Talking points source (depends_on) |
+| sdr-dial-lists | sdr-call-coaching / nooks-autopilot | Queue ↔ coaching loop |
+| sdr-call-coaching | epiphan-call-playbook | Scoring rubric reference (depends_on) |
+| sdr-call-coaching | sdr-dial-lists / nooks-autopilot | Coaching cards ↔ dial performance |
 
 ### Implicit Chains (Common Usage)
 
@@ -464,8 +567,9 @@ grep -l "DEPENDENCY_GRAPH" *.md
 
 ### Last Validated
 
-- **Date:** 2026-03-19
-- **Skill Count:** 67 (2 stable, 65 active)
+- **Date:** 2026-07-03
+- **Skill Count:** 82 (2 stable, 80 active) — verified via `ls active/ stable/`
+- **Changes:** Added edges for 3 P13 Phase 4 promotions (ae-handoff-brief, call-recording-analyzer, dead-deal-recovery) + 12 P14 harvest skills (Sales Enablement subgraph + 4 BDR Automation additions)
 - **Mermaid:** Renders correctly
 - **Cross-links:** SKILLS_INDEX.md, README.md
 

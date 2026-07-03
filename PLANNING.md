@@ -1,14 +1,42 @@
 # Skills Library Planning
 
-**Current Sprint:** P12 — Autoresearch Self-Improving Skills
-**Date:** 2026-03-21
+**Current Sprint:** P14 — Harvest, Repair & Full Refinement
+**Date:** 2026-07-03
 **Constraint:** M4 24GB RAM - max 5-6 parallel agents
 
 ---
 
 ## Active Work
 
-### P12: Autoresearch Self-Improving Skills (IN PROGRESS)
+### P14: Harvest, Repair & Full Refinement (IN PROGRESS)
+
+**Date:** 2026-07-03
+**Scope:** FULL — repo was dormant since 2026-04-09 while skill development continued outside version control.
+
+| Task | Status |
+|------|--------|
+| Phase 1: Harvest 12 unversioned skills (9 from ~/.claude/skills + 3 SDR skills from Downloads) into active/ | Complete |
+| Phase 1b: Normalize all 12 (config.json, XML sections, ≤500 lines) — 3 parallel agents | Complete |
+| Phase 2: Repair P12 analytics — root cause: capture hook was project-scoped; added user-level SessionStart sweep (scripts/sweep-outcomes.sh); backfilled 5 orphaned June sidecars; first SKILL_HEALTH.md generated | Complete |
+| Phase 3: Docs refresh (README/INDEX/GRAPH/TEST_MATRIX to 82 skills) + hygiene (work-artifacts/, stale zips, config name fixes) | In Progress |
+| Phase 4: Full quality audit — MCP tool refs, stale identifiers, BDR gates, dedup, line limits | Pending |
+| Phase 5: Verify + deploy + commit | Pending |
+
+**Library:** 82 skills (2 stable, 80 active). Naming exceptions (live-automation names, no `-skill` suffix): `nooks-autopilot`, `sdr-dial-lists`, `sdr-call-coaching`, `epiphan-call-playbook` — directory rename would change the deployed skill name and break scheduled tasks.
+
+### P13: Post-Audit Remediation (COMPLETE)
+
+**Date:** 2026-04-09
+**Scope:** 28 issues resolved across 4 phases.
+
+| Task | Status |
+|------|--------|
+| Phase 1: 4 critical bugs + 3 RED skills remediated (Golden Rules gates, MCP tool refs) | Done |
+| Phase 2: Stage S `bdr_suppression_until` gate injected into all 13 BDR skills | Done |
+| Phase 3: Conflicting activation triggers removed (cold email, callable leads, SOD/morning brief) | Done |
+| Phase 4: 3 personal skills promoted to library (ae-handoff-brief, call-recording-analyzer, dead-deal-recovery) → 70 skills | Done |
+
+### P12: Autoresearch Self-Improving Skills (COMPLETE)
 
 **Date:** 2026-03-21
 **Scope:** FULL — 5 phases, DA audit, 10 new files, 8 edits.
@@ -20,7 +48,7 @@
 | Phase 2: Feedback capture (/skill-feedback + log-feedback.sh) | Complete |
 | Phase 3: Skill health observer (agent, CLI, slash command, morning pipeline) | Complete |
 | Phase 4: A/B variants (variant-assigner.sh, cold-email pilot, T9, test-outcomes.sh T10-T14) | Complete |
-| Phase 5: Metadata updates (CLAUDE.md, BACKLOG.md, PLANNING.md) | In Progress |
+| Phase 5: Metadata updates (CLAUDE.md, BACKLOG.md, PLANNING.md) | Complete |
 
 **Test Results:** 537 per-skill tests (T1-T9) + 8 infrastructure tests (T10-T14) = 545 total, all passing.
 

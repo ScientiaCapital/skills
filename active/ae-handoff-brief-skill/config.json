@@ -1,5 +1,5 @@
 {
-  "name": "ae-handoff-brief",
+  "name": "ae-handoff-brief-skill",
   "version": "1.0.0",
   "category": "Business",
   "subcategory": "Sales Operations",
@@ -20,7 +20,7 @@
     "clari_get_call_summary",
     "enrich_contact",
     "gmail_create_draft",
-    "gmail_search_messages",
+    "search_threads",
     "get_upcoming_meetings",
     "ask_agent"
   ],

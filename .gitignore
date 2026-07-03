@@ -84,3 +84,7 @@ drafts/
 
 # Memory (project-level, not code)
 memory/
+
+# P14: local work artifacts (BDR reports, trading digests, KPI exports)
+work-artifacts/
+.portfolio/

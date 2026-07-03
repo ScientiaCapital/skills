@@ -1,6 +1,6 @@
 # Skills Library
 
-67 production-ready Claude Code skills. AI-native engineering, GTM, sales automation, and trading.
+82 production-ready Claude Code skills. AI-native engineering, GTM, sales automation, and trading.
 
 ## Quick Start
 
@@ -13,7 +13,7 @@
 ./scripts/deploy.sh
 ```
 
-## Skills (67)
+## Skills (82)
 
 ### Core (5)
 | Skill | What It Does |
@@ -69,15 +69,18 @@
 | **prospect-research-to-cadence** | Apollo research → outreach → sequence automation |
 | **phone-verification-waterfall** | Golden Rules filtering + Clay waterfall enrichment |
 
-### Business — Sales Workflow Automation (4)
+### Business — Sales Workflow Automation (7)
 | Skill | What It Does |
 |-------|-------------|
 | **meddic-call-prep-auto** | Auto-generate MEDDIC call prep from CRM + Apollo data |
 | **deal-momentum-analyzer** | Score deal velocity, predict close vs stall |
 | **portfolio-deal-linker** | Link engineering output to revenue impact |
 | **trading-alert-scheduler** | Daily pre-market digest with regime detection |
+| **ae-handoff-brief** | BDR→AE handoff briefs with MEDDIC summary |
+| **call-recording-analyzer** | Score call recordings against discovery rubric |
+| **dead-deal-recovery** | Resurrect closed-lost deals with re-engagement plays |
 
-### BDR Automation — Daily Pipeline (5)
+### BDR Automation — Daily Pipeline (9)
 | Skill | What It Does |
 |-------|-------------|
 | **prospect-enrich** | Mon-Fri 6:00 AM — phoneless contact enrichment (DEMO REQUEST first) |
@@ -85,6 +88,10 @@
 | **sequence-load** | Monday 7:15 AM — auto-load into Apollo sequences |
 | **callable-lead-count** | M-F 7:25 AM — ATL/BTL inventory + runway metrics |
 | **morning-brief** | M-F 7:30 AM — calendar + dials + deals + drafts briefing |
+| **nooks-autopilot** | M-F 8:05 AM — autonomous lead hunt → Nooks sequence enrollment (shadow-first) |
+| **sdr-dial-lists** | M-F 7:30 AM — per-SDR ranked dial queues (Edgar + Vasil) |
+| **sdr-call-coaching** | Friday 11 AM — score SDR calls, per-rep coaching cards |
+| **he-dial-queue** | Higher-ed callable dial inventory, tiered by ATL/BTL |
 
 ### Sales Intelligence (13)
 | Skill | What It Does |
@@ -102,6 +109,18 @@
 | **pipeline-health-analyzer** | Forecast accuracy + stall prediction |
 | **sales-methodology-implementer** | MEDDIC/BANT/Sandler/Challenger/SPIN frameworks |
 | **social-selling-content-generator** | 30+ LinkedIn posts for prospect attraction |
+
+### Sales Enablement — Epiphan GTM (8)
+| Skill | What It Does |
+|-------|-------------|
+| **epiphan-ai-mcp-guide** | Day-one reference for Epiphan AI + CRM/Clari MCP toolset |
+| **epiphan-call-playbook** | Canonical cold/discovery call playbook, verified spec bank |
+| **business-pulse** | Live firm-wide sales pulse with coaching takeaways |
+| **close-plan-generator** | MEDDIC close plans with confidence score + mutual action plan |
+| **demo-execution-playbook** | Vertical demo flows, objection matrix, post-demo scorecard |
+| **cost-discovery-coach** | Discovery questions mapped to cost-calculator inputs |
+| **post-demo-automation** | Demo recap emails, CRM updates, next-step automation |
+| **greenfield-pearl-tracker** | Track greenfield Pearl cohort deals + buying signals |
 
 ### Business — Trading & Brokerage (2)
 | Skill | What It Does |
@@ -122,9 +141,9 @@
 
 ```
 skills/
-├── active/              # 65 trigger-activated skills
+├── active/              # 80 trigger-activated skills
 ├── stable/              # 2 always-loaded core skills
-├── dist/                # 67 zip files for Claude Desktop
+├── dist/                # 82 zip files for Claude Desktop (gitignored, rebuild-zips.sh)
 ├── scripts/
 │   ├── deploy.sh           # Deploy to ~/.claude/skills/
 │   ├── rebuild-zips.sh     # Rebuild dist/*.zip

@@ -2,7 +2,11 @@
 
 ## P1: Current Priority
 
-All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
+- [ ] **batch-send-drafts-skill (#83)** — plan complete + DA-reviewed (~/.claude/plans/cheeky-floating-moler.md); blocked on gws CLI OAuth (`gcloud auth login` → `gws auth setup`). Carried from 2026-04-01.
+- [ ] **Harvest discipline** — new skills must be created in the repo (or copied back same-day), not directly in ~/.claude/skills/ or Downloads. P14 recovered 12 unversioned skills; avoid a repeat.
+- [ ] **Referenced-but-missing skills** — `sdr-email-sms-playbook`, `orlob-discovery-framework`, `weekly-kpi-report` are cited by the June SDR skills but exist only as cloud scheduled-task prompts. Export them into the repo as skills or downgrade the references to prose.
+
+All earlier P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 
 ---
 
@@ -31,7 +35,7 @@ All P1 items complete (see [ARCHIVE.md](./ARCHIVE.md)).
 
 ## P12: Self-Improvement Infrastructure — Future Work
 
-- [ ] **Extend outcome emit to all 67 skills** — currently only 3 pilots (prospect-enrich, morning-brief, cold-email-sequence-generator). Effort: MEDIUM.
+- [x] **Extend outcome emit to all skills** — completed 2026-04-01 (commit 9cced08). P14 follow-up 2026-07-03: capture loop was project-scoped and lost outcomes from other sessions; fixed with user-level SessionStart sweep hook (scripts/sweep-outcomes.sh).
 - [ ] **Auto-variant promotion** — when a variant has statistically significant better success rate over 2 weeks, auto-update weight split. Effort: HIGH.
 - [ ] **Observer-driven prompt rewriting** — health observer proposes SKILL.md edits for underperforming skills, human approves. Effort: HIGH.
 - [ ] **Dashboard UI** — web-based visualization of outcomes.jsonl + SKILL_HEALTH.md. Effort: MEDIUM. Currently CLI-only.

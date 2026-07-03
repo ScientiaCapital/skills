@@ -1,9 +1,10 @@
 # Skills Index
 
-> Last updated: 2026-04-09
-> Total skills: 70 (2 stable, 68 active)
+> Last updated: 2026-07-03
+> Total skills: 82 (2 stable, 80 active)
 > See [DEPENDENCY_GRAPH.md](./DEPENDENCY_GRAPH.md) for visual skill relationships
-> **100% config.json coverage** — All 70 skills have `config.json` with version tracking
+> **100% config.json coverage** — All 82 skills have `config.json` with version tracking
+> **Naming note:** `nooks-autopilot`, `sdr-dial-lists`, `sdr-call-coaching`, and `epiphan-call-playbook` deliberately omit the `-skill` suffix — they are live-automation names (P14 harvest exceptions to the kebab-case `-skill` convention).
 
 ## Architecture
 
@@ -88,6 +89,18 @@
 | Forecast accuracy + stall prediction for pipeline | [pipeline-health-analyzer](#pipeline-health-analyzer-skill) | Sales Intelligence |
 | Implement MEDDIC/BANT/Sandler/Challenger/SPIN | [sales-methodology-implementer](#sales-methodology-implementer-skill) | Sales Intelligence |
 | 30+ LinkedIn posts for prospect attraction | [social-selling-content-generator](#social-selling-content-generator-skill) | Sales Intelligence |
+| Firm-wide sales pulse: revenue pace + pipeline + coaching | [business-pulse](#business-pulse-skill) | Sales Enablement |
+| MEDDIC close plans with 0-100 confidence score | [close-plan-generator](#close-plan-generator-skill) | Sales Enablement |
+| Vertical discovery questions from cost-of-inaction calculator | [cost-discovery-coach](#cost-discovery-coach-skill) | Sales Enablement |
+| Vertical demo flows + LAER objection handling | [demo-execution-playbook](#demo-execution-playbook-skill) | Sales Enablement |
+| Day-one Epiphan AI + CRM/Clari MCP reference | [epiphan-ai-mcp-guide](#epiphan-ai-mcp-guide-skill) | Sales Enablement |
+| Find greenfield Pearl/EC20 opportunities | [greenfield-pearl-tracker](#greenfield-pearl-tracker-skill) | Sales Enablement |
+| Cold/discovery call playbook: openers, objections, spec bank | [epiphan-call-playbook](#epiphan-call-playbook) | Sales Enablement |
+| Post-demo follow-up: recap, debrief, 5-touch momentum plan | [post-demo-automation](#post-demo-automation-skill) | Sales Automation |
+| Higher-Ed SDR pod tiered daily dial queue | [he-dial-queue](#he-dial-queue-skill) | BDR Automation |
+| Autonomous lead hunt → Nooks sequences → warm replies | [nooks-autopilot](#nooks-autopilot) | BDR Automation |
+| Daily ranked dial lists for Edgar + Vasil | [sdr-dial-lists](#sdr-dial-lists) | BDR Automation |
+| Weekly SDR call scoring + coaching cards | [sdr-call-coaching](#sdr-call-coaching) | BDR Automation |
 
 ---
 
@@ -1120,6 +1133,159 @@ M-F 7:30 AM — Tim's daily briefing: calendar, HubSpot hot leads, deal momentum
 
 ---
 
+#### he-dial-queue-skill
+**Location:** `active/he-dial-queue-skill/` | **Version:** 1.1.0
+
+Builds the Higher-Ed SDR pod's daily tiered dial queue (Tier 1/2/3) from the existing HubSpot pool with Golden Rules + AE-ownership + deal-association suppression, emits a Nooks-ready Google Sheet, and monitors inventory with a capped Apollo top-up gate.
+
+**Depends on:** phone-verification-waterfall-skill
+**Integrates with:** phone-verification-waterfall-skill, morning-brief-skill, callable-lead-count-skill, nooks-autopilot
+
+**Triggers:** "build HE dial queue", "refresh pod dial list", "higher-ed dial queue", "daily dial queue", "tier callable leads", "nooks dial list"
+
+---
+
+#### nooks-autopilot
+**Location:** `active/nooks-autopilot/` | **Version:** 1.0.0
+
+> Naming exception: no `-skill` suffix — live-automation name.
+
+Autonomous BDR/SDR team that hunts leads to a warm reply: sources from HubSpot [AI] lists, qualifies (Golden Rules + Suppression + ATL/BTL + persona match), routes each lead to the right Nooks sequence by play, and (shadow-first) enrolls + monitors for replies to hand each rep a warm contact and their next-best 5 to call.
+
+**Depends on:** sequence-load-skill
+**Integrates with:** sequence-load-skill, prospect-research-to-cadence-skill, prospect-enrich-skill, phone-verification-waterfall-skill, morning-brief-skill
+
+**Triggers:** "run nooks autopilot", "autonomous BDR run", "hunt leads", "enroll into nooks sequences", "shadow enroll", "autopilot dry run", "check for replies", "warm handoffs"
+
+---
+
+#### sdr-dial-lists
+**Location:** `active/sdr-dial-lists/` | **Version:** 1.0.0
+
+> Naming exception: no `-skill` suffix — live-automation name.
+
+Daily SDR dial-list builder for Edgar Marroquin + Vasil Ivanov. Builds each SDR a ranked callable queue every weekday morning with spec-accurate talking points and calibrated discovery questions sourced from epiphan-call-playbook. Read-only except per-SDR Slack DM + optional HTML/XLSX artifact.
+
+**Depends on:** epiphan-call-playbook
+**Integrates with:** epiphan-call-playbook, sdr-call-coaching, nooks-autopilot
+
+**Triggers:** "build SDR dial lists", "Edgar's call list", "Vasil's dial queue", "feed the SDRs", "SDR morning queue"
+
+---
+
+#### sdr-call-coaching
+**Location:** `active/sdr-call-coaching/` | **Version:** 1.0.0
+
+> Naming exception: no `-skill` suffix — live-automation name.
+
+Weekly SDR call-coaching loop for Tim (coaching Edgar Marroquin + Vasil Ivanov). Pulls real connected Nooks dials + external Clari calls, scores every coachable call against a 4-dimension rubric (Orlob discovery, opener + take-control, Epiphan spec accuracy, MEDDIC capture), and outputs per-SDR coaching cards + a team trend. Read-only except Slack DM to Tim + optional Gmail draft. Runs Fridays ~11 AM CST.
+
+**Depends on:** epiphan-call-playbook
+**Integrates with:** epiphan-call-playbook, sdr-dial-lists, nooks-autopilot
+
+**Triggers:** "SDR call coaching", "coaching cards", "score SDR calls", "review Edgar's calls", "review Vasil's calls", "weekly call review"
+
+---
+
+### Sales Enablement (P14 Harvest)
+
+#### epiphan-ai-mcp-guide-skill
+**Location:** `active/epiphan-ai-mcp-guide-skill/` | **Version:** 1.0.0
+
+Day-one reference for the Epiphan AI + CRM/Clari MCP toolset, golden defaults, caveats, and the 5-vertical persona pack.
+
+**Integrates with:** business-pulse-skill, greenfield-pearl-tracker-skill, blue-ocean-strategy-skill, morning-brief-skill, sales-revenue-skill
+
+**Triggers:** "epiphan mcp", "epiphan ai tools", "crm tools", "which epiphan tool", "sdr onboarding", "weekly brief", "query dataset", "clari calls"
+
+---
+
+#### business-pulse-skill
+**Location:** `active/business-pulse-skill/` | **Version:** 1.0.0
+
+Live firm-wide sales pulse (revenue vs pace, pipeline, won/lost, BDR activity) with coaching takeaways, from the Epiphan AI MCP.
+
+**Depends on:** epiphan-ai-mcp-guide-skill
+**Integrates with:** epiphan-ai-mcp-guide-skill, pipeline-health-analyzer-skill, sales-revenue-skill, morning-brief-skill
+
+**Triggers:** "business pulse", "how are we doing", "pipeline health", "revenue pace", "weekly numbers", "standup brief", "sales snapshot"
+
+---
+
+#### close-plan-generator-skill
+**Location:** `active/close-plan-generator-skill/` | **Version:** 1.0.0
+
+Generates comprehensive close plans for Epiphan Video deals: MEDDIC stakeholder mapping, decision process, competitive position, reverse-engineered close timeline, risk register, this-week actions, mutual action plan, and a 0-100 close confidence score.
+
+**Depends on:** epiphan-ai-mcp-guide-skill
+**Integrates with:** deal-momentum-analyzer-skill, meddic-call-prep-auto-skill, ae-handoff-brief-skill, epiphan-ai-mcp-guide-skill
+
+**Triggers:** "close plan", "build close plan", "close strategy", "closing plan", "deal close checklist", "how do I close", "what's blocking"
+
+---
+
+#### cost-discovery-coach-skill
+**Location:** `active/cost-discovery-coach-skill/` | **Version:** 1.0.0
+
+Turns the cost-of-inaction calculator's inputs into tight, spec-true discovery questions per vertical (JTBD job + Never-Split calibrated question + Challenger insight).
+
+**Depends on:** epiphan-ai-mcp-guide-skill
+**Integrates with:** jobs-to-be-done-skill, never-split-the-difference-skill, challenger-sale-skill, epiphan-ai-mcp-guide-skill, greenfield-pearl-tracker-skill
+
+**Triggers:** "discovery questions", "how to ask", "calculator discovery", "cost of inaction questions", "sdr call prep", "what do I ask"
+
+---
+
+#### demo-execution-playbook-skill
+**Location:** `active/demo-execution-playbook-skill/` | **Version:** 1.0.0
+
+Structured demo execution framework for Epiphan AEs: vertical-specific demo flows, RECAP-AGENDA-SHOW VALUE-SUMMARIZE-NEXT STEPS skeleton, Traffic Light live coaching, LAER objection handling, competitive displacement scripts, and post-demo scorecard.
+
+**Depends on:** epiphan-ai-mcp-guide-skill, meddic-call-prep-auto-skill, challenger-sale-skill
+**Integrates with:** epiphan-ai-mcp-guide-skill, meddic-call-prep-auto-skill, challenger-sale-skill, ae-handoff-brief-skill, call-recording-analyzer-skill
+
+**Triggers:** "demo playbook", "demo flow for", "how should I demo to", "demo checklist", "live demo prep", "demo execution", "post-demo scorecard"
+
+---
+
+#### greenfield-pearl-tracker-skill
+**Location:** `active/greenfield-pearl-tracker-skill/` | **Version:** 1.0.0
+
+Find and track greenfield Pearl/EC20 opportunities (new-build, remote production, post-NAB broadcast fly-kit/automation) from live CRM + Clari signals.
+
+**Depends on:** epiphan-ai-mcp-guide-skill
+**Integrates with:** epiphan-ai-mcp-guide-skill, deal-momentum-analyzer-skill, cost-discovery-coach-skill, blue-ocean-strategy-skill
+
+**Triggers:** "greenfield opportunities", "new build", "fly kit", "remote production", "broadcast deals", "NAB signals", "find new logos"
+
+---
+
+#### epiphan-call-playbook
+**Location:** `active/epiphan-call-playbook/` | **Version:** 1.0.0
+
+> Naming exception: no `-skill` suffix — live-automation name.
+
+Canonical Epiphan cold + discovery CALL playbook for Tim's BDR/SDR team (Tim, Edgar, Vasil). Openers, live Orlob discovery flow per vertical, objection handling, spec-accurate talking points by product (Verified Spec Bank), and the close/next-step. Every spec verified via Epiphan AI search_product_catalog / search_product_knowledge.
+
+**Integrates with:** sdr-dial-lists, sdr-call-coaching, nooks-autopilot
+
+**Triggers:** "call script", "cold call", "discovery call", "opener", "objection handling", "talking points", "what to say on the phone"
+
+---
+
+### Sales Automation (P14 Harvest)
+
+#### post-demo-automation-skill
+**Location:** `active/post-demo-automation-skill/` | **Version:** 1.0.0
+
+Automates the post-demo follow-up sequence for Epiphan AEs: Challenger-style demo recap emails, internal HubSpot MEDDIC debrief notes, next-meeting scheduling, stakeholder expansion for single-threaded deals, and a 5-touch momentum plan with Day-14 BDR escalation.
+
+**Integrates with:** meddic-call-prep-auto-skill, deal-momentum-analyzer-skill, challenger-sale-skill, never-split-the-difference-skill, close-plan-generator-skill, ae-handoff-brief-skill
+
+**Triggers:** "post-demo", "demo follow-up", "follow up after demo", "send demo recap", "demo debrief", "what's next after demo"
+
+---
+
 ### Sales Intelligence (Imported)
 
 #### champion-identifier-skill
@@ -1345,7 +1511,7 @@ Chris Voss FBI negotiation framework — tactical empathy, calibrated questions,
 
 ```
 skills/
-├── active/                    # 37 active skills
+├── active/                    # 80 active skills (partial listing — see Quick Lookup above)
 │   ├── agent-capability-matrix-skill/
 │   ├── agent-teams-skill/
 │   ├── api-design-skill/
