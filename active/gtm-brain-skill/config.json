@@ -23,7 +23,10 @@
     "sequence performance",
     "graph intelligence",
     "who responded",
-    "atl coverage graph"
+    "atl coverage graph",
+    "sync from hubspot",
+    "import nooks calls",
+    "sync calls to graph"
   ],
   "tags": ["neo4j", "graph", "relationship", "intelligence", "outcomes", "gtm"],
   "author": "Tim Kipper",

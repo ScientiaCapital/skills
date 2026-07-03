@@ -1,7 +1,7 @@
 ---
 name: gtm-brain-skill
-description: "Relationship intelligence graph for GTM work. Reads and writes Contact/Account/Deal/Outcome nodes in Neo4j Aura (gtm-brain instance). Surfaces what messaging, sequences, and personas worked across verticals. Use when: relationship graph, gtm brain, log outcome, what worked with, account map, contact history, sequence performance."
-version: "1.0.0"
+description: "Relationship intelligence graph for GTM work. Reads and writes Contact/Account/Deal/Outcome nodes in Neo4j Aura. Syncs contacts/accounts from HubSpot MCP and imports call outcomes from Nooks MCP automatically. Surfaces what messaging, sequences, and personas worked across verticals. Use when: relationship graph, gtm brain, log outcome, what worked with, account map, sync from hubspot, import nooks calls, contact history, sequence performance."
+version: "1.1.0"
 ---
 
 <objective>
@@ -39,6 +39,8 @@ python3 ~/.claude/skills/gtm-brain-skill/scripts/brain.py ping
 | "add [contact] to the graph" | Stage 4 — WRITE: merge node |
 | "which sequence wins Courts deals?" | Stage 3 — READ: sequence perf |
 | "ATL coverage on open deals" | Stage 3 — READ: deal map |
+| "sync [contact/company] from HubSpot" | Stage 6 — HubSpot sync |
+| "import today's Nooks calls" / "sync calls" | Stage 7 — Nooks sync |
 </quick_start>
 
 <success_criteria>
@@ -90,6 +92,8 @@ Classify what the user wants:
 | "ATL coverage", "deal map" | Stage 3 — READ |
 | "log outcome", "call result", "add [contact]" | Stage 4 — WRITE |
 | "initialize", "setup schema", "first time" | Stage 5 — INIT |
+| "sync from HubSpot", "add contact from HS", "pull company" | Stage 6 — HubSpot |
+| "import Nooks calls", "sync today's calls", "log calls" | Stage 7 — Nooks |
 
 ---
 
@@ -219,6 +223,113 @@ Safe to re-run (all statements use `IF NOT EXISTS`).
 
 **Manual workflow until wired:**
 Say "log outcome to GTM Brain for [contact]" after any call or email to capture the result.
+
+---
+
+## Stage 6 — HubSpot Sync
+
+Pull a contact and their company from HubSpot and write both to the graph.
+
+**Trigger:** "sync [name] from HubSpot" / "add [company] to graph" / "pull [contact] from HS"
+
+### Step 1 — Fetch contact from HubSpot MCP
+
+Use `hubspot_search_contacts` (Epiphan AI MCP) with the name or email:
+
+```
+mcp__claude_ai_Epiphan_Ai__hubspot_search_contacts(query="Jane Smith")
+```
+
+Extract from result: `id` (hubspot_id), `firstname`, `lastname`, `jobtitle`, `email`, `phone`, `associatedcompanyid`.
+
+### Step 2 — Classify ATL/BTL from title
+
+Apply the ATL/BTL Classification from CLAUDE.md:
+- Match title against Universal ATL Keywords → `ATL`
+- Match against BTL / NEVER ATL lists → `BTL` or `NEVER`
+- Gray zone → `GRAY`
+
+### Step 3 — Determine vertical
+
+Use `mcp__claude_ai_Epiphan_Ai__qualify_lead` or infer from company name/domain:
+Higher Ed → university/college; Courts → court/judicial; Government → city/county/state agency; Healthcare → hospital/health system; Corporate AV → enterprise/corporate.
+
+### Step 4 — Write contact to graph
+
+```bash
+python3 "$SCRIPT" merge-contact \
+  '{"hubspot_id":"<ID>","name":"<FIRST> <LAST>","title":"<JOBTITLE>","email":"<EMAIL>","phone":"<PHONE>","vertical":"<VERTICAL>","atl_btl":"<TIER>"}'
+```
+
+### Step 5 — Fetch and write company
+
+```
+mcp__claude_ai_Epiphan_Ai__hubspot_get_company(companyId="<associatedcompanyid>")
+```
+
+Extract: `id`, `name`, `domain`, vertical (same logic). Write:
+
+```bash
+python3 "$SCRIPT" merge-account \
+  '{"hubspot_id":"<CO_ID>","name":"<CO_NAME>","vertical":"<VERTICAL>","domain":"<DOMAIN>","icp_score":80}'
+```
+
+Wire the relationship:
+
+```bash
+python3 "$SCRIPT" run \
+  "MATCH (c:Contact {hubspot_id:'<C_ID>'}),(a:Account {hubspot_id:'<A_ID>'}) MERGE (c)-[:WORKS_AT]->(a)"
+```
+
+**Batch sync tip:** "sync everyone at [company] from HubSpot" → `hubspot_search_contacts` with company filter → loop Steps 2-5 for each contact.
+
+---
+
+## Stage 7 — Nooks Call Sync
+
+Import recent Nooks call dispositions as Outcome nodes. Run after a dial session.
+
+**Trigger:** "import today's Nooks calls" / "sync calls to graph" / "log calls from Nooks"
+
+### Step 1 — List recent calls
+
+```
+mcp__claude_ai_Nooks__listCalls(filter_owner_id="87486452", filter_time_gte="<TODAY_ISO>")
+```
+
+Use Tim's Nooks user ID `87486452`. Returns call list with `id`, `prospectId`, `sequenceId`.
+
+### Step 2 — Get disposition per call
+
+For each call:
+```
+mcp__claude_ai_Nooks__getCallDisposition(callId="<id>")
+```
+
+### Step 3 — Map disposition → result
+
+| Nooks disposition | Graph result |
+|------------------|--------------|
+| Demo Booked / Interested / Connected-Positive | `positive` |
+| Voicemail / No Answer / Callback Requested | `neutral` |
+| Not Interested / Wrong Person / DQ / Unsubscribed | `negative` |
+
+### Step 4 — Resolve contact hubspot_id
+
+```
+mcp__claude_ai_Nooks__getProspect(prospectId="<id>")
+```
+
+Extract `hubspotContactId`. If contact not yet in graph → run Stage 6 sync first.
+
+### Step 5 — Write each call as an Outcome
+
+```bash
+python3 "$SCRIPT" log-outcome \
+  '{"id":"nooks-<CALL_ID>","contact_hubspot_id":"<HS_ID>","channel":"call","result":"<positive|neutral|negative>","notes":"<disposition label + any call notes>","timestamp":"<call_start_time>","sequence_nooks_id":"<SEQ_ID_IF_SET>"}'
+```
+
+Process all calls in the batch. Report: N calls imported, breakdown by result (X positive / Y neutral / Z negative).
 
 </core_content>
 
