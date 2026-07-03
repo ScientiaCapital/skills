@@ -406,7 +406,7 @@ INVENTORY STATUS
 ✓ Total Runway: 3.7 days (185 contacts at 50 dials/day) — GOOD
 ⚠️ Trending: +6 leads yesterday (+3.2% day-over-day) — ON TRACK
 
-WEEKLY TARGETS (Tim's Ramp 50% = 12 deals minimum)
+WEEKLY TARGETS (full quota: 24 deals/mo ≈ 6/week — resolve current month from CLAUDE.md comp plan)
 Deals Closed YTD: 8
 Deals in Pipeline: 12
 Dial Pace: 45 dials/day (target 50) — ON TRACK

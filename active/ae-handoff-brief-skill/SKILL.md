@@ -117,7 +117,7 @@ For each contact associated with the deal:
 ### 2e. Competitive Intel Check
 | Tool | Purpose |
 |------|---------|
-| `gmail_search_messages` | Check for competitive intel reports mentioning this prospect |
+| `search_threads` | Check for competitive intel reports mentioning this prospect |
 
 ## Stage 3: MEDDIC Scorecard Compilation
 
@@ -194,7 +194,7 @@ Add a note via `ask_agent`: "BDR Handoff Brief generated [date]. MEDDIC: [X/6]. 
 - **Epiphan CRM MCP:** hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_deal, ask_agent, get_upcoming_meetings
 - **Epiphan Clari MCP:** clari_search_calls, clari_get_call_summary
 - **Apollo/Enrichment MCP:** enrich_contact
-- **Gmail MCP:** gmail_create_draft, gmail_search_messages
+- **Gmail MCP:** gmail_create_draft, search_threads
 
 ## Sibling Skills Referenced
 - `meddic-call-prep-auto` — Shares MEDDIC synthesis logic

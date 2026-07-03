@@ -144,58 +144,7 @@ A CRM integration is successful when:
 
 **Note:** Tim's primary CRM is HubSpot via Epiphan CRM MCP. Close CRM patterns are retained for reference but are not the active workflow.
 
-### Query Language (for Smart Views)
-```python
-# Leads with no activity in 30 days
-'sort:date_updated asc date_updated < "30 days ago"'
-
-# High-value opportunities
-'opportunities.value >= 50000 opportunities.status_type:active'
-
-# Custom field filtering
-'custom.cf_industry = "MEP Contractor"'
-
-# Multiple trade types (your ICP)
-'custom.cf_trades:HVAC OR custom.cf_trades:Electrical'
-```
-
-### Core Operations
-```python
-# Create lead with contacts
-lead = close.create_lead({
-    "name": "ABC Mechanical",
-    "url": "https://abcmech.com",
-    "contacts": [{
-        "name": "John Smith",
-        "title": "Owner",
-        "emails": [{"email": "john@abcmech.com", "type": "office"}],
-        "phones": [{"phone": "555-1234", "type": "office"}]
-    }],
-    "custom.cf_tier": "Gold",
-    "custom.cf_source": "sales-agent"
-})
-
-# Create opportunity
-opp = close._request("POST", "/opportunity/", json={
-    "lead_id": lead["id"],
-    "value": 50000,
-    "confidence": 50,
-    "status_id": "stat_xxx"  # Pipeline stage
-})
-
-# Log activity
-close._request("POST", "/activity/note/", json={
-    "lead_id": lead["id"],
-    "note": "Initial discovery call - interested in demo"
-})
-```
-
-### Rate Limit Headers (RFC-compliant)
-```
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 95
-X-RateLimit-Reset: 1704067200
-```
+> See `reference/close-crm-examples.md` for query language examples, core operations (leads, opportunities, activities), and rate-limit headers.
 
 > See `reference/close-deep-dive.md` for query language, Smart Views, sequences, and reporting.
 </close_patterns>
@@ -290,47 +239,7 @@ def composite_create(self, records: list) -> dict:
 <webhook_patterns>
 ## Webhook Handlers
 
-### Close Webhook (FastAPI)
-```python
-from fastapi import FastAPI, Request, HTTPException
-import hmac, hashlib
-
-app = FastAPI()
-
-@app.post("/webhooks/close")
-async def close_webhook(request: Request):
-    body = await request.body()
-    signature = request.headers.get("Close-Sig")
-
-    expected = hmac.new(
-        CLOSE_WEBHOOK_SECRET.encode(), body, hashlib.sha256
-    ).hexdigest()
-
-    if not hmac.compare_digest(signature, expected):
-        raise HTTPException(401, "Invalid signature")
-
-    data = await request.json()
-    event_type = data["event"]["event_type"]
-
-    handlers = {
-        "lead.created": handle_lead_created,
-        "opportunity.status_changed": handle_opp_stage_change,
-    }
-
-    if handler := handlers.get(event_type):
-        await handler(data["event"]["data"])
-
-    return {"status": "ok"}
-```
-
-### Close Webhook Events
-```
-lead.created, lead.updated, lead.deleted, lead.status_changed
-contact.created, contact.updated
-opportunity.created, opportunity.status_changed
-activity.note.created, activity.call.created, activity.email.created
-unsubscribed_email.created
-```
+> See `reference/webhook-handlers.md` for the Close webhook FastAPI handler (with signature verification) and the full webhook event list.
 </webhook_patterns>
 
 <sync_architecture>
@@ -412,7 +321,7 @@ def resolve_conflict(close_record, hubspot_record, strategy):
 | `find-and-enrich-list-of-contacts` | Find specific named contacts at their companies |
 | `add-contact-data-points` | Queue contact enrichment (Email, Phone, Work History, Thought Leadership) |
 | `add-company-data-points` | Queue company enrichment (Tech Stack, Funding, Headcount, Competitors, etc.) |
-| `get-existing-search` | Poll for enrichment results (check `state: completed`) |
+| `get-task` | Poll for enrichment results (check `state: completed`) |
 | `ask-question-about-accounts` | AI analysis of Salesforce account data |
 | `get-my-accounts` | Search Salesforce accounts by filters |
 | `get-task` | Retrieve task status and results by taskId |
@@ -434,6 +343,8 @@ def resolve_conflict(close_record, hubspot_record, strategy):
 
 **CRM-Specific:**
 - `reference/close-deep-dive.md` - Query language, Smart Views, sequences, reporting
+- `reference/close-crm-examples.md` - Close query language, core operations, rate-limit headers
+- `reference/webhook-handlers.md` - Close webhook FastAPI handler + event list
 - `reference/hubspot-patterns.md` - SDK patterns, batch operations, workflows
 - `reference/salesforce-patterns.md` - JWT auth, SOQL, Platform Events, bulk API
 
@@ -456,7 +367,7 @@ def resolve_conflict(close_record, hubspot_record, strategy):
 
 **User wants enrichment / contact data:**
 → Use Clay MCP waterfall pattern (preferred for waterfall, credits OK)
-→ Workflow: `find-and-enrich-contacts-at-company` → `add-contact-data-points` → poll `get-existing-search` for results
+→ Workflow: `find-and-enrich-contacts-at-company` → `add-contact-data-points` → poll `get-task` for results
 → Fallback: Apollo MCP for quick free enrichment (no polling needed)
 → Reference: See "Clay MCP Enrichment" in Integration Points above
 → Cost: Apollo free, Clay $150-300/mo estimate

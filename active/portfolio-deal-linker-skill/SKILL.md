@@ -194,12 +194,8 @@ leverage / systems thinking / revenue ownership] at VP BD scale."
 
 Calculate daily progress against Tim's 2026 BDR comp plan targets.
 
-### March 2026 Targets (Ramp 50%)
-| Metric | Monthly Target | Stretch (126%+) | Daily Run Rate |
-|--------|---------------|-----------------|----------------|
-| Deals created | 12 | 16+ | 0.6/day |
-| Pipeline generated | $357,000 | $450,000+ | $17,850/day |
-| Revenue (closed-won) | $125,000 | $157,000+ | $6,250/day |
+### Current Month Targets
+ALWAYS resolve targets for the CURRENT month from the Monthly Target Lookup table below (never hardcode a month). Since June 2026 Tim is on full quota: 24 deals/mo, $714K pipeline/mo; H2 revenue targets rise monthly. Stretch = 126%+ of target (1.5x accelerator). Daily run rate = monthly target / business days in month.
 
 ### Calculation Logic
 1. Query HubSpot for deals created this month where Tim is owner (87486452) or collaborator
@@ -215,11 +211,11 @@ Calculate daily progress against Tim's 2026 BDR comp plan targets.
 
 ### Output Format (append to daily portfolio report)
 ```
-📊 COMP PLAN TRACKER — March 2026 (Ramp 50%)
+📊 COMP PLAN TRACKER — {Month YYYY} ({Phase from lookup table})
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Pipeline:  $XXX,XXX / $357,000  (XX% — Zone: BASE/1.0x/1.25x/1.5x)
-Revenue:   $XX,XXX / $125,000   (XX% — Zone: BASE/1.0x/1.25x/1.5x)
-Deals:     X / 12               (XX%)
+Pipeline:  $XXX,XXX / ${month pipeline target}  (XX% — Zone: BASE/1.0x/1.25x/1.5x)
+Revenue:   $XX,XXX / ${month revenue target}   (XX% — Zone: BASE/1.0x/1.25x/1.5x)
+Deals:     X / {month deal target}             (XX%)
 Days left: X business days
 Gap to stretch: $XXX,XXX pipeline | $XX,XXX revenue | X deals
 Daily run rate needed: $X,XXX pipeline | $X,XXX revenue
@@ -232,7 +228,12 @@ Daily run rate needed: $X,XXX pipeline | $X,XXX revenue
 | April | 16 | $464K | $163K | Ramp 65% |
 | May | 20 | $607K | $212K | Ramp 85% |
 | June | 24 | $714K | $250K | Full (H1) |
-| July+ | 24 | $714K | $475-600K | Full (H2) |
+| July | 24 | $714K | $475K | Full (H2) |
+| August | 24 | $714K | $475K | Full (H2) |
+| September | 24 | $714K | $500K | Full (H2) |
+| October | 24 | $714K | $525K | Full (H2) |
+| November | 24 | $714K | $550K | Full (H2) |
+| December | 24 | $714K | $600K | Full (H2) |
 
 Dynamically select targets based on current month.
 
@@ -259,7 +260,7 @@ When Tim says "EOD", include portfolio attribution summary for any deals closed 
 ## Required MCP Tools
 - **Epiphan CRM MCP:** hubspot_search_deals, hubspot_get_deal, hubspot_search_contacts, hubspot_get_company, ask_agent (activity history for attribution)
 - **Apollo MCP:** apollo_emailer_campaigns_search (check sequence enrollment history)
-- **Gmail MCP:** gmail_search_messages (check draft/sent history for attribution)
+- **Gmail MCP:** search_threads (check draft/sent history for attribution)
 
 ## Sibling Skills Referenced
 - `portfolio-artifact-skill` — Base metrics capture, weekly digest format, executive summary template

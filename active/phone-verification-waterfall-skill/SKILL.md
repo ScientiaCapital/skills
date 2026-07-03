@@ -235,7 +235,7 @@ Log event to company:
 - Tag with `phone_verified_at` timestamp
 - Log completion to deal/company object if linked
 
-**Tool:** HubSpot REST API (contacts batch update) via `hubspot_contacts_update` or direct HTTP
+**Tool:** HubSpot REST API (contacts batch update) via `hubspot_update_contact` (per-contact; no batch MCP tool) or direct HTTP
 
 </Stage 4>
 
@@ -270,52 +270,10 @@ Log event to company:
 
 **Final Callable Queue Format:**
 
-```
-═══════════════════════════════════════════════════════════════════════════════
-CALLABLE QUEUE — Phone Waterfall Results
-Generated: {timestamp} | Success Rate: {70-80%}
-═══════════════════════════════════════════════════════════════════════════════
-
-SUMMARY:
-Total Leads Pulled:        {N}
-Apollo Matches:            {X} ({X%})
-Clay Enrichments:          {Y} ({Y%})
-Total Verified Phones:     {X+Y} ({(X+Y)%})
-HubSpot Updated:           {X+Y}
-ATL Contacts:              {A} ({A%})
-Gray Zone:                 {G} ({G%})
-BTL Contacts:              {B} ({B%})
-
-READY TO DIAL (sorted ATL first, then ICP score + intent):
-
- #  │ NAME              │ TIER │ TITLE            │ COMPANY           │ PHONE        │ ICP  │ VERTICAL     │ INTENT SIGNAL
-────┼──────────────────┼──────┼──────────────────┼──────────────────┼──────────────┼──────┼──────────────┼─────────────────
-  1 │ Jane Smith       │ ATL  │ VP IT/AV         │ Stanford Univ    │ (650)xxx-xxx │ 93   │ Higher Ed    │ New AV role + hiring
-  2 │ Mike Johnson     │ ATL  │ Dir Technology   │ Federal Courts   │ (202)xxx-xxx │ 87   │ Courts/Legal │ Extron aging out
-  3 │ Sarah Chen       │ GRAY │ Manager IT       │ UCSF Medical     │ (415)xxx-xxx │ 78   │ Healthcare   │ Facility upgrade
-  4 │ David Lee        │ BTL  │ AV Technician    │ Cisco Corp       │ (408)xxx-xxx │ 82   │ Corp AV      │ Meeting room reno
-  5 │ ...              │ ...  │ ...              │ ...              │ ...          │ ...  │ ...          │ ...
-
-═══════════════════════════════════════════════════════════════════════════════
-DIALER QUICK LINKS:
-- Download CSV:        [queue.csv]
-- Import to Dialpad:   [sync button]
-- Import to Aircall:   [sync button]
-- By Company:          [grouped view]
-- By Vertical:         [vertical view]
-- By ATL/BTL Tier:     [tier view]
-
-NEXT STEPS:
-1. Prioritize ATL contacts first (decision-makers with budget authority)
-2. Review GRAY zone contacts for manual budget authority verification
-3. Import to your dialpad tool
-4. Dial 50+ per day, log outcomes, let Sales Engagement cadences trigger
-
-═══════════════════════════════════════════════════════════════════════════════
-```
+> See `reference/callable-queue-format.md` for the full ASCII queue output template (summary block, ready-to-dial table, dialer quick links, next steps).
 
 **Output formats:**
-- **Chat:** Rich formatted table (above) with top 10-20 by ICP score
+- **Chat:** Rich formatted table (template in `reference/callable-queue-format.md`) with top 10-20 by ICP score
 - **CSV download:** Full queue with all data for import to dialpad/Aircall
 - **By Vertical:** Secondary view grouped by industry for vertical hunting
 - **Integration:** Link to import queue to Dialpad, Aircall, or sales engagement tool
@@ -394,11 +352,11 @@ WEDNESDAY MORNING SEQUENCE (mid-week refresh):
 - `find-and-enrich-contacts-at-company` — Batch enrich by company + job title filters
 - `add-contact-data-points` — Add custom phone data point to enrich results
 - `find-and-enrich-list-of-contacts` — Enrich specific contacts by name + company
-- `get-existing-search` — Poll for async enrichment results
+- `get-task` — Poll for async enrichment results
 - *(Costs Clay credits — monitor spend)*
 
 ### HubSpot API (sync stage 4)
-- `hubspot_contacts_update` (batch via REST API) — Write verified phones back to HubSpot
+- `hubspot_update_contact` (per-contact loop; batch only via direct REST API) — Write verified phones back to HubSpot
 - Or native HubSpot bulk import if preferred
 
 ## Sibling Skills & Related Tasks Referenced
@@ -474,27 +432,6 @@ WEDNESDAY MORNING SEQUENCE (mid-week refresh):
 
 ## Example: Phone Waterfall in Action
 
-**Monday 6:15 AM kick-off:**
-```
-INPUT: HubSpot query finds 247 contacts with phone = null and meeting Golden Rules
-APOLLO STAGE (2 min):
-  Batched 247 into 5 parallel requests
-  Success: 118 phones verified (47.8%)
-  → Synced 118 to HubSpot immediately
-  → Remaining: 129 needs Clay
-CLAY STAGE (4 min):
-  Batched 129 into company+title groups
-  Ran find-and-enrich-contacts-at-company for each company
-  Waterfall returned phones for 41 additional contacts (31.8%)
-  → Synced 41 to HubSpot
-  → Final miss: 88 (no phone found)
-SYNC STAGE (30 sec):
-  HubSpot batch updated 159 contacts (118 Apollo + 41 Clay)
-  Tagged phone_source = 'apollo' or 'clay'
-QUEUE STAGE (30 sec):
-  Sorted 159 by ICP score (Higher Ed first, K-12 last)
-  Output: Callable queue ready for 50+ dials
-TOTAL TIME: 7 min 30 sec | CALLABLE: 159 verified | SUCCESS: 64.4%
-```
+> See `reference/waterfall-example.md` for a full worked run (247 leads pulled -> 159 verified callable, 64.4% success, 7 min 30 sec).
 ## Emit Outcome Sidecar
 Write `~/.claude/skill-analytics/last-outcome-phone-verification-waterfall.json`: `{"ts":"[UTC ISO8601]","skill":"phone-verification-waterfall","version":"1.0.0","variant":"default","status":"[success|partial|error]","runtime_ms":[ms],"metrics":{"contacts_processed":[n],"apollo_verified":[n],"clay_verified":[n],"total_callable":[n],"verification_rate_pct":[n]},"error":null,"session_id":"[YYYY-MM-DD]"}`

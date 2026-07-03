@@ -18,7 +18,7 @@ Comprehensive B2B sales skill for Epiphan Video BDRs covering cold outreach to v
 
 **Cold email:** Under 100 words, problem-forward (video capture, streaming, hybrid/remote), clear single CTA
 
-**Tim's March 2026 Targets (Ramp 50%):** 12+ deals (stretch: 16+), $357K pipeline (stretch: $450K+), $125K revenue (stretch: $157K+), 50+ daily dials, 8-12% connect rate, <60 min speed to lead
+**Tim's 2026 Quota (full ramp since June):** 24 deals/mo, $714K pipeline/mo; H2 revenue targets rise monthly ($475K Jul → $600K Dec) — read the current month's row from the comp plan table in CLAUDE.md. Stretch = 126%+ (1.5x accelerator). 50+ daily dials, 8-12% connect rate, <60 min speed to lead
 </quick_start>
 
 <success_criteria>

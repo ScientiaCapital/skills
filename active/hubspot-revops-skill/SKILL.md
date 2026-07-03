@@ -96,7 +96,7 @@ BASE = "https://api.hubapi.com"
 **UC1 — ICP Validation:** Join contacts + companies + deals in SQL, segment by industry/size/geo, compute conversion rates per segment. Feed results to Clay MCP waterfall for enrichment:
    1. `find-and-enrich-company` or `find-and-enrich-contacts-at-company` to identify target contacts
    2. `add-contact-data-points` / `add-company-data-points` to queue enrichment jobs
-   3. `get-existing-search` to poll for results and check `state: completed`
+   3. `get-task` to poll for results and check `state: completed`
    4. Write enriched data back to HubSpot via API or Epiphan CRM integration
    
    Alternative: Use Apollo MCP (`apollo_people_match`) for direct enrichment without waterfall wait.
@@ -190,8 +190,8 @@ WHERE lifecyclestage NOT IN ('customer')
 | MCP Connector | Tools Available |
 |---------------|----------------|
 | **Epiphan CRM** | hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_company, hubspot_get_contact, hubspot_get_deal, crm_search_customers, crm_get_customer, crm_get_order, crm_get_customer_orders, analytics_get_device, analytics_search_by_email, ask_agent (AI queries) |
-| **Clay MCP** | find-and-enrich-company, find-and-enrich-contacts-at-company, find-and-enrich-list-of-contacts, add-contact-data-points, add-company-data-points, get-existing-search |
-| **Apollo** | apollo_people_match, apollo_contacts_create, apollo_contacts_search, apollo_organizations_enrich, apollo_organizations_search, apollo_emailer_campaigns_* |
+| **Clay MCP** | find-and-enrich-company, find-and-enrich-contacts-at-company, find-and-enrich-list-of-contacts, add-contact-data-points, add-company-data-points, get-task |
+| **Apollo** | apollo_people_match, apollo_contacts_create, apollo_contacts_search, apollo_organizations_enrich, apollo_mixed_companies_search, apollo_emailer_campaigns_* |
 
 ---
 
@@ -205,9 +205,9 @@ WHERE lifecyclestage NOT IN ('customer')
 | Missing association API for object links | Use v4 associations: `POST /crm/v4/associations/{from}/{to}/batch/read` |
 | SQL `DATEDIFF` in Postgres | Use `AGE()` or `EXTRACT(EPOCH FROM ...)` — see dialect notes |
 | Not handling HubSpot's `hs_object_id` | Always include `hs_object_id` in property requests |
-| Missing phone numbers after enrichment | Use Clay waterfall after Apollo: Apollo first (fast, free), then Clay MCP (`find-and-enrich-contacts-at-company` → `add-contact-data-points` → `get-existing-search`) for phone verification. Clay aggregates 50+ data providers for high match rates. |
+| Missing phone numbers after enrichment | Use Clay waterfall after Apollo: Apollo first (fast, free), then Clay MCP (`find-and-enrich-contacts-at-company` → `add-contact-data-points` → `get-task`) for phone verification. Clay aggregates 50+ data providers for high match rates. |
 | Scoring model trained on small dataset | Need 200+ closed deals minimum for reliable ML scores |
-| Apollo-only enrichment missing data | Clay MCP as fallback: Create taskId with `find-and-enrich-company`, then `add-contact-data-points` for Email/phone/work history, poll results with `get-existing-search` |
+| Apollo-only enrichment missing data | Clay MCP as fallback: Create taskId with `find-and-enrich-company`, then `add-contact-data-points` for Email/phone/work history, poll results with `get-task` |
 
 ---
 

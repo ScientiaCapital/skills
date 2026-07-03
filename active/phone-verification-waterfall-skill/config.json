@@ -17,7 +17,7 @@
     "find-and-enrich-contacts-at-company",
     "add-contact-data-points",
     "find-and-enrich-list-of-contacts",
-    "get-existing-search"
+    "get-task"
   ],
   "external_apis": [
     "HubSpot REST API (contacts batch update)",

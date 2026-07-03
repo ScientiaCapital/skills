@@ -107,7 +107,7 @@ Extract: what was discussed, commitments made, objections raised, next steps pro
 
 ### 1f. Competitive Intelligence Context
 Check for stored competitive intel from the bdr-v3-competitive-intel daily task:
-1. Search Gmail for recent competitive intel reports: `gmail_search_messages(q="subject:competitive-intel from:me newer_than:7d")`
+1. Search Gmail for recent competitive intel reports: `search_threads(query="subject:competitive-intel from:me newer_than:7d")`
 2. If company or competitor was mentioned in recent Clari extractions, pull the relevant battlecard context
 3. Integrate into MEDDIC brief:
    - **If competitor mentioned in Clari calls**: Include displacement talking points
@@ -276,7 +276,7 @@ When trigger is "demo prep" instead of "call prep", append:
 - **Epiphan CRM MCP:** hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_deal, crm_search_customers, analytics_search_by_email, ask_agent (activity history queries)
 - **Apollo MCP:** apollo_organizations_enrich, apollo_people_match, apollo_organizations_job_postings
 - **Clari MCP (NEW):** clari_search_calls, clari_get_call_summary
-- **Gmail MCP:** gmail_search_messages (for competitive intel reports)
+- **Gmail MCP:** search_threads (for competitive intel reports)
 
 ## Sibling Skills Referenced
 - `sales-revenue-skill` — MEDDIC framework, objection handling (LAER), demo flow

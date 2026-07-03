@@ -60,7 +60,7 @@ mcp__claude_ai_Clay__find-and-enrich-company
 mcp__claude_ai_Clay__find-and-enrich-contacts-at-company
 mcp__claude_ai_Clay__add-contact-data-points
 mcp__claude_ai_Clay__add-company-data-points
-mcp__claude_ai_Clay__get-existing-search
+mcp__claude_ai_Clay__get-task
 ```
 
 **Cost Considerations:**
