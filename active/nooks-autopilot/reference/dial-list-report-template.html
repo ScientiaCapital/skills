@@ -1,0 +1,87 @@
+<!doctype html>
+<!--
+  nooks-autopilot dial-list report TEMPLATE.
+  The skill fills this at runtime. Tokens: {{RUN_DATE}} {{MODE}} (SHADOW|LIVE) {{SUMMARY_*}}.
+  Repeat the .rep block once per dialing rep (Tim, Edgar, Vasil, Nyasha). Within each rep:
+   - .top5 cards = that rep's "Next best 5 to call" (ranked by the priority score).
+   - .candidates table = full per-rep set with disposition (would-enroll / enrolled / skipped+reason).
+  Self-contained: inline CSS only, no external assets.
+-->
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nooks Autopilot — Dial Lists {{RUN_DATE}}</title>
+<style>
+  :root{--ink:#15202b;--mut:#5b6b7b;--line:#e3e8ef;--bg:#f7f9fc;--warm:#c2410c;--ok:#15803d;--skip:#94a3b8;--hot:#1d4ed8}
+  *{box-sizing:border-box} body{margin:0;font:15px/1.5 -apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#15202b;background:#f7f9fc}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 20px}
+  h1{font-size:22px;margin:0 0 2px} .sub{color:#5b6b7b;font-size:13px;margin-bottom:18px}
+  .mode{display:inline-block;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;vertical-align:middle}
+  .mode.shadow{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa} .mode.live{background:#ecfdf5;color:#15803d;border:1px solid #a7f3d0}
+  .summary{display:flex;flex-wrap:wrap;gap:10px;margin:0 0 26px}
+  .kpi{background:#fff;border:1px solid #e3e8ef;border-radius:10px;padding:10px 14px;min-width:120px}
+  .kpi b{display:block;font-size:20px} .kpi span{font-size:12px;color:#5b6b7b}
+  .rep{background:#fff;border:1px solid #e3e8ef;border-radius:14px;padding:18px;margin:0 0 22px}
+  .rep h2{font-size:17px;margin:0 0 2px} .rep .meta{font-size:12px;color:#5b6b7b;margin-bottom:14px}
+  .top5{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:16px}
+  .card{border:1px solid #e3e8ef;border-left:4px solid #1d4ed8;border-radius:10px;padding:12px 14px;background:#fbfdff}
+  .card .nm{font-weight:700} .card .ti{font-size:13px;color:#15202b} .card .co{font-size:13px;color:#5b6b7b}
+  .card .why{font-size:13px;margin-top:8px;color:#0f172a} .card .row{font-size:12px;color:#5b6b7b;margin-top:8px;display:flex;gap:10px;flex-wrap:wrap}
+  .pill{font-size:11px;font-weight:600;padding:1px 8px;border-radius:999px;background:#eef2ff;color:#1d4ed8}
+  .pill.sig{background:#fef2f2;color:#b91c1c} .pill.atl{background:#ecfdf5;color:#15803d}
+  table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}
+  th,td{text-align:left;padding:7px 8px;border-bottom:1px solid #eef2f7;vertical-align:top}
+  th{font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#5b6b7b}
+  .d-enroll{color:#15803d;font-weight:600} .d-skip{color:#94a3b8} .d-hold{color:#c2410c;font-weight:600}
+  .foot{font-size:12px;color:#5b6b7b;margin-top:8px}
+  details>summary{cursor:pointer;font-size:13px;color:#1d4ed8;margin-top:6px}
+</style></head>
+<body><div class="wrap">
+
+  <h1>Nooks Autopilot — Per-Rep Dial Lists <span class="mode shadow">{{MODE}}</span></h1>
+  <div class="sub">{{RUN_DATE}} · sources: Send-to-AI, EDU Hit List, Live Events Hit List, Greenfield HE/LE · one owner per lead, no double-dial</div>
+
+  <div class="summary">
+    <div class="kpi"><b>{{SUMMARY_CANDIDATES}}</b><span>candidates</span></div>
+    <div class="kpi"><b>{{SUMMARY_ATL}}</b><span>qualified ATL</span></div>
+    <div class="kpi"><b>{{SUMMARY_PLANNED}}</b><span>would-enroll / enrolled</span></div>
+    <div class="kpi"><b>{{SUMMARY_DOUBLEDIAL}}</b><span>double-dials prevented</span></div>
+    <div class="kpi"><b>{{SUMMARY_WARM}}</b><span>warm handoffs</span></div>
+  </div>
+
+  <!-- ===== repeat .rep per dialing rep ===== -->
+  <section class="rep">
+    <h2>{{REP_NAME}}</h2>
+    <div class="meta">sdr_owner {{REP_OWNER_ID}} · assigned {{REP_ASSIGNED}} accounts · enrolled/planned {{REP_PLANNED}}</div>
+
+    <h3 style="font-size:14px;margin:0 0 8px">Next best 5 to call</h3>
+    <div class="top5">
+      <!-- repeat .card x5 -->
+      <div class="card">
+        <div class="nm">{{C_NAME}}</div>
+        <div class="ti">{{C_TITLE}}</div>
+        <div class="co">{{C_COMPANY}} · {{C_PHONE}}</div>
+        <div class="why">Why now: {{C_WHY}}</div>
+        <div class="row"><span class="pill atl">ATL</span><span class="pill">{{C_PERSONA}}</span><span class="pill sig">{{C_SIGNAL}}</span><span>→ {{C_SEQUENCE}}</span></div>
+      </div>
+      <!-- /card -->
+    </div>
+
+    <details><summary>Full candidate set ({{REP_TOTAL}})</summary>
+    <table>
+      <thead><tr><th>Lead</th><th>Title / Company</th><th>Persona</th><th>Signal</th><th>Power</th><th>Phone</th><th>Sequence</th><th>Disposition</th></tr></thead>
+      <tbody>
+        <!-- repeat row per candidate -->
+        <tr>
+          <td>{{R_NAME}}</td><td>{{R_TITLE}}<br><span style="color:#5b6b7b">{{R_COMPANY}}</span></td>
+          <td>{{R_PERSONA}}</td><td>{{R_SIGNAL}}</td><td>{{R_POWER}}</td><td>{{R_PHONE}}</td><td>{{R_SEQUENCE}}</td>
+          <td class="d-enroll">{{R_DISPOSITION}}</td><!-- class d-enroll | d-hold | d-skip; skip shows reason -->
+        </tr>
+        <!-- /row -->
+      </tbody>
+    </table></details>
+  </section>
+  <!-- ===== /rep ===== -->
+
+  <p class="foot">Generated by the <b>nooks-autopilot</b> skill. SHADOW = plan only, zero Nooks/HubSpot writes.
+  Multi-thread gaps and skipped-reason details are listed per rep above.</p>
+</div></body></html>
