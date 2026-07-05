@@ -1,0 +1,3314 @@
+[
+  {
+    "skill": "meddic-call-prep-auto",
+    "path": "active/meddic-call-prep-auto-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 3,
+      "output_contract": 3,
+      "failure_handling": 4,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "| Vertical | Primary Competitor | Displacement Angle |\n| Higher Ed | Extron SMP (discontinued) | Extron EOL -> Pearl migration path |",
+        "line_ref": "118-124",
+        "issue": "Competitive displacement angles + competitor EOL status stated from a hardcoded memory table with no live verification. House rule 1 requires competitor/product specs via search_product_catalog/search_product_knowledge; sibling epiphan-call-playbook gates the same 'Extron SMP discontinued' claim behind live verification.",
+        "fix": "Add a spec-verification gate requiring search_product_catalog/search_product_knowledge before emitting any displacement claim; treat the table as fallback only."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "**Golden Rules check:** If ANY of these are true, STOP and skip this prep: - lifecyclestage = 'customer' ... - hubspot_owner_id IN ('82625923', '423155215', '190030668')",
+        "line_ref": "132-136",
+        "issue": "Golden-Rules + ATL/BTL dedupe done inline via raw HubSpot/CRM reads rather than gating through qualify_lead, the declared dedupe/ATL-BTL source of truth (house rule 3).",
+        "fix": "Route suppression + ATL/BTL classification through qualify_lead where available; keep inline logic as fallback."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "## Stage 3: Output Format ... CALL PREP: [Company Name]",
+        "line_ref": "179-254",
+        "issue": "Output is a terminal ASCII brief with no defined delivery mechanism (no Gmail draft/Slack/saved HTML). No durable artifact survives the chat session.",
+        "fix": "Add optional Gmail draft (create_draft to tkipper@epiphan.com) or saved HTML."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "- **NEVER an EB:** Warehouse Manager, Network Manager, Systems Administrator, AV Technician ...",
+        "line_ref": "152-155",
+        "issue": "Full ATL/BTL keyword lists + owner IDs duplicated verbatim from CLAUDE.md; drift risk when canonical classification changes.",
+        "fix": "Reference CLAUDE.md ATL/BTL section (as line 151 already does) instead of re-inlining the lists."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "sales-call-prep-assistant",
+      "orlob-discovery-framework",
+      "epiphan-call-playbook"
+    ],
+    "missing_tool_refs": [
+      "search_product_catalog",
+      "search_product_knowledge",
+      "qualify_lead"
+    ],
+    "self_healing_gap": "Has outcome sidecar with success/partial/error (lines 287-296) and a Golden-Rules STOP, but no retry->degrade->alert->halt ladder for failed MCP pulls (Clari/Apollo down) and no run log to ~/.claude/skill-runs/{skill}.jsonl.",
+    "one_improvement": {
+      "change": "Add a spec/competitor live-verification gate before emitting the displacement table, and route suppression through qualify_lead.",
+      "expected_impact": "Eliminates confidently-wrong competitor claims in briefs and aligns dedupe with the single source of truth.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "epiphan-call-playbook",
+    "path": "active/epiphan-call-playbook/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 5,
+      "output_contract": 4,
+      "failure_handling": 3,
+      "maintainability": 5
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "Before quoting any spec, price, or competitive claim that is NOT in the \"Verified spec bank\" below, look it up live (search_product_catalog for SKUs/pricing/short names, search_product_knowledge for technical/integration).",
+        "line_ref": "33",
+        "issue": "Model implementation of house rule 1 \u2014 spec-accuracy gate is explicit and non-negotiable. Cited as the reference standard other skills should copy.",
+        "fix": "None \u2014 propagate this exact gate to meddic-call-prep-auto and call-recording-analyzer."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "AE discovery call (Phil or Lex): https://meetings.hubspot.com/timkipper/discovery-call",
+        "line_ref": "162",
+        "issue": "Reference skill (no outbound artifact expected), but booking link and rep roster (Tim/Edgar/Vasil) hardcoded in prose; drift risk when roster/link changes.",
+        "fix": "Declare booking link + current roster once in a config block (or reference sdr-call-coaching Identifiers); note Vasil 'ramping' caveat has a known late-July 2026 removal date."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "low",
+        "evidence": "# Epiphan Call Playbook (v1, 2026-06-17)",
+        "line_ref": "28",
+        "issue": "Static reference skill emits no outcome sidecar and no run log, so its usage/health is invisible to the analytics pipeline the other call skills feed.",
+        "fix": "Optional: emit a lightweight sidecar when loaded as a coaching reference, for parity with orlob-discovery-framework."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "orlob-discovery-framework",
+      "sdr-email-sms-playbook",
+      "sales-call-prep-assistant",
+      "sdr-dial-lists"
+    ],
+    "missing_tool_refs": [],
+    "self_healing_gap": "No failure definition, no retry->degrade->alert ladder, no run log \u2014 acceptable for a static reference, but no 'spec bank last-verified' staleness check, so the 2026-06-17 verified facts silently age.",
+    "one_improvement": {
+      "change": "Add a 'spec bank verified on DATE \u2014 re-verify if older than N days' staleness marker plus a config block for the booking link/roster.",
+      "expected_impact": "Prevents the verified spec bank from silently going stale and centralizes drift-prone roster/link.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "sdr-call-coaching",
+    "path": "active/sdr-call-coaching/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 5,
+      "output_contract": 5,
+      "failure_handling": 4,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "TECHNICAL-ACCURACY GATE (non-negotiable): ... verify it live via Epiphan AI search_product_catalog ... or search_product_knowledge ... Never assert a spec from memory in a coaching note.",
+        "line_ref": "47",
+        "issue": "Correctly enforces house rule 1 for spec judgments; uses Epiphan-native Nooks/Clari read tools with explicit read-only gates. No deduction.",
+        "fix": "None."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "2. Gmail DRAFT to tkipper@epiphan.com (create_draft) ... Draft only \u2014 Tim decides what to share. 3. Slack DM to Tim U0AAJUZH2PK (slack_send_message)",
+        "line_ref": "139-140",
+        "issue": "Exemplary draft-first + privacy-scoped delivery (HTML + Gmail draft + Slack DM, nothing sent to SDRs/prospects). No deduction.",
+        "fix": "None."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "- Recording URL present but transcript/audio unfetchable -> score from the Clari summary + disposition context, label \"scored from summary (audio unavailable).\"",
+        "line_ref": "149",
+        "issue": "Rich edge-case handling and week-over-week state (sdr_coaching_prev.json), but no outcome sidecar/run log to ~/.claude/skill-runs, so a failed Friday run is invisible to the health pipeline.",
+        "fix": "Emit an outcome sidecar capturing calls_scored, spec_fixes_flagged, and run status."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "Known disposition ids: Connected 14a81f79-...; Follow Up 6155389e-...; Meeting Booked c1210028-...",
+        "line_ref": "64",
+        "issue": "Owner IDs, Nooks user IDs, disposition UUIDs hardcoded; at least declared once in the Identifiers block (lines 32-36) but duplicated across sibling skills. Name also lacks -skill suffix (known exception).",
+        "fix": "Keep the single Identifiers block; consider a shared team-roster reference across coaching + dial-list skills."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "call-recording-analyzer",
+      "meeting-intelligence-system-skill",
+      "weekly-kpi-report-skill"
+    ],
+    "missing_tool_refs": [],
+    "self_healing_gap": "Strong on degrade paths (audio-unavailable -> score from summary; zero-connects -> ramping card; holiday -> short DM + skip draft) but lacks a machine-readable run log/outcome sidecar and any alert when an SDR's pull returns zero due to an API error vs a genuine no-connect week.",
+    "one_improvement": {
+      "change": "Distinguish 'zero coachable calls (API error)' from 'zero coachable calls (genuine)' and alert Tim on the former, plus emit a run-status sidecar.",
+      "expected_impact": "Prevents a silent Nooks/Clari outage from being mislabeled as a ramping/holiday week.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "call-recording-analyzer",
+    "path": "active/call-recording-analyzer-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 2,
+      "output_contract": 2,
+      "failure_handling": 4,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "### Competitive Intelligence Extraction\nScan for: Extron, Blackmagic, Crestron, vMix, Matrox, Teradek, Kaltura, Panopto, YuJa, Echo360",
+        "line_ref": "170-171",
+        "issue": "Competitor mentions 'mapped to battlecard responses' (line 35) with no live spec/competitor verification gate \u2014 violates house rule 1. Unlike sdr-call-coaching, scores MEDDIC and emits competitor rebuttals without calling search_product_catalog/knowledge, so it can score a rep 'correct' against a stale battlecard.",
+        "fix": "Add the non-negotiable technical-accuracy gate before mapping any competitor mention to a battlecard response."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "| clari_get_call_summary | AI summary, key moments, action items, sentiment |",
+        "line_ref": "66",
+        "issue": "Uses clari_get_call_summary, but sibling sdr-call-coaching (same Clari surface, verified 2026-06-17) uses clari_get_call with includeTranscript=true \u2014 possible stale/nonexistent tool name and inconsistent Clari access pattern.",
+        "fix": "Reconcile against the live Clari tool set; standardize on clari_search_calls + clari_get_call."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "**Pre-Flight Golden Rules Check:** - If contact.lifecyclestage = 'customer' -> Skip. - If hubspot_owner_id IN ('82625923', '423155215', '190030668') AND Tim is NOT collaborator -> Skip.",
+        "line_ref": "80-83",
+        "issue": "Suppression/ownership check via raw HubSpot reads, not gated through qualify_lead (house rule 3).",
+        "fix": "Route the pre-flight check through qualify_lead where available."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "high",
+        "evidence": "## Stage 4: Output Format ... CALL SCORECARD: [Company Name]",
+        "line_ref": "173-198",
+        "issue": "Deps list gmail_create_draft (line 219) but output contract defines only a terminal ASCII scorecard \u2014 no delivery wired (no draft/Slack/HTML); 'feed to downstream skills' (202-213) has no concrete write.",
+        "fix": "Define the actual delivery (Gmail draft or saved HTML) and specify how the deal-momentum-analyzer/morning-brief feed is written."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "- If hubspot_owner_id IN ('82625923', '423155215', '190030668')",
+        "line_ref": "82",
+        "issue": "AE owner IDs hardcoded inline (drift risk vs CLAUDE.md canonical list).",
+        "fix": "Reference CLAUDE.md Golden Rules rather than re-listing the IDs."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "sdr-call-coaching",
+      "meeting-intelligence-system-skill",
+      "meddic-call-prep-auto",
+      "deal-momentum-analyzer-skill"
+    ],
+    "missing_tool_refs": [
+      "search_product_catalog",
+      "search_product_knowledge",
+      "qualify_lead",
+      "create_draft"
+    ],
+    "self_healing_gap": "Has outcome sidecar with partial/error (229-236) but no retry->degrade->alert->halt ladder for Clari misses, no run log to ~/.claude/skill-runs, and no defined behavior when the downstream feed (deal-momentum-analyzer) target is unavailable.",
+    "one_improvement": {
+      "change": "Add the spec-verification gate before battlecard mapping and wire a concrete delivery (Gmail draft/saved HTML) + downstream feed write.",
+      "expected_impact": "Stops stale-battlecard scoring and turns the scorecard into a durable artifact instead of ephemeral terminal text.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "orlob-discovery-framework",
+    "path": "active/orlob-discovery-framework-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 4,
+      "output_contract": 4,
+      "failure_handling": 4,
+      "maintainability": 5
+    },
+    "findings": [
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "Per-vertical calibrated questions and root causes: reference/epiphan-root-causes.md.",
+        "line_ref": "194",
+        "issue": "Exemplary progressive disclosure \u2014 heavy per-vertical detail pushed to a reference file, core skill stays scannable at ~283 lines. No deduction.",
+        "fix": "None."
+      },
+      {
+        "dimension": "trigger_quality",
+        "severity": "med",
+        "evidence": "Use when: discovery framework, orlob discovery, discovery questions, cause analysis, business problem discovery, how to run discovery.",
+        "line_ref": "3",
+        "issue": "Solid trigger phrases but scope overlaps heavily with epiphan-call-playbook Section 3 (also owns 'the live Orlob 5-step discovery flow'); 'discovery questions' could match either.",
+        "fix": "Add a one-line 'this is the framework reference; epiphan-call-playbook applies it live on a call' disambiguation to the description."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "For deeper Economic Buyer validation and ATL/BTL classification, hand off to meddic-call-prep-auto-skill.",
+        "line_ref": "211-213",
+        "issue": "Correctly hands ATL/BTL off rather than re-implementing it; knowledge skill so no qualify_lead/spec gate expected. Noted as correct scoping.",
+        "fix": "None."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "epiphan-call-playbook",
+      "meddic-call-prep-auto",
+      "sales-call-prep-assistant",
+      "sales-methodology-implementer-skill"
+    ],
+    "missing_tool_refs": [],
+    "self_healing_gap": "Emits a proper outcome sidecar with success/partial/error and a bash heredoc write (254-283); as a guidance skill reasonably lacks a retry/alert ladder and run log, but partial-status semantics (score <=2 -> partial) are well defined.",
+    "one_improvement": {
+      "change": "Add a one-line scope-boundary note vs epiphan-call-playbook to the description.",
+      "expected_impact": "Reduces trigger ambiguity between the framework reference and the live-call playbook.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "meeting-intelligence-system",
+    "path": "active/meeting-intelligence-system-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 2,
+      "tool_integration": 1,
+      "output_contract": 2,
+      "failure_handling": 2,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "high",
+        "evidence": "description: Analyze meeting transcripts to extract decisions, action items, blockers, sentiment, and generate follow-up emails. Use when user provides meeting notes, transcripts, or recordings and needs structured summaries or action tracking.",
+        "line_ref": "3",
+        "issue": "Generic, non-'pushy' description \u2014 no enumerated trigger phrases, collides directly with call-recording-analyzer ('review transcript', 'analyze call') and sdr-call-coaching. Nothing scopes it to Epiphan, so it will fire on sales-call transcripts the Epiphan-native skills should own.",
+        "fix": "See rewritten_description; scope to internal/non-sales meetings and enumerate trigger phrases."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "7. **Generate Follow-Up Communications** - Create meeting minutes/summary - Draft action item tracking email",
+        "line_ref": "79-82",
+        "issue": "Zero MCP tools referenced anywhere \u2014 no Clari for transcripts, no HubSpot, and 'draft email' with no create_draft (generic manual step where the Gmail tool exists). Violates house rule 4 (Epiphan-native preferred) and draft-first; every input/output is manual copy-paste.",
+        "fix": "Wire create_draft for the follow-up email and, for sales meetings, defer transcript pulls to clari_get_call."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "high",
+        "evidence": "## Follow-Up Email Draft\nSubject: Action Items from [Meeting Title] - [Date]\nHi team,",
+        "line_ref": "122-142",
+        "issue": "Produces a team/customer-facing email body inline in markdown with no delivery mechanism (no Gmail draft) and no brand-voice gate (house rule 2: get_writing_style/check_my_copy) before emitting the string.",
+        "fix": "Emit via create_draft (draft-first); run any external-facing send through the Epiphan brand-voice check first."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "Use status \"partial\" if some stages failed but results were produced. Use \"error\" only if no output was generated.",
+        "line_ref": "176",
+        "issue": "Only a sidecar exists; no definition of a failed run (transcript unparseable, no owners identifiable), no retry/skip/alert behavior, no run log.",
+        "fix": "Define partial/failed conditions and a skip/alert path."
+      }
+    ],
+    "rewritten_description": "Structure and summarize INTERNAL meeting transcripts (standups, planning, retros, 1:1s) into decisions, owned action items, blockers, sentiment, and a draft follow-up email. Use when: 'analyze this meeting', 'extract action items', 'meeting minutes', 'summarize this standup/planning/retro', 'follow-up email from these notes'. NOT for sales/prospect calls \u2014 route those to call-recording-analyzer (Clari scorecard) or sdr-call-coaching. Wires create_draft for the follow-up email; runs customer-facing copy through the Epiphan brand-voice gate before send.",
+    "overlap_candidates": [
+      "call-recording-analyzer",
+      "sdr-call-coaching",
+      "meddic-call-prep-auto"
+    ],
+    "missing_tool_refs": [
+      "create_draft",
+      "clari_get_call",
+      "get_writing_style",
+      "check_my_copy"
+    ],
+    "self_healing_gap": "Only an outcome sidecar (169-176); no failure definition, no retry->degrade->alert->halt ladder, no run log to ~/.claude/skill-runs, and no delivery mechanism to fail on since output is terminal markdown.",
+    "one_improvement": {
+      "change": "Re-scope the description to internal-only meetings with enumerated triggers and wire create_draft + brand gate for the follow-up email.",
+      "expected_impact": "Removes trigger collisions with the two Epiphan sales-call skills and makes the follow-up email a real, on-brand draft instead of pasted text.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "sdr-dial-lists",
+    "path": "active/sdr-dial-lists/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 4,
+      "output_contract": 5,
+      "failure_handling": 3,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "description: Daily SDR dial-list builder for Edgar Marroquin + Vasil Ivanov ... Use when the user says \"build SDR dial lists\", \"Edgar's call list\", \"Vasil's dial queue\", \"feed the SDRs\", \"SDR morning queue\".",
+        "line_ref": "3",
+        "issue": "Excellent enumerated trigger set, but scope overlaps he-dial-queue (both build SDR dial queues, both name Edgar 93367782) \u2014 collision risk on 'build dial queue' phrasing.",
+        "fix": "Add a disambiguation line: this builds per-SDR ALL-vertical queues; he-dial-queue builds the Higher-Ed pod queue."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "A) HubSpot-owned callable contacts \u2014 `hubspot_search_contacts` with hubspot_owner_id={SDR owner_id} ... SUPPRESSION GATE: enforce the same lead-suppression rules ... (If a dedicated suppression spec/skill is installed, use it; else use the available HubSpot fields.)",
+        "line_ref": "50, 59",
+        "issue": "No qualify_lead gate \u2014 dedupe/ATL-BTL/suppression is reconstructed inline from raw hubspot_search_contacts instead of routing through the canonical qualify_lead source of truth.",
+        "fix": "Gate Step 1/Step 2 output through qualify_lead for dedupe + ATL-BTL + suppression, keeping HubSpot search only for inventory pull."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "TECHNICAL-ACCURACY GATE (non-negotiable): ... verify live via `search_product_catalog` / `search_product_knowledge` before putting it on a row. Never invent specs.",
+        "line_ref": "52",
+        "issue": "Spec-verification gate is present and correct, but there is no brand-voice gate (get_writing_style / check_my_copy) on the per-SDR Slack DM copy in Step 5.",
+        "fix": "Add a check_my_copy pass on the Slack DM opener text before slack_send_message (low stakes since internal, but consistent with house rule 2)."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "=== EDGE CASES === - Vasil thin/zero owned inventory -> fill from greenfield ... - A referenced skill ... not installed this run -> note the gap in output, fall back ... continue.",
+        "line_ref": "92-96",
+        "issue": "Good degrade ladder for edge cases, but no run log \u2014 nothing written to ~/.claude/skill-runs/ or a sidecar; unlike its siblings this skill emits no outcome JSON for analytics.",
+        "fix": "Emit an outcome sidecar (per-SDR counts, fill flags, gate results) like callable-lead-count / he-dial-queue do."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "he-dial-queue",
+      "callable-lead-count",
+      "morning-brief"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "get_writing_style",
+      "check_my_copy"
+    ],
+    "self_healing_gap": "Has failure definition (never empty queue / never RED) and a degrade ladder (greenfield fill, fall-back to HubSpot-direct + live verify), but no retry step, no alert-on-total-failure, and no run log to ~/.claude/skill-runs/sdr-dial-lists.jsonl (no sidecar at all).",
+    "one_improvement": {
+      "change": "Route Step 1/2 inventory through qualify_lead and add an outcome sidecar + run log",
+      "expected_impact": "Removes reinvented dedupe/suppression drift and gives the queue an analytics trail like its siblings",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "he-dial-queue",
+    "path": "active/he-dial-queue-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 4,
+      "output_contract": 5,
+      "failure_handling": 5,
+      "maintainability": 5
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "**MCP tool:** `search_crm_objects` (objectType `contacts`) ... - Golden Rules (Customer-domain / Channel Partner / Device Owner): apply `phone-verification-waterfall-skill/golden-rules-filter.md`.",
+        "line_ref": "40, 58",
+        "issue": "Suppression/Golden-Rules/deal-assoc all rebuilt inline; qualify_lead (the dedupe + ATL/BTL source of truth) is never called, so ATL/BTL tiering here can diverge from the canonical classifier.",
+        "fix": "After Stage 2b, pass surviving contact IDs through qualify_lead for authoritative dedupe + ATL/BTL rather than the local CMS/ATL-BTL config."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "**MCP tool:** `mcp__claude_ai_Google_Drive__create_file` ... `text/csv` **auto-converts to a Google Sheet**",
+        "line_ref": "85-87",
+        "issue": "Uses generic Google Drive create_file for the dial sheet; acceptable since Nooks imports a Sheet, but no Epiphan-native list/HubSpot-view export is offered as the preferred path.",
+        "fix": "Note a HubSpot active-list export option (Nooks imports HubSpot views natively per line 20) as the Epiphan-native primary, Sheet as fallback."
+      },
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "description: \"Use when building or refreshing the Higher-Ed SDR pod's daily dial queue, tiering callable leads into Tier 1/2/3, preparing a Nooks dial list from HubSpot, or checking Higher-Ed callable dial inventory.\"",
+        "line_ref": "3",
+        "issue": "Specific and scoped to Higher-Ed, but omits explicit short trigger phrases; 'checking Higher-Ed callable dial inventory' overlaps callable-lead-count's inventory-check purpose.",
+        "fix": "Keep the HE scope but add the literal manual phrases from line 16 ('Build HE dial queue','Refresh pod dial list') into the description."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "low",
+        "evidence": "Write `~/.claude/skill-analytics/last-outcome-he-dial-queue.json`: ... \"status\":\"[success|partial|error]\" ... Use \"partial\" if the 10k cap was hit ... \"error\" only if no queue was produced.",
+        "line_ref": "106-114",
+        "issue": "Strong sidecar + partial/error semantics, but the log path is skill-analytics (outcome), not a per-run skill-runs/ log; minor vs the standard self-healing template.",
+        "fix": "Optionally also append a run line to ~/.claude/skill-runs/he-dial-queue.jsonl for run-level history."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "sdr-dial-lists",
+      "callable-lead-count",
+      "prospect-enrich-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead"
+    ],
+    "self_healing_gap": "Nearly complete: has failure definition (no queue = error), degrade (partition on 10k cap -> status:partial), alert (Slack floor breach), and a hard-precondition halt (roster unconfirmed blocks production run). Only gap vs template: emits an outcome sidecar but no per-run skill-runs/ log, and no retry step on transient HubSpot/Drive errors.",
+    "one_improvement": {
+      "change": "Insert a qualify_lead gate after Stage 2b deal-suppression",
+      "expected_impact": "Makes ATL/BTL + dedupe authoritative and consistent with the rest of the catalog instead of a local reimplementation",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "callable-lead-count",
+    "path": "active/callable-lead-count-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 3,
+      "output_contract": 4,
+      "failure_handling": 4,
+      "maintainability": 2
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "med",
+        "evidence": "description: \"Daily callable lead inventory with ATL/BTL breakdown. Health check for 50+ daily dials.\"",
+        "line_ref": "3",
+        "issue": "Description is a summary, not 'pushy' \u2014 it enumerates no trigger phrases (the manual phrases 'Show callable leads'/'Lead inventory check' live only in the body at line 15), so activation on natural phrasing is weak.",
+        "fix": "Move the trigger phrases into the description; see rewritten_description."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "## Stage 3: Classify by ATL/BTL Tier ... **MCP Tool:** N/A (logic-based classification using jobtitle) ... **Classification Algorithm:** ```FOR each contact IN filtered_list: title = contact.jobtitle.lower() IF title matches any NEVER_ATL keyword:",
+        "line_ref": "106-160",
+        "issue": "ATL/BTL classification and Golden-Rules filtering are done inline with hardcoded keyword lists instead of gating through qualify_lead (the dedupe/ATL-BTL source of truth); no dedupe step at all, so multi-record contacts double-count inventory.",
+        "fix": "Replace Stage 2/3 keyword logic with a qualify_lead pass that returns tier + dedupe; keep the local lists only as a documented fallback."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "high",
+        "evidence": "**NEVER ATL (Automatic Exclusions):** - Warehouse Manager, Network Manager, Systems Administrator - AV Technician, Graphic Design Instructor ... (lines 134-140) \u2014 duplicates the identical list in CLAUDE.md \u00a7 ATL/BTL Classification.",
+        "line_ref": "112-160",
+        "issue": "The full ATL/GRAY/BTL/NEVER keyword taxonomy is copy-pasted from CLAUDE.md; two sources will drift when the classification is updated.",
+        "fix": "Reference CLAUDE.md \u00a7 ATL/BTL Classification (or qualify_lead) as the single source instead of re-listing all keywords inline."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "## Stage 6: Output Summary Report **Format:** Markdown summary + detailed table ... ## Stage 7: Integration with Morning Brief ... Pass ATL/GRAY/BTL breakdown to morning-brief",
+        "line_ref": "220-294",
+        "issue": "Output is Markdown to chat + a JSON blob for morning-brief, but no delivery mechanism is specified (no Slack DM, no file artifact) despite being a 7:25 AM scheduled run with no human present.",
+        "fix": "Define a delivery channel (Slack DM to Tim U0AAJUZH2PK, matching he-dial-queue) for the scheduled run."
+      }
+    ],
+    "rewritten_description": "Daily callable-lead inventory health check with ATL/BTL/GRAY/NEVER breakdown and ATL Runway metric for Tim's 50+ dials/day target. Alerts when total callable < 50 or ATL < 15. Use when: 'show callable leads', 'lead inventory check', 'how many callable leads', 'ATL runway', 'callable count', or the 7:25 AM scheduled run feeding morning-brief.",
+    "overlap_candidates": [
+      "he-dial-queue",
+      "sdr-dial-lists",
+      "morning-brief"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead"
+    ],
+    "self_healing_gap": "Has an outcome sidecar with success|partial|error semantics (lines 320-327) and a suppression gate, but no retry on HubSpot pagination failure, no alert delivery channel for the unattended scheduled run, and no per-run skill-runs/ log.",
+    "one_improvement": {
+      "change": "Swap inline ATL/BTL keyword logic + Golden Rules for a qualify_lead gate and reference CLAUDE.md for the taxonomy",
+      "expected_impact": "Eliminates the duplicated classifier that will drift from CLAUDE.md and adds real dedupe so the inventory count is accurate",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "inbound-lead-qualifier-skill",
+    "path": "active/inbound-lead-qualifier-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 1,
+      "output_contract": 3,
+      "failure_handling": 3,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "You are an expert at lead qualification and routing ... **ICP Fit (0-40 points)**: - Company size: 0-10 - Industry match: 0-10 ... **Assign To**: [Rep Name] (owns [territory/industry])",
+        "line_ref": "31-52, 199",
+        "issue": "The entire skill is a generic prompt template \u2014 it names ZERO tools: no HubSpot/search_crm_objects to pull the lead, no qualify_lead gate, no Apollo/Clay enrichment, no Gmail draft tool. Everything (score, routing, enrichment) is done from the model's imagination on pasted-in text.",
+        "fix": "Wire concrete tools: HubSpot lookup for the contact, qualify_lead for ICP/ATL-BTL/dedupe, enrich_contact for org data, gmail_create_draft for the follow-up email."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "**Call Script** (within 1 hour): ```Hi [Name] ... Perfect. Let me show you exactly how we solve that...``` ... **Competitive Intel**: - Probably comparing to [Competitor] - [Competitor] weakness: [What we do better]",
+        "line_ref": "154-227",
+        "issue": "Customer-facing call script + email + competitive claims are generated with no search_product_catalog/search_product_knowledge spec gate and no brand voice gate (get_writing_style/check_my_copy) \u2014 violates house rules 1 and 2.",
+        "fix": "Add a spec-verification gate before any product/competitor claim and a check_my_copy pass on the email template before it is drafted."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "**Assign To**: [Rep Name] (owns [territory/industry]) ... **Why This Rep**: - Territory: [Geographic/Industry match]",
+        "line_ref": "199-206",
+        "issue": "Routing is abstract '[Rep Name]' with no real owner IDs; the catalog's real AEs (Phil 190030668, Lex 82625923) and Tim's BDR role are never wired in, so it can't actually route.",
+        "fix": "Encode the real routing table (AE owner IDs + verticals) or hand off to ae-handoff-brief for the AE path."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "## Output Format ```markdown # Inbound Lead Analysis ...``` ... Remember: Speed to lead matters - calling within 5 minutes = 10x better conversion",
+        "line_ref": "59-250",
+        "issue": "Output format is fully specified but there is NO delivery mechanism \u2014 the email 'template' is text in the report, never created as a Gmail draft; contradicts the CLAUDE.md draft-first rule for outbound.",
+        "fix": "Make the email template a gmail_create_draft (draft-first) and write the score/routing back to the HubSpot contact."
+      }
+    ],
+    "rewritten_description": "Score and route an inbound lead (form fill, demo request, content download) on ICP fit (0-40), intent (0-30), and urgency (0-30) -> priority tier + response SLA, then draft a first-touch email and route to the right AE. Use when: 'qualify this inbound lead', 'score and route [name] from [company]', 'is this demo request worth calling', 'route this form fill', 'triage inbound'. Pulls the contact from HubSpot and gates through qualify_lead.",
+    "overlap_candidates": [
+      "ae-handoff-brief",
+      "callable-lead-count",
+      "sales-call-prep-assistant"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "search_crm_objects",
+      "enrich_contact",
+      "search_product_catalog",
+      "search_product_knowledge",
+      "get_writing_style",
+      "check_my_copy",
+      "gmail_create_draft"
+    ],
+    "self_healing_gap": "Has a suppression gate (lines 252-260) and an outcome sidecar with partial/error semantics (lines 264-273), but because it calls no tools there is no failure surface defined for lookups/enrichment, no retry->degrade ladder, no alert, and no run log to skill-runs/.",
+    "one_improvement": {
+      "change": "Convert the prompt template into a tool-wired workflow: HubSpot pull -> qualify_lead -> enrich_contact -> spec+brand gate -> gmail_create_draft",
+      "expected_impact": "Turns an imagination-only scorer into an executable, spec-safe qualifier that actually routes and drafts",
+      "effort": "L"
+    }
+  },
+  {
+    "skill": "ae-handoff-brief",
+    "path": "active/ae-handoff-brief-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 3,
+      "output_contract": 4,
+      "failure_handling": 2,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "## Stage 4: Demo Flow Recommendation | Vertical | Lead Feature | Close Angle | | Higher Ed | Multi-room capture + CMS auto-publish | ... | Corporate AV | Meeting room capture + NDI/SRT streaming |",
+        "line_ref": "156-166",
+        "issue": "Product feature recommendations for the AE demo are stated from a hardcoded table (Pearl feature claims from memory) with no search_product_catalog/search_product_knowledge verification \u2014 violates house rule 1 on a customer-influencing document.",
+        "fix": "Gate the demo-flow feature claims through search_product_knowledge, or cite the spec-verified epiphan-call-playbook rather than an inline table."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "high",
+        "evidence": "## Stage 6: Output Format See `reference/ae-handoff-template.md` for full brief layout (MEDDIC scorecard table ...).",
+        "line_ref": "177",
+        "issue": "Broken reference: the skill directory contains only config.json + SKILL.md (no reference/ dir), so the cited ae-handoff-template.md does not exist \u2014 the output layout is undefined at runtime.",
+        "fix": "Create reference/ae-handoff-template.md or inline the brief layout; a run will otherwise improvise the format."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "### E \u2014 Economic Buyer ... **ATL/BTL Validation (per CLAUDE.md \u00a7 ATL/BTL Classification v1.0):** Map ALL known contacts to ATL/BTL tiers.",
+        "line_ref": "131-137",
+        "issue": "ATL/BTL validation is asked for but done by hand against CLAUDE.md; qualify_lead (the ATL/BTL + dedupe source of truth) is not invoked, and the brand gate is absent on the Gmail draft to the AE.",
+        "fix": "Use qualify_lead for the ATL/BTL map; run check_my_copy on the AE Gmail draft before gmail_create_draft."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "high",
+        "evidence": "### 7a. Gmail Draft to AE ... Use `gmail_create_draft` ... ## Emit Outcome Sidecar ... \"status\":\"[success|partial|error]\"",
+        "line_ref": "181-214",
+        "issue": "Draft-first delivery is correct, but there is no defined behavior for partial failure \u2014 e.g. Clari returns no calls, deal at wrong stage (only a soft warning flag at line 89), or Apollo enrichment fails; the sidecar has partial/error fields but no rule for when to halt vs draft-anyway.",
+        "fix": "Add a degrade ladder: if MEDDIC coverage < threshold or zero calls found, still draft but stamp the brief 'LOW CONFIDENCE' and set sidecar status:partial; halt only if the deal/AE can't be identified."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "meddic-call-prep-auto-skill",
+      "call-recording-analyzer-skill",
+      "deal-momentum-analyzer-skill",
+      "post-demo-automation-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "search_product_knowledge",
+      "search_product_catalog",
+      "get_writing_style",
+      "check_my_copy"
+    ],
+    "self_healing_gap": "Has an outcome sidecar (partial/error) and one soft risk flag (deal-stage warning), but no failure definition for missing calls/enrichment, no retry->degrade->alert ladder, no explicit halt condition, and no run log to ~/.claude/skill-runs/ae-handoff-brief.jsonl. The referenced output template is also missing, so a failed brief has no fallback layout.",
+    "one_improvement": {
+      "change": "Create the missing reference/ae-handoff-template.md and add a MEDDIC-coverage degrade ladder (draft LOW-CONFIDENCE + status:partial) to Stage 7",
+      "expected_impact": "Guarantees a consistent brief layout and a defined behavior when discovery data is thin instead of silent improvisation",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "prospect-enrich",
+    "path": "active/prospect-enrich-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 3,
+      "output_contract": 4,
+      "failure_handling": 3,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "elif title in NEVER_ENRICH:\n  tier = \"NEVER\"  # Hard skip\n...\nelif title in ATL:",
+        "line_ref": "127-141",
+        "issue": "ATL/BTL classification is hand-rolled in-skill against CLAUDE.md keyword lists rather than gated through qualify_lead, the named dedupe/ATL-BTL source of truth. Every sibling re-implements the same title matching, guaranteeing drift.",
+        "fix": "Route each contact through qualify_lead for ATL/BTL tier + dedupe verdict; keep the local keyword list only as a documented fallback."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "**MCP Tool:** `apollo_people_bulk_match` (or `apollo:enrich-lead` skill)",
+        "line_ref": "149",
+        "issue": "No dedupe against prior enrichment before spending Apollo/Clay credits \u2014 Stage 1 only filters phone=null, so daily runs re-spend credits on the same misses.",
+        "fix": "Add a dedupe gate (qualify_lead or enriched_at check) before Stage 4 to skip recently-enriched contacts."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "Use status \"partial\" if some stages failed but results were produced. Use \"error\" only if no output was generated.",
+        "line_ref": "271",
+        "issue": "Sidecar captures terminal status but there is no retry/degrade ladder for Apollo/Clay failure and no run log to ~/.claude/skill-runs/. Clay credit exhaustion mid-run is undefined.",
+        "fix": "Add an 'Apollo fails -> Clay; Clay fails -> Apollo-only partial + alert' ladder plus a per-run append to ~/.claude/skill-runs/prospect-enrich.jsonl."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "**Output:** HTML file saved to workspace as `bdr-v3-prospect-enrich-YYYY-MM-DD.html`",
+        "line_ref": "214",
+        "issue": "Workspace HTML with no delivery mechanism, so a 6 AM scheduled run produces an artifact nobody is notified about.",
+        "fix": "Name a delivery step (Slack DM link or morning-brief handoff)."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "phone-verification-waterfall",
+      "prospect-refresh",
+      "callable-lead-count-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "search_product_catalog / search_product_knowledge (if any customer-facing string generated)"
+    ],
+    "self_healing_gap": "Terminal-status sidecar only; lacks retry->degrade->alert ladder for Apollo/Clay credit exhaustion and a durable run log at ~/.claude/skill-runs/prospect-enrich.jsonl. Single-stage failure has no recovery path.",
+    "one_improvement": {
+      "change": "Gate Stage 3 classification and Stage 1 dedupe through qualify_lead instead of the in-skill keyword list",
+      "expected_impact": "Eliminates ATL/BTL drift across the 6-skill family and stops re-spending credits on already-enriched contacts",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "prospect-refresh",
+    "path": "active/prospect-refresh-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 2,
+      "output_contract": 4,
+      "failure_handling": 2,
+      "maintainability": 2
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "Subject: Epiphan + [UNIVERSITY_NAME]: Hybrid Learning Infrastructure...\n[COMPANY_NAME] provides:\n- Live lecture capture (no manual setup)\n- Auto-recordings to your LMS\n- Multi-platform distribution (Zoom, Teams, Canvas)",
+        "line_ref": "193-206",
+        "issue": "Six hardcoded email templates state Epiphan product capabilities from memory ('auto-recordings to your LMS', '4K Capture + Distribution'). Violates house rule 1 (specs from search_product_catalog/search_product_knowledge) and house rule 2 (no brand-voice gate).",
+        "fix": "Call search_product_knowledge for the vertical's capabilities and check_my_copy/get_writing_style on the drafted body before drafting; treat templates as skeletons filled from verified data."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "**For each Apollo result, check:**\n...propertyName: \"email\", operator: \"EQ\"... propertyName: \"company\", operator: \"CONTAINS_TOKEN\"",
+        "line_ref": "84-98",
+        "issue": "Dedupe is a hand-rolled two-filter HubSpot search, not qualify_lead. Stage 4 Golden Rules also re-stated in prose diverging from the CLAUDE.md canonical list.",
+        "fix": "Replace Stage 3 dedupe + Stage 4 gating with qualify_lead."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "- Do NOT send\u2014leave as draft for manual review",
+        "line_ref": "315",
+        "issue": "Draft-first is correct, but 30 Gmail drafts are created before any human sees the product claims \u2014 with unverified specs this ships wrong claims into 30 drafts/run.",
+        "fix": "Move spec-verification + brand check ahead of gmail_create_draft."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "**Template A \u2014 Higher Ed (ICP 90):** ... **Template F \u2014 K-12 (ICP 65):**",
+        "line_ref": "190-310",
+        "issue": "~120 lines of inline templates + a 7-row ICP matrix hardcoded in a 13KB SKILL.md. Templates duplicate reference/email-templates.md used by prospect-research-to-cadence, so edits must happen twice.",
+        "fix": "Move templates to a shared reference/ file; declare the ICP score table once (repeated in 4 siblings)."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "**Note:** This skill outputs drafts + report. **Sequence Load Skill** runs 45 min later (7:15 AM)",
+        "line_ref": "362",
+        "issue": "No behavior for partial Apollo failure, Gmail quota exhaustion, or zero net-new. Sidecar exists but no retry/alert ladder or run log.",
+        "fix": "Add a degrade path and a run log."
+      }
+    ],
+    "rewritten_description": "Monday 6:30 AM (and on demand) net-new ICP prospecting across all 7 Epiphan verticals: Apollo People search (ATL-first) -> qualify_lead dedupe + Golden Rules -> Apollo/Clay firmographic enrich -> spec-verified, brand-checked Gmail drafts -> HTML report with HubSpot/Apollo drill-downs. Use when: 'run prospect refresh', 'search new ICP prospects', 'find net-new leads', 'weekly prospecting run'.",
+    "overlap_candidates": [
+      "prospect-research-to-cadence",
+      "prospect-enrich",
+      "cold-email-sequence-generator-skill",
+      "sequence-load"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "search_product_knowledge",
+      "search_product_catalog",
+      "get_writing_style",
+      "check_my_copy"
+    ],
+    "self_healing_gap": "No failure definition for zero-net-new, Apollo timeout, or Gmail quota; no retry->degrade->alert ladder; no run log at ~/.claude/skill-runs/prospect-refresh.jsonl. Sidecar records outcome but cannot drive recovery.",
+    "one_improvement": {
+      "change": "Insert a spec-verification (search_product_knowledge) + brand-check (check_my_copy) gate before gmail_create_draft, and dedupe via qualify_lead",
+      "expected_impact": "Stops 30 drafts/run from shipping memory-stated product claims and off-brand copy; removes hand-rolled dedupe drift",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "prospect-research-to-cadence",
+    "path": "active/prospect-research-to-cadence-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 3,
+      "output_contract": 4,
+      "failure_handling": 3,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "| `crm_search_customers` | Epiphan CRM customer match |...| `analytics_search_by_email` | Device registration lookup |",
+        "line_ref": "58-60",
+        "issue": "Wires crm_search_customers + hubspot_search + analytics_search_by_email + an in-line ATL/BTL classifier (110-118) to reconstruct what qualify_lead returns in one call. qualify_lead is the named source of truth and is not called.",
+        "fix": "Call qualify_lead as the single Golden-Rules + ATL/BTL + dedupe gate; keep manual CRM lookups only for enrichment fields it does not return."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "Load `reference/email-templates.md` for templates. Customize with: ... Lead with THEIR problem, not Epiphan features",
+        "line_ref": "144-154",
+        "issue": "Generates 3-touch email sequences + MEDDIC call scripts (customer-facing) with no search_product_knowledge spec check and no get_writing_style/check_my_copy brand gate.",
+        "fix": "Add a spec-verification read and a check_my_copy pass on drafted touches before Stage 2 presentation."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "| Web search | Recent news | Funding, expansion, leadership changes |",
+        "line_ref": "62",
+        "issue": "Generic web search where an Epiphan-native intel path may exist (house rule 4).",
+        "fix": "Prefer Epiphan CRM/intel tools for covered signals; web search only for gaps."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "Present draft to Tim using AskUserQuestion tool ... Options: \"Approve & Load\", \"Edit first\", \"Skip this prospect\"",
+        "line_ref": "205-206",
+        "issue": "Strong draft-first + explicit approval gate before Apollo load \u2014 good. Minor: approved draft is not persisted for audit.",
+        "fix": "Persist the approved deliverable block to a run log."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "prospect-refresh",
+      "sequence-load",
+      "cold-email-sequence-generator-skill",
+      "meddic-call-prep-auto-skill",
+      "sales-revenue-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "search_product_knowledge",
+      "search_product_catalog",
+      "get_writing_style",
+      "check_my_copy"
+    ],
+    "self_healing_gap": "Sidecar status buckets + an approval halt exist, but no retry->degrade ladder for Apollo people_match/enrich failures and no run log at ~/.claude/skill-runs/prospect-research-to-cadence.jsonl. Phone-miss path is skip/flag (line 123) \u2014 reasonable but not generalized.",
+    "one_improvement": {
+      "change": "Consolidate Stage 1b Golden Rules + 1c ATL/BTL + CRM dedupe lookups into a single qualify_lead call and add a check_my_copy brand gate on drafted touches",
+      "expected_impact": "Cuts MCP round-trips, removes classification drift, stops off-brand/unverified copy reaching the approval screen",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "sequence-load",
+    "path": "active/sequence-load-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 3,
+      "output_contract": 4,
+      "failure_handling": 3,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "**Skip if:**\n- Email domain matches known customer domain (cross-check crm_customers)\n... - Title in NEVER ATL list: Warehouse Manager, Network Manager...",
+        "line_ref": "97-102",
+        "issue": "Re-implements Golden Rules + NEVER ATL as prose at the enrollment stage instead of gating through qualify_lead. This is the last gate before contacts enter live Apollo sequences, so drift here sequences disqualified leads.",
+        "fix": "Call qualify_lead for the final go/no-go before enrollment; treat its verdict as authoritative."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "**Input Source:** prospect-refresh HTML report + Gmail drafts\n**Extract from HTML Report:** ...",
+        "line_ref": "37-43",
+        "issue": "Consumes upstream state by scraping prospect-refresh's HTML report rather than a structured handoff, so any format change silently breaks this skill.",
+        "fix": "Have prospect-refresh emit a structured JSON handoff (or shared HubSpot list) that sequence-load reads."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "| Higher Ed | BDR_HigherEd_OutboundX | [search by name] | ... | K-12 | BDR_K12_OutboundX | [search by name] |",
+        "line_ref": "131-139",
+        "issue": "Sequence-name patterns and an email_account_id literal ('6633baaece5fbd01c791d7ca', line 200) are hardcoded values that drift on rename/mailbox change.",
+        "fix": "Resolve sequence IDs dynamically (already partly done); drop the literal ID; declare vertical->sequence mapping once in config.json."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "low",
+        "evidence": "**Expected Success Rate:** 95%+ (most failures due to email validation) ... - Retry if rate limited",
+        "line_ref": "223-225",
+        "issue": "Rate-limit retry + per-prospect logging exist, but no halt/alert if the whole batch fails or the email account resolves to none beyond an inline ERROR note (line 199).",
+        "fix": "Add explicit alert + halt on Stage 6 email-account failure or sub-threshold batch success."
+      }
+    ],
+    "rewritten_description": "Monday 7:15 AM (and on demand) enrollment of prospect-refresh net-new leads into Apollo sequences: qualify_lead final gate + HubSpot/Apollo dedupe + phone validation -> vertical->sequence mapping -> batch add-to-sequence -> HubSpot contact sync -> enrollment report. Use when: 'load prospects into sequences', 'enroll new leads', 'run sequence load'.",
+    "overlap_candidates": [
+      "prospect-refresh",
+      "prospect-research-to-cadence",
+      "crm-integration-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead"
+    ],
+    "self_healing_gap": "Per-prospect enrollment logging + rate-limit retry, but no run log at ~/.claude/skill-runs/sequence-load.jsonl and no batch-level degrade/halt/alert beyond an inline ERROR when the email account is missing. Upstream HTML-scrape has no fallback if parsing fails.",
+    "one_improvement": {
+      "change": "Replace HTML-report scraping with a structured handoff from prospect-refresh and gate the final enrollment decision through qualify_lead",
+      "expected_impact": "Removes the silent-break risk between the two scheduled skills and prevents disqualified leads entering live sequences",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "phone-verification-waterfall",
+    "path": "active/phone-verification-waterfall-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 3,
+      "output_contract": 5,
+      "failure_handling": 4,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "### ATL/BTL Classification Gate (applied after Golden Rules)\nClassify each contact by job title using approved ATL/BTL definitions... ATL Title Keywords... NEVER ATL...",
+        "line_ref": "77-93",
+        "issue": "Full Golden Rules + ATL/BTL re-implemented inline AND duplicated again in reference/golden-rules-filter.md and the Stage-1 block \u2014 three copies of the rule set in one directory \u2014 instead of gating through qualify_lead.",
+        "fix": "Call qualify_lead for the Golden-Rules + ATL/BTL verdict; delete the duplicated inline copies, keep one reference doc."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "**Tool:** HubSpot REST API (contacts batch update) via `hubspot_update_contact` (per-contact; no batch MCP tool) or direct HTTP",
+        "line_ref": "238",
+        "issue": "Stage 4 admits no batch MCP tool and falls back to per-contact loop / raw HTTP for 100+ contacts \u2014 a manual/slow path.",
+        "fix": "Confirm whether a bulk HubSpot update tool exists in the Epiphan MCP; if not, sanction the loop and cap batch size."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "low",
+        "evidence": "On error: skip Clay enrichment and return Apollo-only results (better to have some phones than none) ... If Apple/Apollo API rate limits hit, queue and retry with exponential backoff",
+        "line_ref": "334-335",
+        "issue": "Good degrade ladder + Slack alerts on partial (405-411), but 'Apple/Apollo' typo (334) and no run log to ~/.claude/skill-runs/ (only the sidecar).",
+        "fix": "Fix typo; add a run-log append."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "6:00 AM  \u2192 bdr-v3-prospect-enrich ... 6:15 AM  \u2192 phone-verification-waterfall-skill ... 6:30 AM  \u2192 bdr-v3-prospect-refresh",
+        "line_ref": "316-324",
+        "issue": "18KB SKILL.md + 6 loose top-level docs (IMPLEMENTATION.md, INTEGRATION_MAP.md, EXAMPLE_OUTPUTS.md, README.md); schedule/task-ids restated in several files, inviting drift.",
+        "fix": "Consolidate loose docs under reference/; declare schedule + task IDs once."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "prospect-enrich",
+      "callable-lead-count-skill",
+      "sdr-dial-lists",
+      "he-dial-queue-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead"
+    ],
+    "self_healing_gap": "Strongest of the six: Clay->Apollo-only degrade, exponential-backoff retry, >8min Slack alert, partial/error Slack templates. Still missing a durable run log at ~/.claude/skill-runs/phone-verification-waterfall.jsonl (sidecar only) and a defined halt if HubSpot sync itself fails.",
+    "one_improvement": {
+      "change": "Gate classification through qualify_lead and collapse the three duplicated Golden-Rules/ATL-BTL copies into one source",
+      "expected_impact": "Removes the highest-traffic source of ATL/BTL drift in the catalog (runs twice weekly, feeds the dial queue)",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "personalization-at-scale",
+    "path": "active/personalization-at-scale-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 2,
+      "output_contract": 3,
+      "failure_handling": 2,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "> \"[Name], saw [Company] is [news event]. That kind of [change] usually creates [specific challenge you solve]...\"",
+        "line_ref": "173",
+        "issue": "Generates hundreds of customer-facing first lines with zero brand-voice gate (get_writing_style/check_my_copy) and no product-spec verification for Epiphan value-props. Violates house rules 1 and 2 at the highest volume of any skill in the set.",
+        "fix": "Add a batchable check_my_copy pass over generated lines; pull any product-capability claim from search_product_knowledge before it enters a line."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "### Research Sources\n- Company news and press releases\n- LinkedIn activity (posts, comments, job changes)...",
+        "line_ref": "59-67",
+        "issue": "Lists research sources but names NO tools \u2014 no apollo_organizations_job_postings, no Clay/web for news, no Epiphan intent tool. Describes an outcome with no wired tool chain, so it cannot run at the '300 prospects in minutes' scale it claims.",
+        "fix": "Wire concrete tools per source (apollo_organizations_job_postings, apollo_organizations_enrich, Clay find-and-enrich-company, web/intent-signal-aggregator) and specify batch mechanics."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "Check HubSpot via `mcp__claude_ai_Epiphan_Ai__hubspot_search_contacts` for any contact on the list before spending research time.",
+        "line_ref": "39",
+        "issue": "Golden Rules gate re-implemented inline and only partially; ATL/BTL tiering used by every sibling is absent, so it can personalize BTL contacts the pipeline drops.",
+        "fix": "Gate the input list through qualify_lead to inherit the same dedupe + ATL/BTL verdict."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "**Output:** Personalized first lines with confidence scores, grouped by personalization type, in CSV or merge-field format",
+        "line_ref": "16",
+        "issue": "CSV/merge-fields with no draft-first delivery and no named destination; lines feed 'sequence position 1' (line 227) directly.",
+        "fix": "Add a draft-first staging step (or explicit CSV-for-review handoff) and name where the file lands."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "| Response Rate | 1-3% | 8-15% | ... **Lift** | Baseline | 5-10x improvement |",
+        "line_ref": "234-236",
+        "issue": "Generic benchmark/best-practice filler reads as a marketing explainer, inflating the file without runnable steps.",
+        "fix": "Trim explainer content to reference/; keep SKILL.md focused on the tool-wired workflow."
+      }
+    ],
+    "rewritten_description": "Batch-generate unique, spec-verified, brand-checked personalized first lines for large prospect lists (100s) using Apollo hiring signals, Clay/company news, and LinkedIn activity \u2014 gated through qualify_lead and check_my_copy. Use when: 'personalize outreach for [N] prospects', 'generate unique first lines', 'find personalization angles for this list', 'research these companies for outreach'.",
+    "overlap_candidates": [
+      "cold-email-sequence-generator-skill",
+      "prospect-research-to-cadence",
+      "email-template-generator-skill",
+      "social-selling-content-generator-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "check_my_copy",
+      "get_writing_style",
+      "search_product_knowledge",
+      "apollo_organizations_job_postings",
+      "apollo_organizations_enrich",
+      "find-and-enrich-company"
+    ],
+    "self_healing_gap": "Weakest of the six: no failure definition beyond a 'fallback strategies' section (186-194), no retry->degrade->alert ladder, no tool wiring to fail against, and no run log at ~/.claude/skill-runs/personalization-at-scale.jsonl. Sidecar is the only telemetry and presumes a workflow with no concrete tool calls.",
+    "one_improvement": {
+      "change": "Wire the named research sources to concrete tools and add a batch check_my_copy brand gate before output",
+      "expected_impact": "Turns an aspirational explainer into an executable, on-brand skill and prevents hundreds of unverified/off-brand first lines reaching sequences",
+      "effort": "L"
+    }
+  },
+  {
+    "skill": "gtm-brain-skill",
+    "path": "active/gtm-brain-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 4,
+      "output_contract": 4,
+      "failure_handling": 3,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "description: \"...Use when: relationship graph, gtm brain, log outcome, what worked with, account map, sync from hubspot, import nooks calls, contact history, sequence performance.\"",
+        "line_ref": "3",
+        "issue": "Strong enumerated trigger list; specific and pushy.",
+        "fix": "None."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "### Step 2 \u2014 Classify ATL/BTL from title\nApply the ATL/BTL Classification from CLAUDE.md:\n- Match title against Universal ATL Keywords -> `ATL`",
+        "line_ref": "245-251",
+        "issue": "ATL/BTL tier is re-derived by keyword matching from CLAUDE.md instead of calling qualify_lead, whose power_level (atl/btl/unknown) is the house source of truth. Two classifiers will drift.",
+        "fix": "In Stage 6 Step 2, call qualify_lead and read power_level; fall back to keyword match only when power_level=unknown."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "Use `mcp__claude_ai_Epiphan_Ai__qualify_lead` or infer from company name/domain:",
+        "line_ref": "254",
+        "issue": "qualify_lead offered only as optional vertical-inference path, not as the authority gate before writing a Contact node.",
+        "fix": "Make qualify_lead the default enrichment call for any contact written via Stage 6/7."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "Process all calls in the batch. Report: N calls imported, breakdown by result (X positive / Y neutral / Z negative).",
+        "line_ref": "332",
+        "issue": "Stage 7 batch loop has no per-item failure/skip/retry; one missing hubspotContactId or Aura timeout aborts with no run log.",
+        "fix": "Add per-call try/skip with a failure tally and a run-log line to ~/.claude/skill-runs/gtm-brain.jsonl."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "\"skill\": \"gtm-brain\",\n  \"version\": \"1.0.0\",",
+        "line_ref": "344-345",
+        "issue": "Sidecar hardcodes version 1.0.0 but frontmatter is version \"1.1.0\" (line 4) \u2014 version drift mislabels outcome analytics.",
+        "fix": "Emit the frontmatter version or reference a single VERSION constant."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "Use Tim's Nooks user ID `87486452`.",
+        "line_ref": "300",
+        "issue": "Nooks user id and Aura URL hardcoded inline mid-stage.",
+        "fix": "Declare owner id + instance host once in config.json and reference it."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "nooks-autopilot",
+      "meddic-call-prep-auto-skill",
+      "morning-brief-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead (for power_level authority on contact writes)"
+    ],
+    "self_healing_gap": "No failure definition for the HubSpot/Nooks sync loops, no retry->degrade->alert ladder beyond the ping-retry note (line 80), and no run log to ~/.claude/skill-runs/gtm-brain.jsonl \u2014 only a single end-of-session sidecar written even on partial batch failure.",
+    "one_improvement": {
+      "change": "Route contact tier/vertical through qualify_lead (power_level) instead of re-deriving ATL/BTL from CLAUDE.md keywords",
+      "expected_impact": "Graph tiers stay consistent with the rest of the BDR stack; eliminates a second drifting classifier",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "gtm-pricing-skill",
+    "path": "active/gtm-pricing-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 3,
+      "output_contract": 3,
+      "failure_handling": 2,
+      "maintainability": 5
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "med",
+        "evidence": "description: \"B2B go-to-market strategy, pricing models, ICP development, positioning, and competitive intelligence. Use when planning GTM strategy, setting pricing, defining ICP, or evaluating opportunities.\"",
+        "line_ref": "3",
+        "issue": "No enumerated 'Use when:' trigger-phrase list; 'competitive intelligence' + 'ICP development' collide with research-skill and territory-planning, risking mis-activation.",
+        "fix": "Add explicit trigger phrases and disambiguate scope (generic frameworks, not Epiphan account research)."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "See `reference/gtm.md` for full YAML ICP worksheet templates and an example ICP (MEP contractors).",
+        "line_ref": "98",
+        "issue": "Pure static-framework skill with zero tool calls; ICP scoring and competitive pricing duplicate Epiphan-native qualify_lead and search_product_catalog without referencing them \u2014 violates 'Epiphan-native preferred'.",
+        "fix": "Point ICP scoring to qualify_lead and competitive/price benchmarking to search_product_catalog when target is an Epiphan opportunity."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "**Positioning Statement Template:**\n```\nFor [target customer segment] who [key need/pain],",
+        "line_ref": "112-119",
+        "issue": "Defines output templates but no delivery mechanism (doc, artifact, HubSpot) for where the strategy lands.",
+        "fix": "Specify a deliverable target (doc-coauthoring handoff or HTML one-pager)."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "low",
+        "evidence": "Use status \"partial\" if some stages failed but results were produced. Use \"error\" only if no output was generated.",
+        "line_ref": "343",
+        "issue": "Only failure handling is the sidecar status field; no defined behavior when inputs (value/competitor data) are missing.",
+        "fix": "Add a degrade rule: proceed with documented assumptions and flag confidence when value data is unavailable."
+      }
+    ],
+    "rewritten_description": "Generic B2B go-to-market frameworks: ICP scoring rubric, April Dunford positioning, value-based/tiered pricing, and opportunity scoring. Use when: build an ICP, write a positioning statement, design pricing tiers, set list price, feature gating, score an opportunity, competitive battle card, GTM launch checklist. For Epiphan account/competitor research use research-skill; for live lead ICP scoring use qualify_lead.",
+    "overlap_candidates": [
+      "research-skill",
+      "territory-planning-optimizer",
+      "blue-ocean-strategy-skill",
+      "business-model-canvas-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "search_product_catalog"
+    ],
+    "self_healing_gap": "No failure definition, no retry/degrade/alert ladder, and no run log \u2014 only the pass/partial/error sidecar status. Acceptable for a knowledge skill but no explicit 'insufficient input' degrade path.",
+    "one_improvement": {
+      "change": "Add enumerated trigger phrases plus one-line pointers to qualify_lead / search_product_catalog for the Epiphan-specific cases",
+      "expected_impact": "Cuts activation collisions with research-skill and stops duplicating native ICP/pricing tooling",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "research-skill",
+    "path": "active/research-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 2,
+      "output_contract": 3,
+      "failure_handling": 2,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "- **Data sources:** LinkedIn, Glassdoor, Indeed, G2, Capterra, Google",
+        "line_ref": "366",
+        "issue": "Company/competitive research points only at generic external sources; never references Epiphan-native sales_brief, identify_company, enrich_contact, hubspot_search_companies, or search_product_catalog \u2014 direct 'Epiphan-native preferred' violation for account/competitor prep.",
+        "fix": "Add a Market Research tool order: identify_company -> sales_brief -> activity_get_timeline -> enrich_contact, with Semrush via Epiphan AI marketing tools before generic web."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "Step 5: Synthesize\n|__ Generate company profile, score against ICP",
+        "line_ref": "115-116",
+        "issue": "'Score against ICP' with no call to qualify_lead, the house ICP/power_level source of truth; scoring re-implemented manually.",
+        "fix": "Route the ICP/decision-maker step through qualify_lead + hubspot_find_contacts_by_role."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "|__ /Users/tmkipper/Desktop/tk_projects/mcp-server-cookbook/",
+        "line_ref": "287",
+        "issue": "Hardcoded absolute path uses wrong username 'tmkipper' (Tim's home is /Users/tmk) \u2014 a dead path that silently fails.",
+        "fix": "Fix to /Users/tmk/... or make it relative/env-based."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "machine: m1_mac",
+        "line_ref": "163",
+        "issue": "Stack constraints assert M1 Mac; Tim's machine is now M4 24GB \u2014 drifting hardcoded environment fact.",
+        "fix": "Remove specific hardware or point to a single environment reference."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "research_report:\n  title: \"\"\n  type: \"\"  # market, technical, hybrid",
+        "line_ref": "308-310",
+        "issue": "Defines a YAML report structure but no delivery target (doc, artifact, HubSpot note).",
+        "fix": "Specify where the report is written / handed off."
+      }
+    ],
+    "rewritten_description": "Structured research reports for GTM and tech decisions: company/competitor profiles, tech-stack discovery, framework/LLM/API evaluations, decision matrices with confidence scores. Use when: research a company before a call, competitive analysis, evaluate a framework or LLM, tech-stack decision, build-vs-buy. For Epiphan account prep prefer sales_brief/identify_company; for lead ICP scoring use qualify_lead.",
+    "overlap_candidates": [
+      "gtm-pricing-skill",
+      "prospect-research-compiler",
+      "prospect-research-to-cadence-skill",
+      "competitor-content-analyzer"
+    ],
+    "missing_tool_refs": [
+      "sales_brief",
+      "identify_company",
+      "enrich_contact",
+      "hubspot_search_companies",
+      "qualify_lead",
+      "search_product_catalog"
+    ],
+    "self_healing_gap": "No failure definition, no retry->degrade->alert ladder, and no run log; the confidence field substitutes for failure handling but there is no rule for missing sources beyond labeling confidence 'low'.",
+    "one_improvement": {
+      "change": "Insert an Epiphan-native tool order into Part 1 Market Research (identify_company -> sales_brief -> activity_get_timeline -> enrich_contact) ahead of generic web sources",
+      "expected_impact": "Account research uses first-party CRM/device/Clari data instead of guesswork, and stops duplicating qualify_lead",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "epiphan-ai-mcp-guide-skill",
+    "path": "active/epiphan-ai-mcp-guide-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 5,
+      "output_contract": 4,
+      "failure_handling": 3,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "med",
+        "evidence": "description: Reference for Epiphan AI MCP tools \u2014 CRM, sales intel, device analytics, lead qualification, marketing (Semrush/GA4/GAds).",
+        "line_ref": "3",
+        "issue": "Reference-style description with no 'Use when:' phrases; a discoverability skill that is itself hard to trigger. Lower recall than sibling skills.",
+        "fix": "Add enumerated triggers so it surfaces on 'which tool for X', 'how do I look up a customer', 'find the AV director'."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "Before drafting any customer-facing asset ... defer to the **`epiphan-brand-assets`** skill, which drives the brand tools (`get_brand_asset_kit`, `check_my_copy`, ...)",
+        "line_ref": "356-358",
+        "issue": "Correctly enforces the brand gate and product-spec sourcing (search_product_catalog) \u2014 exemplary; noting as strength.",
+        "fix": "None."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "- **`qualify_lead` is a dry run by default** \u2014 pass `writeToHubSpot: true` to update lifecycle + create the note (admin-scoped).",
+        "line_ref": "366",
+        "issue": "Documents qualify_lead dry-run default and admin-scope caveats accurately \u2014 reinforces house rule 3.",
+        "fix": "None."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "If a tool seems \"missing,\" you're probably on `Epiphan CRM` \u2014 switch to `Epiphan Ai`.",
+        "line_ref": "354",
+        "issue": "Namespace-fallback guidance exists, but as a reference guide there is no defined behavior when a tool returns 403 (non-allowlisted write) or a rate-limit \u2014 caveats are listed but not turned into a recovery step.",
+        "fix": "Add a 'when a write 403s / rate-limits' recovery note (fall back to read + surface to Tim/Victor)."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "> \"BDR activity for owner_ids 87486452, 423155215 last 7 days\"",
+        "line_ref": "255",
+        "issue": "Owner ids appear inline in examples; low drift risk since illustrative, but no single declared roster.",
+        "fix": "Reference the canonical owner-id roster (CLAUDE.md / nooks-autopilot config) instead of loose inline ids."
+      }
+    ],
+    "rewritten_description": "Epiphan AI MCP tool picker: which tool answers which question across HubSpot CRM (read + admin writes + static lists), legacy CRM orders, Pearl device analytics, Clari calls, qualify_lead, enrich_contact, curated query_dataset/weekly_brief reports, and Semrush/GA4/GAds marketing intel. Use when: which Epiphan tool, look up a customer, sales brief, qualify a lead, find the AV/IT director, pull pipeline, weekly sales tracker, wrong namespace / tool missing.",
+    "overlap_candidates": [
+      "hubspot-revops-skill",
+      "crm-integration-skill"
+    ],
+    "missing_tool_refs": [],
+    "self_healing_gap": "As a reference skill it has no run loop, but it also defines no recovery ladder for the failure modes it documents (403 non-allowlist write, per-record rate limit, wrong namespace) beyond prose caveats; no run log applies.",
+    "one_improvement": {
+      "change": "Add an enumerated 'Use when:' trigger list to the frontmatter description",
+      "expected_impact": "Raises activation recall so Claude reaches for the guide on tool-selection questions instead of guessing a namespace",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "portfolio-artifact-skill",
+    "path": "active/portfolio-artifact-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 4,
+      "output_contract": 3,
+      "failure_handling": 3,
+      "maintainability": 5
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "<triggers>\n- \"capture metrics\", \"portfolio report\", \"what did I ship\"\n- \"weekly summary\", \"executive summary\", \"sprint report\"",
+        "line_ref": "32-35",
+        "issue": "Good explicit triggers, but 'weekly summary'/'executive summary' collide with weekly-kpi-report-skill and business-pulse-skill; 'cost per feature' overlaps cost-metering-skill.",
+        "fix": "Scope triggers to engineering/dev-session metrics to disambiguate from GTM KPI reporting."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "name: \"portfolio-artifact\" ... echo \"{\\\"date\\\":\\\"$DATE\\\",...}\" >> ~/.claude/portfolio/daily-metrics.jsonl",
+        "line_ref": "2,82",
+        "issue": "Skill is named 'artifact' and success criteria mention 'artifacts_generated', yet all outputs are Markdown templates + a JSONL file \u2014 no actual Artifact/HTML deliverable or delivery mechanism defined.",
+        "fix": "Render the weekly/exec summary as an HTML Artifact (matching the name) or rename to portfolio-metrics; declare the delivery target explicitly."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "low",
+        "evidence": "COST=$(cat ~/.claude/daily-cost.json 2>/dev/null | jq '.spent // 0')",
+        "line_ref": "80",
+        "issue": "Bash uses 2>/dev/null and // 0 defaults so a missing cost file degrades to 0 silently \u2014 a $0 day looks real.",
+        "fix": "Emit a 'cost_data_missing' flag in the metric row when daily-cost.json is absent."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "**Deep dive:** See `reference/metrics-guide.md`, `reference/report-templates.md`",
+        "line_ref": "186",
+        "issue": "Compact (198 lines) with clean progressive disclosure; no drifting hardcoded values. Strength.",
+        "fix": "None."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "weekly-kpi-report-skill",
+      "cost-metering-skill",
+      "business-pulse-skill",
+      "executive-dashboard-generator"
+    ],
+    "missing_tool_refs": [],
+    "self_healing_gap": "Silent-default bash (|| echo 0, // 0) degrades missing inputs to zero with no alert or run log; no retry ladder and no ~/.claude/skill-runs entry \u2014 a failed git/gh/jq call produces a plausible-but-wrong metric row rather than a flagged partial.",
+    "one_improvement": {
+      "change": "Make the deliverable a real HTML Artifact for the weekly/exec summary (or rename the skill), and flag missing cost/git data instead of defaulting to 0",
+      "expected_impact": "Name matches output, and reports stop silently under-reporting on days with missing source files",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "nooks-autopilot",
+    "path": "active/nooks-autopilot/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 5,
+      "output_contract": 5,
+      "failure_handling": 4,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "Use when: 'run nooks autopilot', 'autonomous BDR run', 'hunt leads', 'enroll into nooks sequences', 'shadow enroll', 'autopilot dry run', 'check for replies / warm handoffs'.",
+        "line_ref": "3",
+        "issue": "Excellent enumerated, quoted triggers with shadow-mode framing; no collision. Strength.",
+        "fix": "None."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "- `qualify_lead` (Epiphan AI) -> category (ideal_mql/warm/nurture/junk), `power_level` (atl/btl/unknown), region, junk flag.",
+        "line_ref": "167",
+        "issue": "qualify_lead used as the qualify/ATL gate; Golden Rules + Suppression + dedup in Stage 2, DA audit in Stage 2c, spec-verification guardrail (line 309) \u2014 fully compliant with all four house rules. Strength.",
+        "fix": "None."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "Fill **`reference/dial-list-report-template.html`** ... write it to the output dir as `nooks_autopilot_<YYYY-MM-DD>.html`. Mode badge = SHADOW or LIVE.",
+        "line_ref": "248-250",
+        "issue": "Defined HTML deliverable, shadow-first default, per-rep segmentation, and outcome sidecar \u2014 a complete output+delivery contract. Strength.",
+        "fix": "None."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "Respect the per-rep daily cap; log any failures and continue (graceful degradation).",
+        "line_ref": "209",
+        "issue": "Graceful degradation and PARTIAL_FAILURE re-run are covered, but 'log any failures' has no concrete sink \u2014 no ~/.claude/skill-runs/nooks-autopilot.jsonl and no alert threshold that halts a run if failures exceed N.",
+        "fix": "Define a run log path and a halt/alert rule (e.g. abort live enroll if >X consecutive createSequenceState failures)."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "| Nyasha Chigwedere | SDR | 94135434 | LGCdlTv6v8dSAiSsoJ7ETWQHVKl1 | none yet \u2014 enroll call/LinkedIn-only or hold auto-email until her mailbox is connected |",
+        "line_ref": "53",
+        "issue": "Roster, sequence ids, list ids, mailbox ids hardcoded in SKILL.md; correctly centralized in the <config> block (right pattern) but one entry (Nyasha mailbox) is a known-stale TODO carried in the skill body.",
+        "fix": "Keep the single <config> source, move the volatile roster/id table into config.json referenced once, and track the Nyasha-mailbox TODO outside the skill body."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "**Version:** 1.0 . **Author:** Tim Kipper . **Status:** v1 shadow",
+        "line_ref": "323",
+        "issue": "326 lines, near the ~500 ceiling; dense but uses reference/ for personas/signals/battlecards. Acceptable.",
+        "fix": "Watch length as v3 content personalization lands; push detail to reference/."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "sequence-load-skill",
+      "prospect-research-to-cadence-skill",
+      "sdr-dial-lists",
+      "he-dial-queue-skill",
+      "gtm-brain-skill"
+    ],
+    "missing_tool_refs": [],
+    "self_healing_gap": "Has shadow-first safety, graceful per-item degradation, and PARTIAL_FAILURE re-run, but lacks a concrete run log (no ~/.claude/skill-runs/nooks-autopilot.jsonl) and a defined alert/halt threshold when live-write failures accumulate; the sidecar is the only persistent artifact and it is written even on partial runs.",
+    "one_improvement": {
+      "change": "Add a run log to ~/.claude/skill-runs/nooks-autopilot.jsonl plus a halt-and-alert threshold on repeated live createSequenceState failures",
+      "expected_impact": "Live enrollment failures become auditable and a bad run stops instead of silently under-enrolling",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "challenger-sale",
+    "path": "active/challenger-sale-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 1,
+      "output_contract": 2,
+      "failure_handling": 2,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "description: \"The Challenger Sale methodology \u2014 Teach-Tailor-Take Control framework for B2B sales. Use when: challenger sale, commercial teaching, constructive tension, reframe, teach tailor take control, insight selling, commercial insight, challenger rep.\"",
+        "line_ref": "3",
+        "issue": "Enumerates trigger phrases well and is pushy; only risk is scope overlap with sales-methodology-implementer which also lists 'Challenger'.",
+        "fix": "Add a disambiguation note: this skill is single-methodology deep-dive vs the multi-framework implementer."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "\"This is exactly what Pearl-2 was built for \u2014 a dedicated hardware encoder that captures, streams, and records simultaneously with zero PC dependency. When the network drops, it keeps recording locally.\"",
+        "line_ref": "238",
+        "issue": "Customer-facing product specs (Pearl-2 local-record-on-network-drop, LMS/LTI integration list at 254-255) are stated from memory, violating house rule 1 \u2014 no call to search_product_catalog / search_product_knowledge.",
+        "fix": "Insert a gate: before emitting any product capability claim, call search_product_knowledge / search_product_catalog and cite verified specs."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "### Cold Email (Challenger Style)\n```\nSubject: Lecture capture at [University]",
+        "line_ref": "257-274",
+        "issue": "Generates customer-facing email copy with no brand-voice gate (get_writing_style / check_my_copy) per house rule 2.",
+        "fix": "Add a Brand Gate step that runs check_my_copy on every generated email/pitch before output."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "### Cold Email (Challenger Style)\n```\nSubject: Lecture capture at [University]",
+        "line_ref": "257-274",
+        "issue": "Produces outbound email copy but defines no delivery mechanism (no Gmail draft-first), conflicting with the CLAUDE.md 'ALWAYS create Gmail drafts' workflow.",
+        "fix": "Specify output as a Gmail draft via create_draft (draft-first), not inline text."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "Use status \"partial\" if some stages failed but results were produced. Use \"error\" only if no output was generated.",
+        "line_ref": "297",
+        "issue": "Only failure semantics are in the outcome sidecar; no retry/skip/alert ladder and no run log to ~/.claude/skill-runs/.",
+        "fix": "Add a failure ladder (missing product data -> call catalog, still missing -> flag placeholder -> alert Tim) and a run log line."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "298 total lines, single self-contained SKILL.md with tagged sections (<teach_framework>, <tailor_framework>, <take_control>).",
+        "line_ref": "1-298",
+        "issue": "Under 500 lines and well-structured; a large example_session (211-275) could move to references/ but no hardcoded owner IDs/list names that drift.",
+        "fix": "Optionally relocate the higher-ed worked example to references/ to keep the core lean."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "sales-methodology-implementer-skill",
+      "sales-revenue-skill",
+      "demo-execution-playbook-skill"
+    ],
+    "missing_tool_refs": [
+      "search_product_catalog",
+      "search_product_knowledge",
+      "get_writing_style",
+      "check_my_copy",
+      "create_draft"
+    ],
+    "self_healing_gap": "No failure definition beyond the sidecar status enum; no retry->degrade->alert->halt ladder; no run log to ~/.claude/skill-runs/challenger-sale.jsonl. A missing/unverifiable product spec should degrade to a placeholder + alert rather than being asserted from memory.",
+    "one_improvement": {
+      "change": "Add a spec-verification + brand gate before any product claim or email is emitted (search_product_knowledge, then check_my_copy).",
+      "expected_impact": "Eliminates memory-stated Pearl specs and off-voice copy in the highest-risk customer-facing output.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "never-split-the-difference",
+    "path": "active/never-split-the-difference-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 2,
+      "output_contract": 2,
+      "failure_handling": 2,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "description: \"Chris Voss FBI negotiation framework \u2014 tactical empathy, calibrated questions, mirroring, labeling, and the Ackerman model ... Use when: negotiation, tactical empathy, calibrated questions, mirroring, labeling, accusation audit, ackerman, deal negotiation, price negotiation, never split the difference.\"",
+        "line_ref": "3",
+        "issue": "Specific, pushy, well-enumerated triggers; distinct enough from siblings (pure negotiation focus).",
+        "fix": "None needed."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "\"[Name], this is Tim from Epiphan Video. [Pause] ... Not sure if it's relevant \u2014 but if it is, I'm at [number].\"",
+        "line_ref": "256-263",
+        "issue": "Multiple customer-facing artifacts (5 email templates 199-266, voicemail script, cold email 351-363) with no brand-voice gate (house rule 2) and no Gmail draft delivery mechanism.",
+        "fix": "Add check_my_copy brand gate and create_draft draft-first delivery for all generated emails/voicemails."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "## Example (selling Pearl-2 fleet, target: $48K)\n- List price: $62,000 (130% anchor)",
+        "line_ref": "188-192",
+        "issue": "Uses illustrative Pearl-2 pricing from memory; if pricing is ever surfaced to a prospect it should come from the catalog, not a hardcoded example.",
+        "fix": "Flag pricing examples as illustrative and require search_product_catalog for any real quote figure."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "### Cold Email (Accusation Audit Style)\n\nSubject: Remote testimony at [Court System]",
+        "line_ref": "351-363",
+        "issue": "Outbound copy produced with no defined delivery mechanism (draft/Slack/HubSpot); conflicts with CLAUDE.md Gmail draft-first workflow.",
+        "fix": "Define output as Gmail draft(s) via create_draft."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "Use status \"partial\" if some stages failed but results were produced. Use \"error\" only if no output was generated.",
+        "line_ref": "387",
+        "issue": "Failure semantics confined to sidecar; no retry/skip/alert ladder, no run log path.",
+        "fix": "Add failure ladder + run log to ~/.claude/skill-runs/never-split-the-difference.jsonl."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "388 total lines; self-contained with tagged sections and a large <example_session> (294-364).",
+        "line_ref": "1-388",
+        "issue": "Under 500 lines, no drifting hardcoded IDs; example section is long but acceptable.",
+        "fix": "Optionally move the court-system example to references/."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "challenger-sale-skill",
+      "sales-revenue-skill",
+      "sales-methodology-implementer-skill"
+    ],
+    "missing_tool_refs": [
+      "get_writing_style",
+      "check_my_copy",
+      "create_draft",
+      "search_product_catalog"
+    ],
+    "self_healing_gap": "No failure definition beyond sidecar status; no retry->degrade->alert->halt ladder; no run log to ~/.claude/skill-runs/never-split-the-difference.jsonl. Generated emails/voicemails bypass any brand or draft-staging safeguard.",
+    "one_improvement": {
+      "change": "Route every generated email/voicemail through check_my_copy then stage as a Gmail draft.",
+      "expected_impact": "Brings all outbound negotiation copy into brand compliance and Tim's review-before-send workflow.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "sales-methodology-implementer-skill",
+    "path": "active/sales-methodology-implementer-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 1,
+      "output_contract": 3,
+      "failure_handling": 2,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "med",
+        "evidence": "description: Implement proven sales methodologies (MEDDIC, BANT, Sandler, Challenger, SPIN) across your team. ... Use when implementing or optimizing sales processes.",
+        "line_ref": "3",
+        "issue": "Generic and non-pushy \u2014 no enumerated trigger phrases in the description, and directly collides with challenger-sale-skill (Challenger), sales-revenue-skill (MEDDIC/SPIN), and meddic-call-prep-auto-skill.",
+        "fix": "See rewritten_description; add explicit trigger phrases and a scope boundary (team-wide enablement/scorecards, not single-call prep)."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "### HubSpot Properties\n- `meddic_score` (Number, 0-100)\n- `meddic_metrics` / `meddic_decision_process` (Multi-line text)",
+        "line_ref": "226-230",
+        "issue": "Specifies CRM custom fields as a manual/generic integration plan but never calls the Epiphan HubSpot MCP or qualify_lead; scoring deals is done by hand rather than through the ATL/BTL source of truth (house rules 3 & 4).",
+        "fix": "Wire deal scoring to qualify_lead and read/write HubSpot via the Epiphan CRM MCP instead of prescribing manual field creation."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "### Salesforce Custom Fields\n- `[Methodology]_[Component]_Score__c` (Number, 0-10) per component",
+        "line_ref": "232-236",
+        "issue": "Salesforce integration is out of scope for Tim's stack (HubSpot portal 21530819 per CLAUDE.md) and adds generic-CRM noise.",
+        "fix": "Drop Salesforce or gate it behind an explicit non-HubSpot flag; default to Epiphan HubSpot MCP."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "### Output Format\n```markdown\n# Sales Methodology Implementation: [Methodology Name]",
+        "line_ref": "54-245",
+        "issue": "Output format is thoroughly specified (guide, scorecard, training plan) but delivery mechanism is undefined \u2014 no artifact/file/HubSpot destination.",
+        "fix": "Name a delivery target (e.g., markdown doc or HubSpot note) for the generated scorecard/plan."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "Use status \"partial\" if some stages failed but results were produced. Use \"error\" only if no output was generated.",
+        "line_ref": "283",
+        "issue": "No retry/skip/alert ladder or run log; sidecar status is the only failure signal.",
+        "fix": "Add failure ladder + run log to ~/.claude/skill-runs/sales-methodology-implementer.jsonl."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "285 total lines, single file with one large Output Format block (54-245).",
+        "line_ref": "1-285",
+        "issue": "Under 500 lines; the giant embedded output template could move to references/ to keep the core scannable.",
+        "fix": "Extract the output template to references/output-template.md."
+      }
+    ],
+    "rewritten_description": "Team-wide sales methodology enablement (MEDDIC, BANT, Sandler, Challenger, SPIN, Value/Gap Selling): generate framework discovery questions, deal scorecards, rep training plans, and HubSpot scoring fields. Use when: implement MEDDIC across my team, build a BANT scorecard, train reps on Sandler, score this deal using [methodology], 30/60/90 sales enablement rollout, standardize qualification. (For single-call prep use meddic-call-prep-auto; for the Challenger narrative use challenger-sale.)",
+    "overlap_candidates": [
+      "challenger-sale-skill",
+      "sales-revenue-skill",
+      "meddic-call-prep-auto-skill",
+      "never-split-the-difference-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "Epiphan CRM (HubSpot) MCP",
+      "ask_agent"
+    ],
+    "self_healing_gap": "No failure definition beyond sidecar status; no retry->degrade->alert->halt ladder; no run log to ~/.claude/skill-runs/sales-methodology-implementer.jsonl. Deal scoring has no source-of-truth tie-in (qualify_lead), so a scored deal can diverge from CRM reality with no reconciliation step.",
+    "one_improvement": {
+      "change": "Replace the manual CRM-field prescription with a qualify_lead + Epiphan HubSpot MCP integration for deal scoring and write-back.",
+      "expected_impact": "Deal scores become grounded in the ATL/BTL source of truth and persist to HubSpot instead of living in disposable markdown.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "sales-revenue",
+    "path": "active/sales-revenue-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 3,
+      "output_contract": 2,
+      "failure_handling": 2,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "description: \"Epiphan Video B2B sales - video capture/streaming lead qualification, pipeline metrics, MEDDIC discovery, and demo execution ... Use for lead scoring, cold outreach to Higher Ed/Government/Corporate AV, and pipeline reviews.\"",
+        "line_ref": "3",
+        "issue": "Specific and Epiphan-scoped, but it is a mega-skill spanning outreach + revops + discovery + demo, so it collides with demo-execution-playbook (demo), sales-methodology-implementer (MEDDIC), and cold-email-sequence-generator (cold email).",
+        "fix": "Tighten description to position this as the umbrella BDR sales skill and cross-reference the specialized siblings to reduce trigger contention."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "| ENRICHER | Contact discovery \u2014 ATL-first ... | Apollo MCP | ... |  | WRITER | Personalized Apollo sequences ... | Apollo MCP |",
+        "line_ref": "93-94",
+        "issue": "Enrichment/scoring routes through Apollo + Clay + a manual Golden-Rules query rather than qualify_lead as the dedupe/ATL-BTL source of truth (house rule 3); ATL/BTL logic is re-implemented inline (67-70) instead of gating through qualify_lead.",
+        "fix": "Add qualify_lead as the mandatory dedupe/qualification gate before any sequence enrollment; keep the inline ATL/BTL table only as a fallback."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "| \"Too expensive\" | Acknowledge -> \"Compared to Extron SMP or Blackmagic?\" -> Show Total Cost of Ownership (Pearl-2 vs legacy + integration) |  ... Pearl = portable, NDI + SRT, Kaltura native integration",
+        "line_ref": "273-274",
+        "issue": "Customer-facing objection responses assert Pearl specs (NDI+SRT, Kaltura native, TCO) from memory with no search_product_catalog / search_product_knowledge gate (house rule 1).",
+        "fix": "Require product-knowledge lookup before emitting spec/competitive claims in objection scripts and demo content."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "1. **Short and specific** - Under 100 words ... 4. **Personalization** - Company name + vertical signal ... | Step | Timing | Purpose | Example |",
+        "line_ref": "98-112",
+        "issue": "Generates cold-email + Apollo sequence copy with no brand-voice gate (get_writing_style/check_my_copy, house rule 2) and prefers Apollo sequences generically without the Gmail draft-first staging CLAUDE.md mandates for call lists.",
+        "fix": "Add a brand gate on all generated copy and clarify draft-first (Gmail) vs Apollo-sequence paths."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "**Action:** Before adding to Apollo sequence, query Epiphan CRM MCP to validate lead state.",
+        "line_ref": "354",
+        "issue": "The skill spans many outputs (scores, emails, pipeline reviews, demo scripts) but never pins a single delivery contract (draft vs XLSX vs HubSpot list); outbound is 'add to Apollo sequence' without draft-first review.",
+        "fix": "Define per-mode output contracts and default outbound to Gmail draft-first before sequence enrollment."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "Use status \"partial\" if some stages failed but results were produced. Use \"error\" only if no output was generated.",
+        "line_ref": "373",
+        "issue": "No retry/skip/alert ladder for failed MCP calls (Apollo/Clay/CRM) and no run log beyond the sidecar.",
+        "fix": "Add a degrade ladder for MCP failures and a run log to ~/.claude/skill-runs/sales-revenue.jsonl."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "hubspot_owner_id IN ('82625923', '423155215', '190030668')` \u2014 AEs: Lex Evans, Ron Epstein, Phillip Sandler",
+        "line_ref": "352",
+        "issue": "Owner IDs, AE names, ICP scores, and product lists are hardcoded and duplicated from CLAUDE.md across the file (61, 337, 340, 352), so they will drift when CLAUDE.md changes; skill is also long and multi-domain (374 lines, three reference/ files).",
+        "fix": "Declare owner IDs / AE roster / ICP scores once (or reference CLAUDE.md \u00a7 authoritatively) instead of re-listing inline."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "demo-execution-playbook-skill",
+      "sales-methodology-implementer-skill",
+      "meddic-call-prep-auto-skill",
+      "cold-email-sequence-generator-skill",
+      "challenger-sale-skill",
+      "never-split-the-difference-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "search_product_catalog",
+      "search_product_knowledge",
+      "get_writing_style",
+      "check_my_copy",
+      "create_draft"
+    ],
+    "self_healing_gap": "No failure definition beyond sidecar status; no retry->degrade->alert->halt ladder for Apollo/Clay/CRM MCP failures; no run log to ~/.claude/skill-runs/sales-revenue.jsonl. Qualification relies on an inline Golden-Rules query rather than qualify_lead, so a CRM outage silently degrades to memory-based classification with no alert.",
+    "one_improvement": {
+      "change": "Insert qualify_lead as the mandatory pre-sequence dedupe/ATL-BTL gate and centralize the hardcoded owner IDs/ICP scores to one declared block.",
+      "expected_impact": "Removes drift risk on AE IDs and makes qualification authoritative instead of a re-implemented inline table.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "demo-execution-playbook",
+    "path": "active/demo-execution-playbook-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 3,
+      "output_contract": 4,
+      "failure_handling": 2,
+      "maintainability": 5
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "triggers:\n  - \"demo playbook\"\n  - \"demo flow for\"\n  - \"how should I demo to\"\n  - \"demo checklist\"\n  - \"live demo prep\"",
+        "line_ref": "17-24",
+        "issue": "Explicit trigger list plus keywords (29-35) \u2014 very pushy and specific; minor overlap with sales-revenue Part 3 (Demo & Discovery) and meddic-call-prep-auto.",
+        "fix": "Add a one-line boundary noting sales-revenue covers lightweight demo flow while this is the full AE execution playbook."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "\"This Pearl-2 records multiple cameras simultaneously [FEATURE]\u2014so instead of hiring 2 operators, you have 1 box doing the work [BENEFIT].\"  ... Pearl actually has on-prem recording + optional on-prem Epiphan Connect.",
+        "line_ref": "172, 286-288",
+        "issue": "Customer-facing capability claims (multi-camera, on-prem Connect, HIPAA-friendly, dual SSD+SRT failover at 100-106) are asserted from memory; Stage 1 calls hubspot/clari/apollo but never search_product_catalog / search_product_knowledge (house rule 1) even though it lists epiphan-ai-mcp-guide as a dependency.",
+        "fix": "Add a product-spec verification call in Stage 1 (search_product_knowledge) and require the demo flows to cite verified specs."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "5. `apollo_organizations_enrich(domain=company_domain)` -> Company size, tech stack, industry",
+        "line_ref": "84",
+        "issue": "Uses generic Apollo enrichment for company intel where an Epiphan-native path may exist, and reads contacts via hubspot_search_contacts without gating MEDDIC/EB identification through qualify_lead (house rules 3-4).",
+        "fix": "Prefer Epiphan-native enrichment/qualify_lead for attendee role + ATL/BTL (EB) assignment; keep Apollo as fallback."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "**Minimum Completion:** 5 minutes post-demo. Upload to HubSpot deal record.  ... [ ] Enter next step in HubSpot deal",
+        "line_ref": "236, 243",
+        "issue": "Strong output contract (scorecard template + HubSpot destination), but the upload is a manual instruction rather than a hubspot_ MCP write call.",
+        "fix": "Bind the scorecard upload and next-step to a HubSpot MCP write (hubspot_update_deal / note) rather than a manual step."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "high",
+        "evidence": "### Stage 1: Pre-Demo Intel Gathering (Parallel MCP Calls) ... 1. `hubspot_get_deal(dealId)` ... 3. `clari_search_calls(...)`",
+        "line_ref": "75-84",
+        "issue": "Five parallel MCP calls with no defined behavior if one fails/returns empty (e.g., no Clari call found, deal not in HubSpot); no retry/skip/alert ladder and no run log \u2014 and unlike the other four skills it has no outcome sidecar at all.",
+        "fix": "Add per-call degrade rules (skip + flag missing intel), a run log to ~/.claude/skill-runs/demo-execution-playbook.jsonl, and an outcome sidecar."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "Full demo arcs ... see [reference/vertical-demo-flows.md] ... Full objection matrix ... see [reference/objection-handling-matrix.md] ... see [reference/competitive-displacement-scripts.md]",
+        "line_ref": "109, 193, 251",
+        "issue": "Exemplary progressive disclosure \u2014 detail pushed to three references/ files keeping SKILL.md ~382 lines; only nit is version/next-review dates hardcoded (376-377) that will silently go stale.",
+        "fix": "None critical; consider dropping the manual 'Next Review' date or moving it to a maintenance log."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "sales-revenue-skill",
+      "meddic-call-prep-auto-skill",
+      "challenger-sale-skill",
+      "ae-handoff-brief-skill"
+    ],
+    "missing_tool_refs": [
+      "search_product_catalog",
+      "search_product_knowledge",
+      "qualify_lead",
+      "get_writing_style",
+      "check_my_copy",
+      "hubspot_update_deal"
+    ],
+    "self_healing_gap": "No failure definition for the five Stage-1 parallel MCP calls (missing deal/Clari/enrich data is unhandled); no retry->degrade->alert->halt ladder; no run log to ~/.claude/skill-runs/demo-execution-playbook.jsonl; and uniquely among these five it emits no outcome sidecar at all, so runs are invisible to analytics.",
+    "one_improvement": {
+      "change": "Add Stage 1 degrade handling (skip + flag on any failed MCP call) plus a product-spec verification call and an outcome sidecar/run log.",
+      "expected_impact": "Prevents a single missing Clari/HubSpot record from silently producing a hollow demo brief, and makes the skill's runs observable + spec-grounded.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "cold-email-sequence-generator-skill",
+    "path": "active/cold-email-sequence-generator-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 1,
+      "output_contract": 2,
+      "failure_handling": 2,
+      "maintainability": 2
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "We've helped [similar company 1] and [similar company 2] [achieve specific outcome] without [common objection].",
+        "line_ref": "89",
+        "issue": "Zero Epiphan-native tool calls anywhere. No search_product_catalog/search_product_knowledge for spec/claim verification, no qualify_lead dedupe gate on the target list, no Epiphan Brand get_writing_style/check_my_copy before generating customer-facing copy. Entire skill is a static template library.",
+        "fix": "Add a pre-generation gate: qualify_lead on the audience list, search_product_knowledge for any product claim, check_my_copy on every drafted subject/body before output."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "high",
+        "evidence": "**Output:** Full email sequence with subject lines (A/B), body copy, timing, personalization variables, and performance benchmarks",
+        "line_ref": "15",
+        "issue": "Output is raw markdown text only. No delivery mechanism \u2014 no Gmail draft creation via create_draft, which CLAUDE.md mandates for all outreach ('ALWAYS create Gmail drafts'). Not draft-first.",
+        "fix": "Terminal stage should call mcp__claude_ai_Gmail__create_draft per email from tkipper@epiphan.com so Tim reviews in Gmail."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "</workflow>\n</output>",
+        "line_ref": "274-275",
+        "issue": "Malformed XML: closing </output> at line 275 has no matching opening tag. Dangling tag corrupts any structural parse.",
+        "fix": "Delete the stray </output> line."
+      },
+      {
+        "dimension": "trigger_quality",
+        "severity": "med",
+        "evidence": "Use when users need outbound email campaigns, sales sequences, or lead generation emails.",
+        "line_ref": "3",
+        "issue": "Generic B2B framing with no Epiphan/BDR anchor collides directly with sdr-email-sms-playbook. No disambiguation.",
+        "fix": "Scope description to generic/non-Epiphan use OR fold into sdr-email-sms-playbook; add pointer."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "{\"ts\":\"[UTC ISO8601]\",\"skill\":\"cold-email-sequence-generator\",\"version\":\"1.1.0\",",
+        "line_ref": "267",
+        "issue": "Sidecar has status field but no defined failed/partial behavior, no retry->degrade ladder, no run log jsonl. success_criteria are content checks not run-state checks.",
+        "fix": "Add explicit partial/error criteria (spec verification fails -> mark partial, skip claim) and a run log line."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "sdr-email-sms-playbook-skill",
+      "email-template-generator-skill",
+      "personalization-at-scale-skill"
+    ],
+    "missing_tool_refs": [
+      "mcp__claude_ai_Gmail__create_draft",
+      "search_product_knowledge",
+      "Epiphan Brand get_writing_style",
+      "Epiphan Brand check_my_copy",
+      "qualify_lead"
+    ],
+    "self_healing_gap": "No failure definition beyond a status enum, no retry->degrade->alert->halt ladder, no run log to ~/.claude/skill-runs/{skill}.jsonl \u2014 only the analytics sidecar.",
+    "one_improvement": {
+      "change": "Add a customer-facing gate: qualify_lead on the list + search_product_knowledge on every claim + check_my_copy on every string, then emit Gmail drafts instead of chat text.",
+      "expected_impact": "Removes hallucinated-spec risk and off-brand copy, and makes output sendable in Tim's draft->review->send flow.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "sdr-email-sms-playbook-skill",
+    "path": "active/sdr-email-sms-playbook-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 3,
+      "output_contract": 4,
+      "failure_handling": 3,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "- **vMix/OBS are software** \u2014 unreliable for mission-critical unattended\n  recording; Pearl is dedicated hardware built for one job.",
+        "line_ref": "344-346",
+        "issue": "Product/competitor specs stated from memory (Pearl = dedicated hardware, Extron SMP EOL, Matrox exited encoder market). No search_product_catalog/search_product_knowledge to verify before they land in customer-facing email copy. Violates house rule 1.",
+        "fix": "Add a spec-verification step: any product/competitor claim woven into a touch must be confirmed via search_product_knowledge first."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "Enroll into the 5-touch cadence (Nooks handles enrollment; this skill is\n   the CONTENT for each step).",
+        "line_ref": "22-23",
+        "issue": "No brand gate. Rule 2 requires get_writing_style/check_my_copy before customer-facing strings; skill has detailed Writing Rules but never runs the Epiphan Brand tools.",
+        "fix": "Add check_my_copy pass on each drafted touch before Gmail draft creation."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "Create Gmail drafts for review before send (Tim's workflow: draft ->\n   review/edit -> send).",
+        "line_ref": "26-27",
+        "issue": "Draft-first delivery specified in prose but the Gmail MCP tool (create_draft) is never named, so no explicit tool contract for HOW drafts are staged.",
+        "fix": "Name mcp__claude_ai_Gmail__create_draft explicitly as the delivery step, one draft per touch."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "cold-email-sequence-generator-skill",
+      "email-template-generator-skill",
+      "epiphan-call-playbook",
+      "sms-text-optimizer"
+    ],
+    "missing_tool_refs": [
+      "search_product_knowledge",
+      "search_product_catalog",
+      "Epiphan Brand check_my_copy",
+      "mcp__claude_ai_Gmail__create_draft"
+    ],
+    "self_healing_gap": "Sidecar defines an error status with guidance ('Set status to error ... if the cadence could not be built') \u2014 better than most \u2014 but still no retry->degrade->alert ladder and no run log to ~/.claude/skill-runs/{skill}.jsonl.",
+    "one_improvement": {
+      "change": "Insert a spec/brand verification gate (search_product_knowledge + check_my_copy) between template fill and Gmail draft creation.",
+      "expected_impact": "Keeps the strong Epiphan cadence but stops unverified competitor/product claims and off-voice copy from reaching prospects.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "social-selling-content-generator-skill",
+    "path": "active/social-selling-content-generator-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 1,
+      "output_contract": 2,
+      "failure_handling": 2,
+      "maintainability": 2
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "Here's what I'm seeing with 200+ B2B sales teams:",
+        "line_ref": "95",
+        "issue": "No tool calls at all. Fabricated authority stats and hardcoded SaaS persona examples baked into the template; no search_product_knowledge for Epiphan claims, no brand gate for public LinkedIn copy carrying Tim's name.",
+        "fix": "Add Epiphan Brand check_my_copy gate for any Epiphan-referencing post; pull real proof points from product knowledge instead of placeholder stats."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "### For CTOs/VPs Engineering\n- **Problems**: Developer productivity, tech debt, hiring, infrastructure costs",
+        "line_ref": "186-187",
+        "issue": "Personas (VP Sales, CTO/VP Eng) and examples are generic SaaS, not Epiphan verticals (Higher Ed, Courts, Gov, Healthcare per CLAUDE.md). Hardcoded off-ICP examples drift users away from real ICP.",
+        "fix": "Replace persona set with Epiphan ATL personas and vertical proof points, or reference a shared personas file."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "**Output:** 30-day content calendar with posts, comment strategies, engagement tactics, and persona-specific templates",
+        "line_ref": "15",
+        "issue": "Output is a markdown calendar with no delivery/staging mechanism (no scheduling, no draft location, no handoff).",
+        "fix": "Define where the calendar lands (file/artifact) and how posts get staged for review."
+      },
+      {
+        "dimension": "trigger_quality",
+        "severity": "med",
+        "evidence": "Use when building personal brand to attract inbound leads through social selling.",
+        "line_ref": "3",
+        "issue": "Overlaps linkedin-post-optimizer, content-marketing, social-media-content-repurposer with no boundary.",
+        "fix": "Narrow to 'net-new LinkedIn post generation' and point to linkedin-post-optimizer for refining existing drafts."
+      }
+    ],
+    "rewritten_description": "Generate a 30-day LinkedIn post calendar (industry insight, thought-leadership, engagement prompts) to attract Epiphan ICP prospects and drive inbound. Use when: 'create LinkedIn posts', 'social selling content', '30 days of posts', 'build my personal brand'. For refining an existing draft use linkedin-post-optimizer; for multi-channel repurposing use social-media-content-repurposer.",
+    "overlap_candidates": [
+      "content-marketing-skill",
+      "linkedin-post-optimizer",
+      "social-media-content-repurposer",
+      "linkedin-sales-navigator-alt-skill"
+    ],
+    "missing_tool_refs": [
+      "Epiphan Brand check_my_copy",
+      "Epiphan Brand get_writing_style",
+      "search_product_knowledge"
+    ],
+    "self_healing_gap": "Only an outcome sidecar with a partial/error status note; no failure definition tied to run state, no retry->degrade->alert->halt ladder, no run log to ~/.claude/skill-runs/{skill}.jsonl.",
+    "one_improvement": {
+      "change": "Swap generic SaaS personas/stats for Epiphan ICP verticals + real product-knowledge proof points, and add a brand check on Epiphan-referencing posts.",
+      "expected_impact": "Makes generated content on-ICP and on-brand instead of generic filler Tim must rewrite.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "content-marketing-skill",
+    "path": "active/content-marketing-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 1,
+      "output_contract": 2,
+      "failure_handling": 1,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "- Quantified outcomes (3-5 metrics)",
+        "line_ref": "288",
+        "issue": "Case-study and blog frameworks instruct quantified customer results and product claims but never call search_product_knowledge/search_product_catalog to source them, and no brand gate on public copy. Pure template skill, zero tool integration.",
+        "fix": "Gate any Epiphan-specific claim through product knowledge and run check_my_copy on customer-facing drafts."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "- **Projects**: coperniq-video-factory, gtm-engineer-journey",
+        "line_ref": "381",
+        "issue": "Hardcoded external project names (coperniq-video-factory, gtm-engineer-journey) and tool list (WordPress, Canva, Descript) that are stale/irrelevant to Epiphan BDR context and will drift.",
+        "fix": "Remove or move stale integration notes to a reference file; keep SKILL.md context-neutral."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "Use status \"partial\" if some stages failed but results were produced. Use \"error\" only if no output was generated.",
+        "line_ref": "400",
+        "issue": "Only status semantics defined; no run-state failure definition, no retry/degrade path, no run log. success_criteria are content-quality checks not run health.",
+        "fix": "Add a degrade path (product-knowledge lookup fails -> mark partial, flag unverified claim) and a run log line."
+      },
+      {
+        "dimension": "trigger_quality",
+        "severity": "med",
+        "evidence": "Use when creating content strategy, writing posts, or building demand gen assets.",
+        "line_ref": "3",
+        "issue": "Broad demand-gen scope collides with social-selling-content-generator, webinar-to-content-multiplier, social-media-content-repurposer with no boundary.",
+        "fix": "Position as the strategy/calendar/SEO umbrella and point to specialized skills for single-channel execution."
+      }
+    ],
+    "rewritten_description": "B2B content strategy + asset creation umbrella: content pillars, calendars, SEO blogs, case studies, video scripts, and repurposing. Use when: 'content strategy', 'content calendar', 'write a blog post', 'SEO article', 'case study', 'video script'. For LinkedIn-only post generation use social-selling-content-generator; for repurposing one asset into many use social-media-content-repurposer.",
+    "overlap_candidates": [
+      "social-selling-content-generator-skill",
+      "webinar-to-content-multiplier",
+      "social-media-content-repurposer",
+      "seo-content-optimizer",
+      "landing-page-copywriter"
+    ],
+    "missing_tool_refs": [
+      "search_product_knowledge",
+      "search_product_catalog",
+      "Epiphan Brand check_my_copy"
+    ],
+    "self_healing_gap": "Status enum with partial/error semantics but no run-state failure definition, no retry->degrade->alert->halt ladder, no run log to ~/.claude/skill-runs/{skill}.jsonl. Good progressive disclosure (reference/*.md) but self-healing absent.",
+    "one_improvement": {
+      "change": "Add a product-knowledge + brand gate for any Epiphan-specific claim and strip the stale hardcoded project/tool references.",
+      "expected_impact": "Prevents unverified claims in published assets and stops the skill pointing users at defunct projects.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "batch-send-drafts-skill",
+    "path": "active/batch-send-drafts-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 4,
+      "output_contract": 5,
+      "failure_handling": 3,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "**ATL signal** (from subject or recipient name if available):\n- Title keywords: Director, VP, CIO, Dean, Provost, Superintendent -> ATL",
+        "line_ref": "55-57",
+        "issue": "Re-implements ATL/BTL classification inline from a truncated keyword list instead of gating through qualify_lead (dedupe/ATL-BTL source of truth per house rule 3). The inline list is a strict subset of CLAUDE.md's full ATL taxonomy, so it will misclassify.",
+        "fix": "Call qualify_lead to resolve ATL/BTL per recipient rather than substring-matching the subject line."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "- Title keywords: Director, VP, CIO, Dean, Provost, Superintendent -> ATL",
+        "line_ref": "57",
+        "issue": "Hardcoded ATL keyword subset duplicates CLAUDE.md ATL/BTL taxonomy and will drift as the canonical list evolves.",
+        "fix": "Reference the canonical classification (or qualify_lead) instead of copying a partial keyword list."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "If `list_drafts` returns minimal header data, call `mcp__claude_ai_Gmail__get_thread` on the `threadId` of each draft to get full headers.",
+        "line_ref": "41",
+        "issue": "Has a sensible degrade path for missing headers but no defined behavior if list_drafts itself errors/returns empty, and no run log \u2014 only the analytics sidecar.",
+        "fix": "Add explicit empty-queue and list_drafts-error handling (report + halt) and a run log line."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "morning-brief-skill",
+      "sequence-load-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead"
+    ],
+    "self_healing_gap": "Good structured stages and one degrade path (get_thread fallback), but no explicit error-state ladder for the primary list_drafts call and no run log to ~/.claude/skill-runs/{skill}.jsonl beyond the analytics sidecar.",
+    "one_improvement": {
+      "change": "Replace the inline ATL substring heuristic with a qualify_lead call per recipient.",
+      "expected_impact": "Prioritization matches the canonical ATL/BTL taxonomy instead of a partial keyword list, so ATL-first ordering is actually correct.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "cost-discovery-coach-skill",
+    "path": "active/cost-discovery-coach-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 4,
+      "output_contract": 3,
+      "failure_handling": 1,
+      "maintainability": 5
+    },
+    "findings": [
+      {
+        "dimension": "failure_handling",
+        "severity": "high",
+        "evidence": "</success_criteria>",
+        "line_ref": "70",
+        "issue": "Skill ends at </success_criteria> with NO Emit Outcome Sidecar section at all \u2014 unlike the other five skills it writes no ~/.claude/skill-analytics/last-outcome-*.json, so the self-improvement framework captures zero outcomes for it.",
+        "fix": "Add the standard Emit Outcome Sidecar stage writing last-outcome-cost-discovery-coach.json."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "Pearl-2 = 6 isolated full-HD channels; Pearl Nexus = 2 recommended (3 max); EC20\n  publishes **straight to your CMS, no encoder in the path**; Edge fleet management is free.",
+        "line_ref": "29-30",
+        "issue": "Concrete specs hardcoded in the body. It correctly INSTRUCTS verification ('Every spec cited must be verified ... never improvise a spec') but bakes the numbers in as source of truth, so they silently rot if the catalog changes. Borderline vs house rule 1.",
+        "fix": "Move the spec table to a runtime search_product_knowledge lookup; keep only the instruction to verify in SKILL.md."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "5. **Hand off** with `ae_handoff` once a Manager+ economic buyer is in play.",
+        "line_ref": "51",
+        "issue": "Names ae_handoff as terminal action but defines no output artifact for the coaching itself (no structured question-set format, no delivery target) \u2014 deliverable is implicit.",
+        "fix": "Define the output contract: a per-input question card (Killer Q / Label / Job / Insight) block, plus the ae_handoff trigger condition."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "orlob-discovery-framework-skill",
+      "meddic-call-prep-auto-skill",
+      "sales-call-prep-assistant",
+      "epiphan-call-playbook"
+    ],
+    "missing_tool_refs": [
+      "search_product_knowledge",
+      "ae_handoff (referenced but not wired to a named MCP tool)"
+    ],
+    "self_healing_gap": "Largest gap of the six: no outcome sidecar, no failure/partial definition, no retry->degrade->alert->halt ladder, no run log. A well-written coaching doc with zero run-state instrumentation.",
+    "one_improvement": {
+      "change": "Add the standard Emit Outcome Sidecar stage and move the hardcoded spec table behind a search_product_knowledge lookup.",
+      "expected_impact": "Brings the skill into the analytics framework (currently invisible) and removes spec-rot risk on the one place it states numbers.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "deal-momentum-analyzer",
+    "path": "active/deal-momentum-analyzer-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 3,
+      "output_contract": 4,
+      "failure_handling": 4,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "med",
+        "evidence": "\"pipeline review\" / \"stalled deals\"",
+        "line_ref": "22",
+        "issue": "Trigger phrases 'stalled deals' and 'pipeline review' collide with dead-deal-recovery and pipeline-health-analyzer, which claim the same phrases \u2014 activation ambiguity across three sibling skills.",
+        "fix": "Reserve 'deal momentum'/'which deals need attention' here; hand 'stalled deals'/'clean pipeline' to dead-deal-recovery and 'pipeline health'/'forecast' to pipeline-health-analyzer. Add a disambiguation note in each description."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "Use `search_crm_objects` (HubSpot MCP) with **two OR-ed filter groups**",
+        "line_ref": "51",
+        "issue": "Workflow calls `search_crm_objects`, but the Dependencies block (line 320) lists `hubspot_search_deals`/`hubspot_search_companies`/`hubspot_search_contacts` \u2014 tool names are inconsistent between body and dependency contract, risking a wrong/hallucinated tool call at runtime.",
+        "fix": "Pick one canonical tool name set (the actual Epiphan HubSpot MCP tool) and use it in both the workflow and Dependencies."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "For each deal's associated contacts, classify by title before scoring: - **ATL:** Chief, VP, Director...",
+        "line_ref": "163-168",
+        "issue": "ATL/BTL classification is done by inline title-keyword matching from memory rather than routing through qualify_lead, the stated ATL/BTL and dedupe source of truth. Two skills can diverge on the same contact.",
+        "fix": "Call qualify_lead for each associated contact and consume its ATL/BTL/EB verdict; keep the keyword table only as a documented fallback."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "| No activity > 14 days | Send re-engagement email | `gmail_create_draft` |",
+        "line_ref": "228",
+        "issue": "Re-engagement email drafts are customer-facing output but there is no Epiphan Brand voice gate (get_writing_style/check_my_copy) before draft creation.",
+        "fix": "Add a brand-gate step: run check_my_copy on any generated email body before gmail_create_draft."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "hubspot_owner_id` EQ `87486452` ... owner IDs 82625923 Lex Evans, 423155215 Ron Epstein, 190030668 Phillip Sandler",
+        "line_ref": "58,85",
+        "issue": "Owner IDs are hardcoded inline in multiple places (Stage 1a, 1a-bis) and duplicate values already defined in CLAUDE.md Golden Rules \u2014 drift risk when a rep changes.",
+        "fix": "Declare owner IDs once at top of the skill (or reference CLAUDE.md) and reuse."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "### 1c. Pull Activity History ... ### 1c. Pull Contact Engagement",
+        "line_ref": "119,124",
+        "issue": "Two consecutive sub-stages are both labelled '1c' \u2014 copy/paste numbering bug.",
+        "fix": "Renumber to 1c and 1d."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "pipeline-health-analyzer-skill",
+      "dead-deal-recovery",
+      "close-plan-generator"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "get_writing_style",
+      "check_my_copy"
+    ],
+    "self_healing_gap": "Has an outcome sidecar with success/partial/error and a Clari->HubSpot degrade path (line 117), but no explicit retry->degrade->alert->halt ladder for HubSpot/Gmail failures and no run log to ~/.claude/skill-runs/deal-momentum-analyzer.jsonl \u2014 only the analytics sidecar.",
+    "one_improvement": {
+      "change": "Route contact ATL/BTL through qualify_lead instead of inline keyword tables, and reconcile the tool names between workflow and Dependencies.",
+      "expected_impact": "Single source of truth for ATL/EB scoring (Signal 3) and eliminates wrong-tool-call risk on every run.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "pipeline-health-analyzer-skill",
+    "path": "active/pipeline-health-analyzer-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 2,
+      "tool_integration": 1,
+      "output_contract": 3,
+      "failure_handling": 2,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "high",
+        "evidence": "Use when deals get stuck or forecast accuracy is poor.",
+        "line_ref": "3",
+        "issue": "Description is generic, non-pushy, enumerates no distinct trigger phrases in the frontmatter, and its scope ('identify stalled deals, predict close probability, suggest actions') is near-identical to deal-momentum-analyzer and dead-deal-recovery \u2014 high collision, no clear ownership boundary.",
+        "fix": "Rewrite description to enumerate specific phrases and stake a distinct claim (forecast/rollup analytics vs per-deal momentum)."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "**Input:** Pipeline export (CSV with deal data) or CRM access",
+        "line_ref": "14",
+        "issue": "Skill relies on a manual CSV export and names zero MCP tools anywhere in the workflow \u2014 HubSpot data is available natively via the Epiphan CRM MCP, so this is generic/manual where an Epiphan-native automated pull exists.",
+        "fix": "Replace CSV input with search_crm_objects/ask_agent pulls (as deal-momentum-analyzer does); make CSV a fallback only."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "**Re-engagement Email**:\nSubject: [Company] - Quick check-in\n\nHi [Name], I haven't heard back since our [last interaction]",
+        "line_ref": "101-108",
+        "issue": "Emits a customer-facing re-engagement email inline with no brand voice gate (get_writing_style/check_my_copy) and no draft-delivery mechanism (no gmail_create_draft) \u2014 output is copy-paste text, not a draft-first outbound artifact.",
+        "fix": "Generate via gmail_create_draft after a check_my_copy brand gate."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "4. **Stakeholder Coverage** - Number and level of contacts",
+        "line_ref": "37",
+        "issue": "'Level of contacts' scoring never routes through qualify_lead for ATL/BTL, unlike its sibling skills \u2014 inconsistent stakeholder classification.",
+        "fix": "Gate stakeholder-level assessment through qualify_lead."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "As the final step, write to `~/.claude/skill-analytics/last-outcome-pipeline-health-analyzer.json`",
+        "line_ref": "253",
+        "issue": "Only failure handling is the analytics sidecar; no defined behavior when the CSV is malformed/missing or CRM access fails, no retry/degrade/alert path.",
+        "fix": "Add explicit 'if input missing -> request export / fall back to CRM pull; if both fail -> alert and halt' ladder."
+      }
+    ],
+    "rewritten_description": "Portfolio-level pipeline forecast + health rollup: stage-by-stage conversion vs benchmark, risk-adjusted forecast (commit/best/worst scenarios), probability calibration, and a pipeline report card. Pulls deals from HubSpot (Epiphan CRM MCP) or a CSV export. Use when: 'analyze pipeline health', 'risk-adjusted forecast', 'forecast accuracy', 'which stage do deals stall in', 'pipeline report card', 'scenario planning'. For per-deal momentum scoring use deal-momentum-analyzer; for kill/recover triage use dead-deal-recovery.",
+    "overlap_candidates": [
+      "deal-momentum-analyzer",
+      "dead-deal-recovery",
+      "sales-forecast-builder"
+    ],
+    "missing_tool_refs": [
+      "search_crm_objects",
+      "ask_agent",
+      "qualify_lead",
+      "gmail_create_draft",
+      "get_writing_style",
+      "check_my_copy"
+    ],
+    "self_healing_gap": "No failure definition and no retry->degrade->alert->halt ladder; the only persistence is the analytics sidecar (line 253), with no run log to ~/.claude/skill-runs/pipeline-health-analyzer.jsonl and no automated data source (CSV is manual).",
+    "one_improvement": {
+      "change": "Wire the skill to the Epiphan CRM MCP (search_crm_objects/ask_agent) for data instead of a manual CSV, and add gmail_create_draft + brand gate for the re-engagement email.",
+      "expected_impact": "Turns a manual analyst worksheet into an automated, draft-first skill and removes the biggest collision/generic-tool gap.",
+      "effort": "L"
+    }
+  },
+  {
+    "skill": "dead-deal-recovery",
+    "path": "active/dead-deal-recovery-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 3,
+      "output_contract": 4,
+      "failure_handling": 4,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "**Email 3 \u2014 Break-Up (Day 10):**\n```\nSubject: Should I close your file?",
+        "line_ref": "146-156",
+        "issue": "Three customer-facing recovery emails are drafted (line 158 gmail_create_draft) with no Epiphan Brand voice gate (get_writing_style/check_my_copy) before draft creation.",
+        "fix": "Insert a check_my_copy pass on each of the 3 touch bodies before gmail_create_draft."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "| 3+ contacts including ATL (economic buyer) | 20 | ... | 2+ contacts but all BTL | 8 |",
+        "line_ref": "117-119",
+        "issue": "Signal 5 stakeholder breadth relies on ATL/BTL judged inline without calling qualify_lead, the dedupe/ATL-BTL source of truth \u2014 can diverge from deal-momentum-analyzer scoring of the same deal.",
+        "fix": "Pull ATL/BTL from qualify_lead per contact."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "- **Apollo MCP:** enrich_contact (find new contacts for single-threaded deals)",
+        "line_ref": "225",
+        "issue": "Names `enrich_contact` for finding new stakeholders where the Epiphan-native qualify_lead / CRM contact search plus the actual Apollo tool (apollo_mixed_people_api_search) would be preferred; the tool name also does not match Apollo's real tool set.",
+        "fix": "Use apollo_mixed_people_api_search and gate discovered contacts through qualify_lead before drafting."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "-> Gmail draft created: Yes/No",
+        "line_ref": "188",
+        "issue": "Output reports whether a Gmail draft was created but HubSpot 'Closed Lost' updates in Stage 4 are described as actions without a confirmation/delivery line in the report contract.",
+        "fix": "Add a per-deal 'HubSpot updated: Yes/No + lost reason' field to the Stage 5 report."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "deal-momentum-analyzer",
+      "pipeline-health-analyzer-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "get_writing_style",
+      "check_my_copy",
+      "apollo_mixed_people_api_search"
+    ],
+    "self_healing_gap": "Strong on process guardrails (disqualification checklist lines 161-168, outcome sidecar lines 235-241) but has no retry->degrade->alert->halt ladder for tool failures and no run log to ~/.claude/skill-runs/dead-deal-recovery.jsonl beyond the analytics sidecar.",
+    "one_improvement": {
+      "change": "Add a brand-voice gate (check_my_copy) before the three recovery-email gmail_create_draft calls and route Signal 5 ATL/BTL through qualify_lead.",
+      "expected_impact": "Brings outbound copy on-brand and unifies stakeholder scoring with sibling skills at low effort.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "close-plan-generator",
+    "path": "active/close-plan-generator-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 3,
+      "output_contract": 4,
+      "failure_handling": 2,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "**Epiphan Competitive Advantages (by vertical):**\n- Higher Ed: NDI + Kaltura/Panopto integration, multi-campus cloud ... - Live Events: Pearl Nano portability, EC20 PTZ flexibility, low latency",
+        "line_ref": "114-120",
+        "issue": "Product specs and competitive claims are stated from memory in the workflow (and battlecard, Stage 4) rather than pulled from search_product_catalog/search_product_knowledge \u2014 violates the no-specs-from-memory house rule for a customer-facing mutual action plan / battlecard.",
+        "fix": "Require a search_product_knowledge/search_product_catalog call to source any product capability or competitive differentiator before it appears in the plan."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "Output as Gmail draft (optional) or copy-paste ready.",
+        "line_ref": "206",
+        "issue": "The Mutual Action Plan is a customer-facing outbound artifact but no Epiphan Brand voice gate (get_writing_style/check_my_copy) runs before the Gmail draft.",
+        "fix": "Add check_my_copy on the mutual-action-plan body before creating the draft."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "- **Company Context:** `apollo_organizations_enrich` (industry, headcount, location, tech stack)",
+        "line_ref": "62",
+        "issue": "Uses generic apollo_organizations_enrich for company context and never routes stakeholders through qualify_lead for ATL/BTL despite doing ATL/BTL classification (Stage 2) \u2014 Epiphan-native qualification is bypassed.",
+        "fix": "Gate contact ATL/BTL through qualify_lead; keep Apollo only for firmographic gaps."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "high",
+        "evidence": "Bug reports: Note skill output, deal stage, which stage failed",
+        "line_ref": "362",
+        "issue": "No outcome sidecar and no defined failed/partial-run behavior \u2014 unlike the three sibling deal skills, this skill emits nothing to analytics and has no retry/degrade path when Clari/HubSpot returns sparse data (only a human 'bug report' note).",
+        "fix": "Add the standard last-outcome sidecar + a 'if Clari sparse -> degrade to HubSpot notes, flag confidence as low' rule."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "vendor evaluation? (RFP process, incumbent incumbent, incumbent defense playbook)",
+        "line_ref": "98",
+        "issue": "Duplicated word 'incumbent incumbent' \u2014 minor content-rot indicator in Stage 3.",
+        "fix": "Clean up the typo."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "deal-momentum-analyzer",
+      "meddic-call-prep-auto-skill",
+      "ae-handoff-brief-skill"
+    ],
+    "missing_tool_refs": [
+      "search_product_knowledge",
+      "search_product_catalog",
+      "get_writing_style",
+      "check_my_copy",
+      "qualify_lead"
+    ],
+    "self_healing_gap": "No failure definition, no outcome sidecar, no retry->degrade->alert->halt ladder, and no run log to ~/.claude/skill-runs/close-plan-generator.jsonl \u2014 the weakest self-healing of the five despite good progressive disclosure.",
+    "one_improvement": {
+      "change": "Source all product/competitive claims via search_product_knowledge and add an outcome sidecar + degrade rule for sparse Clari data.",
+      "expected_impact": "Eliminates from-memory spec risk in a customer-facing plan and brings the skill up to the observability baseline of its siblings.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "post-demo-automation",
+    "path": "active/post-demo-automation-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 2,
+      "output_contract": 4,
+      "failure_handling": 3,
+      "maintainability": 2
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "- \"We have Extron SMP\" -> Position Pearl as upgrade (SMP discontinued; Pearl has cloud, AI) ... - Takeaway 1: \"Pearl's direct API integration cuts transcoding time \u2014 your faculty time-to-publish drops from 4 hours to 15 min\"",
+        "line_ref": "256,281",
+        "issue": "Recap emails and objection responses assert product specs and competitor claims from memory (SMP discontinued, Pearl cloud/AI, transcoding/time-to-publish numbers) \u2014 customer-facing copy that violates the no-specs-from-memory house rule and could ship inaccurate claims.",
+        "fix": "Require search_product_knowledge/search_product_catalog to verify any capability, integration, or competitor claim before it enters the draft."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "- **Gmail** (gmail_create_draft) \u2014 compose recap email",
+        "line_ref": "230",
+        "issue": "Recap, objection-response, loop-in, and 5-touch emails are all customer-facing but no Epiphan Brand voice gate (get_writing_style/check_my_copy) runs before drafting.",
+        "fix": "Add a check_my_copy brand pass on each generated email body before gmail_create_draft."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "1. **Research via Apollo:** - Identify 2-3 likely stakeholders ... Pull titles, emails, LinkedIn profiles",
+        "line_ref": "157-159",
+        "issue": "Stakeholder expansion pulls new contacts via Apollo but never routes them through qualify_lead for dedupe/ATL-BTL before drafting loop-in emails \u2014 risk of drafting to a dup or a customer/partner-excluded contact per Golden Rules.",
+        "fix": "Gate all Apollo-discovered contacts through qualify_lead before Stage 5 outreach drafts."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "## Version History\n- **v1.0** (April 2026): Initial release with 5-stage automation",
+        "line_ref": "407-410",
+        "issue": "No outcome sidecar emitted (all three sibling deal skills emit one) \u2014 no analytics/log of run status, so failed/partial runs are invisible. Troubleshooting section (line 370) handles inputs but there is no status ladder or run log.",
+        "fix": "Add the standard last-outcome-post-demo-automation.json sidecar and a run log."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "high",
+        "evidence": "## Workflow: 5-Stage Post-Demo Automation ... ### Stage 7: Deal Stage Automation",
+        "line_ref": "66,196",
+        "issue": "File is 410 lines with all vertical templates, objection libraries, three worked examples, and config inline and no references/ progressive disclosure \u2014 exceeds the ~500-line lean-context guidance in spirit and is the least maintainable of the five; title also says '5-Stage' but there are 7 stages (line 196), an internal inconsistency.",
+        "fix": "Move vertical templates, objection library, and the three examples to references/ files and fix the stage count."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "close-plan-generator",
+      "meddic-call-prep-auto-skill",
+      "deal-momentum-analyzer"
+    ],
+    "missing_tool_refs": [
+      "search_product_knowledge",
+      "search_product_catalog",
+      "get_writing_style",
+      "check_my_copy",
+      "qualify_lead"
+    ],
+    "self_healing_gap": "Has good human-facing escalation (Day 14 BDR handoff, troubleshooting) but no machine self-healing: no outcome sidecar, no status ladder, no run log to ~/.claude/skill-runs/post-demo-automation.jsonl.",
+    "one_improvement": {
+      "change": "Verify every product/competitor claim through search_product_knowledge and add a check_my_copy brand gate before any recap/objection email draft.",
+      "expected_impact": "Stops inaccurate spec claims from reaching prospects within 2 hours of a demo \u2014 the highest-blast-radius customer-facing gap in the set.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "contact-hunter-skill",
+    "path": "active/contact-hunter-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 3,
+      "output_contract": 2,
+      "failure_handling": 2,
+      "maintainability": 1
+    },
+    "findings": [
+      {
+        "dimension": "maintainability",
+        "severity": "high",
+        "evidence": "line 122 `**Compliance:** ...No scraping. Follow CAN-SPAM for outreach.` immediately followed by line 123 `   3. Use title filter: \"VP of Engineering\"` ... line 126 `   Google:` ... line 138 `   Email Pattern Guessing:`",
+        "line_ref": "122-369",
+        "issue": "File contains TWO contradictory bodies stitched together: a clean MCP-first workflow (1-122) and a legacy manual/Google-dork/email-guessing version (123-357). The tail defines a second contact-card format (204-223), a second CSV schema (226-230), duplicate trigger lists (306-313) and duplicate compliance sections (315-340) that conflict with the Golden-Rules-gated top half.",
+        "fix": "Delete lines 123-357 (orphaned legacy body). Keep the MCP workflow ending at line 122, then the outcome sidecar block."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "high",
+        "evidence": "line 369 `</output>` and line 368 `</workflow>`",
+        "line_ref": "368-369",
+        "issue": "Dangling closing tags \u2014 orphaned `</output>` with no matching open, evidence of a bad merge/paste.",
+        "fix": "Remove the stray `</output>` tag."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "line 16 `**MCP Tools:** ...hubspot_search_contacts, apollo_contacts_search, ...Clay__find-and-enrich-contacts-at-company`",
+        "line_ref": "16, 42-74",
+        "issue": "Does not route through qualify_lead \u2014 the CLAUDE.md dedupe/ATL-BTL source of truth. Golden Rules and ATL/BTL are re-implemented inline (Stage G, Stage 3) risking drift from canonical logic.",
+        "fix": "Insert qualify_lead as the gate after HubSpot search; drive ATL/BTL and dedupe from its verdict."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "lines 138-144 `Email Pattern Guessing: ... john.smith@acme.com` and line 232 `Email Pattern Detection`",
+        "line_ref": "138-144, 232-257",
+        "issue": "Legacy tail promotes email-pattern guessing/Google dorking \u2014 a manual method Apollo/Clay automates and the top half explicitly forbids ('No scraping', line 122).",
+        "fix": "Remove; rely on Apollo/Clay verified enrichment only."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "line 15 `Output: Qualified contact cards ... and HubSpot record link` and line 111 `**Bulk output** (CSV format for sequence-load)`",
+        "line_ref": "15, 90-118",
+        "issue": "No delivery mechanism \u2014 no Gmail draft-first stage despite CLAUDE.md 'ALWAYS create Gmail drafts for every lead.' Two competing card formats (95-108 vs 204-223) make the contract ambiguous.",
+        "fix": "Pick one card format; add draft-staging handoff (or hand to sequence-load-skill)."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "line 367 `Use status \"partial\" if some stages failed ... \"error\" only if no output`",
+        "line_ref": "358-367",
+        "issue": "Only failure signal is the outcome sidecar status. No retry/skip ladder on empty/error waterfall tiers, no run log.",
+        "fix": "Add 'no result -> next tier -> all empty = zero-with-reason' ladder and run-log append."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "linkedin-sales-navigator-alt-skill",
+      "phone-verification-waterfall-skill",
+      "prospect-enrich-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "mcp__claude_ai_Gmail__create_draft"
+    ],
+    "self_healing_gap": "Has outcome sidecar (partial/error) but no per-stage failure DEFINITION, no retry->degrade->alert->halt ladder, and no run log to ~/.claude/skill-runs/contact-hunter.jsonl. Empty-result vs tool-error not distinguished.",
+    "one_improvement": {
+      "change": "Delete orphaned legacy body (123-357) and route qualification through qualify_lead",
+      "expected_impact": "Removes contradictory instructions that could make the skill guess emails/scrape against policy; single source of truth for ATL/BTL and dedupe",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "lookalike-customer-finder-skill",
+    "path": "active/lookalike-customer-finder-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 1,
+      "output_contract": 2,
+      "failure_handling": 2,
+      "maintainability": 2
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "lines 353-358 `**Recommended Tools**: - **Company Data**: Crunchbase, ZoomInfo, LinkedIn ... - **Contacts**: Apollo, RocketReach, Hunter.io ... - **Intent**: 6sense, Bombora, G2`",
+        "line_ref": "353-358",
+        "issue": "Names only generic/third-party tools as prose and invokes ZERO live MCP tools. Epiphan-native HubSpot/customer-orders MCP and Apollo/Clay MCP ignored \u2014 seed 'best customers' and lookalikes would be fabricated.",
+        "fix": "Replace with concrete MCP calls: pull seeds from HubSpot/customer-orders MCP, expand via apollo_mixed_companies_search / Clay find-and-enrich-company."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "line 262 `### Stage S \u2014 Suppression Gate` present but no Golden Rules customer/channel/AE gate and no qualify_lead anywhere",
+        "line_ref": "262-270",
+        "issue": "List-producing skill outputs 100+ companies plus 'Decision Maker' contacts (145-149) but only has Suppression gate \u2014 missing Golden Rules customer/channel/AE-owned exclusion; no qualify_lead. Could surface existing customers as 'net-new lookalikes'.",
+        "fix": "Add Golden Rules Gate (as contact-hunter Stage G) and gate any surfaced contact through qualify_lead."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "line 189 `**Export Available**: CSV with company details` and line 336 `- [ ] Enrich contact data`",
+        "line_ref": "189, 320-348",
+        "issue": "Output is a Markdown report; 'Export Available: CSV' asserted but no file written and no delivery mechanism (XLSX/HubSpot list/Gmail draft). Bulk is a static placeholder template, not a produced artifact.",
+        "fix": "Write a real ranked-company XLSX/CSV and optionally push to a HubSpot list."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "443 lines; lines 321-348 `Quick Start Action Plan / Week 1 ... Week 5-6` and lines 285-317 `Expected Results: Response Rate 40-50%`",
+        "line_ref": "276-399",
+        "issue": "~440 lines, much of it hardcoded outreach-cadence playbook and invented benchmark rates belonging in a sequence/targeting skill. No references/ progressive disclosure.",
+        "fix": "Cut weekly action-plan + benchmark tables; keep ICP+scoring+output; push detail to references/."
+      },
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "line 3 `Input your best customers and find 100+ companies that match the profile`",
+        "line_ref": "2-3, 413-418",
+        "issue": "Decent description but scope overlaps ICP/territory skills; trigger phrases buried at 413-418, generic (not tied to Epiphan verticals).",
+        "fix": "Pull trigger phrases into description; tie ICP to Epiphan verticals."
+      }
+    ],
+    "rewritten_description": "Build a tiered target-account list by analyzing Epiphan's best customers (pulled live from HubSpot + customer-orders MCP), deriving an ICP across firmographics/tech/growth, and scoring 100+ net-new lookalike companies 0-100. Gates every surfaced company through Golden Rules + qualify_lead so existing customers/channel/AE-owned accounts are excluded. Use when: 'find companies like [customers]', 'build a lookalike list', 'who else looks like [account]', expanding into a new vertical.",
+    "overlap_candidates": [
+      "territory-planning-optimizer",
+      "gtm-pricing-skill",
+      "intent-signal-aggregator-skill"
+    ],
+    "missing_tool_refs": [
+      "mcp__claude_ai_Epiphan_Ai__hubspot_search_companies",
+      "qualify_lead",
+      "mcp__claude_ai_Apollo_io__apollo_mixed_companies_search",
+      "mcp__claude_ai_Clay__find-and-enrich-company"
+    ],
+    "self_healing_gap": "No failure definition, no retry/degrade ladder, no run log. Only the outcome sidecar (432-441). Calls no tools, so nothing observable can fail \u2014 real gap is it never verifies data existence before producing a report.",
+    "one_improvement": {
+      "change": "Wire in live MCP data sourcing (HubSpot seeds + Apollo/Clay expansion) and add Golden Rules + qualify_lead gate",
+      "expected_impact": "Turns a static template into a real list producer and prevents surfacing existing customers/AE-owned accounts as new prospects",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "linkedin-sales-navigator-alt-skill",
+    "path": "active/linkedin-sales-navigator-alt-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 2,
+      "tool_integration": 1,
+      "output_contract": 2,
+      "failure_handling": 1,
+      "maintainability": 1
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "lines 301-306 `**Email Discovery Methods**: 1. **Pattern Matching** ... 2. **Hunter.io / RocketReach** ... 4. **Domain Search**: Try common patterns` and line 307 `**Phone Number Sources**: ... ZoomInfo / Apollo (paid tools)`",
+        "line_ref": "300-317",
+        "issue": "Zero live MCP tools; relies on manual email-pattern guessing and generic third-party tools where Epiphan-native Apollo/Clay MCP + hubspot_search_contacts exist. No qualify_lead, no Golden Rules, no suppression gate on a list-producing outbound skill.",
+        "fix": "Rebuild around apollo_contacts_search / Clay + hubspot_search_contacts; gate every prospect through qualify_lead + Golden Rules + suppression."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "line 30 `This skill only works with publicly available information and respects LinkedIn's Terms of Service` with no CRM dedupe anywhere in 472 lines",
+        "line_ref": "30, 79-91",
+        "issue": "Produces prospect lists and 'likely email addresses' with no HubSpot dedupe \u2014 will surface existing customers/AE-owned contacts as net-new. Contradicts CLAUDE.md Golden Rules.",
+        "fix": "Add mandatory HubSpot dedupe + Golden Rules gate before any prospect is listed."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "line 14 `Output: Prioritized prospect list with contact details, personalization notes, and segmented campaign strategies`",
+        "line_ref": "14, 94-427",
+        "issue": "Output is a ~330-line Markdown template with placeholder tables; no concrete artifact written and no Gmail draft-first staging despite outbound intent.",
+        "fix": "Define a real deliverable and draft-first staging (or hand to sequence-load-skill)."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "high",
+        "evidence": "472 lines; lines 343-373 campaign templates, 376-393 `Research Notes / Seasonal Factors`, 429-437 `Best Practices`",
+        "line_ref": "94-459",
+        "issue": "Longest of the six (472 lines), nearly all static template + generic best-practices prose with no references/ progressive disclosure.",
+        "fix": "Collapse to a lean workflow (ICP -> MCP search -> qualify -> output); move template/examples to references/."
+      },
+      {
+        "dimension": "trigger_quality",
+        "severity": "high",
+        "evidence": "line 3 `Build targeted prospect lists by analyzing LinkedIn profiles ... tracks job changes for warm outreach`",
+        "line_ref": "3, 441-447",
+        "issue": "Heavy collision: 'find [title] at [company]' (line 13) overlaps contact-hunter's 'Find the VP of Sales at [Company]'; job-change tracking overlaps intent-signal-aggregator. Name references Sales Navigator, a tool it can't access, inflating scope.",
+        "fix": "Narrow to job-change/warm-lead detection and cross-reference contact-hunter for point lookups; or merge."
+      }
+    ],
+    "rewritten_description": "Detect warm outbound timing by surfacing recent job-changers, promotions, and new-in-role decision-makers at target accounts, enriched via Apollo/Clay MCP and deduped against HubSpot. Gates every prospect through Golden Rules + qualify_lead + suppression before listing. Use when: 'who recently moved into [role]', 'find new-in-role champions at [accounts]', 'warm leads from job changes'. For point contact lookups use contact-hunter-skill instead.",
+    "overlap_candidates": [
+      "contact-hunter-skill",
+      "lookalike-customer-finder-skill",
+      "intent-signal-aggregator-skill",
+      "champion-identifier-skill"
+    ],
+    "missing_tool_refs": [
+      "mcp__claude_ai_Apollo_io__apollo_contacts_search",
+      "mcp__claude_ai_Epiphan_Ai__hubspot_search_contacts",
+      "qualify_lead",
+      "mcp__claude_ai_Clay__find-and-enrich-contacts-at-company",
+      "mcp__claude_ai_Gmail__create_draft"
+    ],
+    "self_healing_gap": "No failure definition, no retry->degrade->alert->halt ladder, no run log. Only the outcome sidecar (463-470). Calls no tools, so no observable failure surface; no verification a prospect exists before emitting a 'likely email'.",
+    "one_improvement": {
+      "change": "Replace manual pattern-guessing with Apollo/Clay MCP + HubSpot dedupe/qualify_lead gate, and narrow the trigger to job-change detection",
+      "expected_impact": "Eliminates policy-risky email guessing and the largest trigger collision in the prospecting cluster; produces qualified, deduped output",
+      "effort": "L"
+    }
+  },
+  {
+    "skill": "champion-identifier-skill",
+    "path": "active/champion-identifier-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 2,
+      "output_contract": 3,
+      "failure_handling": 2,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "line 3 `Analyze LinkedIn profiles in target accounts to identify potential internal champions` \u2014 no MCP tool referenced anywhere in 242 lines",
+        "line_ref": "1-242",
+        "issue": "Invokes zero live tools. Champion scoring, org chart, and 'Account Mapping (DMU)' (152-159) produced from inference alone \u2014 no hubspot_search_contacts for real contacts/owners, no qualify_lead for ATL/BTL, no Apollo/Clay to confirm titles. Candidates and scores are effectively fabricated.",
+        "fix": "Pull real account contacts via hubspot_search_contacts + Apollo; derive ATL/BTL/influence from qualify_lead."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "line 227 `5. Document champion interactions in CRM` (prose, not a tool call)",
+        "line_ref": "225-229",
+        "issue": "CRM documentation is a manual suggestion, not wired to a HubSpot write/note. ATL/BTL implied by 'Start at Director/VP level' (225) but never gated through canonical qualify_lead / ATL-BTL logic.",
+        "fix": "Add qualify_lead ATL/BTL gate on candidates; optionally a HubSpot note write for the chosen champion."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "low",
+        "evidence": "line 15 `Output: Ranked champion candidates with scores (0-60), outreach templates, org chart, and multi-threading strategy`",
+        "line_ref": "15, 61-190",
+        "issue": "Format is well-specified (cards, DMU table, coverage map) but no delivery mechanism \u2014 outreach templates (100-110) are terminal text, not staged as Gmail drafts per draft-first workflow.",
+        "fix": "Stage outreach templates as Gmail drafts via create_draft for top 1-2 candidates."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "lines 233-240 outcome sidecar with `\"atl_count\":[n]`",
+        "line_ref": "231-240",
+        "issue": "Sidecar tracks atl_count implying ATL classification is expected, but body never defines how ATL is determined nor what to do when all candidates score <30. No retry/degrade/run-log.",
+        "fix": "Define 'no champion found' degrade path; source atl_count from qualify_lead."
+      },
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "line 13 `**Trigger:** \"Find potential champions at [Company]\" or \"Who should I connect with at [Company] to champion our tool?\"`",
+        "line_ref": "13",
+        "issue": "Specific, mostly collision-free, but 'who should I connect with at [Company]' brushes contact-hunter/linkedin-alt point-lookup phrasing.",
+        "fix": "Emphasize the champion/advocacy angle to disambiguate."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "linkedin-sales-navigator-alt-skill",
+      "contact-hunter-skill",
+      "meddic-call-prep-auto-skill"
+    ],
+    "missing_tool_refs": [
+      "mcp__claude_ai_Epiphan_Ai__hubspot_search_contacts",
+      "qualify_lead",
+      "mcp__claude_ai_Apollo_io__apollo_contacts_search",
+      "mcp__claude_ai_Gmail__create_draft"
+    ],
+    "self_healing_gap": "Outcome sidecar present (partial/error) but no failure definition, no retry->degrade->alert->halt ladder, no run log to ~/.claude/skill-runs/champion-identifier.jsonl. No handling for 'no candidate above threshold'.",
+    "one_improvement": {
+      "change": "Ground champion candidates in real HubSpot/Apollo contact data and derive ATL/BTL via qualify_lead instead of free-form 0-60 scoring",
+      "expected_impact": "Stops fabricating people and scores; ties influence/ATL to canonical logic so recommendations are actionable",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "intent-signal-aggregator-skill",
+    "path": "active/intent-signal-aggregator-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 3,
+      "output_contract": 3,
+      "failure_handling": 2,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "line 37 `Check HubSpot via mcp__claude_ai_Epiphan_Ai__hubspot_search_companies or ...hubspot_search_contacts before including any account` \u2014 signal sources unnamed",
+        "line_ref": "37, 59-79",
+        "issue": "Golden Rules + suppression correctly gate through HubSpot MCP, but the actual signal SOURCING (job postings, funding, leadership \u2014 59-79) invokes no tool. Apollo has apollo_organizations_job_postings + apollo_organizations_enrich; instead signals are described abstractly so 'Signals Detected' (98-112) would be invented.",
+        "fix": "Wire detection to apollo_organizations_job_postings + apollo_organizations_enrich (and Clay track-event) so evidence is real."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "line 32 `hubspot_owner_id IN [82625923 (Lex), 423155215 (Ron), 190030668 (Phil)]`",
+        "line_ref": "32",
+        "issue": "Owner IDs hardcoded inline rather than declared once \u2014 same triplet in contact-hunter (line 37) and CLAUDE.md. Drift risk. Also no qualify_lead final dedupe before an account is marked hot.",
+        "fix": "Reference a single shared owner-ID source; add qualify_lead as final gate."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "line 15 `Output: Prioritized intent signal report with hot accounts` and line 134 `## Weekly Digest`",
+        "line_ref": "15, 82-146",
+        "issue": "Report format defined but delivery is not \u2014 no Slack DM / Gmail draft / file for the weekly digest, no handoff to a dial-list/sequence skill for hot accounts. Terminal Markdown only.",
+        "fix": "Define delivery (Slack digest or hand hot accounts to sdr-dial-lists / contact-hunter); draft-first any outreach."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "lines 152-159 outcome sidecar with signal_types breakdown",
+        "line_ref": "150-159",
+        "issue": "Sidecar is only failure signal; no behavior when a source returns nothing/errors, no run log. 'partial' (159) not mapped to specific source failures.",
+        "fix": "Add per-source degrade ('funding empty -> proceed with hiring, flag partial') and run-log append."
+      },
+      {
+        "dimension": "maintainability",
+        "severity": "low",
+        "evidence": "line 123 `| Funding | 15 | 3-5 days | 18% |` win-rate table with hardcoded benchmarks",
+        "line_ref": "122-130",
+        "issue": "Signal win-rate benchmarks are hardcoded illustrative numbers that read as real and will drift/mislead. 161 lines otherwise lean.",
+        "fix": "Mark benchmarks illustrative or source from outcome data."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "linkedin-sales-navigator-alt-skill",
+      "lookalike-customer-finder-skill",
+      "weak-signal-synthesizer"
+    ],
+    "missing_tool_refs": [
+      "mcp__claude_ai_Apollo_io__apollo_organizations_job_postings",
+      "mcp__claude_ai_Apollo_io__apollo_organizations_enrich",
+      "qualify_lead"
+    ],
+    "self_healing_gap": "Strong on gates (Golden Rules + Suppression) but no failure definition per signal source, no retry->degrade->alert->halt ladder, no run log to ~/.claude/skill-runs/intent-signal-aggregator.jsonl. Sidecar status is the only observability.",
+    "one_improvement": {
+      "change": "Wire intent signals to apollo_organizations_job_postings + apollo_organizations_enrich so 'Signals Detected' is real evidence, not narrated",
+      "expected_impact": "Converts a well-gated but hollow report into a genuine live intent feed; keeps the strong Golden Rules gate it already has",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "greenfield-pearl-tracker-skill",
+    "path": "active/greenfield-pearl-tracker-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 4,
+      "output_contract": 4,
+      "failure_handling": 3,
+      "maintainability": 5
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "line 61 `There is no \"fly-kit\" doc page ... Ground hard specs via search_product_knowledge; frame the fly-kit story, don't cite a spec sheet` and line 56 `Pearl Mini \u2014 portable switcher ... EC20 \u2014 PTZ, direct-to-CMS`",
+        "line_ref": "56-62",
+        "issue": "Product-fit map states specs (Pearl Mini 'portable switcher', EC20 'PTZ, direct-to-CMS, no operator', Pearl Nano 'PoE+') from memory. It correctly instructs grounding via search_product_knowledge for hard specs, but the inline spec claims themselves violate house rule 1 and could be cited before the tool runs.",
+        "fix": "Convert product-fit lines to positioning labels only; make search_product_knowledge a required call before any spec appears in output."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "line 71 `## Guardrail \u2014 internal only ... Output is internal ... buyer-facing copy stays clean`",
+        "line_ref": "70-72",
+        "issue": "No brand voice gate (get_writing_style / check_my_copy) \u2014 acceptable because output is explicitly internal-only, but if a row's 'Next action' text is reused buyer-facing there's no gate. Scoped-OK gap, noted not heavily penalized.",
+        "fix": "Add a one-line note: any copy promoted buyer-facing must pass check_my_copy."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "lines 17-19 collaborator_owner_id Edgar `93367782` / Vasil `93782443` / Nyasha `94135434` and repEmails at line 32",
+        "line_ref": "17-19, 32",
+        "issue": "SDR owner IDs and rep emails hardcoded in two places (quick_start 17-19 and How-to-run 25-33). Roster drift (per project memory: Edgar on HOLD, Vasil ramping caveats) means these go stale in-file.",
+        "fix": "Declare the cohort roster once (config.json exists) and reference it, rather than repeating IDs."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "success_criteria line 75 `Data pulled LIVE (HubSpot deals via collaborator_owner_id + Clari call summaries) \u2014 no invented signals`",
+        "line_ref": "17-36, 75",
+        "issue": "Sources deals via hubspot_search_deals but does not run qualify_lead / Golden Rules on surfaced accounts. Lower risk (internal tracker of existing SDR-owned deals, not net-new outreach), but customer/channel status isn't checked.",
+        "fix": "Optional: note surfaced accounts inherit their deal's qualification; no new-contact gate needed for internal tracker."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "config.json present (824 bytes) but SKILL.md body has no sidecar block and success_criteria ends at line 80",
+        "line_ref": "74-80",
+        "issue": "Unlike the other five, NO outcome-sidecar emission in the body and no run log \u2014 so this live-data-driven skill produces zero analytics/observability. No defined behavior when Clari/HubSpot returns no calls for a rep.",
+        "fix": "Add the standard outcome-sidecar emission + 'rep has no calls in window -> skip rep, note in output' degrade path."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "intent-signal-aggregator-skill",
+      "he-dial-queue-skill"
+    ],
+    "missing_tool_refs": [
+      "search_product_knowledge (referenced but must be enforced pre-output)",
+      "qualify_lead (optional for internal tracker)"
+    ],
+    "self_healing_gap": "Best-structured of the six (progressive disclosure via reference/signals.md, live-data success criteria) but has NO outcome sidecar and NO run log \u2014 the one skill here with zero analytics emission. No degrade path when a rep's Clari window is empty; no retry ladder.",
+    "one_improvement": {
+      "change": "Add the standard outcome-sidecar emission + run log, and convert inline product specs to positioning labels enforced by a required search_product_knowledge call",
+      "expected_impact": "Gives the strongest skill the observability the others already have and closes the from-memory-spec house-rule gap",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "morning-brief-skill",
+    "path": "active/morning-brief-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 3,
+      "tool_integration": 2,
+      "output_contract": 4,
+      "failure_handling": 2,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "med",
+        "evidence": "description: \"Daily briefing with calendar, CRM priority dial list, deal momentum summary, and Gmail drafts for each lead.\"",
+        "line_ref": "3",
+        "issue": "Frontmatter description is a flat capability sentence \u2014 no enumerated trigger phrases, not 'pushy'. Manual triggers ('Show morning brief','Today's dial list') live only in quick_start line 15-16, not in the router-matched description.",
+        "fix": "Move enumerated trigger phrases into description; state de-collision vs sdr-dial-lists/callable-lead-count/business-pulse."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "objectType: \"contacts\" ... sorts:[{propertyName:\"custom_atl_btl_tier\",direction:\"ASCENDING\"}]",
+        "line_ref": "74-96",
+        "issue": "Dial list produced directly from search_crm_objects with hand-rolled ATL/BTL sort on a custom field \u2014 never gates through qualify_lead, the dedupe/ATL-BTL source of truth. Dupe + stale-tier risk.",
+        "fix": "Route Stage-2 candidates through qualify_lead before Stage 3."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "high",
+        "evidence": "\"positive feedback on the Pearl Nano demo.\" ... \"Canvas integration setup\" ... \"the Pearl Mini setup on 3/12\"",
+        "line_ref": "287,291,320",
+        "issue": "Customer-facing Gmail drafts name products from memory \u2014 no search_product_catalog/search_product_knowledge, no brand gate (get_writing_style/check_my_copy).",
+        "fix": "Add spec-verification + check_my_copy pass in Stage 7 before create_draft."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "Stage 11: Emit Outcome Sidecar ... \"status\":\"[success|partial|error]\"",
+        "line_ref": "465-472",
+        "issue": "Sidecar carries status enum but no per-stage partial/error definition, no retry/skip/alert ladder, no run log.",
+        "fix": "Add failure matrix (Supabase/Calendar/Clari down -> degrade+flag); log to ~/.claude/skill-runs/morning-brief.jsonl."
+      }
+    ],
+    "rewritten_description": "Tim's daily BDR morning brief (M\u2013F 7:30 AM ET). Trigger: 'show morning brief','today's dial list','morning brief', or scheduled run. Pulls today's Google Calendar, a qualify_lead-gated ATL-first dial list from HubSpot (portal 21530819), deal-momentum scores, last-7-day Clari summaries, and creates a draft-only Gmail per lead; filters Supabase cooldown + HubSpot suppression. Emits single-page HTML brief. Consumes callable-lead-count inventory; does NOT re-run sdr-dial-list sourcing or business-pulse firm-wide reporting.",
+    "overlap_candidates": [
+      "sdr-dial-lists",
+      "callable-lead-count-skill",
+      "business-pulse-skill",
+      "deal-momentum-analyzer-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead",
+      "search_product_catalog",
+      "get_writing_style",
+      "check_my_copy"
+    ],
+    "self_healing_gap": "Has success|partial|error sidecar (465-472) but no per-stage failure definition, no retry->degrade->alert->halt ladder, no run log to ~/.claude/skill-runs/morning-brief.jsonl. Dead Clari/Supabase/Calendar dependency has undefined behavior.",
+    "one_improvement": {
+      "change": "Insert qualify_lead dedupe/ATL gate between Stage 2 and 3, and add product-spec + brand check before Gmail draft creation.",
+      "expected_impact": "Eliminates duplicate/stale-tier leads and prevents from-memory product claims in outbound drafts.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "weekly-kpi-report-skill",
+    "path": "active/weekly-kpi-report-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 5,
+      "tool_integration": 5,
+      "output_contract": 5,
+      "failure_handling": 5,
+      "maintainability": 5
+    },
+    "findings": [
+      {
+        "dimension": "trigger_quality",
+        "severity": "low",
+        "evidence": "**Trigger:** \"weekly kpi report\",\"kpi report\",\"weekly report\",\"sdr metrics\",\"team scorecard\",\"how did the team do this week\" ... This task MEASURES the reps; sdr-call-coaching (Fridays 11 AM) COACHES them \u2014 do not duplicate the coaching rubric here.",
+        "line_ref": "3,14",
+        "issue": "Reference implementation: enumerates trigger phrases AND explicitly de-collides with sibling coaching skill.",
+        "fix": "None \u2014 reference implementation."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "NOOKS = READ-ONLY ... Use ONLY: listCalls,getCall,listCallDispositions,listProspects,listUsers,getMe ... HUBSPOT = READ-ONLY for metrics.",
+        "line_ref": "62-64",
+        "issue": "Read/write gates explicit and correctly scoped; qualify_lead/brand/spec gates correctly N/A (measurement pass, no lead list, no customer-facing string).",
+        "fix": "None."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "low",
+        "evidence": "If Slack send fails, still write the HTML + kpi_prev.json ... status = \"success\" if all three reps pulled ... \"partial\" if any source was missing/degraded ... \"error\" only if the report could not be produced at all.",
+        "line_ref": "157,185",
+        "issue": "Defines degrade path, Slack-failure fallback, precise partial/error semantics. Only gap vs full template is no dedicated run log.",
+        "fix": "Optionally add run log; sidecar covers most."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "business-pulse-skill",
+      "sdr-call-coaching",
+      "ramping-rep-tracker",
+      "pipeline-health-analyzer-skill"
+    ],
+    "missing_tool_refs": [],
+    "self_healing_gap": "Near-complete: failure definition (90), degrade-and-ship (33,157), partial/error rules (185), Slack fallback (157), persisted baseline kpi_prev.json. Only missing a dedicated run log to ~/.claude/skill-runs/weekly-kpi-report.jsonl beyond the sidecar.",
+    "one_improvement": {
+      "change": "Add lightweight run-log append to ~/.claude/skill-runs/weekly-kpi-report.jsonl per run.",
+      "expected_impact": "Trendable history of partial/degraded runs beyond single last-outcome sidecar.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "business-pulse-skill",
+    "path": "active/business-pulse-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 4,
+      "output_contract": 3,
+      "failure_handling": 1,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "failure_handling",
+        "severity": "high",
+        "evidence": "success_criteria: \"[ ] Pulled LIVE data via weekly_brief / query_dataset this run \u2014 no stale or fabricated numbers\"",
+        "line_ref": "87-92",
+        "issue": "No failure/partial behavior; if weekly_brief errors/empties there is no degrade path, no alert, and \u2014 unlike its siblings \u2014 NO outcome sidecar at all, so a failed run is invisible to the analytics sweep.",
+        "fix": "Add sidecar (last-outcome-business-pulse.json) + empty-data guard (flag 'no live data', never fabricate)."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "3. **Synthesize** into the output shape below \u2014 never just dump JSON.",
+        "line_ref": "48,52-67",
+        "issue": "Output SHAPE well-specified but no delivery mechanism (no Slack DM/HTML/file) \u2014 renders inline text only, nowhere for a scheduled/standup consumer to receive it.",
+        "fix": "Add explicit delivery target (Slack DM to Tim or saved HTML)."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "weekly_brief({ bdr_owner_ids: [\"93367782\",\"93782443\",\"94135434\"] }) ... (IDs + Nooks mapping live in epiphan-ai-mcp-guide-skill golden defaults.)",
+        "line_ref": "35-40",
+        "issue": "Epiphan-native tools used correctly, but owner IDs inlined here AND said to live in epiphan-ai-mcp-guide-skill \u2014 two drifting sources of truth.",
+        "fix": "Reference golden-defaults IDs by pointer only."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "weekly-kpi-report-skill",
+      "morning-brief-skill",
+      "pipeline-health-analyzer-skill",
+      "sales-revenue-skill"
+    ],
+    "missing_tool_refs": [
+      "(sidecar writer) last-outcome-business-pulse.json"
+    ],
+    "self_healing_gap": "Largest gap of the five: no failure definition, no retry/degrade/alert ladder, no outcome sidecar or run log at all \u2014 a broken weekly_brief pull yields fabrication risk or a silent no-op with zero telemetry.",
+    "one_improvement": {
+      "change": "Add outcome sidecar + empty-data guard (flag 'no live data', never fabricate) and one concrete delivery target.",
+      "expected_impact": "Makes failed/degraded runs observable and gives the skill a headless delivery path like siblings.",
+      "effort": "S"
+    }
+  },
+  {
+    "skill": "hubspot-revops-skill",
+    "path": "active/hubspot-revops-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 3,
+      "output_contract": 3,
+      "failure_handling": 3,
+      "maintainability": 4
+    },
+    "findings": [
+      {
+        "dimension": "tool_integration",
+        "severity": "med",
+        "evidence": "-- Target only AE territories (Lex Evans, Ron Epstein, Phillip Sandler)\n  AND hubspot_owner_id IN (82625923, 423155215, 190030668)",
+        "line_ref": "129-131",
+        "issue": "Golden-Rules SQL re-implements ATL/BTL + AE-owner exclusion in raw SQL rather than gating list-producing UC1 through qualify_lead; also reads as hard-exclude AE-owned, conflicting with CLAUDE.md 2026-03-21 90-day-stale exception.",
+        "fix": "Route UC1/UC2 candidate lists through qualify_lead; keep SQL for aggregates. Update AE clause to 90-day stale-exception logic."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "from hubspot import HubSpot; client = HubSpot(access_token=\"pat-na1-xxxxx\") ... HEADERS = {\"Authorization\": \"Bearer pat-na1-xxxxx\"}",
+        "line_ref": "72-80",
+        "issue": "Leads with generic raw HubSpot SDK/REST + Private App setup when line 41 states access is via Epiphan CRM MCP and no Private App is needed \u2014 Epiphan-native path buried below the generic one.",
+        "fix": "Lead with Epiphan MCP tool path; demote raw SDK/Private App to appendix."
+      },
+      {
+        "dimension": "output_contract",
+        "severity": "med",
+        "evidence": "| 1 | ICP Validation | ... | Segment conversion rates | SQL + Clay |",
+        "line_ref": "88-92",
+        "issue": "Use-case outputs abstract with no concrete delivery artifact (XLSX/HTML/HubSpot property write) named per case.",
+        "fix": "Name a delivery target per UC (e.g. UC2 writes score to HubSpot property; UC5 emits XLSX/HTML forecast)."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "crm-integration-skill",
+      "data-analysis-skill",
+      "sales-revenue-skill",
+      "pipeline-health-analyzer-skill",
+      "deal-momentum-analyzer-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead"
+    ],
+    "self_healing_gap": "Partial: Common Mistakes table with rate-limit/backoff (200-210) and success|partial|error sidecar (236-245), but no explicit retry->degrade->alert->halt ladder for a failed SQL/API run and no run log to ~/.claude/skill-runs/.",
+    "one_improvement": {
+      "change": "Gate list-producing UC1/UC2 through qualify_lead and reconcile the Golden-Rules SQL AE-owner clause with the 90-day stale exception.",
+      "expected_impact": "Removes a drifting second copy of ATL/BTL+AE rules and stops wrongly excluding re-engageable stale AE leads.",
+      "effort": "M"
+    }
+  },
+  {
+    "skill": "portfolio-deal-linker-skill",
+    "path": "active/portfolio-deal-linker-skill/SKILL.md",
+    "scores": {
+      "trigger_quality": 4,
+      "tool_integration": 4,
+      "output_contract": 4,
+      "failure_handling": 3,
+      "maintainability": 3
+    },
+    "findings": [
+      {
+        "dimension": "maintainability",
+        "severity": "med",
+        "evidence": "## Stage 4: Update Portfolio Files (line 130) ... ## Stage 4: Comp Plan Attainment Tracker (line 193)",
+        "line_ref": "130,193",
+        "issue": "Two different stages both numbered 'Stage 4' \u2014 ambiguous step index; can't tell which runs when.",
+        "fix": "Renumber Comp Plan Attainment Tracker to Stage 5 and cascade references."
+      },
+      {
+        "dimension": "tool_integration",
+        "severity": "low",
+        "evidence": "Exclude channel deals (`is_channel = true`) and owned by AE IDs '82625923','423155215','190030668' (Lex Evans, Ron Epstein, Phillip Sandler)",
+        "line_ref": "53",
+        "issue": "Re-hardcodes AE owner-ID exclusion inline (a 4th copy across the catalog) instead of referencing canonical Golden Rules; also reads as hard-exclude, ignoring the 90-day stale exception.",
+        "fix": "Reference CLAUDE.md Golden Rules owner list once; note stale-AE exception."
+      },
+      {
+        "dimension": "failure_handling",
+        "severity": "med",
+        "evidence": "\"status\":\"[success|partial|error]\" ... Use status \"partial\" if some stages failed ... \"error\" only if no output was generated.",
+        "line_ref": "272-281",
+        "issue": "Status defined but no behavior when the incremental mechanism fails \u2014 if last-run.json (line 51) is missing/corrupt the attribution window is undefined; no alert/retry.",
+        "fix": "Define last-run.json recovery (default trailing-24h + flag) and retry/skip for failed hubspot_search_deals; log to ~/.claude/skill-runs/."
+      }
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": [
+      "portfolio-artifact-skill",
+      "deal-momentum-analyzer-skill",
+      "weekly-kpi-report-skill"
+    ],
+    "missing_tool_refs": [
+      "qualify_lead (dedupe when matching attributed contacts)"
+    ],
+    "self_healing_gap": "Has incremental state (last-run.json, 51) and success|partial|error sidecar (272-281), but no recovery when last-run.json is missing/corrupt, no retry->degrade->alert ladder for a failed HubSpot pull, no run log to ~/.claude/skill-runs/portfolio-deal-linker.jsonl.",
+    "one_improvement": {
+      "change": "Renumber the duplicate 'Stage 4' and add last-run.json corruption/missing recovery (default trailing-24h window + flag).",
+      "expected_impact": "Removes step-index ambiguity and prevents an undefined attribution window on first/corrupted runs.",
+      "effort": "S"
+    }
+  }
+]

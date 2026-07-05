@@ -1,0 +1,419 @@
+{
+  "pair_count": {
+    "meddic-call-prep-auto-skill|||sales-call-prep-assistant": 1,
+    "meddic-call-prep-auto-skill|||orlob-discovery-framework-skill": 2,
+    "epiphan-call-playbook|||meddic-call-prep-auto-skill": 1,
+    "epiphan-call-playbook|||orlob-discovery-framework-skill": 2,
+    "epiphan-call-playbook|||sdr-email-sms-playbook-skill": 2,
+    "epiphan-call-playbook|||sales-call-prep-assistant": 1,
+    "epiphan-call-playbook|||sdr-dial-lists": 1,
+    "call-recording-analyzer-skill|||sdr-call-coaching": 2,
+    "meeting-intelligence-system-skill|||sdr-call-coaching": 2,
+    "sdr-call-coaching|||weekly-kpi-report-skill": 2,
+    "call-recording-analyzer-skill|||meeting-intelligence-system-skill": 2,
+    "call-recording-analyzer-skill|||meddic-call-prep-auto-skill": 1,
+    "call-recording-analyzer-skill|||deal-momentum-analyzer-skill": 1,
+    "orlob-discovery-framework-skill|||sales-call-prep-assistant": 1,
+    "orlob-discovery-framework-skill|||sales-methodology-implementer-skill": 1,
+    "meddic-call-prep-auto-skill|||meeting-intelligence-system-skill": 1,
+    "he-dial-queue-skill|||sdr-dial-lists": 2,
+    "callable-lead-count-skill|||sdr-dial-lists": 2,
+    "morning-brief-skill|||sdr-dial-lists": 2,
+    "callable-lead-count-skill|||he-dial-queue-skill": 2,
+    "he-dial-queue-skill|||prospect-enrich-skill": 1,
+    "callable-lead-count-skill|||morning-brief-skill": 2,
+    "ae-handoff-brief-skill|||inbound-lead-qualifier-skill": 1,
+    "callable-lead-count-skill|||inbound-lead-qualifier-skill": 1,
+    "inbound-lead-qualifier-skill|||sales-call-prep-assistant": 1,
+    "ae-handoff-brief-skill|||meddic-call-prep-auto-skill": 1,
+    "ae-handoff-brief-skill|||call-recording-analyzer-skill": 1,
+    "ae-handoff-brief-skill|||deal-momentum-analyzer-skill": 1,
+    "ae-handoff-brief-skill|||post-demo-automation-skill": 1,
+    "phone-verification-waterfall-skill|||prospect-enrich-skill": 2,
+    "prospect-enrich-skill|||prospect-refresh-skill": 2,
+    "callable-lead-count-skill|||prospect-enrich-skill": 1,
+    "prospect-refresh-skill|||prospect-research-to-cadence-skill": 2,
+    "cold-email-sequence-generator-skill|||prospect-refresh-skill": 1,
+    "prospect-refresh-skill|||sequence-load-skill": 2,
+    "prospect-research-to-cadence-skill|||sequence-load-skill": 2,
+    "cold-email-sequence-generator-skill|||prospect-research-to-cadence-skill": 1,
+    "meddic-call-prep-auto-skill|||prospect-research-to-cadence-skill": 1,
+    "prospect-research-to-cadence-skill|||sales-revenue-skill": 1,
+    "crm-integration-skill|||sequence-load-skill": 1,
+    "callable-lead-count-skill|||phone-verification-waterfall-skill": 1,
+    "phone-verification-waterfall-skill|||sdr-dial-lists": 1,
+    "he-dial-queue-skill|||phone-verification-waterfall-skill": 1,
+    "cold-email-sequence-generator-skill|||personalization-at-scale-skill": 2,
+    "personalization-at-scale-skill|||prospect-research-to-cadence-skill": 1,
+    "email-template-generator-skill|||personalization-at-scale-skill": 1,
+    "personalization-at-scale-skill|||social-selling-content-generator-skill": 1,
+    "gtm-brain-skill|||nooks-autopilot": 2,
+    "gtm-brain-skill|||meddic-call-prep-auto-skill": 1,
+    "gtm-brain-skill|||morning-brief-skill": 1,
+    "gtm-pricing-skill|||research-skill": 2,
+    "gtm-pricing-skill|||territory-planning-optimizer": 1,
+    "blue-ocean-strategy-skill|||gtm-pricing-skill": 1,
+    "business-model-canvas-skill|||gtm-pricing-skill": 1,
+    "prospect-research-compiler|||research-skill": 1,
+    "prospect-research-to-cadence-skill|||research-skill": 1,
+    "competitor-content-analyzer|||research-skill": 1,
+    "epiphan-ai-mcp-guide-skill|||hubspot-revops-skill": 1,
+    "crm-integration-skill|||epiphan-ai-mcp-guide-skill": 1,
+    "portfolio-artifact-skill|||weekly-kpi-report-skill": 1,
+    "cost-metering-skill|||portfolio-artifact-skill": 1,
+    "business-pulse-skill|||portfolio-artifact-skill": 1,
+    "executive-dashboard-generator|||portfolio-artifact-skill": 1,
+    "nooks-autopilot|||sequence-load-skill": 1,
+    "nooks-autopilot|||prospect-research-to-cadence-skill": 1,
+    "nooks-autopilot|||sdr-dial-lists": 1,
+    "he-dial-queue-skill|||nooks-autopilot": 1,
+    "challenger-sale-skill|||sales-methodology-implementer-skill": 2,
+    "challenger-sale-skill|||sales-revenue-skill": 2,
+    "challenger-sale-skill|||demo-execution-playbook-skill": 2,
+    "challenger-sale-skill|||never-split-the-difference-skill": 1,
+    "never-split-the-difference-skill|||sales-revenue-skill": 2,
+    "never-split-the-difference-skill|||sales-methodology-implementer-skill": 2,
+    "sales-methodology-implementer-skill|||sales-revenue-skill": 2,
+    "meddic-call-prep-auto-skill|||sales-methodology-implementer-skill": 1,
+    "demo-execution-playbook-skill|||sales-revenue-skill": 2,
+    "meddic-call-prep-auto-skill|||sales-revenue-skill": 1,
+    "cold-email-sequence-generator-skill|||sales-revenue-skill": 1,
+    "demo-execution-playbook-skill|||meddic-call-prep-auto-skill": 1,
+    "ae-handoff-brief-skill|||demo-execution-playbook-skill": 1,
+    "cold-email-sequence-generator-skill|||sdr-email-sms-playbook-skill": 2,
+    "cold-email-sequence-generator-skill|||email-template-generator-skill": 1,
+    "email-template-generator-skill|||sdr-email-sms-playbook-skill": 1,
+    "sdr-email-sms-playbook-skill|||sms-text-optimizer": 1,
+    "content-marketing-skill|||social-selling-content-generator-skill": 2,
+    "linkedin-post-optimizer|||social-selling-content-generator-skill": 1,
+    "social-media-content-repurposer|||social-selling-content-generator-skill": 1,
+    "linkedin-sales-navigator-alt-skill|||social-selling-content-generator-skill": 1,
+    "content-marketing-skill|||webinar-to-content-multiplier": 1,
+    "content-marketing-skill|||social-media-content-repurposer": 1,
+    "content-marketing-skill|||seo-content-optimizer": 1,
+    "content-marketing-skill|||landing-page-copywriter": 1,
+    "batch-send-drafts-skill|||morning-brief-skill": 1,
+    "batch-send-drafts-skill|||sequence-load-skill": 1,
+    "cost-discovery-coach-skill|||orlob-discovery-framework-skill": 1,
+    "cost-discovery-coach-skill|||meddic-call-prep-auto-skill": 1,
+    "cost-discovery-coach-skill|||sales-call-prep-assistant": 1,
+    "cost-discovery-coach-skill|||epiphan-call-playbook": 1,
+    "deal-momentum-analyzer-skill|||pipeline-health-analyzer-skill": 2,
+    "dead-deal-recovery-skill|||deal-momentum-analyzer-skill": 2,
+    "close-plan-generator-skill|||deal-momentum-analyzer-skill": 2,
+    "dead-deal-recovery-skill|||pipeline-health-analyzer-skill": 2,
+    "pipeline-health-analyzer-skill|||sales-forecast-builder": 1,
+    "close-plan-generator-skill|||meddic-call-prep-auto-skill": 1,
+    "ae-handoff-brief-skill|||close-plan-generator-skill": 1,
+    "close-plan-generator-skill|||post-demo-automation-skill": 1,
+    "meddic-call-prep-auto-skill|||post-demo-automation-skill": 1,
+    "deal-momentum-analyzer-skill|||post-demo-automation-skill": 1,
+    "contact-hunter-skill|||linkedin-sales-navigator-alt-skill": 2,
+    "contact-hunter-skill|||phone-verification-waterfall-skill": 1,
+    "contact-hunter-skill|||prospect-enrich-skill": 1,
+    "lookalike-customer-finder-skill|||territory-planning-optimizer": 1,
+    "gtm-pricing-skill|||lookalike-customer-finder-skill": 1,
+    "intent-signal-aggregator-skill|||lookalike-customer-finder-skill": 2,
+    "linkedin-sales-navigator-alt-skill|||lookalike-customer-finder-skill": 1,
+    "intent-signal-aggregator-skill|||linkedin-sales-navigator-alt-skill": 2,
+    "champion-identifier-skill|||linkedin-sales-navigator-alt-skill": 2,
+    "champion-identifier-skill|||contact-hunter-skill": 1,
+    "champion-identifier-skill|||meddic-call-prep-auto-skill": 1,
+    "intent-signal-aggregator-skill|||weak-signal-synthesizer": 1,
+    "greenfield-pearl-tracker-skill|||intent-signal-aggregator-skill": 1,
+    "greenfield-pearl-tracker-skill|||he-dial-queue-skill": 1,
+    "business-pulse-skill|||morning-brief-skill": 2,
+    "deal-momentum-analyzer-skill|||morning-brief-skill": 1,
+    "business-pulse-skill|||weekly-kpi-report-skill": 2,
+    "ramping-rep-tracker|||weekly-kpi-report-skill": 1,
+    "pipeline-health-analyzer-skill|||weekly-kpi-report-skill": 1,
+    "business-pulse-skill|||pipeline-health-analyzer-skill": 1,
+    "business-pulse-skill|||sales-revenue-skill": 1,
+    "crm-integration-skill|||hubspot-revops-skill": 1,
+    "data-analysis-skill|||hubspot-revops-skill": 1,
+    "hubspot-revops-skill|||sales-revenue-skill": 1,
+    "hubspot-revops-skill|||pipeline-health-analyzer-skill": 1,
+    "deal-momentum-analyzer-skill|||hubspot-revops-skill": 1,
+    "portfolio-artifact-skill|||portfolio-deal-linker-skill": 1,
+    "deal-momentum-analyzer-skill|||portfolio-deal-linker-skill": 1,
+    "portfolio-deal-linker-skill|||weekly-kpi-report-skill": 1
+  },
+  "direct_edges": {
+    "meddic-call-prep-auto-skill": [
+      "epiphan-call-playbook",
+      "orlob-discovery-framework-skill",
+      "sales-call-prep-assistant"
+    ],
+    "epiphan-call-playbook": [
+      "orlob-discovery-framework-skill",
+      "sales-call-prep-assistant",
+      "sdr-dial-lists",
+      "sdr-email-sms-playbook-skill"
+    ],
+    "sdr-call-coaching": [
+      "call-recording-analyzer-skill",
+      "meeting-intelligence-system-skill",
+      "weekly-kpi-report-skill"
+    ],
+    "call-recording-analyzer-skill": [
+      "deal-momentum-analyzer-skill",
+      "meddic-call-prep-auto-skill",
+      "meeting-intelligence-system-skill",
+      "sdr-call-coaching"
+    ],
+    "orlob-discovery-framework-skill": [
+      "epiphan-call-playbook",
+      "meddic-call-prep-auto-skill",
+      "sales-call-prep-assistant",
+      "sales-methodology-implementer-skill"
+    ],
+    "meeting-intelligence-system-skill": [
+      "call-recording-analyzer-skill",
+      "meddic-call-prep-auto-skill",
+      "sdr-call-coaching"
+    ],
+    "sdr-dial-lists": [
+      "callable-lead-count-skill",
+      "he-dial-queue-skill",
+      "morning-brief-skill"
+    ],
+    "he-dial-queue-skill": [
+      "callable-lead-count-skill",
+      "prospect-enrich-skill",
+      "sdr-dial-lists"
+    ],
+    "callable-lead-count-skill": [
+      "he-dial-queue-skill",
+      "morning-brief-skill",
+      "sdr-dial-lists"
+    ],
+    "inbound-lead-qualifier-skill": [
+      "ae-handoff-brief-skill",
+      "callable-lead-count-skill",
+      "sales-call-prep-assistant"
+    ],
+    "ae-handoff-brief-skill": [
+      "call-recording-analyzer-skill",
+      "deal-momentum-analyzer-skill",
+      "meddic-call-prep-auto-skill",
+      "post-demo-automation-skill"
+    ],
+    "prospect-enrich-skill": [
+      "callable-lead-count-skill",
+      "phone-verification-waterfall-skill",
+      "prospect-refresh-skill"
+    ],
+    "prospect-refresh-skill": [
+      "cold-email-sequence-generator-skill",
+      "prospect-enrich-skill",
+      "prospect-research-to-cadence-skill",
+      "sequence-load-skill"
+    ],
+    "prospect-research-to-cadence-skill": [
+      "cold-email-sequence-generator-skill",
+      "meddic-call-prep-auto-skill",
+      "prospect-refresh-skill",
+      "sales-revenue-skill",
+      "sequence-load-skill"
+    ],
+    "sequence-load-skill": [
+      "crm-integration-skill",
+      "prospect-refresh-skill",
+      "prospect-research-to-cadence-skill"
+    ],
+    "phone-verification-waterfall-skill": [
+      "callable-lead-count-skill",
+      "he-dial-queue-skill",
+      "prospect-enrich-skill",
+      "sdr-dial-lists"
+    ],
+    "personalization-at-scale-skill": [
+      "cold-email-sequence-generator-skill",
+      "email-template-generator-skill",
+      "prospect-research-to-cadence-skill",
+      "social-selling-content-generator-skill"
+    ],
+    "gtm-brain-skill": [
+      "meddic-call-prep-auto-skill",
+      "morning-brief-skill",
+      "nooks-autopilot"
+    ],
+    "gtm-pricing-skill": [
+      "blue-ocean-strategy-skill",
+      "business-model-canvas-skill",
+      "research-skill",
+      "territory-planning-optimizer"
+    ],
+    "research-skill": [
+      "competitor-content-analyzer",
+      "gtm-pricing-skill",
+      "prospect-research-compiler",
+      "prospect-research-to-cadence-skill"
+    ],
+    "epiphan-ai-mcp-guide-skill": [
+      "crm-integration-skill",
+      "hubspot-revops-skill"
+    ],
+    "portfolio-artifact-skill": [
+      "business-pulse-skill",
+      "cost-metering-skill",
+      "executive-dashboard-generator",
+      "weekly-kpi-report-skill"
+    ],
+    "nooks-autopilot": [
+      "gtm-brain-skill",
+      "he-dial-queue-skill",
+      "prospect-research-to-cadence-skill",
+      "sdr-dial-lists",
+      "sequence-load-skill"
+    ],
+    "challenger-sale-skill": [
+      "demo-execution-playbook-skill",
+      "sales-methodology-implementer-skill",
+      "sales-revenue-skill"
+    ],
+    "never-split-the-difference-skill": [
+      "challenger-sale-skill",
+      "sales-methodology-implementer-skill",
+      "sales-revenue-skill"
+    ],
+    "sales-methodology-implementer-skill": [
+      "challenger-sale-skill",
+      "meddic-call-prep-auto-skill",
+      "never-split-the-difference-skill",
+      "sales-revenue-skill"
+    ],
+    "sales-revenue-skill": [
+      "challenger-sale-skill",
+      "cold-email-sequence-generator-skill",
+      "demo-execution-playbook-skill",
+      "meddic-call-prep-auto-skill",
+      "never-split-the-difference-skill",
+      "sales-methodology-implementer-skill"
+    ],
+    "demo-execution-playbook-skill": [
+      "ae-handoff-brief-skill",
+      "challenger-sale-skill",
+      "meddic-call-prep-auto-skill",
+      "sales-revenue-skill"
+    ],
+    "cold-email-sequence-generator-skill": [
+      "email-template-generator-skill",
+      "personalization-at-scale-skill",
+      "sdr-email-sms-playbook-skill"
+    ],
+    "sdr-email-sms-playbook-skill": [
+      "cold-email-sequence-generator-skill",
+      "email-template-generator-skill",
+      "epiphan-call-playbook",
+      "sms-text-optimizer"
+    ],
+    "social-selling-content-generator-skill": [
+      "content-marketing-skill",
+      "linkedin-post-optimizer",
+      "linkedin-sales-navigator-alt-skill",
+      "social-media-content-repurposer"
+    ],
+    "content-marketing-skill": [
+      "landing-page-copywriter",
+      "seo-content-optimizer",
+      "social-media-content-repurposer",
+      "social-selling-content-generator-skill",
+      "webinar-to-content-multiplier"
+    ],
+    "batch-send-drafts-skill": [
+      "morning-brief-skill",
+      "sequence-load-skill"
+    ],
+    "cost-discovery-coach-skill": [
+      "epiphan-call-playbook",
+      "meddic-call-prep-auto-skill",
+      "orlob-discovery-framework-skill",
+      "sales-call-prep-assistant"
+    ],
+    "deal-momentum-analyzer-skill": [
+      "close-plan-generator-skill",
+      "dead-deal-recovery-skill",
+      "pipeline-health-analyzer-skill"
+    ],
+    "pipeline-health-analyzer-skill": [
+      "dead-deal-recovery-skill",
+      "deal-momentum-analyzer-skill",
+      "sales-forecast-builder"
+    ],
+    "dead-deal-recovery-skill": [
+      "deal-momentum-analyzer-skill",
+      "pipeline-health-analyzer-skill"
+    ],
+    "close-plan-generator-skill": [
+      "ae-handoff-brief-skill",
+      "deal-momentum-analyzer-skill",
+      "meddic-call-prep-auto-skill"
+    ],
+    "post-demo-automation-skill": [
+      "close-plan-generator-skill",
+      "deal-momentum-analyzer-skill",
+      "meddic-call-prep-auto-skill"
+    ],
+    "contact-hunter-skill": [
+      "linkedin-sales-navigator-alt-skill",
+      "phone-verification-waterfall-skill",
+      "prospect-enrich-skill"
+    ],
+    "lookalike-customer-finder-skill": [
+      "gtm-pricing-skill",
+      "intent-signal-aggregator-skill",
+      "territory-planning-optimizer"
+    ],
+    "linkedin-sales-navigator-alt-skill": [
+      "champion-identifier-skill",
+      "contact-hunter-skill",
+      "intent-signal-aggregator-skill",
+      "lookalike-customer-finder-skill"
+    ],
+    "champion-identifier-skill": [
+      "contact-hunter-skill",
+      "linkedin-sales-navigator-alt-skill",
+      "meddic-call-prep-auto-skill"
+    ],
+    "intent-signal-aggregator-skill": [
+      "linkedin-sales-navigator-alt-skill",
+      "lookalike-customer-finder-skill",
+      "weak-signal-synthesizer"
+    ],
+    "greenfield-pearl-tracker-skill": [
+      "he-dial-queue-skill",
+      "intent-signal-aggregator-skill"
+    ],
+    "morning-brief-skill": [
+      "business-pulse-skill",
+      "callable-lead-count-skill",
+      "deal-momentum-analyzer-skill",
+      "sdr-dial-lists"
+    ],
+    "weekly-kpi-report-skill": [
+      "business-pulse-skill",
+      "pipeline-health-analyzer-skill",
+      "ramping-rep-tracker",
+      "sdr-call-coaching"
+    ],
+    "business-pulse-skill": [
+      "morning-brief-skill",
+      "pipeline-health-analyzer-skill",
+      "sales-revenue-skill",
+      "weekly-kpi-report-skill"
+    ],
+    "hubspot-revops-skill": [
+      "crm-integration-skill",
+      "data-analysis-skill",
+      "deal-momentum-analyzer-skill",
+      "pipeline-health-analyzer-skill",
+      "sales-revenue-skill"
+    ],
+    "portfolio-deal-linker-skill": [
+      "deal-momentum-analyzer-skill",
+      "portfolio-artifact-skill",
+      "weekly-kpi-report-skill"
+    ]
+  }
+}

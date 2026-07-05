@@ -1,0 +1,97 @@
+[
+  {
+    "skill": "meddic-call-prep-auto",
+    "path": "active/meddic-call-prep-auto-skill/SKILL.md",
+    "scores": {"trigger_quality": 5, "tool_integration": 3, "output_contract": 3, "failure_handling": 4, "maintainability": 3},
+    "findings": [
+      {"dimension": "tool_integration", "severity": "high", "evidence": "| Vertical | Primary Competitor | Displacement Angle |\n| Higher Ed | Extron SMP (discontinued) | Extron EOL -> Pearl migration path |", "line_ref": "118-124", "issue": "Competitive displacement angles + competitor EOL status stated from a hardcoded memory table with no live verification. House rule 1 requires competitor/product specs via search_product_catalog/search_product_knowledge; sibling epiphan-call-playbook gates the same 'Extron SMP discontinued' claim behind live verification.", "fix": "Add a spec-verification gate requiring search_product_catalog/search_product_knowledge before emitting any displacement claim; treat the table as fallback only."},
+      {"dimension": "tool_integration", "severity": "med", "evidence": "**Golden Rules check:** If ANY of these are true, STOP and skip this prep: - lifecyclestage = 'customer' ... - hubspot_owner_id IN ('82625923', '423155215', '190030668')", "line_ref": "132-136", "issue": "Golden-Rules + ATL/BTL dedupe done inline via raw HubSpot/CRM reads rather than gating through qualify_lead, the declared dedupe/ATL-BTL source of truth (house rule 3).", "fix": "Route suppression + ATL/BTL classification through qualify_lead where available; keep inline logic as fallback."},
+      {"dimension": "output_contract", "severity": "med", "evidence": "## Stage 3: Output Format ... CALL PREP: [Company Name]", "line_ref": "179-254", "issue": "Output is a terminal ASCII brief with no defined delivery mechanism (no Gmail draft/Slack/saved HTML). No durable artifact survives the chat session.", "fix": "Add optional Gmail draft (create_draft to tkipper@epiphan.com) or saved HTML."},
+      {"dimension": "maintainability", "severity": "low", "evidence": "- **NEVER an EB:** Warehouse Manager, Network Manager, Systems Administrator, AV Technician ...", "line_ref": "152-155", "issue": "Full ATL/BTL keyword lists + owner IDs duplicated verbatim from CLAUDE.md; drift risk when canonical classification changes.", "fix": "Reference CLAUDE.md ATL/BTL section (as line 151 already does) instead of re-inlining the lists."}
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": ["sales-call-prep-assistant", "orlob-discovery-framework", "epiphan-call-playbook"],
+    "missing_tool_refs": ["search_product_catalog", "search_product_knowledge", "qualify_lead"],
+    "self_healing_gap": "Has outcome sidecar with success/partial/error (lines 287-296) and a Golden-Rules STOP, but no retry->degrade->alert->halt ladder for failed MCP pulls (Clari/Apollo down) and no run log to ~/.claude/skill-runs/{skill}.jsonl.",
+    "one_improvement": {"change": "Add a spec/competitor live-verification gate before emitting the displacement table, and route suppression through qualify_lead.", "expected_impact": "Eliminates confidently-wrong competitor claims in briefs and aligns dedupe with the single source of truth.", "effort": "S"}
+  },
+  {
+    "skill": "epiphan-call-playbook",
+    "path": "active/epiphan-call-playbook/SKILL.md",
+    "scores": {"trigger_quality": 5, "tool_integration": 5, "output_contract": 4, "failure_handling": 3, "maintainability": 5},
+    "findings": [
+      {"dimension": "tool_integration", "severity": "low", "evidence": "Before quoting any spec, price, or competitive claim that is NOT in the \"Verified spec bank\" below, look it up live (search_product_catalog for SKUs/pricing/short names, search_product_knowledge for technical/integration).", "line_ref": "33", "issue": "Model implementation of house rule 1 — spec-accuracy gate is explicit and non-negotiable. Cited as the reference standard other skills should copy.", "fix": "None — propagate this exact gate to meddic-call-prep-auto and call-recording-analyzer."},
+      {"dimension": "output_contract", "severity": "med", "evidence": "AE discovery call (Phil or Lex): https://meetings.hubspot.com/timkipper/discovery-call", "line_ref": "162", "issue": "Reference skill (no outbound artifact expected), but booking link and rep roster (Tim/Edgar/Vasil) hardcoded in prose; drift risk when roster/link changes.", "fix": "Declare booking link + current roster once in a config block (or reference sdr-call-coaching Identifiers); note Vasil 'ramping' caveat has a known late-July 2026 removal date."},
+      {"dimension": "failure_handling", "severity": "low", "evidence": "# Epiphan Call Playbook (v1, 2026-06-17)", "line_ref": "28", "issue": "Static reference skill emits no outcome sidecar and no run log, so its usage/health is invisible to the analytics pipeline the other call skills feed.", "fix": "Optional: emit a lightweight sidecar when loaded as a coaching reference, for parity with orlob-discovery-framework."}
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": ["orlob-discovery-framework", "sdr-email-sms-playbook", "sales-call-prep-assistant", "sdr-dial-lists"],
+    "missing_tool_refs": [],
+    "self_healing_gap": "No failure definition, no retry->degrade->alert ladder, no run log — acceptable for a static reference, but no 'spec bank last-verified' staleness check, so the 2026-06-17 verified facts silently age.",
+    "one_improvement": {"change": "Add a 'spec bank verified on DATE — re-verify if older than N days' staleness marker plus a config block for the booking link/roster.", "expected_impact": "Prevents the verified spec bank from silently going stale and centralizes drift-prone roster/link.", "effort": "S"}
+  },
+  {
+    "skill": "sdr-call-coaching",
+    "path": "active/sdr-call-coaching/SKILL.md",
+    "scores": {"trigger_quality": 5, "tool_integration": 5, "output_contract": 5, "failure_handling": 4, "maintainability": 4},
+    "findings": [
+      {"dimension": "tool_integration", "severity": "low", "evidence": "TECHNICAL-ACCURACY GATE (non-negotiable): ... verify it live via Epiphan AI search_product_catalog ... or search_product_knowledge ... Never assert a spec from memory in a coaching note.", "line_ref": "47", "issue": "Correctly enforces house rule 1 for spec judgments; uses Epiphan-native Nooks/Clari read tools with explicit read-only gates. No deduction.", "fix": "None."},
+      {"dimension": "output_contract", "severity": "low", "evidence": "2. Gmail DRAFT to tkipper@epiphan.com (create_draft) ... Draft only — Tim decides what to share. 3. Slack DM to Tim U0AAJUZH2PK (slack_send_message)", "line_ref": "139-140", "issue": "Exemplary draft-first + privacy-scoped delivery (HTML + Gmail draft + Slack DM, nothing sent to SDRs/prospects). No deduction.", "fix": "None."},
+      {"dimension": "failure_handling", "severity": "med", "evidence": "- Recording URL present but transcript/audio unfetchable -> score from the Clari summary + disposition context, label \"scored from summary (audio unavailable).\"", "line_ref": "149", "issue": "Rich edge-case handling and week-over-week state (sdr_coaching_prev.json), but no outcome sidecar/run log to ~/.claude/skill-runs, so a failed Friday run is invisible to the health pipeline.", "fix": "Emit an outcome sidecar capturing calls_scored, spec_fixes_flagged, and run status."},
+      {"dimension": "maintainability", "severity": "low", "evidence": "Known disposition ids: Connected 14a81f79-...; Follow Up 6155389e-...; Meeting Booked c1210028-...", "line_ref": "64", "issue": "Owner IDs, Nooks user IDs, disposition UUIDs hardcoded; at least declared once in the Identifiers block (lines 32-36) but duplicated across sibling skills. Name also lacks -skill suffix (known exception).", "fix": "Keep the single Identifiers block; consider a shared team-roster reference across coaching + dial-list skills."}
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": ["call-recording-analyzer", "meeting-intelligence-system-skill", "weekly-kpi-report-skill"],
+    "missing_tool_refs": [],
+    "self_healing_gap": "Strong on degrade paths (audio-unavailable -> score from summary; zero-connects -> ramping card; holiday -> short DM + skip draft) but lacks a machine-readable run log/outcome sidecar and any alert when an SDR's pull returns zero due to an API error vs a genuine no-connect week.",
+    "one_improvement": {"change": "Distinguish 'zero coachable calls (API error)' from 'zero coachable calls (genuine)' and alert Tim on the former, plus emit a run-status sidecar.", "expected_impact": "Prevents a silent Nooks/Clari outage from being mislabeled as a ramping/holiday week.", "effort": "M"}
+  },
+  {
+    "skill": "call-recording-analyzer",
+    "path": "active/call-recording-analyzer-skill/SKILL.md",
+    "scores": {"trigger_quality": 5, "tool_integration": 2, "output_contract": 2, "failure_handling": 4, "maintainability": 3},
+    "findings": [
+      {"dimension": "tool_integration", "severity": "high", "evidence": "### Competitive Intelligence Extraction\nScan for: Extron, Blackmagic, Crestron, vMix, Matrox, Teradek, Kaltura, Panopto, YuJa, Echo360", "line_ref": "170-171", "issue": "Competitor mentions 'mapped to battlecard responses' (line 35) with no live spec/competitor verification gate — violates house rule 1. Unlike sdr-call-coaching, scores MEDDIC and emits competitor rebuttals without calling search_product_catalog/knowledge, so it can score a rep 'correct' against a stale battlecard.", "fix": "Add the non-negotiable technical-accuracy gate before mapping any competitor mention to a battlecard response."},
+      {"dimension": "tool_integration", "severity": "med", "evidence": "| clari_get_call_summary | AI summary, key moments, action items, sentiment |", "line_ref": "66", "issue": "Uses clari_get_call_summary, but sibling sdr-call-coaching (same Clari surface, verified 2026-06-17) uses clari_get_call with includeTranscript=true — possible stale/nonexistent tool name and inconsistent Clari access pattern.", "fix": "Reconcile against the live Clari tool set; standardize on clari_search_calls + clari_get_call."},
+      {"dimension": "tool_integration", "severity": "med", "evidence": "**Pre-Flight Golden Rules Check:** - If contact.lifecyclestage = 'customer' -> Skip. - If hubspot_owner_id IN ('82625923', '423155215', '190030668') AND Tim is NOT collaborator -> Skip.", "line_ref": "80-83", "issue": "Suppression/ownership check via raw HubSpot reads, not gated through qualify_lead (house rule 3).", "fix": "Route the pre-flight check through qualify_lead where available."},
+      {"dimension": "output_contract", "severity": "high", "evidence": "## Stage 4: Output Format ... CALL SCORECARD: [Company Name]", "line_ref": "173-198", "issue": "Deps list gmail_create_draft (line 219) but output contract defines only a terminal ASCII scorecard — no delivery wired (no draft/Slack/HTML); 'feed to downstream skills' (202-213) has no concrete write.", "fix": "Define the actual delivery (Gmail draft or saved HTML) and specify how the deal-momentum-analyzer/morning-brief feed is written."},
+      {"dimension": "maintainability", "severity": "low", "evidence": "- If hubspot_owner_id IN ('82625923', '423155215', '190030668')", "line_ref": "82", "issue": "AE owner IDs hardcoded inline (drift risk vs CLAUDE.md canonical list).", "fix": "Reference CLAUDE.md Golden Rules rather than re-listing the IDs."}
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": ["sdr-call-coaching", "meeting-intelligence-system-skill", "meddic-call-prep-auto", "deal-momentum-analyzer-skill"],
+    "missing_tool_refs": ["search_product_catalog", "search_product_knowledge", "qualify_lead", "create_draft"],
+    "self_healing_gap": "Has outcome sidecar with partial/error (229-236) but no retry->degrade->alert->halt ladder for Clari misses, no run log to ~/.claude/skill-runs, and no defined behavior when the downstream feed (deal-momentum-analyzer) target is unavailable.",
+    "one_improvement": {"change": "Add the spec-verification gate before battlecard mapping and wire a concrete delivery (Gmail draft/saved HTML) + downstream feed write.", "expected_impact": "Stops stale-battlecard scoring and turns the scorecard into a durable artifact instead of ephemeral terminal text.", "effort": "M"}
+  },
+  {
+    "skill": "orlob-discovery-framework",
+    "path": "active/orlob-discovery-framework-skill/SKILL.md",
+    "scores": {"trigger_quality": 4, "tool_integration": 4, "output_contract": 4, "failure_handling": 4, "maintainability": 5},
+    "findings": [
+      {"dimension": "maintainability", "severity": "low", "evidence": "Per-vertical calibrated questions and root causes: reference/epiphan-root-causes.md.", "line_ref": "194", "issue": "Exemplary progressive disclosure — heavy per-vertical detail pushed to a reference file, core skill stays scannable at ~283 lines. No deduction.", "fix": "None."},
+      {"dimension": "trigger_quality", "severity": "med", "evidence": "Use when: discovery framework, orlob discovery, discovery questions, cause analysis, business problem discovery, how to run discovery.", "line_ref": "3", "issue": "Solid trigger phrases but scope overlaps heavily with epiphan-call-playbook Section 3 (also owns 'the live Orlob 5-step discovery flow'); 'discovery questions' could match either.", "fix": "Add a one-line 'this is the framework reference; epiphan-call-playbook applies it live on a call' disambiguation to the description."},
+      {"dimension": "tool_integration", "severity": "low", "evidence": "For deeper Economic Buyer validation and ATL/BTL classification, hand off to meddic-call-prep-auto-skill.", "line_ref": "211-213", "issue": "Correctly hands ATL/BTL off rather than re-implementing it; knowledge skill so no qualify_lead/spec gate expected. Noted as correct scoping.", "fix": "None."}
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": ["epiphan-call-playbook", "meddic-call-prep-auto", "sales-call-prep-assistant", "sales-methodology-implementer-skill"],
+    "missing_tool_refs": [],
+    "self_healing_gap": "Emits a proper outcome sidecar with success/partial/error and a bash heredoc write (254-283); as a guidance skill reasonably lacks a retry/alert ladder and run log, but partial-status semantics (score <=2 -> partial) are well defined.",
+    "one_improvement": {"change": "Add a one-line scope-boundary note vs epiphan-call-playbook to the description.", "expected_impact": "Reduces trigger ambiguity between the framework reference and the live-call playbook.", "effort": "S"}
+  },
+  {
+    "skill": "meeting-intelligence-system",
+    "path": "active/meeting-intelligence-system-skill/SKILL.md",
+    "scores": {"trigger_quality": 2, "tool_integration": 1, "output_contract": 2, "failure_handling": 2, "maintainability": 3},
+    "findings": [
+      {"dimension": "trigger_quality", "severity": "high", "evidence": "description: Analyze meeting transcripts to extract decisions, action items, blockers, sentiment, and generate follow-up emails. Use when user provides meeting notes, transcripts, or recordings and needs structured summaries or action tracking.", "line_ref": "3", "issue": "Generic, non-'pushy' description — no enumerated trigger phrases, collides directly with call-recording-analyzer ('review transcript', 'analyze call') and sdr-call-coaching. Nothing scopes it to Epiphan, so it will fire on sales-call transcripts the Epiphan-native skills should own.", "fix": "See rewritten_description; scope to internal/non-sales meetings and enumerate trigger phrases."},
+      {"dimension": "tool_integration", "severity": "high", "evidence": "7. **Generate Follow-Up Communications** - Create meeting minutes/summary - Draft action item tracking email", "line_ref": "79-82", "issue": "Zero MCP tools referenced anywhere — no Clari for transcripts, no HubSpot, and 'draft email' with no create_draft (generic manual step where the Gmail tool exists). Violates house rule 4 (Epiphan-native preferred) and draft-first; every input/output is manual copy-paste.", "fix": "Wire create_draft for the follow-up email and, for sales meetings, defer transcript pulls to clari_get_call."},
+      {"dimension": "output_contract", "severity": "high", "evidence": "## Follow-Up Email Draft\nSubject: Action Items from [Meeting Title] - [Date]\nHi team,", "line_ref": "122-142", "issue": "Produces a team/customer-facing email body inline in markdown with no delivery mechanism (no Gmail draft) and no brand-voice gate (house rule 2: get_writing_style/check_my_copy) before emitting the string.", "fix": "Emit via create_draft (draft-first); run any external-facing send through the Epiphan brand-voice check first."},
+      {"dimension": "failure_handling", "severity": "med", "evidence": "Use status \"partial\" if some stages failed but results were produced. Use \"error\" only if no output was generated.", "line_ref": "176", "issue": "Only a sidecar exists; no definition of a failed run (transcript unparseable, no owners identifiable), no retry/skip/alert behavior, no run log.", "fix": "Define partial/failed conditions and a skip/alert path."}
+    ],
+    "rewritten_description": "Structure and summarize INTERNAL meeting transcripts (standups, planning, retros, 1:1s) into decisions, owned action items, blockers, sentiment, and a draft follow-up email. Use when: 'analyze this meeting', 'extract action items', 'meeting minutes', 'summarize this standup/planning/retro', 'follow-up email from these notes'. NOT for sales/prospect calls — route those to call-recording-analyzer (Clari scorecard) or sdr-call-coaching. Wires create_draft for the follow-up email; runs customer-facing copy through the Epiphan brand-voice gate before send.",
+    "overlap_candidates": ["call-recording-analyzer", "sdr-call-coaching", "meddic-call-prep-auto"],
+    "missing_tool_refs": ["create_draft", "clari_get_call", "get_writing_style", "check_my_copy"],
+    "self_healing_gap": "Only an outcome sidecar (169-176); no failure definition, no retry->degrade->alert->halt ladder, no run log to ~/.claude/skill-runs, and no delivery mechanism to fail on since output is terminal markdown.",
+    "one_improvement": {"change": "Re-scope the description to internal-only meetings with enumerated triggers and wire create_draft + brand gate for the follow-up email.", "expected_impact": "Removes trigger collisions with the two Epiphan sales-call skills and makes the follow-up email a real, on-brand draft instead of pasted text.", "effort": "M"}
+  }
+]

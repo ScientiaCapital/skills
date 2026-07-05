@@ -1,0 +1,1243 @@
+{
+  "total": 87,
+  "skills": [
+    {
+      "name": "ae-handoff-brief-skill",
+      "path": "active/ae-handoff-brief-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Auto-generate structured AE handoff briefs when Tim books a demo for Phil Sandler or Lex Evans. Packages MEDDIC scorecard, competitive intel, discovery notes, call transcripts, and next-best-action into a single document the AE can scan in 60 seconds. Increases demo-to-close rate by ensuring AEs walk in fully prepared. Use when: 'handoff to Phil', 'handoff to Lex', 'book demo for AE', 'ae brief', 'hand off [company]', 'prep handoff', 'pass to AE', 'transition [company] to Phil', 'transition [company] to Lex', 'demo booked for [company]'.",
+      "line_count": 215,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "agent-capability-matrix-skill",
+      "path": "active/agent-capability-matrix-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Map task types to the best agent, skill, model, and fallback. Route any task to the right tool. Use when: which agent, route task, agent for this, best agent, capability matrix.",
+      "line_count": 165,
+      "bundled_resources": [
+        "config.json",
+        "reference/matrix-table.md",
+        "reference/selection-flowchart.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "agent-teams-skill",
+      "path": "active/agent-teams-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Orchestrate teams of parallel Claude Code sessions working on the same codebase. Handles task decomposition, agent coordination, context isolation, and merge strategies. Builds on worktree-manager for infrastructure.",
+      "line_count": 415,
+      "bundled_resources": [
+        "config.json",
+        "reference/best-practices-full.md",
+        "reference/context-engineering.md",
+        "reference/prompt-templates.md",
+        "reference/workflows-detailed.md",
+        "reference/worktree-integration.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "api-design-skill",
+      "path": "active/api-design-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "REST/GraphQL API design patterns - resource naming, HTTP methods, error handling, pagination, versioning. Use when: design API, REST endpoints, GraphQL schema, error responses, pagination, rate limiting, API documentation.",
+      "line_count": 415,
+      "bundled_resources": [
+        "config.json",
+        "reference/checklist.md",
+        "reference/documentation.md",
+        "reference/error-handling.md",
+        "reference/filtering-sorting.md",
+        "reference/pagination.md",
+        "reference/rate-limiting.md",
+        "reference/rest-patterns.md",
+        "reference/versioning.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "api-testing-skill",
+      "path": "active/api-testing-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Tool-based API testing with Postman and Bruno - collections, environments, test assertions, CI integration. Use when: postman, bruno, API testing, test API endpoint, API collection, HTTP request testing, endpoint validation.",
+      "line_count": 273,
+      "bundled_resources": [
+        "config.json",
+        "reference/bruno-patterns.md",
+        "reference/ci-integration.md",
+        "reference/data-management.md",
+        "reference/postman-patterns.md",
+        "reference/test-design.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "batch-send-drafts-skill",
+      "path": "active/batch-send-drafts-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Review and batch-send staged Gmail BDR outreach drafts. Lists all queued drafts, shows a prioritized review table (recipient / subject / vertical), and generates one-click Gmail send links so Tim can flush the outreach queue in under 2 minutes. Trigger: send staged drafts, flush draft queue, batch send drafts, review my drafts, what drafts do I have.",
+      "line_count": 167,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "blue-ocean-strategy-skill",
+      "path": "active/blue-ocean-strategy-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Blue Ocean Strategy analysis using ERRC framework and Strategy Canvas. Use when: blue ocean, market differentiation, competitive strategy, value innovation, ERRC framework, strategy canvas, new market space, competitive analysis.",
+      "line_count": 417,
+      "bundled_resources": [
+        "config.json",
+        "reference/example-session.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "business-model-canvas-skill",
+      "path": "active/business-model-canvas-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Business model design using Alexander Osterwalder's 9 building blocks. Use when: business model, canvas, value proposition, customer segments, revenue streams, startup planning, analyze business, business strategy.",
+      "line_count": 479,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "business-pulse-skill",
+      "path": "active/business-pulse-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Live firm-wide sales pulse from the Epiphan CRM \u2014 revenue vs pace, pipeline by stage, won/lost, BDR activity, with coaching takeaways. Use when: business pulse, how are we doing, pipeline health, revenue pace, weekly numbers, standup brief, are we on track, sales snapshot.",
+      "line_count": 93,
+      "bundled_resources": [
+        "config.json",
+        "reference/example-session.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "call-recording-analyzer-skill",
+      "path": "active/call-recording-analyzer-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Gong/Chorus-style call transcript analysis using Clari data. Scores calls against MEDDIC framework, flags missed discovery questions, surfaces competitor mentions, extracts action items, and identifies coaching moments. Feeds deal-momentum-analyzer and morning-brief with call quality signals. Use when: 'analyze call', 'call review', 'score my call', 'what did I miss', 'call coaching', 'review transcript', 'Clari analysis', 'call scorecard', 'how did my call go', 'review my last call with [company]'.",
+      "line_count": 237,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "callable-lead-count-skill",
+      "path": "active/callable-lead-count-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Daily callable lead inventory with ATL/BTL breakdown. Health check for 50+ daily dials.",
+      "line_count": 341,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "challenger-sale-skill",
+      "path": "active/challenger-sale-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "The Challenger Sale methodology \u2014 Teach-Tailor-Take Control framework for B2B sales. Use when: challenger sale, commercial teaching, constructive tension, reframe, teach tailor take control, insight selling, commercial insight, challenger rep.",
+      "line_count": 298,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "champion-identifier-skill",
+      "path": "active/champion-identifier-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Analyze LinkedIn profiles in target accounts to identify potential internal champions. Evaluates role, career path, mutual connections, interests, and suggests personalization approach. Use when you need to find who will champion your solution internally.",
+      "line_count": 243,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "close-plan-generator-skill",
+      "path": "active/close-plan-generator-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Generates comprehensive close plans for Epiphan Video deals. Maps stakeholders to MEDDIC roles, identifies decision processes, assesses competitive position, and creates actionable next-best-actions with a close confidence score (0-100). Outputs ASCII report + optional mutual action plan for prospect outreach.",
+      "line_count": 377,
+      "bundled_resources": [
+        "config.json",
+        "reference/output-format.md",
+        "reference/tips-best-practices.md",
+        "reference/troubleshooting-faq.md",
+        "reference/usage-examples.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "cold-email-sequence-generator-skill",
+      "path": "active/cold-email-sequence-generator-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Generate personalized cold email sequences (7-14 emails) with A/B test subject lines, follow-up timing recommendations, and integrated social proof. Creates multi-touch campaigns optimized for response rates. Use when users need outbound email campaigns, sales sequences, or lead generation emails.",
+      "line_count": 275,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "contact-hunter-skill",
+      "path": "active/contact-hunter-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Find and enrich contact information for specific people or companies using HubSpot, Apollo, and Clay MCP tools. Applies Golden Rules qualification gates before returning results. Use when you need to find contacts at target accounts with verified emails and phones for BDR outreach.",
+      "line_count": 370,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "content-marketing-skill",
+      "path": "active/content-marketing-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "B2B content marketing - thought leadership, SEO, LinkedIn, blog posts, case studies, and video scripts. Use when creating content strategy, writing posts, or building demand gen assets.",
+      "line_count": 401,
+      "bundled_resources": [
+        "config.json",
+        "reference/blog-templates.md",
+        "reference/linkedin-templates.md",
+        "reference/seo-checklist.md",
+        "reference/video-scripts.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "cost-discovery-coach-skill",
+      "path": "active/cost-discovery-coach-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Turns the cost-of-inaction calculator's inputs into tight, killer discovery questions per vertical \u2014 JTBD job, Never-Split calibrated question, Challenger insight. Use when: discovery questions, how to ask, calculator discovery, cost of inaction questions, SDR call prep, what do I ask, qualify the room count, broadcast/live-events/corporate discovery.",
+      "line_count": 71,
+      "bundled_resources": [
+        "config.json",
+        "reference/discovery-by-input.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "cost-metering-skill",
+      "path": "active/cost-metering-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Track and manage API costs across sessions. Budget alerts, model routing for cost optimization, spend reports. Use when: cost check, budget status, how much spent, optimize costs, cost tracking.",
+      "line_count": 169,
+      "bundled_resources": [
+        "config.json",
+        "reference/budget-templates.md",
+        "reference/cost-tracking-guide.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "crm-integration-skill",
+      "path": "active/crm-integration-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "CRM integration patterns for Close CRM, HubSpot, and Salesforce. Use when: Close CRM, HubSpot, Salesforce, CRM API, lead sync, deal sync, activity logging, CRM webhook, pipeline automation, contact enrichment.",
+      "line_count": 412,
+      "bundled_resources": [
+        "config.json",
+        "reference/clay-enrichment-patterns.md",
+        "reference/close-crm-examples.md",
+        "reference/close-deep-dive.md",
+        "reference/webhook-handlers.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "data-analysis-skill",
+      "path": "active/data-analysis-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Executive-grade data analysis with pandas/polars and McKinsey-quality visualizations. Use when analyzing data, building dashboards, creating investor presentations, or calculating SaaS metrics.",
+      "line_count": 488,
+      "bundled_resources": [
+        "config.json",
+        "reference/chart-gallery.md",
+        "reference/data-wrangling.md",
+        "reference/saas-metrics.md",
+        "reference/streamlit-patterns.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "dead-deal-recovery-skill",
+      "path": "active/dead-deal-recovery-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Identify stalled and dying deals, run structured disqualification or recovery workflows, and clean pipeline of dead weight. Finds deals stuck 60+ days, with no champion, no activity, or overdue close dates and prescribes either a final re-engagement campaign or formal disqualification. Keeps pipeline honest and frees mental bandwidth. Use when: 'dead deals', 'stalled deals', 'clean pipeline', 'pipeline cleanup', 'disqualify deals', 'deal graveyard', 'zombie deals', 'which deals should I kill', 'pipeline hygiene', 'deal recovery', 'win back', 'lost deal review', 'close out stale deals'.",
+      "line_count": 243,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "deal-momentum-analyzer-skill",
+      "path": "active/deal-momentum-analyzer-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Deal health scoring + next-best-action for every open deal. Pulls HubSpot deals, CRM activity history, and engagement data to flag stalled deals, predict close probability, and recommend specific recovery actions. Runs daily at 7am CST or on-demand. Use when: 'deal health', 'pipeline review', 'stalled deals', 'deal momentum', 'which deals need attention', 'morning brief', 'SOD'.",
+      "line_count": 344,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "debug-like-expert-skill",
+      "path": "active/debug-like-expert-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Deep analysis debugging mode for complex issues. Activates methodical investigation protocol with evidence gathering, hypothesis testing, and rigorous verification. Use when: standard troubleshooting fails, systematic root cause analysis needed, complex bugs, mysterious errors.",
+      "line_count": 321,
+      "bundled_resources": [
+        "config.json",
+        "reference/debugging-mindset.md",
+        "reference/hypothesis-testing.md",
+        "reference/investigation-techniques.md",
+        "reference/verification-patterns.md",
+        "reference/when-to-research.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "demo-execution-playbook-skill",
+      "path": "active/demo-execution-playbook-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Structured demo execution framework for AEs to drive deals forward with vertical-specific flows, live coaching, and post-demo scoring",
+      "line_count": 383,
+      "bundled_resources": [
+        "config.json",
+        "reference/competitive-displacement-scripts.md",
+        "reference/objection-handling-matrix.md",
+        "reference/vertical-demo-flows.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "docker-compose-skill",
+      "path": "active/docker-compose-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Local dev environments with Docker Compose - multi-service setups, databases, hot reload, debugging. Use when: docker compose, local dev, postgres container, redis local, dev environment.",
+      "line_count": 179,
+      "bundled_resources": [
+        "config.json",
+        "reference/compose-patterns.md",
+        "reference/dev-workflow.md",
+        "reference/networking.md",
+        "reference/services.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "email-template-generator-skill",
+      "path": "active/email-template-generator-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Generate professional email templates for various business scenarios including sales outreach, customer support, internal communications, follow-ups, and apologies. Creates personalized, tone-appropriate templates with subject lines and formatting. Use when users need to write business emails, cold outreach, or professional communications.",
+      "line_count": 178,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "epiphan-ai-mcp-guide-skill",
+      "path": "active/epiphan-ai-mcp-guide-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Reference for Epiphan AI MCP tools \u2014 CRM, sales intel, device analytics, lead qualification, marketing (Semrush/GA4/GAds).",
+      "line_count": 382,
+      "bundled_resources": [
+        "config.json",
+        "reference/tool-examples.md",
+        "reference/verticals.md",
+        "resources/crm-tools.md",
+        "resources/enrichment-tools.md",
+        "resources/marketing-tools.md",
+        "resources/product-tools.md",
+        "resources/sales-tools.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "epiphan-call-playbook",
+      "path": "active/epiphan-call-playbook/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Canonical Epiphan cold + discovery CALL playbook for Tim's BDR/SDR team (Tim, Edgar, Vasil). The phone-call sibling to sdr-email-sms-playbook. Covers the opener, the live discovery flow (Orlob-applied per vertical), objection handling, spec-accurate talking points by product, and the close/next-step. Every spec verified via Epiphan AI search_product_catalog / search_product_knowledge. Use when prepping or making cold calls, writing or reviewing call scripts, coaching reps, building dial-list talking points, or when the sdr-call-coaching task needs the canonical \"what good sounds like\" reference. Trigger on: call script, cold call, discovery call, opener, objection handling, talking points, what to say on the phone, dial list talking points, SDR coaching reference, Pearl/EC20/Nexus pitch on a call.",
+      "line_count": 232,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "extension-authoring-skill",
+      "path": "active/extension-authoring-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Comprehensive guide for authoring Claude Code extensions including skills (SKILL.md), hooks, slash commands, and subagents. Use when: creating skills, writing hooks, making slash commands, building subagents, learning Claude Code extensions.",
+      "line_count": 303,
+      "bundled_resources": [
+        "config.json",
+        "reference/commands.md",
+        "reference/hooks.md",
+        "reference/skills.md",
+        "reference/subagents.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "frontend-ui-skill",
+      "path": "active/frontend-ui-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Enterprise SaaS frontend \u2014 Tailwind v4, shadcn/ui, Next.js App Router or Vite SPA, accessibility, responsive design, component patterns. Use when: React component, Next.js page, frontend UI, Tailwind, shadcn, accessibility, a11y, responsive design, form validation, server component, client component, design system, dark mode, SaaS UI, dashboard, pricing page, enterprise UI, data table, landing page, Vite, React Router, SPA, single page app.",
+      "line_count": 370,
+      "bundled_resources": [
+        "config.json",
+        "reference/accessibility-checklist.md",
+        "reference/component-patterns.md",
+        "reference/form-patterns.md",
+        "reference/performance-optimization.md",
+        "reference/saas-dashboard.md",
+        "reference/saas-pricing-checkout.md",
+        "reference/shadcn-setup.md",
+        "reference/spa-routing.md",
+        "reference/tailwind-v4-setup.md",
+        "reference/vite-react-setup.md",
+        "templates/component-with-variants.tsx",
+        "templates/dashboard-layout.tsx",
+        "templates/form-with-server-action.tsx",
+        "templates/nextjs-tailwind-v4-setup.css",
+        "templates/pricing-page.tsx",
+        "templates/spa-app-layout.tsx",
+        "templates/vite-react-config.ts"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "git-workflow-skill",
+      "path": "active/git-workflow-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Git workflow patterns - conventional commits, branch naming, PR templates, merge strategies. Use when: commit, PR, branch naming, git workflow, conventional commits, semantic versioning.",
+      "line_count": 496,
+      "bundled_resources": [
+        "config.json",
+        "reference/commit-examples.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "greenfield-pearl-tracker-skill",
+      "path": "active/greenfield-pearl-tracker-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Find and track greenfield Pearl/EC20 opportunities from live CRM + Clari signals \u2014 new-build, remote production, and post-NAB broadcast fly-kit / automation. Use when: greenfield opportunities, new build, fly kit, remote production, broadcast deals, mobilization, find new logos, NAB signals, who's building.",
+      "line_count": 81,
+      "bundled_resources": [
+        "config.json",
+        "reference/signals.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "groq-inference-skill",
+      "path": "active/groq-inference-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Fast LLM inference with Groq API - chat, vision, audio STT/TTS, tool use. Use when: groq, fast inference, low latency, whisper, PlayAI TTS, Llama, vision API, tool calling, voice agents, real-time AI.",
+      "line_count": 299,
+      "bundled_resources": [
+        "config.json",
+        "reference/audio-speech.md",
+        "reference/cost-optimization.md",
+        "reference/models-catalog.md",
+        "reference/reasoning-models.md",
+        "reference/tool-use-patterns.md",
+        "reference/vision-multimodal.md",
+        "templates/groq-client.py"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "gtm-brain-skill",
+      "path": "active/gtm-brain-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Relationship intelligence graph for GTM work. Reads and writes Contact/Account/Deal/Outcome nodes in Neo4j Aura. Syncs contacts/accounts from HubSpot MCP and imports call outcomes from Nooks MCP automatically. Surfaces what messaging, sequences, and personas worked across verticals. Use when: relationship graph, gtm brain, log outcome, what worked with, account map, sync from hubspot, import nooks calls, contact history, sequence performance.",
+      "line_count": 358,
+      "bundled_resources": [
+        "config.json",
+        "reference/cypher-patterns.md",
+        "reference/graph-schema.md",
+        "scripts/__pycache__/neo4j.cpython-312.pyc",
+        "scripts/brain.py"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "gtm-pricing-skill",
+      "path": "active/gtm-pricing-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "B2B go-to-market strategy, pricing models, ICP development, positioning, and competitive intelligence. Use when planning GTM strategy, setting pricing, defining ICP, or evaluating opportunities.",
+      "line_count": 344,
+      "bundled_resources": [
+        "config.json",
+        "reference/gtm.md",
+        "reference/opportunity.md",
+        "reference/pricing.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "he-dial-queue-skill",
+      "path": "active/he-dial-queue-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Use when building or refreshing the Higher-Ed SDR pod's daily dial queue, tiering callable leads into Tier 1/2/3, preparing a Nooks dial list from HubSpot, or checking Higher-Ed callable dial inventory.",
+      "line_count": 144,
+      "bundled_resources": [
+        "config.json",
+        "reference/verticals/higher_ed.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "heal-skill",
+      "path": "active/heal-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Use when skills fail to activate, produce errors, need structural validation, or the library needs a health audit. Diagnose YAML frontmatter, XML sections, config.json schema, file structure, and cross-skill dependencies.",
+      "line_count": 254,
+      "bundled_resources": [
+        "config.json",
+        "reference/known-issues.md",
+        "reference/validation-rules.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "hubspot-revops-skill",
+      "path": "active/hubspot-revops-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Use when building revenue analytics on HubSpot \u2014 SQL warehouse queries,",
+      "line_count": 246,
+      "bundled_resources": [
+        "config.json",
+        "reference/api-guide.md",
+        "reference/architecture.md",
+        "reference/enrichment-pipelines.md",
+        "reference/sql-analytics.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "ibkr-api-skill",
+      "path": "active/ibkr-api-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Interactive Brokers (IBKR) API integration for portfolio management, account queries, and trade execution across multiple account types (Roth IRA, personal brokerage, business). Use when the user mentions IBKR, Interactive Brokers, IB Gateway, TWS API, Client Portal API, brokerage API, portfolio positions, account balances, placing trades via API, multi-account trading, IRA trading restrictions, or wants to build/debug code that connects to Interactive Brokers. Also triggers on \"ib_async\", \"ib_insync\", \"ibapi\", or any IBKR endpoint reference.",
+      "line_count": 215,
+      "bundled_resources": [
+        "config.json",
+        "reference/connection-patterns.md",
+        "reference/multi-broker-strategy.md",
+        "reference/trading-patterns.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "inbound-lead-qualifier-skill",
+      "path": "active/inbound-lead-qualifier-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Analyze inbound leads (form fills, demo requests) and score based on ICP fit, intent, and urgency. Auto-generates qualification questions, routes to right rep, and suggests personalized first touch. Use for qualifying and routing inbound leads at scale.",
+      "line_count": 276,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "intent-signal-aggregator-skill",
+      "path": "active/intent-signal-aggregator-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Monitor buyer intent signals across the web including job postings, tech changes, funding rounds, and leadership changes. Alerts when prospects show buying signals and prioritizes \"hot\" accounts. Use for timing-based prospecting.",
+      "line_count": 162,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "jobs-to-be-done-skill",
+      "path": "active/jobs-to-be-done-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Jobs To Be Done (JTBD) analysis using Christensen and Ulwick's Outcome-Driven Innovation. Use when: jobs to be done, JTBD, customer jobs, outcome driven innovation, ODI, forces of progress, job map, switch interview, hiring firing, outcome statements, why customers switch.",
+      "line_count": 431,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "langgraph-agents-skill",
+      "path": "active/langgraph-agents-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Multi-agent systems with LangGraph - supervisor/swarm/handoff/router patterns, state coordination, Deep Agents, guardrails, testing, observability, deployment. Use when building multi-agent workflows, coordinating agents, or need cost-optimized orchestration. Uses Claude, DeepSeek, Gemini (no OpenAI).",
+      "line_count": 261,
+      "bundled_resources": [
+        "config.json",
+        "reference/base-agent-architecture.md",
+        "reference/context-engineering.md",
+        "reference/cost-optimization.md",
+        "reference/deep-agents.md",
+        "reference/deployment-patterns.md",
+        "reference/functional-api.md",
+        "reference/guardrails.md",
+        "reference/mcp-integration.md",
+        "reference/observability.md",
+        "reference/orchestration-patterns.md",
+        "reference/state-schemas.md",
+        "reference/streaming-patterns.md",
+        "reference/testing-patterns.md",
+        "reference/tools-organization.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "linkedin-sales-navigator-alt-skill",
+      "path": "active/linkedin-sales-navigator-alt-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Build targeted prospect lists by analyzing LinkedIn profiles, extracting job titles, companies, locations, and recent activity. Identifies decision-makers, tracks job changes for warm outreach, and enriches contact data. Use when users need to find prospects, build lead lists, or track decision-maker movements.",
+      "line_count": 473,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "lookalike-customer-finder-skill",
+      "path": "active/lookalike-customer-finder-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Input your best customers and find 100+ companies that match the profile. Uses firmographic data, tech stack, growth signals, and similarity scoring to identify ideal prospects. Use when building target account lists or expanding to new markets.",
+      "line_count": 444,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "meddic-call-prep-auto-skill",
+      "path": "active/meddic-call-prep-auto-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Auto-generate MEDDIC-structured call prep scripts from prospect context. Pulls HubSpot deal + contact data, Apollo enrichment, CRM activity history, and calendar context to build a complete demo/discovery brief in 60 seconds. Use when: 'call prep', 'prep me for', 'demo prep', 'discovery prep', 'meddic brief', 'prep [company]', 'get me ready for [company]'.",
+      "line_count": 297,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "meeting-intelligence-system-skill",
+      "path": "active/meeting-intelligence-system-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Analyze meeting transcripts to extract decisions, action items, blockers, sentiment, and generate follow-up emails. Use when user provides meeting notes, transcripts, or recordings and needs structured summaries or action tracking.",
+      "line_count": 179,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "miro-skill",
+      "path": "active/miro-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Use when creating visual boards, strategy canvases, architecture diagrams, or sprint boards in Miro. Triggers on \"miro board\", \"visual diagram\", \"strategy canvas\", \"whiteboard\".",
+      "line_count": 197,
+      "bundled_resources": [
+        "config.json",
+        "reference/board-workflows.md",
+        "reference/mcp-tools-reference.md",
+        "reference/prompt-templates.md",
+        "reference/setup-guide.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "morning-brief-skill",
+      "path": "active/morning-brief-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Daily briefing with calendar, CRM priority dial list, deal momentum summary, and Gmail drafts for each lead.",
+      "line_count": 491,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "never-split-the-difference-skill",
+      "path": "active/never-split-the-difference-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Chris Voss FBI negotiation framework \u2014 tactical empathy, calibrated questions, mirroring, labeling, and the Ackerman model for B2B sales and deal negotiation. Use when: negotiation, tactical empathy, calibrated questions, mirroring, labeling, accusation audit, ackerman, deal negotiation, price negotiation, never split the difference.",
+      "line_count": 388,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "nooks-autopilot",
+      "path": "active/nooks-autopilot/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Autonomous BDR/SDR team that hunts leads to a warm reply. Sources from HubSpot [AI] lists, qualifies (Golden Rules + Suppression + ATL/BTL + persona match), routes each lead to the right Nooks sequence by play, and (shadow-first) enrolls + monitors for replies to hand Tim a warm contact. Use when: 'run nooks autopilot', 'autonomous BDR run', 'hunt leads', 'enroll into nooks sequences', 'shadow enroll', 'autopilot dry run', 'check for replies / warm handoffs'.",
+      "line_count": 326,
+      "bundled_resources": [
+        "config.json",
+        "reference/Higher_Ed_Survey_Prospect_Signals_Report.md",
+        "reference/dial-list-report-template.html",
+        "reference/nooks-battlecards-v3.md",
+        "reference/nooks-personas-v2.md",
+        "reference/nooks-signals-v1.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "openrouter-skill",
+      "path": "active/openrouter-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Orchestrate Chinese LLMs (DeepSeek, Qwen, Yi, Moonshot) through OpenRouter API with LangChain. Use when: openrouter, chinese llm, deepseek, qwen, moonshot, yi model, model routing, auto router, llm orchestration.",
+      "line_count": 202,
+      "bundled_resources": [
+        "config.json",
+        "reference/cost-optimization.md",
+        "reference/langchain-integration.md",
+        "reference/models-catalog.md",
+        "reference/multimodal.md",
+        "reference/observability.md",
+        "reference/routing-strategies.md",
+        "reference/tool-calling.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "orlob-discovery-framework-skill",
+      "path": "active/orlob-discovery-framework-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Chris Orlob's 5-step discovery framework applied to Epiphan \u2014 business problem \u2192 cause analysis \u2192 negative impact \u2192 future state \u2192 close. Per-vertical root causes, calibrated question bank, MEDDIC integration, and the 0-3 discovery scoring rubric used by sdr-call-coaching. Use when: discovery framework, orlob discovery, discovery questions, cause analysis, business problem discovery, how to run discovery.",
+      "line_count": 284,
+      "bundled_resources": [
+        "config.json",
+        "reference/epiphan-root-causes.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "personalization-at-scale-skill",
+      "path": "active/personalization-at-scale-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Generate unique personalized first lines for hundreds of prospects using company news, LinkedIn activity, and mutual connections. Saves 10+ hours of manual research per campaign. Use when you need personalized outreach at volume.",
+      "line_count": 285,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "phone-verification-waterfall-skill",
+      "path": "active/phone-verification-waterfall-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Always-on callable lead pipeline for BDRs: HubSpot lead pull \u2192 Apollo phone lookup \u2192 Clay waterfall enrichment \u2192 HubSpot sync \u2192 callable queue. Ensures 50+ daily dials by maintaining verified phone inventory. Runs scheduled Mon & Wed 6:15 AM (between prospect-enrich 6:00 and prospect-refresh 6:30). Use when: 'verify phones', 'phone waterfall', 'callable leads', 'who can I call', 'dial list', 'always have someone to call', 'phone check', 'enrich phones'.",
+      "line_count": 438,
+      "bundled_resources": [
+        "EXAMPLE_OUTPUTS.md",
+        "IMPLEMENTATION.md",
+        "INTEGRATION_MAP.md",
+        "README.md",
+        "config.json",
+        "golden-rules-filter.md",
+        "reference/callable-queue-format.md",
+        "reference/waterfall-example.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "pipeline-health-analyzer-skill",
+      "path": "active/pipeline-health-analyzer-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Analyze pipeline health, identify stalled deals, predict close probability, and suggest actions to move deals forward. Improves forecast accuracy and prevents revenue leakage. Use when deals get stuck or forecast accuracy is poor.",
+      "line_count": 263,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "planning-prompts-skill",
+      "path": "active/planning-prompts-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Comprehensive skill for project planning and prompt engineering. Covers hierarchical plans (briefs, roadmaps, phases), Claude-to-Claude meta-prompts, and multi-stage workflows. Use when: planning, prompt creation, agentic pipeline work, project roadmap, meta-prompts, research to implement workflow.",
+      "line_count": 409,
+      "bundled_resources": [
+        "config.json",
+        "reference/meta-prompts.md",
+        "reference/plans.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "portfolio-artifact-skill",
+      "path": "active/portfolio-artifact-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Auto-extract GTME metrics from work sessions. Lines shipped, bugs fixed, PRs merged, cost per feature. Weekly digests and executive summaries. Use when: capture metrics, portfolio report, what did I ship, weekly summary.",
+      "line_count": 198,
+      "bundled_resources": [
+        "config.json",
+        "reference/metrics-guide.md",
+        "reference/report-templates.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "portfolio-deal-linker-skill",
+      "path": "active/portfolio-deal-linker-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Auto-update GTME portfolio when HubSpot deals close. Links deal outcomes (won/lost, revenue, cycle time) to the skills, automations, and outreach that influenced them \u2014 building VP BD transition evidence automatically. Runs daily at 7am CST or on-demand. Use when: 'portfolio update', 'deal closed', 'link deal to portfolio', 'gtme evidence', 'what did I influence', 'career evidence', 'transition tracker'.",
+      "line_count": 283,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "post-demo-automation-skill",
+      "path": "active/post-demo-automation-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Automates post-demo follow-up sequence for Epiphan AEs: demo recap emails, internal debrief notes, meeting scheduling, stakeholder expansion, and 5-touch momentum plans.",
+      "line_count": 410,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "prospect-enrich-skill",
+      "path": "active/prospect-enrich-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Mon-Fri 6:00 AM \u2014 Daily batch enrichment of phoneless contacts using Apollo + Clay. DEMO REQUEST first, then ATL-first priority. Golden Rules + ATL/BTL Classification Gate. Feeds into phone-waterfall and prospect-refresh.",
+      "line_count": 291,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "prospect-refresh-skill",
+      "path": "active/prospect-refresh-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Monday ICP prospect search + Gmail draft creation. Finds NET NEW prospects across all verticals using Apollo.",
+      "line_count": 394,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "prospect-research-to-cadence-skill",
+      "path": "active/prospect-research-to-cadence-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "End-to-end prospect research pipeline: Apollo enrichment \u2192 personalized email + call scripts \u2192 draft review \u2192 Apollo sequence load. Eliminates manual research bottleneck. Use when: 'research prospect', 'prospect [company]', 'build cadence for', 'outreach for [company]', 'research-to-cadence', 'enrich and sequence', 'new prospect batch'.",
+      "line_count": 252,
+      "bundled_resources": [
+        "config.json",
+        "reference/email-templates.md"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "research-skill",
+      "path": "active/research-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Market intelligence, competitive analysis, technical evaluations, and technology decisions. Use when researching companies, analyzing competitors, evaluating frameworks, or making tech stack decisions.",
+      "line_count": 395,
+      "bundled_resources": [
+        "config.json",
+        "reference/market.md",
+        "reference/technical.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "runpod-deployment-skill",
+      "path": "active/runpod-deployment-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Deploy GPU workloads to RunPod serverless and pods - vLLM endpoints, A100/H100 setup, scale-to-zero, cost optimization. Use when: deploy to RunPod, GPU serverless, vLLM endpoint, scale to zero, A100 deployment, H100 setup, serverless handler, GPU cost optimization.",
+      "line_count": 458,
+      "bundled_resources": [
+        "config.json",
+        "reference/cicd.md",
+        "reference/cost-optimization.md",
+        "reference/model-deployment.md",
+        "reference/monitoring.md",
+        "reference/pod-management.md",
+        "reference/project-configs.md",
+        "reference/serverless-workers.md",
+        "reference/templates.md",
+        "reference/troubleshooting.md",
+        "reference/vllm-setup.md",
+        "templates/runpod-worker.py"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "sales-methodology-implementer-skill",
+      "path": "active/sales-methodology-implementer-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Implement proven sales methodologies (MEDDIC, BANT, Sandler, Challenger, SPIN) across your team. Generate framework-specific questions, score deals, train reps, and enforce consistent qualification. Use when implementing or optimizing sales processes.",
+      "line_count": 286,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "sales-revenue-skill",
+      "path": "active/sales-revenue-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Epiphan Video B2B sales - video capture/streaming lead qualification, pipeline metrics, MEDDIC discovery, and demo execution for Pearl devices, EC20 PTZ, and Epiphan Connect. Use for lead scoring, cold outreach to Higher Ed/Government/Corporate AV, and pipeline reviews.",
+      "line_count": 375,
+      "bundled_resources": [
+        "config.json",
+        "reference/discovery.md",
+        "reference/outreach.md",
+        "reference/revenue-ops.md",
+        "reference/sequence-audit-removal-pattern.md"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "sdr-call-coaching",
+      "path": "active/sdr-call-coaching/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Weekly SDR call-coaching loop for Tim (Sr. BDR coaching Edgar Marroquin + Vasil Ivanov). Pulls each SDR's real connected Nooks dials (recordingUrl) + external Clari calls from the report week, scores every coachable call against a 4-dimension rubric (Orlob discovery, opener + take-control, Epiphan spec accuracy, MEDDIC capture), and outputs a per-SDR coaching card (score, 2 wins, 2 fixes, verbatim quotes, recording links) + a team trend. Read-only everywhere except the final Slack DM to Tim and an optional coaching-notes Gmail draft. Built to run Friday ~11 AM CST so Tim reviews before the 5:30 PM KPI report.",
+      "line_count": 153,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "sdr-dial-lists",
+      "path": "active/sdr-dial-lists/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Daily SDR dial-list builder for Edgar Marroquin + Vasil Ivanov (Tim's SDRs). Builds each SDR their own ranked callable queue every weekday morning \u2014 HubSpot-owned contacts first, callback-owed prospects from Nooks, vertical-matched cold ATL/BTL \u2014 each row carrying spec-accurate talking points + calibrated discovery questions sourced from the epiphan-call-playbook skill. The dial-list sibling to Tim's morning-brief; same engine, run for the SDRs. Read-only except per-SDR Slack DM + an optional HTML/XLSX artifact. Use when the user says \"build SDR dial lists\", \"Edgar's call list\", \"Vasil's dial queue\", \"feed the SDRs\", \"SDR morning queue\".",
+      "line_count": 99,
+      "bundled_resources": [
+        "config.json",
+        "reference/SOURCES.md",
+        "reference/ae_persona_intel.md",
+        "reference/tim_persona_intel.md",
+        "scripts/build_deliverables.py",
+        "scripts/build_lists.py",
+        "scripts/build_notes.py",
+        "scripts/data_raw.py"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "sdr-email-sms-playbook-skill",
+      "path": "active/sdr-email-sms-playbook-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "5-touch email/SMS cadence for Epiphan BDR outreach. Full templates for Higher Ed, Courts, Gov, Healthcare by touch. Companion to epiphan-call-playbook (phone). Writing rules, subject line patterns, and SMS guidelines. Use when: email playbook, email template, outreach email, sdr email, cold email template, sms outreach, follow up email, 5 touch cadence.",
+      "line_count": 398,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "security-skill",
+      "path": "active/security-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Application security patterns - authentication, secrets management, input validation, OWASP Top 10. Use when: auth, JWT, secrets, API keys, SQL injection, XSS, CSRF, RLS, security audit, pen testing basics.",
+      "line_count": 450,
+      "bundled_resources": [
+        "config.json",
+        "reference/auth-patterns.md",
+        "reference/input-validation.md",
+        "reference/owasp-top-10.md",
+        "reference/rls-policies.md",
+        "reference/secrets-management.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "sequence-load-skill",
+      "path": "active/sequence-load-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Monday auto-load of weekly prospect refresh results into Apollo outreach sequences.",
+      "line_count": 347,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "social-selling-content-generator-skill",
+      "path": "active/social-selling-content-generator-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Generate 30+ LinkedIn posts that attract your target prospects. Creates industry insights, thought leadership, engagement prompts, and comment strategies. Use when building personal brand to attract inbound leads through social selling.",
+      "line_count": 259,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "stripe-stack-skill",
+      "path": "active/stripe-stack-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Stripe integration patterns for Next.js + Supabase - payments, subscriptions, webhooks, credit systems, checkout. Use when: stripe, payments, billing, subscription, webhook, checkout, add payments to project.",
+      "line_count": 276,
+      "bundled_resources": [
+        "config.json",
+        "reference/common-errors.md",
+        "reference/environment-vars.md",
+        "reference/pricing-models.md",
+        "reference/webhook-patterns.md",
+        "templates/env-example.txt",
+        "templates/idempotency-migration.sql",
+        "templates/plans-config.ts",
+        "templates/stripe-client.ts",
+        "templates/webhook-handler-nextjs.ts",
+        "templates/webhook-handler.test.ts",
+        "workflows/add-credit-system.md",
+        "workflows/add-webhook-handler.md",
+        "workflows/go-live-checklist.md",
+        "workflows/implement-subscriptions.md",
+        "workflows/setup-new-project.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "subagent-teams-skill",
+      "path": "active/subagent-teams-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Orchestrate in-session Task tool teams for parallel work. Fan-out research, implementation, review, and documentation across subagents. Use when: parallel tasks, fan-out, subagent team, Task tool, in-session agents.",
+      "line_count": 367,
+      "bundled_resources": [
+        "config.json",
+        "reference/prompt-templates.md",
+        "reference/task-tool-guide.md",
+        "reference/team-patterns.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "supabase-sql-skill",
+      "path": "active/supabase-sql-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Clean and format SQL migrations for Supabase - idempotency, RLS policies, formatting, schema fixes. Use when: fix this SQL, clean migration, RLS policy, Supabase schema, format postgres, prepare for SQL Editor, idempotent migration.",
+      "line_count": 169,
+      "bundled_resources": [
+        "config.json",
+        "reference/function-patterns.md",
+        "reference/rls-patterns.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "testing-skill",
+      "path": "active/testing-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "TDD patterns, test writing strategies, coverage guidance, mocking patterns. Use when: write tests, TDD, test coverage, unit test, integration test, E2E test, mocking, test organization, pytest, vitest, jest.",
+      "line_count": 379,
+      "bundled_resources": [
+        "config.json",
+        "reference/coverage-strategies.md",
+        "reference/integration-testing.md",
+        "reference/test-organization.md",
+        "reference/unit-testing.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "trading-alert-scheduler-skill",
+      "path": "active/trading-alert-scheduler-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Market signals \u2192 daily digest delivered before market open. Scans watchlist tickers for regime changes, technical setups, options flow anomalies, and IBKR position health \u2014 then delivers a prioritized action list. No IBKR distraction during 50-call BDR days. Use when: 'market digest', 'trading alerts', 'pre-market scan', 'watchlist check', 'what's setting up', 'trading morning brief', 'market open prep'.",
+      "line_count": 248,
+      "bundled_resources": [
+        "config.json",
+        "reference/watchlist.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "trading-signals-skill",
+      "path": "active/trading-signals-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Expert trading partner for Options, Stocks, Crypto, Commodities, Gold, Silver, Oil, VIX, and Forex. Covers technical analysis (Elliott Wave, Wyckoff, Fibonacci, Markov Regime, Turtle), options strategies (25+ including iron condors, credit spreads, naked puts, PMCC, gamma scalping), Greeks analysis, risk management, and sentiment signals. Use when analyzing any market, designing options trades, evaluating positions, calculating Greeks, discussing trading strategies, or asking about price action on any asset class. Even if the user just mentions a ticker, a chart, or asks 'what should I do with my position' \u2014 this skill applies.",
+      "line_count": 224,
+      "bundled_resources": [
+        "config.json",
+        "reference/backtesting-patterns.md",
+        "reference/chinese-llm-stack.md",
+        "reference/commodities.md",
+        "reference/daily-trading-workflow.md",
+        "reference/elliott-wave.md",
+        "reference/equities.md",
+        "reference/fibonacci.md",
+        "reference/forex.md",
+        "reference/markov-regime.md",
+        "reference/options-strategies.md",
+        "reference/options-trading.md",
+        "reference/pattern-recognition.md",
+        "reference/risk-management.md",
+        "reference/sentiment-signals.md",
+        "reference/swarm-consensus.md",
+        "reference/turtle-trading.md",
+        "reference/vix-volatility.md",
+        "reference/wyckoff.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "unsloth-training-skill",
+      "path": "active/unsloth-training-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Fine-tune LLMs with Unsloth using GRPO or SFT. Supports FP8, vision models, mobile deployment, Docker, packing, GGUF export. Use when: train with GRPO, fine-tune, reward functions, SFT training, FP8 training, vision fine-tuning, phone deployment, docker training, packing, export to GGUF.",
+      "line_count": 478,
+      "bundled_resources": [
+        "config.json",
+        "reference/advanced-training.md",
+        "reference/deployment.md",
+        "reference/domain-examples.md",
+        "reference/export-formats.md",
+        "reference/fp8-training.md",
+        "reference/grpo/basic_grpo.py",
+        "reference/grpo/hyperparameters.py",
+        "reference/grpo/reward_functions.py",
+        "reference/hyperparameters.md",
+        "reference/mobile-deployment.md",
+        "reference/reward-design.md",
+        "reference/sft/generate_training_data.py",
+        "reference/sft/sales_extractor_training.py",
+        "reference/sft/seed_examples.json",
+        "reference/troubleshooting.md",
+        "reference/vision-training.md"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "voice-ai-skill",
+      "path": "active/voice-ai-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Production voice AI agents with sub-500ms latency. Groq LLM, Deepgram STT, Cartesia TTS, Twilio integration. No OpenAI. Use when: voice agent, phone bot, STT, TTS, Deepgram, Cartesia, Twilio, voice AI, speech to text, IVR, call center, voice latency.",
+      "line_count": 491,
+      "bundled_resources": [
+        "config.json",
+        "reference/cartesia-tts.md",
+        "reference/deepgram-setup.md",
+        "reference/groq-voice-llm.md",
+        "reference/latency-optimization.md",
+        "reference/twilio-webhooks.md",
+        "reference/voice-prompts.md",
+        "templates/voice-agent-starter.py"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "weekly-kpi-report-skill",
+      "path": "active/weekly-kpi-report-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Friday 5:30 PM CST weekly KPI report for Tim's SDR pod (Tim Kipper, Edgar Marroquin, Vasil Ivanov). Pulls each rep's real Nooks dials/connects + HubSpot meetings-booked and pipeline-created for Mon 00:00 \u2192 Fri 5:30 PM CST, calculates connect rate + attainment vs weekly targets, builds color-coded per-rep scorecards (GREEN/YELLOW/RED) with week-over-week trend arrows, rolls up a team totals row, and delivers an HTML report + a compact Slack DM to Tim. Read-only everywhere except the Slack DM and the local HTML/prev-week JSON. This task MEASURES the reps; sdr-call-coaching (Fridays 11 AM) COACHES them \u2014 do not duplicate the coaching rubric here.",
+      "line_count": 189,
+      "bundled_resources": [
+        "config.json"
+      ],
+      "last_modified": "2026-07-03"
+    },
+    {
+      "name": "workflow-orchestrator-skill",
+      "path": "active/workflow-orchestrator-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Dual-team project workflow \u2014 Builder + Observer teams, cost tracking, parallel execution, security gates, agent orchestration. Use when: start day, begin session, status check, new feature, build, implement, end day, wrap up, debug, investigate, dual team, observer team, builder team, spawn observers, devil's advocate.",
+      "line_count": 394,
+      "bundled_resources": [
+        "config.json",
+        "reference/agent-routing.md",
+        "reference/cost-tracking.md",
+        "reference/debug-methodology.md",
+        "reference/devils-advocate.md",
+        "reference/dual-team-architecture.md",
+        "reference/end-day-protocol.md",
+        "reference/feature-development.md",
+        "reference/observer-patterns.md",
+        "reference/research-workflow.md",
+        "reference/rollback-recovery.md",
+        "reference/start-day-protocol.md",
+        "templates/OBSERVER_ARCH.md",
+        "templates/OBSERVER_QUALITY.md",
+        "templates/PROJECT_CONTEXT.md",
+        "templates/RESEARCH.md",
+        "templates/daily-cost.json",
+        "templates/worktree-registry.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "worktree-manager-skill",
+      "path": "active/worktree-manager-skill/SKILL.md",
+      "category": "active",
+      "frontmatter_description": "Parallel development with git worktrees and Claude Code agents. Handles Ghostty terminal launching, port allocation, and global registry. Use when creating worktrees, managing parallel development, or launching agents in isolated workspaces.",
+      "line_count": 445,
+      "bundled_resources": [
+        "config.json",
+        "reference/advanced-workflows.md",
+        "reference/agent-launching.md",
+        "reference/cleanup-operations.md",
+        "reference/port-allocation.md",
+        "reference/registry-operations.md",
+        "reference/script-reference.md",
+        "reference/system-notifications.md",
+        "reference/troubleshooting.md",
+        "scripts/allocate-ports.sh",
+        "scripts/cleanup.sh",
+        "scripts/launch-agent.sh",
+        "scripts/register.sh",
+        "scripts/release-ports.sh",
+        "scripts/status.sh",
+        "templates/worktree.json"
+      ],
+      "last_modified": "2026-03-22"
+    },
+    {
+      "name": "project-context-skill",
+      "path": "stable/project-context-skill/SKILL.md",
+      "category": "stable",
+      "frontmatter_description": "Maintains project context and progress tracking across Claude sessions. Use at session start to load context, on session end to save progress. Triggers: load project context, save context, end session, what was I working on, switch to project, done for today.",
+      "line_count": 175,
+      "bundled_resources": [
+        "config.json",
+        "docs/2025-11-30-smart-context-loader-design.md",
+        "reference/projects-list.md",
+        "reference/template.md"
+      ],
+      "last_modified": "2026-04-09"
+    },
+    {
+      "name": "workflow-enforcer-skill",
+      "path": "stable/workflow-enforcer-skill/SKILL.md",
+      "category": "stable",
+      "frontmatter_description": "Enforces workflow discipline across ALL projects. Ensures Claude checks for specialized agents before responding, announces skill/agent usage, and creates TodoWrite todos for multi-step tasks. Triggers: automatic on all sessions, use the right agent, follow workflow.",
+      "line_count": 133,
+      "bundled_resources": [
+        "config.json",
+        "reference/agents-catalog.md"
+      ],
+      "last_modified": "2026-03-22"
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+[
+  {
+    "skill": "gtm-brain-skill",
+    "path": "active/gtm-brain-skill/SKILL.md",
+    "scores": {"trigger_quality": 5, "tool_integration": 4, "output_contract": 4, "failure_handling": 3, "maintainability": 3},
+    "findings": [
+      {"dimension": "trigger_quality", "severity": "low", "evidence": "description: \"...Use when: relationship graph, gtm brain, log outcome, what worked with, account map, sync from hubspot, import nooks calls, contact history, sequence performance.\"", "line_ref": "3", "issue": "Strong enumerated trigger list; specific and pushy.", "fix": "None."},
+      {"dimension": "tool_integration", "severity": "med", "evidence": "### Step 2 — Classify ATL/BTL from title\nApply the ATL/BTL Classification from CLAUDE.md:\n- Match title against Universal ATL Keywords -> `ATL`", "line_ref": "245-251", "issue": "ATL/BTL tier is re-derived by keyword matching from CLAUDE.md instead of calling qualify_lead, whose power_level (atl/btl/unknown) is the house source of truth. Two classifiers will drift.", "fix": "In Stage 6 Step 2, call qualify_lead and read power_level; fall back to keyword match only when power_level=unknown."},
+      {"dimension": "tool_integration", "severity": "low", "evidence": "Use `mcp__claude_ai_Epiphan_Ai__qualify_lead` or infer from company name/domain:", "line_ref": "254", "issue": "qualify_lead offered only as optional vertical-inference path, not as the authority gate before writing a Contact node.", "fix": "Make qualify_lead the default enrichment call for any contact written via Stage 6/7."},
+      {"dimension": "failure_handling", "severity": "med", "evidence": "Process all calls in the batch. Report: N calls imported, breakdown by result (X positive / Y neutral / Z negative).", "line_ref": "332", "issue": "Stage 7 batch loop has no per-item failure/skip/retry; one missing hubspotContactId or Aura timeout aborts with no run log.", "fix": "Add per-call try/skip with a failure tally and a run-log line to ~/.claude/skill-runs/gtm-brain.jsonl."},
+      {"dimension": "maintainability", "severity": "med", "evidence": "\"skill\": \"gtm-brain\",\n  \"version\": \"1.0.0\",", "line_ref": "344-345", "issue": "Sidecar hardcodes version 1.0.0 but frontmatter is version \"1.1.0\" (line 4) — version drift mislabels outcome analytics.", "fix": "Emit the frontmatter version or reference a single VERSION constant."},
+      {"dimension": "maintainability", "severity": "low", "evidence": "Use Tim's Nooks user ID `87486452`.", "line_ref": "300", "issue": "Nooks user id and Aura URL hardcoded inline mid-stage.", "fix": "Declare owner id + instance host once in config.json and reference it."}
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": ["nooks-autopilot", "meddic-call-prep-auto-skill", "morning-brief-skill"],
+    "missing_tool_refs": ["qualify_lead (for power_level authority on contact writes)"],
+    "self_healing_gap": "No failure definition for the HubSpot/Nooks sync loops, no retry->degrade->alert ladder beyond the ping-retry note (line 80), and no run log to ~/.claude/skill-runs/gtm-brain.jsonl — only a single end-of-session sidecar written even on partial batch failure.",
+    "one_improvement": {"change": "Route contact tier/vertical through qualify_lead (power_level) instead of re-deriving ATL/BTL from CLAUDE.md keywords", "expected_impact": "Graph tiers stay consistent with the rest of the BDR stack; eliminates a second drifting classifier", "effort": "S"}
+  },
+  {
+    "skill": "gtm-pricing-skill",
+    "path": "active/gtm-pricing-skill/SKILL.md",
+    "scores": {"trigger_quality": 3, "tool_integration": 3, "output_contract": 3, "failure_handling": 2, "maintainability": 5},
+    "findings": [
+      {"dimension": "trigger_quality", "severity": "med", "evidence": "description: \"B2B go-to-market strategy, pricing models, ICP development, positioning, and competitive intelligence. Use when planning GTM strategy, setting pricing, defining ICP, or evaluating opportunities.\"", "line_ref": "3", "issue": "No enumerated 'Use when:' trigger-phrase list; 'competitive intelligence' + 'ICP development' collide with research-skill and territory-planning, risking mis-activation.", "fix": "Add explicit trigger phrases and disambiguate scope (generic frameworks, not Epiphan account research)."},
+      {"dimension": "tool_integration", "severity": "med", "evidence": "See `reference/gtm.md` for full YAML ICP worksheet templates and an example ICP (MEP contractors).", "line_ref": "98", "issue": "Pure static-framework skill with zero tool calls; ICP scoring and competitive pricing duplicate Epiphan-native qualify_lead and search_product_catalog without referencing them — violates 'Epiphan-native preferred'.", "fix": "Point ICP scoring to qualify_lead and competitive/price benchmarking to search_product_catalog when target is an Epiphan opportunity."},
+      {"dimension": "output_contract", "severity": "low", "evidence": "**Positioning Statement Template:**\n```\nFor [target customer segment] who [key need/pain],", "line_ref": "112-119", "issue": "Defines output templates but no delivery mechanism (doc, artifact, HubSpot) for where the strategy lands.", "fix": "Specify a deliverable target (doc-coauthoring handoff or HTML one-pager)."},
+      {"dimension": "failure_handling", "severity": "low", "evidence": "Use status \"partial\" if some stages failed but results were produced. Use \"error\" only if no output was generated.", "line_ref": "343", "issue": "Only failure handling is the sidecar status field; no defined behavior when inputs (value/competitor data) are missing.", "fix": "Add a degrade rule: proceed with documented assumptions and flag confidence when value data is unavailable."}
+    ],
+    "rewritten_description": "Generic B2B go-to-market frameworks: ICP scoring rubric, April Dunford positioning, value-based/tiered pricing, and opportunity scoring. Use when: build an ICP, write a positioning statement, design pricing tiers, set list price, feature gating, score an opportunity, competitive battle card, GTM launch checklist. For Epiphan account/competitor research use research-skill; for live lead ICP scoring use qualify_lead.",
+    "overlap_candidates": ["research-skill", "territory-planning-optimizer", "blue-ocean-strategy-skill", "business-model-canvas-skill"],
+    "missing_tool_refs": ["qualify_lead", "search_product_catalog"],
+    "self_healing_gap": "No failure definition, no retry/degrade/alert ladder, and no run log — only the pass/partial/error sidecar status. Acceptable for a knowledge skill but no explicit 'insufficient input' degrade path.",
+    "one_improvement": {"change": "Add enumerated trigger phrases plus one-line pointers to qualify_lead / search_product_catalog for the Epiphan-specific cases", "expected_impact": "Cuts activation collisions with research-skill and stops duplicating native ICP/pricing tooling", "effort": "S"}
+  },
+  {
+    "skill": "research-skill",
+    "path": "active/research-skill/SKILL.md",
+    "scores": {"trigger_quality": 3, "tool_integration": 2, "output_contract": 3, "failure_handling": 2, "maintainability": 3},
+    "findings": [
+      {"dimension": "tool_integration", "severity": "high", "evidence": "- **Data sources:** LinkedIn, Glassdoor, Indeed, G2, Capterra, Google", "line_ref": "366", "issue": "Company/competitive research points only at generic external sources; never references Epiphan-native sales_brief, identify_company, enrich_contact, hubspot_search_companies, or search_product_catalog — direct 'Epiphan-native preferred' violation for account/competitor prep.", "fix": "Add a Market Research tool order: identify_company -> sales_brief -> activity_get_timeline -> enrich_contact, with Semrush via Epiphan AI marketing tools before generic web."},
+      {"dimension": "tool_integration", "severity": "med", "evidence": "Step 5: Synthesize\n|__ Generate company profile, score against ICP", "line_ref": "115-116", "issue": "'Score against ICP' with no call to qualify_lead, the house ICP/power_level source of truth; scoring re-implemented manually.", "fix": "Route the ICP/decision-maker step through qualify_lead + hubspot_find_contacts_by_role."},
+      {"dimension": "maintainability", "severity": "med", "evidence": "|__ /Users/tmkipper/Desktop/tk_projects/mcp-server-cookbook/", "line_ref": "287", "issue": "Hardcoded absolute path uses wrong username 'tmkipper' (Tim's home is /Users/tmk) — a dead path that silently fails.", "fix": "Fix to /Users/tmk/... or make it relative/env-based."},
+      {"dimension": "maintainability", "severity": "low", "evidence": "machine: m1_mac", "line_ref": "163", "issue": "Stack constraints assert M1 Mac; Tim's machine is now M4 24GB — drifting hardcoded environment fact.", "fix": "Remove specific hardware or point to a single environment reference."},
+      {"dimension": "output_contract", "severity": "low", "evidence": "research_report:\n  title: \"\"\n  type: \"\"  # market, technical, hybrid", "line_ref": "308-310", "issue": "Defines a YAML report structure but no delivery target (doc, artifact, HubSpot note).", "fix": "Specify where the report is written / handed off."}
+    ],
+    "rewritten_description": "Structured research reports for GTM and tech decisions: company/competitor profiles, tech-stack discovery, framework/LLM/API evaluations, decision matrices with confidence scores. Use when: research a company before a call, competitive analysis, evaluate a framework or LLM, tech-stack decision, build-vs-buy. For Epiphan account prep prefer sales_brief/identify_company; for lead ICP scoring use qualify_lead.",
+    "overlap_candidates": ["gtm-pricing-skill", "prospect-research-compiler", "prospect-research-to-cadence-skill", "competitor-content-analyzer"],
+    "missing_tool_refs": ["sales_brief", "identify_company", "enrich_contact", "hubspot_search_companies", "qualify_lead", "search_product_catalog"],
+    "self_healing_gap": "No failure definition, no retry->degrade->alert ladder, and no run log; the confidence field substitutes for failure handling but there is no rule for missing sources beyond labeling confidence 'low'.",
+    "one_improvement": {"change": "Insert an Epiphan-native tool order into Part 1 Market Research (identify_company -> sales_brief -> activity_get_timeline -> enrich_contact) ahead of generic web sources", "expected_impact": "Account research uses first-party CRM/device/Clari data instead of guesswork, and stops duplicating qualify_lead", "effort": "M"}
+  },
+  {
+    "skill": "epiphan-ai-mcp-guide-skill",
+    "path": "active/epiphan-ai-mcp-guide-skill/SKILL.md",
+    "scores": {"trigger_quality": 3, "tool_integration": 5, "output_contract": 4, "failure_handling": 3, "maintainability": 4},
+    "findings": [
+      {"dimension": "trigger_quality", "severity": "med", "evidence": "description: Reference for Epiphan AI MCP tools — CRM, sales intel, device analytics, lead qualification, marketing (Semrush/GA4/GAds).", "line_ref": "3", "issue": "Reference-style description with no 'Use when:' phrases; a discoverability skill that is itself hard to trigger. Lower recall than sibling skills.", "fix": "Add enumerated triggers so it surfaces on 'which tool for X', 'how do I look up a customer', 'find the AV director'."},
+      {"dimension": "tool_integration", "severity": "low", "evidence": "Before drafting any customer-facing asset ... defer to the **`epiphan-brand-assets`** skill, which drives the brand tools (`get_brand_asset_kit`, `check_my_copy`, ...)", "line_ref": "356-358", "issue": "Correctly enforces the brand gate and product-spec sourcing (search_product_catalog) — exemplary; noting as strength.", "fix": "None."},
+      {"dimension": "tool_integration", "severity": "low", "evidence": "- **`qualify_lead` is a dry run by default** — pass `writeToHubSpot: true` to update lifecycle + create the note (admin-scoped).", "line_ref": "366", "issue": "Documents qualify_lead dry-run default and admin-scope caveats accurately — reinforces house rule 3.", "fix": "None."},
+      {"dimension": "failure_handling", "severity": "med", "evidence": "If a tool seems \"missing,\" you're probably on `Epiphan CRM` — switch to `Epiphan Ai`.", "line_ref": "354", "issue": "Namespace-fallback guidance exists, but as a reference guide there is no defined behavior when a tool returns 403 (non-allowlisted write) or a rate-limit — caveats are listed but not turned into a recovery step.", "fix": "Add a 'when a write 403s / rate-limits' recovery note (fall back to read + surface to Tim/Victor)."},
+      {"dimension": "maintainability", "severity": "low", "evidence": "> \"BDR activity for owner_ids 87486452, 423155215 last 7 days\"", "line_ref": "255", "issue": "Owner ids appear inline in examples; low drift risk since illustrative, but no single declared roster.", "fix": "Reference the canonical owner-id roster (CLAUDE.md / nooks-autopilot config) instead of loose inline ids."}
+    ],
+    "rewritten_description": "Epiphan AI MCP tool picker: which tool answers which question across HubSpot CRM (read + admin writes + static lists), legacy CRM orders, Pearl device analytics, Clari calls, qualify_lead, enrich_contact, curated query_dataset/weekly_brief reports, and Semrush/GA4/GAds marketing intel. Use when: which Epiphan tool, look up a customer, sales brief, qualify a lead, find the AV/IT director, pull pipeline, weekly sales tracker, wrong namespace / tool missing.",
+    "overlap_candidates": ["hubspot-revops-skill", "crm-integration-skill"],
+    "missing_tool_refs": [],
+    "self_healing_gap": "As a reference skill it has no run loop, but it also defines no recovery ladder for the failure modes it documents (403 non-allowlist write, per-record rate limit, wrong namespace) beyond prose caveats; no run log applies.",
+    "one_improvement": {"change": "Add an enumerated 'Use when:' trigger list to the frontmatter description", "expected_impact": "Raises activation recall so Claude reaches for the guide on tool-selection questions instead of guessing a namespace", "effort": "S"}
+  },
+  {
+    "skill": "portfolio-artifact-skill",
+    "path": "active/portfolio-artifact-skill/SKILL.md",
+    "scores": {"trigger_quality": 4, "tool_integration": 4, "output_contract": 3, "failure_handling": 3, "maintainability": 5},
+    "findings": [
+      {"dimension": "trigger_quality", "severity": "low", "evidence": "<triggers>\n- \"capture metrics\", \"portfolio report\", \"what did I ship\"\n- \"weekly summary\", \"executive summary\", \"sprint report\"", "line_ref": "32-35", "issue": "Good explicit triggers, but 'weekly summary'/'executive summary' collide with weekly-kpi-report-skill and business-pulse-skill; 'cost per feature' overlaps cost-metering-skill.", "fix": "Scope triggers to engineering/dev-session metrics to disambiguate from GTM KPI reporting."},
+      {"dimension": "output_contract", "severity": "med", "evidence": "name: \"portfolio-artifact\" ... echo \"{\\\"date\\\":\\\"$DATE\\\",...}\" >> ~/.claude/portfolio/daily-metrics.jsonl", "line_ref": "2,82", "issue": "Skill is named 'artifact' and success criteria mention 'artifacts_generated', yet all outputs are Markdown templates + a JSONL file — no actual Artifact/HTML deliverable or delivery mechanism defined.", "fix": "Render the weekly/exec summary as an HTML Artifact (matching the name) or rename to portfolio-metrics; declare the delivery target explicitly."},
+      {"dimension": "failure_handling", "severity": "low", "evidence": "COST=$(cat ~/.claude/daily-cost.json 2>/dev/null | jq '.spent // 0')", "line_ref": "80", "issue": "Bash uses 2>/dev/null and // 0 defaults so a missing cost file degrades to 0 silently — a $0 day looks real.", "fix": "Emit a 'cost_data_missing' flag in the metric row when daily-cost.json is absent."},
+      {"dimension": "maintainability", "severity": "low", "evidence": "**Deep dive:** See `reference/metrics-guide.md`, `reference/report-templates.md`", "line_ref": "186", "issue": "Compact (198 lines) with clean progressive disclosure; no drifting hardcoded values. Strength.", "fix": "None."}
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": ["weekly-kpi-report-skill", "cost-metering-skill", "business-pulse-skill", "executive-dashboard-generator"],
+    "missing_tool_refs": [],
+    "self_healing_gap": "Silent-default bash (|| echo 0, // 0) degrades missing inputs to zero with no alert or run log; no retry ladder and no ~/.claude/skill-runs entry — a failed git/gh/jq call produces a plausible-but-wrong metric row rather than a flagged partial.",
+    "one_improvement": {"change": "Make the deliverable a real HTML Artifact for the weekly/exec summary (or rename the skill), and flag missing cost/git data instead of defaulting to 0", "expected_impact": "Name matches output, and reports stop silently under-reporting on days with missing source files", "effort": "M"}
+  },
+  {
+    "skill": "nooks-autopilot",
+    "path": "active/nooks-autopilot/SKILL.md",
+    "scores": {"trigger_quality": 5, "tool_integration": 5, "output_contract": 5, "failure_handling": 4, "maintainability": 4},
+    "findings": [
+      {"dimension": "trigger_quality", "severity": "low", "evidence": "Use when: 'run nooks autopilot', 'autonomous BDR run', 'hunt leads', 'enroll into nooks sequences', 'shadow enroll', 'autopilot dry run', 'check for replies / warm handoffs'.", "line_ref": "3", "issue": "Excellent enumerated, quoted triggers with shadow-mode framing; no collision. Strength.", "fix": "None."},
+      {"dimension": "tool_integration", "severity": "low", "evidence": "- `qualify_lead` (Epiphan AI) -> category (ideal_mql/warm/nurture/junk), `power_level` (atl/btl/unknown), region, junk flag.", "line_ref": "167", "issue": "qualify_lead used as the qualify/ATL gate; Golden Rules + Suppression + dedup in Stage 2, DA audit in Stage 2c, spec-verification guardrail (line 309) — fully compliant with all four house rules. Strength.", "fix": "None."},
+      {"dimension": "output_contract", "severity": "low", "evidence": "Fill **`reference/dial-list-report-template.html`** ... write it to the output dir as `nooks_autopilot_<YYYY-MM-DD>.html`. Mode badge = SHADOW or LIVE.", "line_ref": "248-250", "issue": "Defined HTML deliverable, shadow-first default, per-rep segmentation, and outcome sidecar — a complete output+delivery contract. Strength.", "fix": "None."},
+      {"dimension": "failure_handling", "severity": "med", "evidence": "Respect the per-rep daily cap; log any failures and continue (graceful degradation).", "line_ref": "209", "issue": "Graceful degradation and PARTIAL_FAILURE re-run are covered, but 'log any failures' has no concrete sink — no ~/.claude/skill-runs/nooks-autopilot.jsonl and no alert threshold that halts a run if failures exceed N.", "fix": "Define a run log path and a halt/alert rule (e.g. abort live enroll if >X consecutive createSequenceState failures)."},
+      {"dimension": "maintainability", "severity": "med", "evidence": "| Nyasha Chigwedere | SDR | 94135434 | LGCdlTv6v8dSAiSsoJ7ETWQHVKl1 | none yet — enroll call/LinkedIn-only or hold auto-email until her mailbox is connected |", "line_ref": "53", "issue": "Roster, sequence ids, list ids, mailbox ids hardcoded in SKILL.md; correctly centralized in the <config> block (right pattern) but one entry (Nyasha mailbox) is a known-stale TODO carried in the skill body.", "fix": "Keep the single <config> source, move the volatile roster/id table into config.json referenced once, and track the Nyasha-mailbox TODO outside the skill body."},
+      {"dimension": "maintainability", "severity": "low", "evidence": "**Version:** 1.0 . **Author:** Tim Kipper . **Status:** v1 shadow", "line_ref": "323", "issue": "326 lines, near the ~500 ceiling; dense but uses reference/ for personas/signals/battlecards. Acceptable.", "fix": "Watch length as v3 content personalization lands; push detail to reference/."}
+    ],
+    "rewritten_description": null,
+    "overlap_candidates": ["sequence-load-skill", "prospect-research-to-cadence-skill", "sdr-dial-lists", "he-dial-queue-skill", "gtm-brain-skill"],
+    "missing_tool_refs": [],
+    "self_healing_gap": "Has shadow-first safety, graceful per-item degradation, and PARTIAL_FAILURE re-run, but lacks a concrete run log (no ~/.claude/skill-runs/nooks-autopilot.jsonl) and a defined alert/halt threshold when live-write failures accumulate; the sidecar is the only persistent artifact and it is written even on partial runs.",
+    "one_improvement": {"change": "Add a run log to ~/.claude/skill-runs/nooks-autopilot.jsonl plus a halt-and-alert threshold on repeated live createSequenceState failures", "expected_impact": "Live enrollment failures become auditable and a bad run stops instead of silently under-enrolling", "effort": "S"}
+  }
+]
