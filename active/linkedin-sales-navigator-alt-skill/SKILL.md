@@ -1,472 +1,155 @@
 ---
 name: linkedin-sales-navigator-alt-skill
-description: Build targeted prospect lists by analyzing LinkedIn profiles, extracting job titles, companies, locations, and recent activity. Identifies decision-makers, tracks job changes for warm outreach, and enriches contact data. Use when users need to find prospects, build lead lists, or track decision-maker movements.
+description: Detect warm outbound timing by surfacing recent job-changers, promotions, and new-in-role decision-makers at target accounts, enriched via Apollo/Clay MCP and deduped against HubSpot. Gates every prospect through Golden Rules + qualify_lead + suppression before listing. Use when: "who recently moved into [role] at [company]", "find new-in-role champions at [accounts]", "warm leads from job changes", "track promotions at [target accounts]", "who's newly hired into [title] roles this month". For point-in-time contact lookups ("find the VP of Sales at [Company]") use contact-hunter-skill instead — this skill is specifically for job-change/new-in-role timing signals, not general prospect-list building.
 ---
 
-# LinkedIn Sales Navigator Alternative
+# LinkedIn Sales Navigator Alternative — Job-Change Signal Detector
 
 <objective>
-Build targeted prospect lists by analyzing LinkedIn profiles, extracting job titles, companies, locations, and recent activity using publicly available data. Identifies decision-makers, tracks job changes for warm outreach, and enriches contact data -- all without requiring a Sales Navigator subscription.
+Surface warm outbound timing by detecting recent job changes, promotions, and new-in-role
+decision-makers at target accounts — without a Sales Navigator subscription. This skill does
+not browse LinkedIn or guess email addresses; it sources signal and contact data from live
+Apollo/Clay MCP tools, then gates every candidate through HubSpot dedupe + `qualify_lead` +
+Golden Rules + suppression before it's ever surfaced. New-in-role people are high-intent
+targets (evaluating vendors in their first 90 days) — that timing signal, not a scraped
+LinkedIn profile, is the point of this skill.
 </objective>
 
 <quick_start>
-**Trigger:** "find [title] at [company type]" or "build a prospect list for [criteria]"
-**Output:** Prioritized prospect list with contact details, personalization notes, and segmented campaign strategies
+**Trigger:** "who recently moved into [role] at [accounts]", "find new-in-role champions at [company]", "warm leads from job changes", "track promotions at [target accounts]"
+**Not this skill:** a plain "find [title] at [company]" lookup with no job-change angle → use `contact-hunter-skill`
+**Output:** A gated, deduped list of job-change/promotion signals per target account — hot (ATL, <30-day change) vs. warm (GRAY or hiring-signal-only) — handed off for drafting/enrollment
+**Dependencies:** Apollo MCP (`apollo_organizations_job_postings`, `apollo_mixed_people_api_search`, `apollo_organizations_enrich`, `apollo_people_match`), Clay MCP (`find-and-enrich-contacts-at-company`, `find-and-enrich-company`), HubSpot (`hubspot_search_contacts`, `qualify_lead`), Gmail (`create_draft`)
 </quick_start>
 
 <success_criteria>
-- [ ] Prospects segmented by seniority, industry, company size, and location
-- [ ] Hot prospects (recent job changers) identified and prioritized
-- [ ] Personalization data included per prospect (talking points, company news)
-- [ ] Campaign strategies provided for each prospect segment
+- [ ] Target accounts / ICP defined before any tool call (explicit list or HubSpot list)
+- [ ] Job-change/promotion/new-in-role signals come from Apollo and/or Clay MCP tool calls only — no manual pattern-guessing of "who's probably relevant"
+- [ ] Every candidate checked against HubSpot (`hubspot_search_contacts`) for an existing record before being treated as net-new
+- [ ] Every surviving candidate gated through `qualify_lead` + Golden Rules (customers, channel partners, product-only engagers excluded; AE-owned 90-day stale exception applied per CLAUDE.md) + the suppression check (see `skill-audit/specs/suppression-spec.md`)
+- [ ] No "likely email address" guessing — contact details come from Apollo/Clay enrichment or are tagged "needs enrichment," never a `firstname.lastname@domain.com` guess
+- [ ] Output segments Hot (ATL + recent change) vs. Warm (GRAY or hiring-signal-only); BTL/NEVER-ATL/suppressed never listed
+- [ ] Next-step handoff stated (sequence-load-skill / nooks-autopilot for enrollment, or Gmail draft-first per CLAUDE.md) rather than this skill inventing campaign copy
+- [ ] Outcome sidecar written
 </success_criteria>
 
 <workflow>
 
-## Instructions
+## Stage 1 — Define target accounts + signal window
+Get the target account set from the user's request or a HubSpot list (`hubspot_search_contacts` /
+existing list). Default signal window: job changes/promotions in the **last 30-60 days**. Confirm
+ICP filters if given (industry, size, geography) — this scopes which accounts to check, it does not
+replace the qualification gate in Stage 3.
 
-You are an expert sales intelligence researcher who helps build targeted prospect lists using publicly available LinkedIn data and other business intelligence sources. Your mission is to identify the right people at the right companies for outreach.
+## Stage 2 — Detect signals via Apollo/Clay (no manual guessing)
+Per target account/domain, call real tools — do not infer from static title lists:
+- **`apollo_organizations_job_postings`** — active hiring at the account (a hiring-signal proxy:
+  growth, new-role backfill, evaluating tools for a function that's expanding).
+- **`apollo_mixed_people_api_search`** — search people at the account by title/seniority to surface
+  those newly in role; treat a short tenure-in-current-title as the job-change signal since Apollo
+  does not expose a direct "changed jobs" filter.
+- **Clay `find-and-enrich-contacts-at-company`** / **`find-and-enrich-company`** — parallel or
+  fallback source, especially for accounts thin in Apollo's index.
+Record per candidate: name, title, company, domain, detected signal type (new-in-role / promotion /
+hiring-at-account), source tool, and tenure/date if available. This is the raw candidate list —
+nothing here is qualified yet.
 
-**IMPORTANT COMPLIANCE NOTE**: This skill only works with publicly available information and respects LinkedIn's Terms of Service. Always encourage users to use official LinkedIn tools when available and appropriate. Focus on aggregating public data for legitimate business development.
+## Stage 3 — HubSpot dedupe + qualify_lead gate (mandatory, no bypass)
+For every raw candidate, in order:
+1. **Dedupe:** `hubspot_search_contacts` by email/domain — if a contact record exists, use it
+   (don't treat as net-new); note existing owner/lifecyclestage.
+2. **`qualify_lead`:** returns category, `power_level` (ATL/GRAY/BTL/unknown), region, junk flag.
+3. **Golden Rules** (CLAUDE.md): exclude `lifecyclestage = customer` or `device_count >= 1`,
+   `is_channel = true`, product-only-engager `first_conversion`, and BTL/NEVER-ATL titles.
+   Apply the **AE-owned 90-day stale exception**: contacts owned by Lex Evans (82625923), Ron
+   Epstein (423155215), or Phillip Sandler (190030668) are excluded unless last activity is
+   >90 days ago (Ron: all geos; Lex/Phil: NA only) — surface those as `STALE AE LEAD`, don't
+   auto-list them as fresh.
+4. **Suppression:** check `bdr_suppressed` / `bdr_suppression_until` per the contract in
+   `skill-audit/specs/suppression-spec.md` (this skill only reads/respects that gate — it does not
+   create HubSpot properties or write suppression state).
+5. Drop anything that fails 2-4. Tag survivors ATL / GRAY with their `qualify_lead` category.
 
-### Core Capabilities
+## Stage 4 — Enrich survivors only
+For the gated list only, fill in contact/company detail via **`apollo_organizations_enrich`**,
+**`apollo_people_match`**, or Clay **`add-contact-data-points`** / **`add-company-data-points`**.
+If a field (email, phone) can't be verified through these tools, mark the row **"needs
+enrichment"** — never emit a guessed `firstname.lastname@domain` pattern.
 
-**Prospect Discovery**:
-- Find decision-makers by job title and company
-- Build lists based on industry, company size, location
-- Identify recent job changers (warm leads)
-- Track promotions and career moves
-- Find contacts in specific departments
-
-**Data Extraction** (Public Info Only):
-- Full name and current job title
-- Company name and size
-- Location (city, state, country)
-- Industry and sector
-- Recent posts/activity (if public)
-- Shared connections
-- Company news and funding
-
-**List Building Strategies**:
-1. **Account-Based**: Target specific companies
-2. **Role-Based**: Find people by job function
-3. **Industry-Based**: Segment by vertical
-4. **Event-Based**: Track job changes, funding rounds
-5. **Geography-Based**: Regional targeting
-
-### Workflow
-
-1. **Define Ideal Customer Profile (ICP)**
-   - Industry/sector
-   - Company size (employees, revenue)
-   - Geography
-   - Tech stack (if applicable)
-   - Funding stage (for startups)
-
-2. **Identify Decision Maker Personas**
-   - Primary: Direct buyer
-   - Secondary: Influencers
-   - Economic buyer: Budget holder
-   - Technical buyer: Evaluation team
-
-3. **Build Search Strategy**
-   - Job title patterns
-   - Company criteria
-   - Location filters
-   - Seniority level
-   - Keywords in descriptions
-
-4. **Data Collection & Enrichment**
-   - Compile prospect information
-   - Verify company details
-   - Find contact information
-   - Add context for personalization
-   - Score lead quality
-
-5. **Prioritization & Segmentation**
-   - Hot leads (recent job changes)
-   - Warm leads (shared connections)
-   - Cold leads (no previous contact)
-   - Account grouping for campaigns
-
-### Output Format
+## Stage 5 — Prioritize, segment, output
+- **🔥 Hot:** ATL + job-change/promotion detected within the signal window.
+- **🤝 Warm:** GRAY power level, or hiring-signal-only (no personal change detected) at an
+  otherwise-qualified account.
+- Group by account; flag accounts with no ATL/GRAY survivor as needing a broader search
+  (`hubspot_find_contacts_by_role` equivalent) rather than lowering the bar.
 
 ```markdown
-# Prospect List: [Target Persona/Campaign Name]
+# Job-Change Signal List: [Target Account Set / Campaign Name]
 
-**Generated**: [Date]
-**Total Prospects**: [Number]
-**Target Profile**: [Brief ICP description]
+**Generated**: [Date] | **Signal window**: last [N] days | **Accounts checked**: [N] | **Gated candidates**: [N]
 
----
+## Search Criteria
+- Target accounts / ICP: [list or filters]
+- Signal types: new-in-role | promotion | hiring-at-account
 
-## 🎯 Search Criteria
+## 🔥 Hot (ATL, recent change)
+**[Name]** — [New Title] at [Company] ([domain])
+- Signal: [new-in-role / promotion], detected [date/tenure], source: [Apollo/Clay tool]
+- HubSpot: [new contact | existing, owner X] | qualify_lead: [category, power_level]
+- Contact: [verified email/phone from Apollo/Clay, or "needs enrichment"]
 
-**Company Filters**:
-- Industries: [List]
-- Company Size: [Range] employees
-- Location: [Geographic focus]
-- Funding Stage: [Series A/B/C, etc.]
-- Technologies Used: [If applicable]
+## 🤝 Warm (GRAY or hiring-signal-only)
+[same row structure]
 
-**Job Title Patterns**:
-- Primary: [e.g., "VP of Engineering", "Head of DevOps"]
-- Alternative titles: [e.g., "Engineering Director", "CTO"]
-- Seniority: [VP+, Director, Manager]
-- Department: [Engineering, Sales, Marketing, etc.]
+## Excluded (for transparency, not for outreach)
+- Golden Rules: [n] | Suppressed: [n] | Stale-AE surfaced: [n, see STALE AE LEAD]
 
-**Qualification Criteria**:
-- ✅ Must have: [Required attributes]
-- ➕ Nice to have: [Bonus attributes]
-- ❌ Exclude: [Disqualifying criteria]
-
----
-
-## 📊 Prospect List Summary
-
-### Distribution by Seniority
-
-| Level | Count | % of Total |
-|-------|-------|-----------|
-| C-Level (CEO, CTO, etc.) | XX | XX% |
-| VP Level | XX | XX% |
-| Director Level | XX | XX% |
-| Manager Level | XX | XX% |
-
-### Distribution by Industry
-
-| Industry | Count | % of Total |
-|----------|-------|-----------|
-| [Industry 1] | XX | XX% |
-| [Industry 2] | XX | XX% |
-| [Industry 3] | XX | XX% |
-
-### Distribution by Company Size
-
-| Size | Count | % of Total |
-|------|-------|-----------|
-| 1-50 employees | XX | XX% |
-| 51-200 employees | XX | XX% |
-| 201-1000 employees | XX | XX% |
-| 1000+ employees | XX | XX% |
-
-### Distribution by Location
-
-| Region | Count | % of Total |
-|--------|-------|-----------|
-| [Region 1] | XX | XX% |
-| [Region 2] | XX | XX% |
-| [Region 3] | XX | XX% |
-
----
-
-## 🔥 Hot Prospects (Priority Outreach)
-
-### Recent Job Changes (Last 30 Days)
-
-**#1. [Name]**
-- **Title**: [New Job Title]
-- **Company**: [Company Name] ([Size], [Industry])
-- **Location**: [City, State]
-- **Previous Role**: [Old title] at [Old company]
-- **Change Type**: Promotion / New company
-- **Why Hot**: New in role, likely evaluating vendors/solutions
-- **Talking Point**: "Congrats on the new role! I've helped other [job titles] in their first 90 days..."
-- **LinkedIn**: [Profile URL if available]
-- **Company LinkedIn**: [Company page]
-- **Email Pattern**: [firstname.lastname@company.com] (unverified)
-
----
-
-**#2. [Name]**
-- **Title**: [Job Title]
-- **Company**: [Company Name]
-- **Location**: [City, State]
-- **Job Change**: [Details]
-- **Why Hot**: [Reason this is good timing]
-- **Talking Point**: [Personalization idea]
-
----
-
-*(Repeat for top 10-20 hot prospects)*
-
----
-
-## 💼 Qualified Prospects by Company
-
-### Company: [Company Name 1]
-
-**Company Details**:
-- **Industry**: [Industry]
-- **Size**: [X-Y] employees
-- **Location**: [HQ Location]
-- **Website**: [URL]
-- **Recent News**: [Funding round, product launch, expansion, etc.]
-- **Tech Stack**: [If known]
-- **Hiring?**: [Yes/No - indicator of growth]
-
-**Decision Makers Identified**: [Number]
-
-#### Primary Contact: [Name]
-- **Title**: [Job Title]
-- **LinkedIn**: [URL if available]
-- **Background**: [Brief relevant experience]
-- **Tenure**: [How long at company]
-- **Location**: [City, State]
-- **Reports To**: [If known]
-- **Team Size**: [If known]
-- **Recent Activity**: [Posts, articles, job changes]
-- **Email Pattern**: [Guess based on company domain]
-- **Phone**: [If publicly available]
-- **Shared Connections**: [Number - if you can see]
-- **Personalization Notes**:
-  - [Interest/hobby from profile]
-  - [Recent company achievement]
-  - [Common connection to mention]
-  - [Content they've engaged with]
-
-#### Secondary Contact: [Name]
-- **Title**: [Job Title]
-- **Why Include**: [Influencer, champion, etc.]
-- **Relationship to Primary**: [Reports to, peers with, etc.]
-
-#### Economic Buyer: [Name]
-- **Title**: [Job Title]
-- **Why Include**: [Budget authority]
-
----
-
-### Company: [Company Name 2]
-
-**Company Details**: [Same structure]
-
-**Decision Makers**: [Same structure]
-
----
-
-*(Repeat for all target companies)*
-
----
-
-## 🎯 Prospects by Job Title
-
-### VP of Engineering (25 prospects)
-
-**#1. [Name]**
-- **Company**: [Company] ([Size], [Industry])
-- **Location**: [City, State]
-- **Tenure**: [X] years at company
-- **Company News**: [Recent funding, growth, challenges]
-- **Likely Pain Points**:
-  - [Pain point 1 based on company stage]
-  - [Pain point 2 based on industry]
-- **Outreach Angle**: [How your solution helps]
-- **Email**: [Pattern guess]
-- **LinkedIn**: [URL]
-
-**#2. [Name]**
-[Same structure]
-
----
-
-### Head of DevOps (18 prospects)
-
-[Same structure as above]
-
----
-
-### CTO / Technical Co-Founder (12 prospects)
-
-[Same structure as above]
-
----
-
-## 🌟 Enrichment Data
-
-### Company Signals
-
-**Growth Indicators**:
-- **Funding Rounds**: [Companies that recently raised]
-- **Hiring Sprees**: [Companies with many open roles]
-- **Expansion**: [Companies opening new offices]
-- **Product Launches**: [Recent announcements]
-
-**Pain Indicators**:
-- **Layoffs**: [Recent workforce reductions]
-- **Leadership Changes**: [C-suite churn]
-- **Negative Press**: [Issues that create buying opportunity]
-
-### Contact Finding Strategies
-
-**Email Discovery Methods**:
-1. **Pattern Matching**: Most companies use [firstname.lastname@domain.com]
-2. **Hunter.io / RocketReach**: Use for verification
-3. **Company Website**: Check "Team" or "About" pages
-4. **Domain Search**: Try common patterns and verify with tools
-
-**Phone Number Sources**:
-- Company website (direct lines rare)
-- ZoomInfo / Apollo (paid tools)
-- Press releases (sometimes include media contacts)
-- LinkedIn (occasionally listed)
-
-**Verification**:
-- Use email verification tools before sending
-- Check bounce rates on small test batches
-- Verify phone numbers exist before calling
-
----
-
-## 📈 List Quality Metrics
-
-**List Health**:
-- Total Prospects: [Number]
-- Companies Represented: [Number]
-- Average Company Size: [Employees]
-- Geographic Concentration: [% in top 3 regions]
-
-**Confidence Levels**:
-- High Confidence (verified contact info): [X%]
-- Medium Confidence (likely email pattern): [X%]
-- Low Confidence (need enrichment): [X%]
-
-**Segmentation Tags**:
-- 🔥 Hot (recent job change): [Number]
-- 🤝 Warm (shared connection): [Number]
-- ❄️ Cold (no prior contact): [Number]
-- ⭐ High-Value (company size/industry match): [Number]
-
----
-
-## 🎪 Segmented Campaigns
-
-### Campaign 1: "New in Role" Sequence
-
-**Target**: Recent job changers (30 prospects)
-**Messaging**: Congratulations + value prop for first 90 days
-**Timeline**: Reach out within 7 days of job change
-**Channel Mix**: LinkedIn message first, email follow-up
-**Expected Response Rate**: 15-20%
-
-**Sample Message**:
-> "Hi [Name], congrats on joining [Company] as [Title]! I've helped other [titles] in similar roles at [comparable company] with [specific outcome]. Would love to share what's working in your first 90 days..."
-
----
-
-### Campaign 2: "Account-Based" for Top 20 Accounts
-
-**Target**: Multiple contacts at high-value companies
-**Messaging**: Company-specific research and insights
-**Timeline**: Coordinate touches across contacts
-**Channel Mix**: Multi-threaded approach
-**Expected Response Rate**: 10-15%
-
----
-
-### Campaign 3: "Industry Event Follow-Up"
-
-**Target**: Prospects who attended/spoke at recent conferences
-**Messaging**: Reference their talk/participation
-**Timeline**: Within 7 days of event
-**Channel Mix**: LinkedIn + email
-**Expected Response Rate**: 20-25%
-
----
-
-## 🔍 Research Notes
-
-### Industry Trends (Relevant to Prospects)
-- [Trend 1: How it affects target audience]
-- [Trend 2: Creates urgency or pain point]
-- [Trend 3: Opportunity to add value]
-
-### Competitive Intelligence
-- [What competitors prospects might be using]
-- [Common pain points with current solutions]
-- [Switching triggers to watch for]
-
-### Seasonal Factors
-- [Budget cycles for target companies]
-- [Industry-specific timing considerations]
-- [Best months for outreach]
-
----
-
-## ✅ Next Steps
-
-1. **Enrich Contact Data** (1-2 days)
-   - Verify email addresses using Hunter.io or similar
-   - Find phone numbers via ZoomInfo/Apollo (if available)
-   - Add to CRM with proper tagging
-
-2. **Prioritize Outreach** (Same day)
-   - Start with 🔥 Hot prospects (recent job changes)
-   - Then 🤝 Warm prospects (shared connections)
-   - Finally ❄️ Cold prospects (volume play)
-
-3. **Personalize Messaging** (2-3 days)
-   - Research each company's recent news
-   - Identify specific pain points
-   - Craft unique opening lines
-   - Prepare relevant case studies
-
-4. **Set Up Sequences** (1 day)
-   - Configure outreach cadence in sales tool
-   - Set up tracking and follow-ups
-   - Prepare reply templates
-   - Schedule send times
-
-5. **Monitor & Optimize** (Ongoing)
-   - Track open, reply, and meeting rates
-   - A/B test subject lines and messaging
-   - Refine ICP based on responses
-   - Update list with new prospects weekly
-
----
-
+## Next Step
+Hand qualified rows to `sequence-load-skill` / `nooks-autopilot` for sequence enrollment, or
+stage individual Gmail drafts via `gmail_create_draft` (from tkipper@epiphan.com) per Tim's
+call → draft → review → send workflow. This skill does not draft campaign copy itself.
 ```
 
-### Best Practices
+</workflow>
 
-1. **Quality Over Quantity**: 50 highly qualified prospects > 500 random contacts
-2. **Regular Updates**: Refresh lists monthly, add new job changers weekly
-3. **Multi-Threading**: Identify 2-3 contacts per target account
-4. **Respect Privacy**: Only use publicly available information
-5. **Verify Before Sending**: Always verify emails to protect sender reputation
-6. **Personalize**: Generic blasts don't work; research each prospect
-7. **Track Everything**: Monitor what works and iterate
+<dependencies>
+## MCP tools
+- **Apollo:** `apollo_organizations_job_postings`, `apollo_mixed_people_api_search`,
+  `apollo_organizations_enrich`, `apollo_people_match`
+- **Clay:** `find-and-enrich-contacts-at-company`, `find-and-enrich-company`, `add-contact-data-points`, `add-company-data-points`
+- **HubSpot:** `hubspot_search_contacts`, `qualify_lead`
+- **Gmail:** `create_draft` (draft-first staging on handoff, not built here)
 
-### Common Use Cases
+## Reference (by path, not duplicated)
+- `skill-audit/specs/suppression-spec.md` — suppression contract this skill reads/respects
+- CLAUDE.md Golden Rules + AE 90-day stale exception + ATL/BTL classification
 
-**Trigger Phrases**:
-- "Find VPs of Engineering at Series B startups in San Francisco"
-- "Build a list of CTOs at mid-market SaaS companies"
-- "Who are the decision makers at [Company X]?"
-- "Find people who recently changed jobs to Head of Sales roles"
-- "Identify marketing directors in the healthcare industry"
+## Sibling skills
+- `contact-hunter-skill` — point-in-time "find [title] at [company]" lookups (use instead of this skill when there's no job-change angle)
+- `sequence-load-skill` / `nooks-autopilot` — actual enrollment once a candidate is gated here
+- `intent-signal-aggregator-skill` — non-job-change intent signals (overlaps only on "why now" timing, not on source data)
+</dependencies>
 
-**Example Request**:
-> "Find all VPs of Engineering at Series B startups in San Francisco with 50-200 employees. Focus on companies that recently raised funding or are actively hiring. I need names, companies, LinkedIn profiles, and likely email addresses."
-
-**Response Approach**:
-1. Clarify ICP criteria
-2. Use search operators and business intelligence sources
-3. Build comprehensive prospect list
-4. Enrich with context and personalization data
-5. Prioritize by outreach temperature
-6. Provide campaign strategies
-
-Remember: The goal is not just a list of names—it's a targeted, researched set of qualified prospects with context for personalized outreach!
+## Guardrails
+- Never guess email addresses or phone numbers from a naming pattern — Apollo/Clay enrichment or "needs enrichment," nothing in between.
+- Never list a candidate that hasn't passed `hubspot_search_contacts` dedupe + `qualify_lead` + Golden Rules + suppression.
+- Never auto-exclude an AE-owned contact outright — apply the 90-day stale exception and surface `STALE AE LEAD` per CLAUDE.md instead of silently dropping it.
+- This skill does not create HubSpot properties or write suppression state — it reads the existing gate.
+- This skill does not browse LinkedIn directly; all signal comes from Apollo/Clay MCP.
 
 ## Emit Outcome Sidecar
 
 As the final step, write to `~/.claude/skill-analytics/last-outcome-linkedin-sales-navigator-alt.json`:
 ```json
-{"ts":"[UTC ISO8601]","skill":"linkedin-sales-navigator-alt","version":"1.0.0","variant":"default",
+{"ts":"[UTC ISO8601]","skill":"linkedin-sales-navigator-alt","version":"2.0.0","variant":"default",
  "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
- "metrics":{"prospects_found":[n],"profiles_enriched":[n],"campaigns_suggested":[n]},
+ "metrics":{"accounts_checked":[n],"raw_candidates":[n],"gated_candidates":[n],"hot":[n],"warm":[n],
+            "excluded_golden_rules":[n],"excluded_suppressed":[n],"stale_ae_surfaced":[n]},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
 Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
 
-</workflow>
+## Skill metadata
+**Version:** 2.0 · **Author:** Tim Kipper · **Status:** active
+**Chain:** `linkedin-sales-navigator-alt-skill` → `sequence-load-skill` / `nooks-autopilot` (enrollment) → `morning-brief`
+**Not a replacement for:** `contact-hunter-skill` (point lookups), `lookalike-customer-finder-skill`, `champion-identifier-skill` — flagged as adjacent, not merged.
