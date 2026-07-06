@@ -1,6 +1,6 @@
 ---
 name: "sales-revenue"
-description: "Epiphan Video B2B sales - video capture/streaming lead qualification, pipeline metrics, MEDDIC discovery, and demo execution for Pearl devices, EC20 PTZ, and Epiphan Connect. Use for lead scoring, cold outreach to Higher Ed/Government/Corporate AV, and pipeline reviews."
+description: "Umbrella B2B sales skill for Epiphan Video — qualification-gated lead scoring, pipeline/revenue metrics, and MEDDIC/SPIN discovery + demo execution for Pearl devices, EC20 PTZ, and Epiphan Connect across Higher Ed/Government/Corporate AV/Healthcare/Courts/K-12/Houses of Worship. Use for lead scoring, cold outreach, and pipeline reviews; for deep-dive demo scripts see demo-execution-playbook-skill, for MEDDIC call prep see meddic-call-prep-auto-skill, for cold-email copy see cold-email-sequence-generator-skill, for negotiation see challenger-sale-skill / never-split-the-difference-skill."
 ---
 
 <objective>
@@ -20,6 +20,36 @@ Comprehensive B2B sales skill for Epiphan Video BDRs covering cold outreach to v
 
 **Tim's 2026 Quota (full ramp since June):** 24 deals/mo, $714K pipeline/mo; H2 revenue targets rise monthly ($475K Jul → $600K Dec) — read the current month's row from the comp plan table in CLAUDE.md. Stretch = 126%+ (1.5x accelerator). 50+ daily dials, 8-12% connect rate, <60 min speed to lead
 </quick_start>
+
+<config>
+## Declared reference values (single source of truth for this file)
+
+Everywhere else in this skill, reference the two tables below instead of re-listing owner IDs or ICP
+scores inline — this keeps the skill from drifting when CLAUDE.md's Golden Rules or ICP scoring change.
+
+**AE owner IDs (`hubspot_owner_id`) — Golden Rule 4, 90-day stale exception scope:**
+| AE | Owner ID | Stale-exception (>90d no activity) scope |
+|----|----------|-------------------------------------------|
+| Lex Evans | `82625923` | North America only (USA/Canada) |
+| Ron Epstein | `423155215` | All regions |
+| Phillip Sandler | `190030668` | North America only (USA/Canada) |
+
+If last activity is <90 days, respect ownership and exclude regardless of AE.
+
+**ICP vertical scores** (feeds `icp_fit` 0-30 scoring factor and tier/priority notes):
+| Vertical | Score |
+|----------|-------|
+| Higher Ed | 90 |
+| Courts/Legal | 85 |
+| Government | 80 |
+| Corporate AV | 80 |
+| Healthcare | 75 |
+| Houses of Worship | 70 |
+| K-12 | 65 |
+
+Full ATL/BTL keyword lists live in CLAUDE.md § ATL/BTL Classification v1.0 (canonical) — the fallback
+copy in the Qualification Gate below is a degrade path, not a second source of truth.
+</config>
 
 <success_criteria>
 Sales process is successful when:
@@ -62,8 +92,17 @@ Apollo Discovery → Lead Scoring → ICP Filtering → Apollo Sequences → Cla
 | SILVER | Content download (whitepapers), free guide download, Facebook Lead Ads from video/streaming content | Week 1 | Standard Apollo sequence | First conversion contains 'setup', 'Pearl', 'Connect', 'signup'; product usage in engagement_overview |
 | BRONZE | Webinar/lecture symposium attendance, newsletter signup | Nurture | Drip campaign + nurture flow | |
 
-### ATL/BTL Gate (Pre-Sequence)
-Before adding ANY contact to an Apollo sequence, classify by title:
+### Qualification Gate (Pre-Sequence) — `qualify_lead` is mandatory
+Per `skill-audit/specs/suppression-spec.md`, **`qualify_lead` is the single gate.** Call it immediately
+after the initial candidate pull (Gate A: dedupe) — **before** any ATL/BTL tiering, enrichment spend
+(Apollo/Clay), Apollo sequence enrollment, or Gmail draft creation. `qualify_lead` returns `category`
+(ideal_mql/warm/nurture/junk), `power_level` (atl/btl/unknown), region, and a junk flag — treat this as
+authoritative over any inline keyword table. Drop junk; hold GRAY/unknown for Tim's review per the
+90-day stale-AE exception (see `<config>`); never auto-enroll BTL.
+
+**Fallback (only if `qualify_lead` is unavailable):** classify by title against these keyword lists.
+This is a documented degrade path, not a second source of truth — if `qualify_lead` comes back online
+mid-run, re-qualify anything already routed off the fallback before it goes further down the funnel.
 - **ATL (auto-approve for sequence):** Chief, VP, Director, Dean, Provost, Superintendent, Court Administrator, City Manager, Senior Pastor, Executive Pastor
 - **GRAY (require Tim's review):** Manager (AV/Facilities/IT) — only if confirmed reports to Director+ with budget >$25K
 - **BTL (deprioritize):** Technician, Specialist, Coordinator, Support, Administrator (Systems/Network/Database), Engineer (AV/Network/Systems), Operator, Instructor/Professor/Faculty, Designer (Learning/Instructional/Graphic), Assistant, Clerk (non-Court Admin), Volunteer, Intern, Student, Resident, Help Desk
@@ -75,7 +114,7 @@ See CLAUDE.md § ATL/BTL Classification v1.0 for full vertical-specific patterns
 
 ```python
 scoring_factors = {
-    'icp_fit': 0-30,              # Higher Ed (90), Courts/Legal (85), Government (80), Corp AV (80), Healthcare (75), Houses of Worship (70), K-12 (65)
+    'icp_fit': 0-30,              # per-vertical score — see ICP vertical scores table in <config>
     'intent_signals': 0-25,       # Pearl inquiry, CMS integration (Kaltura, Panopto, YuJa), streaming protocol (RTMP/S, SRT, HLS, NDI)
     'engagement': 0-20,           # Email opens, clicks, replies, website visits to Pearl product pages
     'timing': 0-15,               # Budget cycle (edu = spring/summer, govt = fiscal year), event season (conferences)
@@ -89,8 +128,8 @@ scoring_factors = {
 | Agent | Role | MCP Tool | Output |
 |-------|------|----------|--------|
 | RESEARCHER | Company intel, tech stack (Extron SMP EOL?, Blackmagic, Crestron, vMix, Teradek presence) | Clay MCP | Enriched company data + competitor intel |
-| QUALIFIER | ICP fit scoring (vertical + device readiness) | Epiphan CRM MCP + ask_agent | 0-100 score + tier |
-| ENRICHER | Contact discovery — ATL-first: VP/Director/Dean/CIO/CTO/Provost (ATL), then Manager (GRAY — flag for review). Exclude NEVER-ATL titles per CLAUDE.md § ATL/BTL v1.0 | Apollo MCP | Verified emails, org chart, buying signals, ATL/BTL tier |
+| QUALIFIER | Mandatory dedupe/qualify gate, then ICP fit scoring (vertical + device readiness) | `qualify_lead` (Epiphan AI) + Epiphan CRM MCP + ask_agent | category/power_level/junk flag, 0-100 score + tier |
+| ENRICHER | Contact discovery for `qualify_lead`-approved leads only — ATL-first: VP/Director/Dean/CIO/CTO/Provost (ATL), then Manager (GRAY — flag for review). Exclude NEVER-ATL titles per CLAUDE.md § ATL/BTL v1.0 (fallback keyword table in Qualification Gate above) | Apollo MCP | Verified emails, org chart, buying signals, ATL/BTL tier |
 | WRITER | Personalized Apollo sequences (Pearl pain points, CMS integrations) | Apollo MCP | Multi-step email campaign |
 | ANALYZER | Reply intent (demo request vs nurture vs disqualify) | Gmail MCP + Epiphan CRM MCP | Route to next action |
 | ROUTER | Orchestration (add to sequence, update HubSpot, schedule follow-up) | Calendar MCP + Epiphan CRM MCP | Next-best-action |
@@ -101,6 +140,14 @@ scoring_factors = {
 2. **Problem-forward** - Lead with their pain (hybrid lecture capture, board meeting recording, multi-location streaming, NDI/RTMP integration, CMS workflow)
 3. **Clear CTA** - One ask (usually 10-min Pearl product demo or technical fit call)
 4. **Personalization** - Company name + vertical signal (e.g., "I noticed you're in Higher Ed using Panopto...")
+5. **Brand gate (mandatory)** - Before finalizing any generated copy, run it through `get_writing_style` / `check_my_copy`. Do not send copy that hasn't passed the brand-voice check.
+
+### Outreach Delivery Path (Draft-First)
+Per CLAUDE.md's Gmail Draft Workflow mandate, **default outbound is a Gmail draft, not a direct send or
+auto-fired sequence step**, for any lead-specific/high-touch touch (GOLD tier, STALE AE LEAD re-engagement,
+1:1 follow-ups): create via `create_draft`, Tim reviews/edits/sends. Apollo sequences are for the
+automated multi-step SILVER/BRONZE nurture cadence (Apollo Email Sequence Structure below) — even then,
+a lead only enters an Apollo sequence after it has cleared the Qualification Gate (`qualify_lead`) above.
 
 ### Apollo Email Sequence Structure (Epiphan Video)
 
@@ -268,6 +315,12 @@ Sales-revenue integrates with the strategy skill cluster for first-principles se
 See: `challenger-sale-skill`, `never-split-the-difference-skill`, `jobs-to-be-done-skill`
 </methodology_integration>
 
+**Product-knowledge gate (mandatory before any spec/competitive claim):** the table below (TCO, NDI/SRT
+support, Kaltura native integration, etc.) is illustrative framing, not a source of current specs. Before
+stating a spec, competitive comparison, or TCO number in a live objection response or demo script, verify
+it via `search_product_catalog` / `search_product_knowledge` — never assert Pearl/competitor specs from
+memory.
+
 | Objection | Response Framework (Epiphan) |
 |-----------|-------------------|
 | "Too expensive" | Acknowledge -> "Compared to Extron SMP or Blackmagic?" -> Show Total Cost of Ownership (Pearl-2 vs legacy + integration) |
@@ -334,24 +387,45 @@ See: `challenger-sale-skill`, `never-split-the-difference-skill`, `jobs-to-be-do
 - **Enrichment:** Apollo MCP (contact discovery), Clay MCP (company intel + competitor tech stack)
 - **Discovery Tools:** Gmail MCP (reply detection), Google Calendar MCP (schedule follow-ups)
 - **Channel Partners:** AVI-SPL, Diversified, CTI, CCS Presentation Systems, Ford AV (cross-check is_channel=true to exclude)
-- **ATL/BTL Classification:** See CLAUDE.md § ATL/BTL Classification v1.0 — approved title patterns for decision-maker identification across all 7 ICP verticals (2026-03-17)
-- **Related Skills:** lead-qualification-skill, demo-script-skill, objection-handling-skill
+- **ATL/BTL Classification:** See CLAUDE.md § ATL/BTL Classification v1.0 — approved title patterns for decision-maker identification across all 7 ICP verticals (2026-03-17); gated through `qualify_lead` per the Qualification Gate above
+- **Related Skills (umbrella vs. specialist):** this skill is the BDR umbrella; route to `demo-execution-playbook-skill` for deep-dive demo scripts, `sales-methodology-implementer-skill` / `meddic-call-prep-auto-skill` for MEDDIC call prep, `cold-email-sequence-generator-skill` for cold-email copy generation, `challenger-sale-skill` / `never-split-the-difference-skill` for negotiation framing
 - **Products:** Pearl-2, Pearl Mini, Pearl Nano, Pearl Nexus, EC20 PTZ, Epiphan Connect
-- **Verticals:** Higher Ed (90), Courts/Legal (85), Government (80), Corporate AV (80), Healthcare (75), Houses of Worship (70), K-12 (65)
+- **Verticals / ICP scores:** see ICP vertical scores table in `<config>`
 - **CMS Integrations:** Kaltura, Panopto, YuJa, Echo360, Opencast
 - **Streaming Protocols:** RTMP/S, SRT, HLS, NDI, RTSP
 
+## Output Contracts (per mode)
+
+| Mode | Delivery | Notes |
+|------|----------|-------|
+| Lead scoring / tiering | Tiered list (Gold/Silver/Bronze) with score breakdown | Input to outreach, not sent anywhere |
+| Cold outreach (GOLD, STALE AE LEAD, 1:1) | Gmail draft via `create_draft` (draft-first, default) | Tim reviews/edits/sends — never auto-sent |
+| Cold outreach (SILVER/BRONZE nurture) | Apollo sequence enrollment | Only after the Qualification Gate (`qualify_lead`) above; brand-gated copy |
+| Pipeline review | Weekly Pipeline Review Template (below) | For Tim / pipeline syncs |
+| Call prep / demo | Call Prep Checklist + Demo flow (below) | Spec claims pass the product-knowledge gate above |
+
 ## Golden Rules — EXCLUDE These Leads
 
-**DO NOT OUTREACH if ANY of these conditions are true:**
+**DO NOT OUTREACH if ANY of these conditions are true (mirrors what `qualify_lead` enforces —
+see Qualification Gate above; this table is the documented fallback):**
 - `lifecyclestage = 'customer'` — Already a customer, route to AE/CSM
 - `first_conversion_source` contains 'Pearl', 'setup', 'Connect', 'signup' — Already converting/onboarding
 - `company.device_count >= 1` — Has active devices, route to AE/CSM
 - `engagement_overview` contains product usage data — Already engaged, notify AE
 - `is_channel = true` — Channel partner, route to channel manager
-- `hubspot_owner_id IN ('82625923', '423155215', '190030668')` — AEs: Lex Evans, Ron Epstein, Phillip Sandler → **90-day stale exception**: if no activity >90d, surface as STALE AE LEAD for Tim (ATL/BTL + deal value). Ron=all, Lex/Phil=NA only. <90d=respect ownership.
+- `hubspot_owner_id` matches an AE in the AE Owner IDs table (`<config>`) → **90-day stale exception** applies per that table's scope column: if no activity >90d, surface as STALE AE LEAD for Tim (ATL/BTL + deal value). <90d = respect ownership, exclude.
 
-**Action:** Before adding to Apollo sequence, query Epiphan CRM MCP to validate lead state.
+**Action:** Before adding to Apollo sequence, query Epiphan CRM MCP to validate lead state (in addition to, not instead of, the `qualify_lead` gate).
+
+## Failure Handling (MCP degrade ladder)
+
+Apollo / Clay / Epiphan CRM MCP calls can fail mid-run. Ladder, per call:
+1. **Retry once** (transient error only).
+2. **Skip + log** the affected lead/stage with reason; continue the run — don't let one failed enrichment call halt the whole batch.
+3. **Alert Tim** in the run output if the same MCP tool fails 3+ times in one run (likely an outage, not a fluke) — e.g. "Apollo MCP degraded: N enrichments skipped."
+4. **Halt** only if `qualify_lead` itself is unavailable AND the keyword-list fallback also can't be applied (e.g. no title data) — never silently ship unqualified leads.
+
+Append each run to `~/.claude/skill-runs/sales-revenue.jsonl`: `{ts, stage, mcp_tool, status, leads_affected, note}` per failure, in addition to the outcome sidecar below.
 
 ---
 
