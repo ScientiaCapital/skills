@@ -1,5 +1,6 @@
 ---
 name: "business-pulse"
+version: "1.0.0"
 description: "Live firm-wide sales pulse from the Epiphan CRM — revenue vs pace, pipeline by stage, won/lost, BDR activity, with coaching takeaways. Use when: business pulse, how are we doing, pipeline health, revenue pace, weekly numbers, standup brief, are we on track, sales snapshot."
 ---
 
@@ -32,11 +33,12 @@ cuts, use the `query_dataset` calls in "How to run it". Reference material: `ref
 
    **Track the new SDR cohort** (Edgar / Vasil / Nyasha — onboarded June 2026) explicitly:
    ```
-   weekly_brief({ bdr_owner_ids: ["93367782","93782443","94135434"] })
+   weekly_brief({ bdr_owner_ids: <new-SDR-cohort ids> })
    query_dataset({ dataset: "rep_activity", group_by: ["owner"],
-                   filters: { owner_ids: ["93367782","93782443","94135434"] } })
+                   filters: { owner_ids: <new-SDR-cohort ids> } })
    ```
-   (IDs + Nooks mapping live in `epiphan-ai-mcp-guide-skill` golden defaults.)
+   Pull the actual ids from `epiphan-ai-mcp-guide-skill` golden defaults (single source of truth —
+   do not re-hardcode them here; they drift otherwise).
 
 2. **Deeper cuts as needed:**
    ```
@@ -46,6 +48,23 @@ cuts, use the `query_dataset` calls in "How to run it". Reference material: `ref
    ```
 
 3. **Synthesize** into the output shape below — never just dump JSON.
+
+4. **Deliver + emit outcome sidecar** (see "Delivery" and "Outcome sidecar" below).
+
+## Empty-data guard (CRITICAL)
+If `weekly_brief` (or a `query_dataset` call the output depends on) returns empty, errors, or times
+out, **do not fabricate or estimate numbers to fill the shape**. Instead:
+- Retry the call once.
+- If still empty/unavailable, produce the report with the affected section replaced by
+  `NO LIVE DATA — <source> unavailable this run` (e.g. `NO LIVE DATA — weekly_brief unavailable`),
+  omit any coaching takeaway that would depend on the missing number, and mark the run `partial`.
+- If `weekly_brief` itself fails and no fallback `query_dataset` cut can substitute, halt and mark
+  the run `error` — never present a guess as the pace/revenue/pipeline figure.
+
+## Delivery
+Save the rendered report as `outputs/business_pulse_<YYYY-MM-DD>.html` (self-contained, matches the
+Output shape below) — this is the concrete artifact a scheduled/standup run leaves behind. For an
+interactive "business pulse" ask, also paste the same content inline in the reply.
 
 ## Output shape
 
@@ -83,10 +102,44 @@ Output is internal. Naming partners/competitors here is fine; anything buyer-fac
 (no AV-matrix mechanism, no third-party brand names — "your CMS / LMS"). The pooled figure is "a more
 affordable path, a starting point, not a quote." See `epiphan-ai-mcp-guide-skill`.
 
+## Outcome sidecar (every run)
+Write `~/.claude/skill-analytics/last-outcome-business-pulse-skill.json` (path MUST be outside the
+repo) so a broken `weekly_brief` pull is visible to the analytics sweep instead of a silent no-op.
+Failure definition per `skill-audit/specs/self-healing-template.md`: **success** = pulled live and
+delivered clean; **partial** = one or more sections replaced by the `NO LIVE DATA` guard above but a
+report was still produced; **error** = no usable report produced at all (`weekly_brief` failed with no
+fallback). `partial`/`error` must name the failing source in `error` — never leave it blank.
+
+```json
+{
+  "ts": "{ISO-8601 UTC now}",
+  "skill": "business-pulse-skill",
+  "version": "1.0.0",
+  "variant": "default",
+  "status": "success | partial | error",
+  "runtime_ms": 0,
+  "metrics": {
+    "ytd_pace_pct": 0,
+    "week_revenue": 0,
+    "pipeline_open": 0,
+    "deals_won": 0,
+    "deals_lost": 0,
+    "sections_missing": []
+  },
+  "error": null,
+  "session_id": "{session id or null}"
+}
+```
+`version` must match the frontmatter `version:` above. `sections_missing` lists any output rows
+replaced by `NO LIVE DATA` this run (empty array on a clean success).
+
 <success_criteria>
 - [ ] Pulled LIVE data via `weekly_brief` / `query_dataset` this run — no stale or fabricated numbers
+- [ ] Any empty/failed source is flagged inline as `NO LIVE DATA — <source>` (never guessed) and the run marked partial/error accordingly
 - [ ] Output follows the BUSINESS PULSE shape: pace vs $19.5M target, revenue (week/MTD/QTD/YoY), pipeline by stage, won/lost, BDR activity, top movers
-- [ ] Exactly three "SO WHAT" coaching takeaways, each tied to a number in the brief
+- [ ] Exactly three "SO WHAT" coaching takeaways, each tied to a number in the brief (fewer if a dependent section is missing)
 - [ ] Any vertical breakdown is labeled approximate (derived via source/pipeline/country proxy — no native vertical dimension)
 - [ ] Output stays internal-only; buyer-facing guardrails respected
+- [ ] Report saved to `outputs/business_pulse_<YYYY-MM-DD>.html`
+- [ ] Outcome sidecar written to `~/.claude/skill-analytics/last-outcome-business-pulse-skill.json`
 </success_criteria>

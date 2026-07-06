@@ -114,10 +114,12 @@ Check for stored competitive intel from the bdr-v3-competitive-intel daily task:
    - **If no competitor mentioned**: Include proactive competitive positioning for top 2 competitors in prospect's vertical
    - **Specific objection rebuttals**: Map Clari objections to prepared responses
 
-**Competitive Quick Reference (by vertical):**
+**Non-negotiable: spec/competitor live-verification gate.** Before emitting the displacement table or any spec/price/competitor-status claim in the brief, call `search_product_catalog` (SKUs, pricing, short names) and/or `search_product_knowledge` (technical/integration/EOL status) to confirm it's current — per the `epiphan-call-playbook` technical-accuracy gate. Specs and competitor claims (e.g. "discontinued", "EOL") must never be stated from memory in the output brief. The table below is a fallback only for when live lookup is unavailable; if used as a fallback, mark it `⚠️ UNVERIFIED — confirm before the call` in the brief.
+
+**Competitive Quick Reference (by vertical) — fallback only, confirm live before use:**
 | Vertical | Primary Competitor | Displacement Angle |
 |----------|-------------------|-------------------|
-| Higher Ed | Extron SMP (discontinued) | Extron EOL → Pearl migration path |
+| Higher Ed | Extron SMP (last known: discontinued) | Extron EOL → Pearl migration path |
 | Corporate AV | Crestron | Pearl = simpler, no programmer needed |
 | Houses of Worship | vMix | Pearl = hardware reliability, no PC crashes |
 | Healthcare | Blackmagic | Pearl = HIPAA-friendly, Connect cloud mgmt |
@@ -129,13 +131,10 @@ Check for stored competitive intel from the bdr-v3-competitive-intel daily task:
 | `crm_search_customers` | Existing customer match — devices, orders, channel relationship |
 | `analytics_search_by_email` | Device registration lookup by contact email |
 
-**Golden Rules check:** If ANY of these are true, STOP and skip this prep:
-  - `lifecyclestage = 'customer'` → Route to AE/account manager, not Tim's call
-  - `device_count >= 1` → Existing customer, route to account manager
-  - `is_channel = true` → Channel partner, route to channel manager
-  - `hubspot_owner_id` IN ('82625923', '423155215', '190030668') → AE-owned deal (Lex Evans, Ron Epstein, Phillip Sandler), not Tim's to prep
+**Golden Rules / suppression gate:** Call `qualify_lead` for the primary contact(s) on this deal — it is the single source of truth for Golden Rules, ATL/BTL, and suppression (per `skill-audit/specs/suppression-spec.md`); do not re-derive customer/channel/AE-owned status from raw HubSpot/CRM fields. If `qualify_lead` returns `junk` or a suppression/Golden-Rules category (customer, channel partner, AE-owned <90 days), STOP and skip this prep.
+  - **Fallback (qualify_lead unavailable):** apply the Golden Rules inline as a degraded check — `lifecyclestage = 'customer'` or `device_count >= 1` → existing customer; `is_channel = true` → channel partner; `hubspot_owner_id` IN ('82625923', '423155215', '190030668') → AE-owned (Lex Evans, Ron Epstein, Phillip Sandler) with the 90-day stale exception per CLAUDE.md — and mark the brief `partial` in the outcome sidecar since the gate was degraded.
 
-**Exception:** If Tim explicitly says 'prep me for [company]' and the company is flagged, generate the brief but add a ⚠️ WARNING banner at the top: 'This is an EXISTING customer/channel partner/AE deal. Coordinate with the owner before reaching out.'
+**Exception:** If Tim explicitly says 'prep me for [company]' and the company is flagged (by `qualify_lead` or the fallback), generate the brief but add a ⚠️ WARNING banner at the top: 'This is an EXISTING customer/channel partner/AE deal. Coordinate with the owner before reaching out.'
 
 ## Stage 2: MEDDIC Synthesis
 
@@ -148,11 +147,11 @@ Map gathered context into MEDDIC framework:
 
 ### E — Economic Buyer
 - **Known:** Map attendees by seniority → VP/Director/Dean = likely EB
-- **ATL/BTL Validation (MANDATORY — see CLAUDE.md § ATL/BTL Classification v1.0):**
-  - **Confirmed EB (ATL tier):** Title matches Chief (CIO, CTO, CFO, COO), VP (AVP, SVP, EVP), President, Provost, Vice Provost, Superintendent, Director (of IT, Technology, Facilities, Academic Technology, Procurement, Materials Mgmt, Medical Education, Court Administration), Dean, Court Administrator, Clerk of Court (Federal), City Manager, County Manager, Senior Pastor, Executive Pastor → Mark EB as ✅ IDENTIFIED
-  - **Gray Zone — confirm budget authority:** Manager (AV/Facilities/IT) — only ATL if reports to Director+ AND has delegated budget >$25K. Ask: "Does [name] control the budget for this purchase, or do they need approval from someone above them?"
-  - **NOT an EB (BTL tier):** Technician, Specialist, Coordinator, Support, Administrator (Systems/Network/Database), Engineer (AV/Network/Systems), Operator, Instructor/Professor/Faculty, Designer (Learning/Instructional/Graphic), Assistant, Clerk (non-Court Admin), Volunteer, Intern, Student, Resident, Help Desk → Mark EB as ⚠️ NOT IDENTIFIED — need to find the person who signs the PO
-  - **NEVER an EB:** Warehouse Manager, Network Manager, Systems Administrator, AV Technician, Graphic Design Instructor, Program Administrator, Web Designer, Classroom Support, Lab Coordinator, Maintenance, Building Engineer, Multimedia Services Manager, Video Production Specialist, Streaming Crew → These roles CANNOT approve budget. Do not list them as potential EBs.
+- **ATL/BTL Validation (MANDATORY — route through `qualify_lead`):** For each attendee, call `qualify_lead` and read its `power_level` (`atl` / `btl` / `gray` / `unknown`) — this is the single gate for ATL/BTL classification (per `skill-audit/specs/suppression-spec.md`); do not re-derive it from a hand-rolled title keyword table.
+  - `power_level = atl` → Mark EB as ✅ IDENTIFIED
+  - `power_level = gray` → Confirm budget authority before treating as EB. Ask: "Does [name] control the budget for this purchase, or do they need approval from someone above them?" (full gray-zone criteria, e.g. the $25K delegated-budget threshold for AV/Facilities/IT Managers, are defined in CLAUDE.md § ATL/BTL Classification v1.0 — `qualify_lead` applies them, this skill doesn't re-implement them)
+  - `power_level = btl` → Mark EB as ⚠️ NOT IDENTIFIED — need to find the person who signs the PO. Do not list BTL/junk-flagged titles as potential EBs.
+  - `power_level = unknown` (e.g. `qualify_lead` unavailable) → fall back to CLAUDE.md § ATL/BTL Classification v1.0 title matching, and mark the brief `partial` in the outcome sidecar since the gate was degraded.
 - **Unknown attendees:** Flag for discovery ("Who controls the budget for this?")
 - **Signal:** If only BTL/technical staff on call, EB isn't engaged yet — flag as ⚠️ and add discovery question: "Who would sign off on this purchase?"
 
@@ -253,6 +252,12 @@ CALL AGENDA (suggested):
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
+## Stage 4: Delivery (optional — durable artifact)
+The terminal brief above doesn't survive the chat session. If Tim asks to save/share the prep, or by default when prepping for a meeting >2 hours out, deliver one of:
+- **Gmail draft:** `create_draft` to `tkipper@epiphan.com` with the brief as the body (subject: `Call Prep: [Company] — [Date]`).
+- **Saved HTML:** render the same content to a self-contained HTML file for quick reference/sharing.
+Skip delivery (terminal-only) for "prep my next call" quick-lookups run just before a call.
+
 </workflow>
 
 <demo_prep_addon>
@@ -273,16 +278,21 @@ When trigger is "demo prep" instead of "call prep", append:
 <dependencies>
 ## Required MCP Tools
 - **Google Calendar MCP:** gcal_list_events, gcal_get_event
-- **Epiphan CRM MCP:** hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_deal, crm_search_customers, analytics_search_by_email, ask_agent (activity history queries)
+- **Epiphan CRM MCP:** hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_deal, crm_search_customers, analytics_search_by_email, ask_agent (activity history queries), `qualify_lead` (Golden Rules / ATL-BTL / suppression gate), `search_product_catalog`, `search_product_knowledge` (spec/competitor live-verification gate)
 - **Apollo MCP:** apollo_organizations_enrich, apollo_people_match, apollo_organizations_job_postings
 - **Clari MCP (NEW):** clari_search_calls, clari_get_call_summary
-- **Gmail MCP:** search_threads (for competitive intel reports)
+- **Gmail MCP:** search_threads (for competitive intel reports), create_draft (optional delivery, Stage 4)
 
 ## Sibling Skills Referenced
 - `sales-revenue-skill` — MEDDIC framework, objection handling (LAER), demo flow
 - `prospect-research-to-cadence-skill` — Shares enrichment logic, Golden Rules filter
 - `hubspot-revops-skill` — HubSpot query patterns, deal stage definitions
+- `epiphan-call-playbook` — source of the technical-accuracy gate pattern reused above (Stage 1f)
 </dependencies>
+
+## Self-Healing
+
+Follows `skill-audit/specs/self-healing-template.md`. For each external call (HubSpot, Apollo, Clari, Calendar, qualify_lead): retry once on transient errors, degrade to a lesser source and mark the run `partial` (e.g. `qualify_lead` down → CLAUDE.md keyword fallback above; Clari down → skip prior-call context), alert (flag in the brief) if a mandatory gate — Golden Rules or the spec-verification gate — can't be evaluated at all, and halt (no brief) if the company/deal can't be identified. In addition to the outcome sidecar below, append one line per run to `~/.claude/skill-runs/meddic-call-prep-auto.jsonl` per the template's run-log convention.
 
 ## Emit Outcome Sidecar
 
@@ -293,4 +303,7 @@ As the final step, write to `~/.claude/skill-analytics/last-outcome-meddic-call-
  "metrics":{"calls_prepped":[n],"meddic_fields_filled":[n],"contacts_enriched":[n],"economic_buyers_identified":[n]},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
-Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+Use status "partial" if some stages failed but results were produced (including a degraded Golden-Rules/qualify_lead fallback or a skipped spec-verification lookup) — name the degraded stage in `error`. Use "error" only if no output was generated. The `version` above must match the Skill metadata footer below, per the template's version-consistency rule — don't hardcode it a second time.
+
+## Skill metadata
+**Version:** 1.0.0 · **Author:** Tim Kipper · **Status:** active · **Tier:** P1 (Core BDR Automation)

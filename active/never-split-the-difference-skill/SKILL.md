@@ -185,6 +185,8 @@ This is Chris Voss's single highest-response-rate email template.
 
 **The non-monetary item:** At your final price, throw in something non-monetary ("We'll include on-site installation and training"). This signals: "I've gone as low as I can on price."
 
+**Illustrative only — verify before quoting:** the $ figures below are a worked example to teach the anchor/concede mechanics. Never repeat them to a prospect. Pull the real list price and any active promo via `search_product_catalog` before using this model on an actual deal.
+
 ## Example (selling Pearl-2 fleet, target: $48K)
 - List price: $62,000 (130% anchor)
 - First concession: $55,200 (115%) — "I can do this if we close this quarter"
@@ -263,6 +265,12 @@ Not sure if it's relevant — but if it is, I'm at [number].
 Either way, no worries."
 ```
 **Why it works:** Accusation audit is embedded ("not sure if it's relevant"). The "either way, no worries" removes pressure (no-oriented). FM DJ voice builds trust on a channel where 85%+ of dials land.
+
+## Delivery — Brand Gate + Draft Staging (required for all 5 templates + the voicemail script)
+None of the copy above is "done" when the words are generated. Before it's treated as final:
+1. **Brand gate:** run `get_writing_style` (Tim/Epiphan voice) then `check_my_copy` on the drafted text. Resolve every flag it raises — never hand back or stage copy that failed the check.
+2. **Stage, don't just print:** create the email as a Gmail draft via `gmail_create_draft` (send-from `tkipper@epiphan.com` per CLAUDE.md) instead of returning finished copy as chat-only text. Tim's workflow is call → open draft → review/edit → send.
+3. **Voicemail scripts** have no draft equivalent — after the brand gate passes, hand it back as a call-prep script, not a "ready to leave" artifact.
 </email_templates>
 
 <integration_points>
@@ -361,6 +369,8 @@ Fair enough. But I've been talking to court IT teams across [state] and hearing 
 Would it be out of the question to spend 15 minutes comparing notes on what other courts are doing?
 
 [Signature]
+
+*(Per the Delivery step in `<email_templates>`: this would run through `get_writing_style` + `check_my_copy` and be staged via `gmail_create_draft` before being treated as final — omitted here for brevity.)*
 </example_session>
 
 <anti_patterns>
@@ -375,13 +385,27 @@ Would it be out of the question to spend 15 minutes comparing notes on what othe
 - **Being a pushover** — Tactical empathy is assertive, not passive. You're understanding their world while still advocating for yours.
 </anti_patterns>
 
+## Required MCP Tools
+- **Epiphan Brand:** `get_writing_style`, `check_my_copy` (brand-voice gate, required before any email/voicemail copy is final)
+- **Gmail:** `gmail_create_draft` (draft-first staging, required for every generated email)
+- **Epiphan AI:** `search_product_catalog` (real pricing — never quote the Ackerman example figures from memory)
+
+## Failure Handling
+Per `skill-audit/specs/self-healing-template.md`:
+- **success** — strategy/copy generated, brand gate passed clean, draft(s) staged (or, in Negotiate/Discover modes with no outbound copy, the brief was delivered).
+- **partial** — `check_my_copy` flagged issues that were fixed and re-checked, OR `gmail_create_draft` failed and the copy was returned in chat instead — state which stage degraded and why.
+- **error** — no usable strategy/copy was produced (e.g. missing prospect/deal context), or the brand gate could not be reached and no draft was staged.
+
+Retry once on a transient `check_my_copy`/`gmail_create_draft` failure; if it still fails, degrade to returning the copy in chat flagged `NOT drafted — check_my_copy/Gmail unavailable` rather than silently staging unchecked copy. Append one line per run to `~/.claude/skill-runs/never-split-the-difference.jsonl` (schema per the self-healing spec) in addition to the sidecar below.
+
 ## Emit Outcome Sidecar
 
 As the final step, write to `~/.claude/skill-analytics/last-outcome-never-split-the-difference.json`:
 ```json
 {"ts":"[UTC ISO8601]","skill":"never-split-the-difference","version":"1.0.0","variant":"default",
  "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
- "metrics":{"tactics_applied":[n],"labels_created":[n],"accusation_audits":[n],"calibrated_questions":[n]},
+ "metrics":{"tactics_applied":[n],"labels_created":[n],"accusation_audits":[n],"calibrated_questions":[n],
+            "brand_gate_passed":[n],"drafts_staged":[n]},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
 Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
