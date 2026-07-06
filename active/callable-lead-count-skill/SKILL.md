@@ -1,6 +1,6 @@
 ---
 name: callable-lead-count
-description: "Daily callable lead inventory with ATL/BTL breakdown. Health check for 50+ daily dials."
+description: "Daily callable-lead inventory health check with ATL/BTL/GRAY/NEVER breakdown and ATL Runway metric for Tim's 50+ dials/day target. Alerts when total callable < 50 or ATL < 15. Use when: 'show callable leads', 'lead inventory check', 'how many callable leads', 'ATL runway', 'callable count', or the 7:25 AM scheduled run feeding morning-brief."
 schedule: "0 7 25 * * 1-5"
 timezone: "America/New_York"
 ---
@@ -13,15 +13,15 @@ Generate daily inventory of callable prospects (contacts with phone numbers) in 
 
 <quick_start>
 **Trigger:** M-F 7:25 AM ET (daily, before morning-brief at 7:30 AM)  
-**Manual Trigger:** "Show callable leads" or "Lead inventory check"  
-**Dependencies:** Requires HubSpot portal 21530819 access  
-**Output:** Callable lead count by tier, ATL Runway days, health alerts
+**Manual Trigger:** "Show callable leads", "Lead inventory check", "how many callable leads", "ATL runway", "callable count"  
+**Dependencies:** Requires HubSpot portal 21530819 access; `qualify_lead` (Epiphan AI) for dedupe + tiering  
+**Output:** Callable lead count by tier, ATL Runway days, health alerts, delivered via Slack DM on the scheduled run
 </quick_start>
 
 <success_criteria>
 - [ ] Query HubSpot for contacts with phone != null
-- [ ] Apply Golden Rules (exclude customers, channel, device owners, product-page engagers)
-- [ ] Classify each by ATL/BTL tier (per CLAUDE.md Decision-Maker rules)
+- [ ] Gate every candidate through `qualify_lead` (dedupe + Golden Rules + power_level) per `skill-audit/specs/suppression-spec.md` — do not re-derive Golden Rules or ATL/BTL from local keyword lists
+- [ ] Classify each by ATL/BTL tier sourced from `qualify_lead`'s `power_level` (taxonomy defined once in CLAUDE.md § ATL/BTL Classification, not restated here)
 - [ ] Count totals: ATL, GRAY, BTL, NEVER (for awareness)
 - [ ] Calculate ATL Runway = ATL count ÷ 15 dials/day = X days of inventory
 - [ ] Calculate total Runway = total callable count ÷ 50 dials/day = X days
@@ -68,26 +68,23 @@ limit: 100
 
 ---
 
-## Stage 2: Apply Golden Rules Filter
+## Stage 2: qualify_lead Gate (Golden Rules + Dedupe)
 
-**Golden Rules (Hard Exclusions):**
+**MCP Tool:** `qualify_lead` (Epiphan AI)
 
-**Skip contacts if:**
-- Email domain matches crm_customers table (customer account)
-- Contact tagged "Channel Partner" (hubspot_owner_id = channel owner)
-- Contact tagged "Device Owner" or in device-owner list
-- Contact tagged "Product Page Engager" (marketing-only engagement)
-- Job title contains BTL keywords: Technician, Support, Intern, Volunteer, Operator, Designer (non-director)
-- Job title in NEVER ATL list (Warehouse Manager, Network Manager, Systems Admin, AV Tech, Graphic Design Instructor, Program Administrator, Web Designer, Classroom Support, Lab Coordinator, Maintenance, Building Engineer, Multimedia Services Manager, Video Production Specialist, Streaming Crew)
+Call `qualify_lead` on every contact from Stage 1 immediately after the pull — this is Gate A per `skill-audit/specs/suppression-spec.md`, and it must run before any ATL/BTL tiering. `qualify_lead` returns `category` (ideal_mql/warm/nurture/junk), `power_level` (atl/gray/btl/unknown), region, and a junk/duplicate flag, so it replaces both the hand-rolled Golden Rules keyword matching and the missing dedupe step (multi-record contacts at the same account previously double-counted inventory).
+
+**Drop from the callable pool if:**
+- `qualify_lead` flags the record as duplicate or `category == junk`
+- Any Golden Rule from CLAUDE.md § Golden Rules — Lead Qualification Gates applies (customer, channel partner, product-only engager, AE-owned with <90d activity) — `qualify_lead` reflects these; treat CLAUDE.md as the source of truth on disagreement
 - Lead status in exclusion list: Unqualified, Opted Out, Bad Fit
-- Phone number invalid or duplicate
+- Phone number invalid
 
-**Retention Logic:**
-- Keep contacts with hs_lead_status in: Subscriber, Qualified Lead, Inbound Lead, Marketing Qualified Lead, Sales Qualified Lead
-- Keep prospects created in last 90 days
-- Keep contacts with hs_analytics_num_page_views > 0 (engagement signal)
+**Retention logic:** keep contacts `qualify_lead` doesn't drop, prioritizing hs_lead_status in Subscriber/Qualified Lead/Inbound Lead/Marketing Qualified Lead/Sales Qualified Lead, prospects created in the last 90 days, and contacts with hs_analytics_num_page_views > 0.
 
-**Output:** Filtered callable list (typically 50-70% of input after Golden Rules)
+**Fallback (only if `qualify_lead` is unreachable):** apply the Golden Rules checklist directly from CLAUDE.md rather than a locally maintained keyword list, and flag the run as degraded (no dedupe) in the outcome sidecar.
+
+**Output:** Deduped, Golden-Rules-filtered callable list (typically 50-70% of input).
 
 ---
 
@@ -105,59 +102,28 @@ Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_
 
 ## Stage 3: Classify by ATL/BTL Tier
 
-**MCP Tool:** N/A (logic-based classification using jobtitle)
+**MCP Tool:** `qualify_lead` (Epiphan AI) — same call as Stage 2; source tier from its `power_level` field rather than re-deriving it from a local keyword list.
 
-**Apply ATL/BTL Decision-Maker Classification (per CLAUDE.md):**
-
-**ATL Tier (Always Prospect)** — 10 Universal Keywords:
-- Chief, CIO, CTO, CFO, COO
-- Vice President, VP, AVP, SVP, EVP
-- President, Provost, Vice Provost
-- Superintendent, Director (IT/Tech/Facilities/Academic Tech/Procurement)
-- Dean, Court Administrator, Clerk of Court
-- City Manager, County Manager, Senior Pastor, Executive Pastor
-
-**GRAY Tier (Contextual - Budget Authority >$25K):**
-- Manager (AV/Facilities/IT) — only if reports to Director+
-- Department Chair — context-dependent (small vs large institution)
-- Director of Educational Technology — depends on reporting line
-- Program Director — only if dept-level budget authority
-
-**BTL Tier (No Budget Authority):**
-- Technician, Specialist, Coordinator, Support
-- Administrator (Systems/Network/Database)
-- Engineer (AV/Network/Systems), Operator
-- Instructor, Professor, Faculty, Designer, Assistant
-- Clerk (non-Court), Volunteer, Help Desk
-- Student, Resident, Intern
-
-**NEVER ATL (Automatic Exclusions):**
-- Warehouse Manager, Network Manager, Systems Administrator
-- AV Technician, Graphic Design Instructor
-- Program Administrator, Web Designer
-- Classroom Support, Lab Coordinator, Maintenance
-- Building Engineer, Multimedia Services Manager
-- Video Production Specialist, Streaming Crew
-
-**Classification Algorithm:**
+**Tier mapping (from `qualify_lead` output):**
 ```
 FOR each contact IN filtered_list:
-  title = contact.jobtitle.lower()
-  
-  IF title matches any NEVER_ATL keyword:
-    tier = "NEVER"
-    action = "REVIEW" (may need removal from sequences)
-  
-  ELIF title matches any ATL keyword:
+  IF power_level == "atl":
     tier = "ATL"
-  
-  ELIF title matches any GRAY keyword:
+  ELIF power_level == "gray":
     tier = "GRAY"
     note = "Verify budget authority >$25K via company research"
-  
-  ELSE:
+  ELIF power_level == "btl":
     tier = "BTL"
+  ELIF title matches CLAUDE.md's NEVER-ATL list (power_level unresolved):
+    tier = "NEVER"
+    action = "REVIEW" (may need removal from sequences)
+  ELSE:
+    tier = "BTL"  # unknown power_level, no NEVER-ATL match — treat conservatively
 ```
+
+The full ATL / GRAY / BTL / NEVER keyword taxonomy is defined once in **CLAUDE.md § ATL/BTL Decision-Maker Classification** and in `skill-audit/specs/suppression-spec.md` — it is not restated here. If `qualify_lead`'s tier and the CLAUDE.md taxonomy ever disagree for a contact, CLAUDE.md wins and the mismatch should be logged for review (possible `qualify_lead` drift).
+
+**Fallback (only if `qualify_lead` is unreachable):** classify directly against the CLAUDE.md keyword lists rather than a locally cached copy, and flag the run as degraded in the outcome sidecar.
 
 **Output:** Classified callable contacts with tier assignment
 
@@ -214,6 +180,8 @@ recent_engagers = count(hs_analytics_num_page_views > 0)
 🔍 NEVER ATL: 2 contacts (remove from sequences)
 ✓ Health: GREEN (acceptable inventory)
 ```
+
+**Delivery:** On the 7:25 AM scheduled run there's no one watching chat, so any ⚠️/🚨/🔍 alert must go out, not just render to a transcript. Send via `slack_send_message` to Tim's DM (`U0AAJUZH2PK`), matching the `he-dial-queue` alert pattern. On a manual trigger, the chat response is sufficient and no Slack send is needed.
 
 ---
 
@@ -324,17 +292,34 @@ As the final step, write to `~/.claude/skill-analytics/last-outcome-callable-lea
  "metrics":{"atl_count":[n],"gray_count":[n],"btl_count":[n],"total_callable":[n],"never_atl_flagged":[n],"atl_runway_days":[n]},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
-Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated. If Stage 2/3 ran in the `qualify_lead`-unreachable fallback mode, use "partial" and note the degraded dedupe/tiering in `error`.
+
+---
+
+<dependencies>
+## MCP tools
+- **HubSpot:** `search_crm_objects` (Stage 1 pull)
+- **Epiphan AI:** `qualify_lead` (Stage 2 dedupe + Golden Rules gate, Stage 3 ATL/BTL tiering)
+- **Slack:** `slack_send_message` (Stage 5 alert delivery on the scheduled run)
+
+## Reference, not restated here
+- `skill-audit/specs/suppression-spec.md` — `qualify_lead` as the single gate contract (dedupe + Golden Rules + power_level)
+- `CLAUDE.md` § Golden Rules — Lead Qualification Gates, and § ATL/BTL Decision-Maker Classification — full keyword taxonomy
+
+## Sibling skills referenced (reuse, don't rebuild)
+- `he-dial-queue` — Slack alert delivery pattern
+- `sdr-dial-lists`, `morning-brief` — overlapping inventory/consumption; this skill is the health-check source of truth, not a dial-list builder
+</dependencies>
 
 ---
 
 ## Skill Metadata
 
-**Version:** 1.0  
-**Last Updated:** 2026-03-19  
+**Version:** 1.1  
+**Last Updated:** 2026-07-06  
 **Author:** Tim Kipper  
 **Status:** Production  
-**Integration:** HubSpot (portal 21530819)  
+**Integration:** HubSpot (portal 21530819) + Epiphan AI (`qualify_lead`) + Slack (alert delivery)  
 **Tier:** P1 (Core BDR Automation)  
-**Triggers:** Scheduled (M-F 7:25 AM) + Manual ("Show callable leads")  
+**Triggers:** Scheduled (M-F 7:25 AM) + Manual ("Show callable leads", "lead inventory check", "ATL runway")  
 **Dependencies:** Feeds into morning-brief (7:30 AM)
