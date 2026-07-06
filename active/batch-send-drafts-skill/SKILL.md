@@ -12,7 +12,7 @@ Surface all staged Gmail outreach drafts for review, group them by vertical/prio
 **Trigger:** "send staged drafts" / "flush draft queue" / "batch send drafts" / "review my drafts"
 **From address:** tkipper@epiphan.com (always filter to this sender)
 **Output:** Numbered review table + one Gmail link per draft → Tim clicks Send in browser
-**MCP tools:** `list_drafts` → `search_threads` (for recipient enrichment if needed)
+**MCP tools:** `list_drafts` → `search_threads` (for recipient enrichment if needed) → `qualify_lead` (per-recipient ATL/BTL, canonical source — see `skill-audit/specs/suppression-spec.md`)
 </quick_start>
 
 <success_criteria>
@@ -40,6 +40,11 @@ For each draft, extract:
 
 If `list_drafts` returns minimal header data, call `mcp__claude_ai_Gmail__get_thread` on the `threadId` of each draft to get full headers.
 
+**Error/empty handling:**
+- `list_drafts` errors (auth failure, timeout, etc.) → report the error to Tim verbatim and **halt** — do not proceed to Stage 2 with partial data.
+- `list_drafts` succeeds with 0 drafts → report "No staged drafts found" and **halt** cleanly (this is a `success` status, not `error`).
+- Append a line to `~/.claude/skill-runs/batch-send-drafts.jsonl` at both start and end of run (`{ts, status, drafts_found}`) so runs are auditable beyond the analytics sidecar.
+
 ## Stage 2: Enrich + classify
 
 For each draft:
@@ -52,9 +57,14 @@ For each draft:
 - `church` / `worship` / `pastor` → Worship
 - everything else → Corporate / Other
 
-**ATL signal** (from subject or recipient name if available):
-- Title keywords: Director, VP, CIO, Dean, Provost, Superintendent → ATL ★
-- No title info → Unknown (treat as GRAY)
+**ATL signal** — call `qualify_lead(recipient_email, name/title if parseable from headers)` per
+recipient to resolve `power_level`. Do not substring-match titles inline; the canonical ATL/BTL
+taxonomy lives in `qualify_lead` (see `skill-audit/specs/suppression-spec.md`), and a hand-rolled
+keyword subset drifts from it.
+- `power_level == atl` → ATL ★
+- `power_level == gray` or `unknown` (or `qualify_lead` unreachable) → GRAY (ranked after ATL, before BTL)
+- `power_level == btl` → BTL (ranked last; still shown — a draft already staged is never auto-dropped here)
+- `junk == true` on the returned category → flag 🚫 in the table; Tim decides whether to still send
 
 **Touch number** (from subject line patterns):
 - `RE:` prefix or `[2]` / `[3]` / `FU` / `follow` → follow-up touch
@@ -161,6 +171,6 @@ Write `~/.claude/skill-analytics/last-outcome-batch-send-drafts.json`:
 
 ## Skill metadata
 **Version:** 1.0.0 · **Status:** v1 (review + link; manual send) · **Author:** Tim Kipper
-**Integration:** Gmail MCP (list_drafts, search_threads, get_thread)
+**Integration:** Gmail MCP (list_drafts, search_threads, get_thread) + `qualify_lead` (ATL/BTL classification, per suppression-spec.md)
 **Tier:** P1 (BDR Core) · **Triggers:** Manual ("send staged drafts", "flush draft queue")
 **Feeds:** outreach pipeline; complements morning-brief (draft count awareness)

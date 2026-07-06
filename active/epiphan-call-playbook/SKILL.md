@@ -15,6 +15,22 @@ Serve as the canonical reference for what a good Epiphan phone call sounds like,
 **Spec claims:** state only what's in the Verified Spec Bank (Section 6); anything else, verify live via `search_product_catalog` / `search_product_knowledge` before saying it.
 </quick_start>
 
+<config>
+## Locked configuration
+
+**Booking link (AE discovery call):** https://meetings.hubspot.com/timkipper/discovery-call
+
+**Rep roster** (BDR/SDR team this playbook coaches — full HubSpot owner_id / Nooks user_id mappings live in `sdr-call-coaching`'s Identifiers and `nooks-autopilot`'s roster table; this is the name/status view for call-prep purposes):
+
+| Rep | Role | Status |
+|-----|------|--------|
+| Tim Kipper | Sr. BDR | full ramp |
+| Edgar Marroquin | SDR | full ramp |
+| Vasil Ivanov | SDR | ramping — onboarded 2026-06-11; coach as developmental (see `sdr-call-coaching` "NEW · ramping" handling) until ~2026-07-31, then hold to the full Section 7 standard |
+
+**Spec bank verification:** confirmed 2026-06-17 via Epiphan AI (`search_product_catalog` / `search_product_knowledge`). **Staleness threshold: 60 days** — if today is more than 60 days past the confirmation date above, re-verify every claim in Section 6 live before a call and update the date.
+</config>
+
 <success_criteria>
 - Every product/competitor claim made on a call matches the Verified Spec Bank or was verified live first — zero confidently-stated wrong specs (the technical-accuracy gate is non-negotiable).
 - Openers follow the coached rules: name + Epiphan in the first sentence, one sentence then a question, no "How are you today?".
@@ -30,7 +46,7 @@ Serve as the canonical reference for what a good Epiphan phone call sounds like,
 The canonical reference for what a good Epiphan phone call sounds like. Sibling to `sdr-email-sms-playbook` (email/SMS) — this one is the PHONE. Use it to make calls, coach Edgar + Vasil, and source talking points for dial lists. The `sdr-call-coaching` task scores calls against the standards defined here.
 
 ## Non-negotiable: technical-accuracy gate
-Every product/competitor claim in this playbook was verified via Epiphan AI on 2026-06-17. Before quoting any spec, price, or competitive claim that is NOT in the "Verified spec bank" below, look it up live (`search_product_catalog` for SKUs/pricing/short names, `search_product_knowledge` for technical/integration). A confidently-stated wrong spec on a real prospect call is the worst outcome — it costs credibility and the meeting. When unsure, say "let me confirm the exact number and send it right after this call." Zero tolerance for invented capabilities.
+Every product/competitor claim in this playbook was verified via Epiphan AI on 2026-06-17 (see `<config>` for the 60-day staleness threshold — re-verify Section 6 if that window has passed). Before quoting any spec, price, or competitive claim that is NOT in the "Verified spec bank" below, look it up live (`search_product_catalog` for SKUs/pricing/short names, `search_product_knowledge` for technical/integration). A confidently-stated wrong spec on a real prospect call is the worst outcome — it costs credibility and the meeting. When unsure, say "let me confirm the exact number and send it right after this call." Zero tolerance for invented capabilities.
 
 ## Frameworks in play
 - **Challenger** (Teach → Tailor → Take Control): lead with an insight that reframes their problem, tailor to their vertical, control the next step.
@@ -159,15 +175,15 @@ Two specific options beat "when are you free?"
 Let them tell you the condition, then meet it.
 
 ## 5C. Booking mechanics
-- AE discovery call (Phil or Lex): https://meetings.hubspot.com/timkipper/discovery-call
+- AE discovery call (Phil or Lex): booking link declared in `<config>` above (Locked configuration).
 - If they'll book live, send the link while on the phone and confirm the calendar invite before you hang up.
 - Set the AE up: capture the pain + any MEDDIC in the notes so the `ae_handoff` is clean.
 
 ---
 
-# 6. Verified Spec Bank (confirmed 2026-06-17 via Epiphan AI)
+# 6. Verified Spec Bank (confirmed 2026-06-17 via Epiphan AI — 60-day staleness threshold, see `<config>`)
 
-State these exactly. If a prospect pushes on a number not here, confirm live before answering.
+State these exactly. If a prospect pushes on a number not here, confirm live before answering. **Staleness check:** this bank was last verified 2026-06-17; if more than 60 days have passed, re-verify every claim below via `search_product_knowledge` / `search_product_catalog` before relying on it, and update the confirmation date.
 
 ## Pearl-2
 - Up to **six simultaneous 1080p30 channels** for recording/streaming.
