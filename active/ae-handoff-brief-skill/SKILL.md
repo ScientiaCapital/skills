@@ -133,7 +133,8 @@ Compile everything known across ALL discovery touchpoints into a unified MEDDIC 
 - **On the demo?**: [Yes/No — if no, flag as risk]
 
 **ATL/BTL Validation (per CLAUDE.md § ATL/BTL Classification v1.0):**
-Map ALL known contacts to ATL/BTL tiers. If no ATL contact is on the demo invite, this is a RED FLAG.
+Use `qualify_lead` (Epiphan AI) as the source of truth to map ALL known contacts to ATL/BTL/GRAY
+tiers — do not hand-classify from title text alone. If no ATL contact is on the demo invite, this is a RED FLAG.
 
 ### D — Decision Criteria
 - **Stated**: [What prospect said they'll evaluate]
@@ -154,6 +155,11 @@ Map ALL known contacts to ATL/BTL tiers. If no ATL contact is on the demo invite
 - **AE should test**: [Champion validation question]
 
 ## Stage 4: Demo Flow Recommendation
+
+**Verify before citing:** the table below is a starting hypothesis, not a confirmed spec sheet.
+Gate every "Lead Feature" claim through `search_product_knowledge` / `search_product_catalog`
+(or cite the spec-verified `epiphan-call-playbook`) before it goes in the brief — never present
+a feature claim sourced from memory on a customer-facing/AE-facing document.
 
 | Vertical | Lead Feature | Close Angle |
 |----------|-------------|-------------|
@@ -178,14 +184,32 @@ See `reference/ae-handoff-template.md` for full brief layout (MEDDIC scorecard t
 
 ## Stage 7: Delivery
 
-### 7a. Gmail Draft to AE
+### 7a. Confidence Gate (MEDDIC Degrade Ladder) — run before drafting
+Run this before generating output. Two outcomes only — never silently ship a thin brief as if it were complete:
+
+- **Halt (no draft):** only if the deal or the AE cannot be identified at all (Stage 1 failed to
+  resolve a company/deal or an AE). Log sidecar `"status":"error"` with the reason; do not proceed to 7b.
+- **Degrade (draft anyway, flagged):** if `meddic_coverage_pct` < 50% (fewer than 3 of the 6 MEDDIC
+  dimensions have real "Known/Identified" content, gap-only doesn't count) **OR** zero Clari calls
+  were found for the account:
+  1. Still generate and send the brief — never withhold it for being thin.
+  2. Uncomment/fill the "⚠️ LOW-CONFIDENCE BRIEF" banner at the top of
+     `reference/ae-handoff-template.md`, naming which MEDDIC dimensions are missing and whether
+     the gap is "no Clari calls found" vs. "calls found but dimension unaddressed."
+  3. Set the outcome sidecar `"status":"partial"` (not `"success"`).
+- **Otherwise** (coverage ≥ 50% and ≥1 call found): normal brief, no banner, sidecar `"status":"success"`
+  unless an individual MCP call failed along the way, in which case still use `"partial"`.
+
+### 7b. Gmail Draft to AE
 **To:** [Phil: phillip@epiphan.com | Lex: lex@epiphan.com]
-**Subject:** AE Brief: [Company Name] — Demo [Date]
+**Subject:** AE Brief: [Company Name] — Demo [Date] [— LOW-CONFIDENCE if degraded]
 
-Use `gmail_create_draft` with the brief content.
+Render the brief from `reference/ae-handoff-template.md`. Match Tim's established tone via
+`get_writing_style`, then run `check_my_copy` on the drafted content (brand/tone/claims gate)
+**before** calling `gmail_create_draft`.
 
-### 7b. HubSpot Deal Update
-Add a note via `ask_agent`: "BDR Handoff Brief generated [date]. MEDDIC: [X/6]. AE: [name]."
+### 7c. HubSpot Deal Update
+Add a note via `ask_agent`: "BDR Handoff Brief generated [date]. MEDDIC: [X/6]. AE: [name]. [LOW-CONFIDENCE if degraded]."
 
 </workflow>
 
@@ -194,12 +218,18 @@ Add a note via `ask_agent`: "BDR Handoff Brief generated [date]. MEDDIC: [X/6]. 
 - **Epiphan CRM MCP:** hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, hubspot_get_deal, ask_agent, get_upcoming_meetings
 - **Epiphan Clari MCP:** clari_search_calls, clari_get_call_summary
 - **Apollo/Enrichment MCP:** enrich_contact
-- **Gmail MCP:** gmail_create_draft, search_threads
+- **Epiphan AI MCP:** `qualify_lead` (ATL/BTL/power_level source of truth, Stage 3), `search_product_knowledge` / `search_product_catalog` (verify demo-flow feature claims, Stage 4)
+- **Gmail MCP:** gmail_create_draft, search_threads, `get_writing_style` + `check_my_copy` (tone + brand gate before drafting, Stage 7b)
+
+## Reference data (this skill's `reference/`)
+`ae-handoff-template.md` — the full brief layout (MEDDIC scorecard, discovery timeline,
+competitive landscape, demo flow, objection forecast, LOW-CONFIDENCE banner).
 
 ## Sibling Skills Referenced
 - `meddic-call-prep-auto` — Shares MEDDIC synthesis logic
 - `call-recording-analyzer` — Provides call-by-call MEDDIC scores
 - `deal-momentum-analyzer` — Deal health context for the AE
+- `epiphan-call-playbook` — spec-verified source for demo-flow feature claims (Stage 4)
 </dependencies>
 
 ## Emit Outcome Sidecar

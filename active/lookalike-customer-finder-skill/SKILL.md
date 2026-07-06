@@ -169,9 +169,9 @@ Based on analysis of your best customers:
 3. **Budget Signals**: [Funding/growth = budget available]
 4. **Tech Fit**: Already using [complementary technology]
 
-**Contact Intelligence**:
-- **Decision Maker**: [Name], [Title]
-- **Champion Candidate**: [Name], [Title]
+**Contact Intelligence** (post-`qualify_lead` gate — ATL/GRAY only; BTL-only accounts flagged, not featured):
+- **Decision Maker**: [Name], [Title] — `power_level`: [ATL/GRAY]
+- **Champion Candidate**: [Name], [Title] — `power_level`: [ATL/GRAY/BTL]
 - **Mutual Connections**: [X] 2nd degree connections
 - **Recent Activity**: [Hiring/funding/expansion news]
 
@@ -305,97 +305,30 @@ Reference: `skill-audit/specs/suppression-spec.md` (enforcement point = `qualify
 
 ## 🎯 Targeting Strategy
 
-### Tier 1: Top 10 (Weeks 1-2)
+### Tier 1: Top 10
 
-**Approach**: Highly personalized, multi-channel outreach
-- Research each company deeply
-- Find warm intro paths
-- Custom demos and case studies
-- Executive-level engagement
+**Approach**: Highly personalized, multi-channel outreach — research each company deeply, find warm intro paths, executive-level engagement.
 
-**Expected Results**:
-- Response Rate: 40-50%
-- Meeting Rate: 25-30%
-- Close Rate: 15-20%
+### Tier 2: Next 40
 
----
+**Approach**: Personalized at scale — account-based sequences, industry-specific content, multi-threading.
 
-### Tier 2: Next 40 (Weeks 3-6)
+### Tier 3: Next 50
 
-**Approach**: Personalized at scale
-- AI-generated personalization
-- Account-based sequences
-- Industry-specific content
-- Multi-threading
+**Approach**: Volume with relevance — segment by characteristics, nurture over time.
 
-**Expected Results**:
-- Response Rate: 20-30%
-- Meeting Rate: 12-15%
-- Close Rate: 8-12%
+Response/meeting/close rate benchmarks are not invented here — track actuals per tier once sequences run (via HubSpot/Nooks), and hand tiered execution to `prospect-research-to-cadence-skill` / `sequence-load` / `nooks-autopilot`, which own outreach-cadence mechanics. This skill's job stops at a qualified, tiered, exported list.
 
 ---
 
-### Tier 3: Next 50 (Weeks 7-10)
+## 💡 Data Sources (live MCP tools actually used)
 
-**Approach**: Volume with relevance
-- Template-based outreach
-- Segment by characteristics
-- Nurture over time
-- Marketing automation
+Report which tools produced this run's data — no third-party tools that aren't wired in (Crunchbase, ZoomInfo, BuiltWith, 6sense, etc. are NOT used):
 
-**Expected Results**:
-- Response Rate: 10-15%
-- Meeting Rate: 5-8%
-- Close Rate: 3-5%
-
----
-
-## 🚀 Quick Start Action Plan
-
-### Week 1: Top 10 Deep Dive
-- [ ] Research each of top 10 companies
-- [ ] Find mutual connections
-- [ ] Identify decision makers
-- [ ] Draft personalized outreach
-- [ ] Begin outreach
-
-### Week 2: Tier 1 Follow-up + Tier 2 Prep
-- [ ] Follow up with Tier 1 non-responders
-- [ ] Schedule meetings with responders
-- [ ] Export Tier 2 list (40 companies)
-- [ ] Build outreach sequences
-- [ ] Enrich contact data
-
-### Week 3-4: Tier 2 Outreach
-- [ ] Launch Tier 2 campaign
-- [ ] Monitor responses
-- [ ] Continue Tier 1 meetings
-- [ ] Adjust messaging based on learnings
-
-### Week 5-6: Tier 2 Follow-up + Tier 3 Launch
-- [ ] Follow up Tier 2
-- [ ] Prepare Tier 3 campaign
-- [ ] Review what's working
-- [ ] Optimize approach
-
----
-
-## 💡 Enrichment Data Sources
-
-**Recommended Tools**:
-- **Company Data**: Crunchbase, ZoomInfo, LinkedIn
-- **Tech Stack**: BuiltWith, Wappalyzer, Datanyze
-- **Funding**: Crunchbase, PitchBook, CB Insights
-- **Contacts**: Apollo, RocketReach, Hunter.io
-- **Intent**: 6sense, Bombora, G2
-
-**Data Points to Gather**:
-- Decision maker names and emails
-- Recent company news
-- Tech stack details
-- Employee count growth
-- Job postings
-- Social media activity
+- **Seeds**: `hubspot_search_deals`, `hubspot_search_companies`, `crm_get_customer_orders` / `crm_search_customers`
+- **Expansion**: `apollo_organizations_enrich`, `apollo_mixed_companies_search`, `apollo_organizations_job_postings` (hiring signals)
+- **Waterfall enrichment**: Clay `find-and-enrich-company`
+- **Gate**: `qualify_lead`
 
 ---
 
@@ -442,24 +375,20 @@ Reference: `skill-audit/specs/suppression-spec.md` (enforcement point = `qualify
 
 ### Common Use Cases
 
-**Trigger Phrases**:
-- "Find 100 companies like my top 10 customers"
-- "Who else looks like [Best Customer Company]?"
-- "Build a lookalike target account list"
-- "Identify companies similar to our best customers"
+(See frontmatter `description` for trigger phrases.)
 
 **Example Request**:
-> "Here are my top 10 customers: Stripe, Square, Braintree, Adyen, Checkout.com. All are payment processors between 200-1000 employees. Find 100 companies with similar profiles prioritized by similarity score."
+> "Who else looks like our best Higher Ed lecture-capture customers? Pull our closed-won accounts and find 100 companies with similar profiles, prioritized by similarity score."
 
 **Response Approach**:
-1. Analyze common characteristics of best customers
-2. Build ideal customer profile (ICP)
-3. Search market for matching companies
-4. Score each on similarity dimensions
-5. Rank and prioritize by score
-6. Provide targeting strategy
+1. Pull seed "best customers" live from HubSpot + CRM (Stage 1) — never from memory
+2. Build ideal customer profile (ICP) from the real seeds (Stage 2)
+3. Expand via Apollo/Clay to 100+ candidates (Stage 3)
+4. Gate every candidate through Golden Rules + `qualify_lead` (Stage G) — drop customers/channel/active-AE, surface stale-AE
+5. Score survivors on similarity dimensions and rank/tier
+6. Export the ranked list and hand off tiering strategy pointers
 
-Remember: Your best future customers look a lot like your best current customers!
+Remember: Your best future customers look a lot like your best current customers — but only if the "lookalike" isn't secretly already a customer.
 
 ## Emit Outcome Sidecar
 
@@ -467,9 +396,38 @@ As the final step, write to `~/.claude/skill-analytics/last-outcome-lookalike-cu
 ```json
 {"ts":"[UTC ISO8601]","skill":"lookalike-customer-finder","version":"1.0.0","variant":"default",
  "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
- "metrics":{"seed_customers_analyzed":[n],"lookalikes_found":[n],"icp_dimensions_scored":[n]},
+ "metrics":{"seed_customers_analyzed":[n],"lookalikes_found":[n],"icp_dimensions_scored":[n],
+            "qualify_lead_excluded":[n],"stale_ae_surfaced":[n]},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
 Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
 
 </workflow>
+
+<dependencies>
+## MCP tools
+- **Seeds:** `hubspot_search_deals` (closed-won), `hubspot_search_companies`, `crm_get_customer_orders` / `crm_search_customers` (Stage 1)
+- **Expansion:** `apollo_organizations_enrich`, `apollo_mixed_companies_search`, `apollo_organizations_job_postings` (Stage 3)
+- **Waterfall enrichment:** Clay `find-and-enrich-company` (Stage 3, fallback)
+- **Gate:** `qualify_lead` — Golden Rules, dedupe, ATL/BTL/gray/junk, suppression (Stage G)
+
+## Sibling skills referenced (reuse, don't rebuild)
+- `prospect-research-to-cadence-skill` — actual outreach cadence/sequence execution for tiered accounts
+- `sequence-load` / `nooks-autopilot` — enrollment + dial-list mechanics once a tier is exported
+
+## Reference
+- `skill-audit/specs/suppression-spec.md` — suppression contract and `qualify_lead` enforcement point (referenced by path, not duplicated here)
+
+## Overlap (flagged, not removed)
+This skill's ICP/scoring scope overlaps `territory-planning-optimizer`, `gtm-pricing-skill`, and `intent-signal-aggregator-skill`. No consolidation performed here — flagging only.
+</dependencies>
+
+## Guardrails
+- Never hand-roll Golden Rules/ATL-BTL/suppression logic inline — `qualify_lead` is the single gate (Stage G, `skill-audit/specs/suppression-spec.md`).
+- Never surface an existing customer, channel partner, or an account with an active AE deal (<90 days) as a "net-new lookalike."
+- `STALE AE LEAD` accounts (AE-owned, >90 days inactive) are surfaced with a flag for Tim's review — never silently dropped, never treated as fresh net-new.
+- Never create HubSpot properties/lists or write suppression state — that requires Tim's separate approval (see suppression-spec.md fallback: append-only local file, reconcile later).
+- Don't assert an export exists without writing it — produce the CSV described in the Output Format section.
+
+## Skill metadata
+**Version:** 1.1 · **Author:** Tim Kipper · **Status:** active

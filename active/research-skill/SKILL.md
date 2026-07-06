@@ -1,6 +1,6 @@
 ---
 name: "research"
-description: "Market intelligence, competitive analysis, technical evaluations, and technology decisions. Use when researching companies, analyzing competitors, evaluating frameworks, or making tech stack decisions."
+description: "Structured research reports for GTM and tech decisions: company/competitor profiles, tech-stack discovery, framework/LLM/API evaluations, decision matrices with confidence scores. Use when: research a company before a call, competitive analysis, evaluate a framework or LLM, tech-stack decision, build-vs-buy. For Epiphan account prep prefer sales_brief/identify_company; for lead ICP scoring use qualify_lead."
 ---
 
 <objective>
@@ -52,6 +52,24 @@ Comprehensive research framework combining market intelligence and technical eva
 ---
 
 ## Part 1: Market Research
+
+### Epiphan-Native Tool Order (Required First Pass)
+
+Before touching generic web sources, run the Epiphan-native MCP tools in this order. They cover
+CRM history, device install base, and Clari deal context that no web search can see — generic
+sources (LinkedIn, Glassdoor, G2, Google, etc.) are for filling gaps these tools don't cover.
+
+```
+1. identify_company        # Fuzzy-match the target to CRM + HubSpot company record
+2. sales_brief              # Full pre-call briefing: device history, Clari, engagement timeline
+3. activity_get_timeline    # Contact/company/rep activity timeline (recency, cadence, gaps)
+4. enrich_contact           # Fill decision-maker + firmographic gaps on named contacts
+   |__ only fall back to LinkedIn/Glassdoor/Indeed/G2/Capterra/Google for what's still missing
+```
+
+If the target isn't an existing Epiphan account/contact (e.g. pure competitor or tech-stack
+research with no CRM record), skip straight to generic discovery below and note the skip reason
+in the report's `sources` section.
 
 ### Company Profile Framework
 
@@ -110,10 +128,11 @@ Step 3: Pain Signals
 └── Reviews, social mentions, forum posts
 
 Step 4: Decision Makers
-└── LinkedIn Sales Nav, company about page
+└── hubspot_find_contacts_by_role (Epiphan-native first), then LinkedIn Sales Nav, company about page
 
 Step 5: Synthesize
-└── Generate company profile, score against ICP
+└── Generate company profile; score against ICP via qualify_lead (house source of truth —
+    do not re-implement ICP scoring manually)
 ```
 
 ### Competitive Positioning
@@ -148,7 +167,7 @@ constraints:
     compute: runpod_serverless
     database: supabase
     hosting: vercel
-    local: ollama  # M1 Mac compatible
+    local: ollama  # see Tim's current machine spec in CLAUDE.md, not hardcoded here
 
   frameworks:
     preferred:
@@ -284,7 +303,7 @@ api_evaluation:
 # When looking for MCP capabilities:
 
 1. Check mcp-server-cookbook first
-   └── /Users/tmkipper/Desktop/tk_projects/mcp-server-cookbook/
+   └── ~/Desktop/tk_projects/mcp-server-cookbook/  (Tim's home dir — verify with `echo ~` if unsure)
 
 2. Search official MCP servers
    └── github.com/modelcontextprotocol/servers
@@ -311,6 +330,8 @@ research_report:
   type: ""  # market, technical, hybrid
   date: ""
   researcher: ""
+  delivery: ""  # where this report is handed off: HubSpot note on the company/deal record,
+                # artifact (chat), or doc — pick one per Integration Notes below
 
   # Executive Summary
   summary:
@@ -363,7 +384,10 @@ research_report:
 
 ### Market Research
 - **Feeds into:** dealer-scraper (enrichment), sales-agent (qualification)
-- **Data sources:** LinkedIn, Glassdoor, Indeed, G2, Capterra, Google
+- **Data sources (in order):** Epiphan-native first — `identify_company`, `sales_brief`,
+  `activity_get_timeline`, `enrich_contact`, `qualify_lead`, `hubspot_find_contacts_by_role`,
+  `hubspot_search_companies`, `search_product_catalog` — then generic web (LinkedIn, Glassdoor,
+  Indeed, G2, Capterra, Google) to fill remaining gaps
 - **Pairs with:** sales-outreach-skill (messaging), opportunity-evaluator-skill (deals)
 
 ### Technical Research

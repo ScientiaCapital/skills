@@ -74,7 +74,7 @@ prospects in-vertical, and generates inbound interest — never generic B2B-SaaS
 ## Content Strategy
 
 **Your Personal Brand Position**:
-"[One-sentence positioning - e.g., 'I help B2B SaaS companies scale revenue without scaling headcount']"
+"[One-sentence positioning - e.g., 'I help Higher Ed and Courts/Legal teams modernize AV without blowing a fiscal-year budget']"
 
 **Content Themes**:
 1. [Theme 1]: [Description]
@@ -303,6 +303,14 @@ delivered calendar — never marked ready silently.
 - [ ] Start DM conversations with hot leads
 ```
 
+### Delivery
+
+Write the final calendar to `outputs/social_selling_calendar_<YYYY-MM-DD>.md` (create `outputs/` if it
+doesn't exist). Every post carries a `[READY]` / `[NEEDS check_my_copy]` / `[UNVERIFIED]` tag from the
+Brand & Proof-Point Gate above. Tim reviews and copies `[READY]` posts to LinkedIn manually — this skill
+does not post directly to LinkedIn, and the Gmail-draft staging workflow in this repo's CLAUDE.md applies
+to email touches, not LinkedIn content.
+
 ### Best Practices
 
 1. **Post Consistently**: 3-5x per week minimum
@@ -321,9 +329,38 @@ As the final step, write to `~/.claude/skill-analytics/last-outcome-social-selli
 ```json
 {"ts":"[UTC ISO8601]","skill":"social-selling-content-generator","version":"1.0.0","variant":"default",
  "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
- "metrics":{"posts_generated":[n],"content_types":[n],"comment_strategies":[n],"weeks_of_content":[n]},
+ "metrics":{"posts_generated":[n],"content_types":[n],"comment_strategies":[n],"weeks_of_content":[n],
+            "posts_passed_brand_gate":[n],"posts_unverified":[n]},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
-Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+Use status "partial" if some stages failed but results were produced (including any post left
+`[UNVERIFIED]` or `[NEEDS check_my_copy]`). Use "error" only if no output was generated.
 
 </workflow>
+
+<dependencies>
+## MCP tools
+- **Epiphan Brand:** `check_my_copy` (required gate on any Epiphan-referencing post before it's marked
+  `[READY]`), `get_writing_style` (optional — pulls Tim's voice before drafting)
+- **Epiphan AI:** `search_product_knowledge` (deep technical/RAG proof points), `search_product_catalog`
+  (specs, pricing, SKUs) — source of truth for any claim made about Epiphan in a post
+
+## Sibling skills (overlap — reuse, don't duplicate)
+- `content-marketing-skill` — blog/case-study/video content, general content strategy, and repurposing
+  long-form into LinkedIn/Twitter/email. If the ask is refining an existing draft or repurposing other
+  content, hand off to that skill instead of regenerating a calendar here.
+- `linkedin-sales-navigator-alt-skill` — LinkedIn prospect list building/tracking, not content generation.
+</dependencies>
+
+## Guardrails
+- Never state an Epiphan product spec, feature, or competitor claim from memory — always verify via
+  `search_product_knowledge`/`search_product_catalog` first, and cut or flag `[UNVERIFIED]` claims the
+  tools can't confirm.
+- Never mark a post `[READY]` if it references Epiphan and hasn't passed `check_my_copy`.
+- Personas and pain points must come from Epiphan's real ICP verticals (Higher Ed, Courts/Legal,
+  Government, Corporate AV, Healthcare, Houses of Worship, K-12) — not generic SaaS/tech-sales roles.
+- This skill generates net-new posts only; for refining an existing draft or repurposing other content,
+  hand off to `content-marketing-skill`.
+
+## Skill metadata
+**Version:** 1.0 · **Author:** Tim Kipper · **Status:** active

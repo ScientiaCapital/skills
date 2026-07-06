@@ -1,6 +1,6 @@
 ---
 name: morning-brief
-description: "Daily briefing with calendar, CRM priority dial list, deal momentum summary, and Gmail drafts for each lead."
+description: "Tim's daily BDR morning brief (M-F 7:30 AM ET). Trigger: 'show morning brief', 'today's dial list', 'morning brief', or scheduled run. Pulls today's Google Calendar, a qualify_lead-gated ATL-first dial list from HubSpot (portal 21530819), deal-momentum scores, last-7-day Clari summaries, and creates a draft-only Gmail per lead; filters Supabase cooldown + HubSpot suppression. Emits single-page HTML brief. Consumes callable-lead-count inventory; does NOT re-run sdr-dial-list sourcing or business-pulse firm-wide reporting."
 schedule: "0 7 30 * * 1-5"
 timezone: "America/New_York"
 ---
@@ -14,7 +14,8 @@ Generate Tim's daily briefing (Monday-Friday 7:30 AM) with calendar, HubSpot hot
 <quick_start>
 **Trigger:** M-F 7:30 AM ET (after callable-lead-count at 7:25 AM)  
 **Manual Trigger:** "Show morning brief" or "Today's dial list"  
-**Dependencies:** Requires HubSpot (portal 21530819), Google Calendar, Clari, Supabase (disposition check)  
+**Dependencies:** Requires HubSpot (portal 21530819), Google Calendar, Clari, Supabase (disposition check), Epiphan AI (`qualify_lead`, `search_product_knowledge`/`search_product_catalog`), Gmail brand tools (`get_writing_style`, `check_my_copy`)  
+**De-collision:** Does not source leads (see `sdr-dial-lists`) or run firm-wide reporting (see `business-pulse`); consumes `callable-lead-count` inventory and `deal-momentum-analyzer` scores read-only.  
 **Output:** Single-page HTML brief with calendar, dial list (20 ATL contacts), deal momentum, call summaries, draft emails
 </quick_start>
 
@@ -102,7 +103,38 @@ limit: 50
 4. Sort by: custom_atl_btl_tier (ATL > GRAY > BTL)
 5. Within tier, sort by: hs_lastmodifieddate DESC (most recent first)
 
-**Trim to top 25 candidates** (will further filter in Stage 3)
+**Trim to top 25 candidates** (will further filter in Stage 2b/3)
+
+Note: the `custom_atl_btl_tier` sort above is a pre-sort hint only, not the tiering source of truth — Stage 2b's `qualify_lead` call is authoritative.
+
+---
+
+## Stage 2b: Qualify Lead Gate (Dedupe + ATL/BTL)
+
+Route every Stage 2 candidate through `qualify_lead` before any further tiering, enrichment, or cooldown
+filtering — this is the single dedupe/ATL-BTL gate (see `skill-audit/specs/suppression-spec.md`). Do not
+hand-roll Golden Rules / NEVER-ATL keyword tables here; `qualify_lead` is the source of truth
+(mirrors the `nooks-autopilot` reference implementation).
+
+**MCP Tool:** `qualify_lead` (Epiphan AI)
+
+```
+FOR each candidate IN stage_2_candidates:
+  result = qualify_lead(contact_id)
+  # result: {category, power_level (atl/gray/btl/unknown), region, junk}
+  IF result.junk:
+    DROP candidate
+    LOG: "qualify_lead: junk"
+  ELIF candidate already seen this run (dedupe by contact_id/email/domain):
+    DROP duplicate
+    LOG: "qualify_lead: dedupe"
+  ELSE:
+    TAG candidate with power_level, category, region
+```
+
+**Output:** Deduped, ATL/GRAY/BTL-tagged candidate list, carried into Stage 3. Drop BTL unless Tim has
+flagged an exception for that contact; GRAY holds through Stage 3-6 for the ATL-first sort in Stage 8's
+dial list.
 
 ---
 
@@ -330,6 +362,14 @@ Best,
 Tim
 ```
 
+**Pre-Draft Verification (required before every `gmail_create_draft` call):**
+1. **Product-claim check:** For any product/feature named in the draft body (e.g. Pearl Nano, Pearl Mini,
+   Canvas integration), call `search_product_knowledge`/`search_product_catalog` to confirm the claim
+   against current spec — never state a spec, integration, or capability from memory. If the tool can't
+   confirm a claim, soften it (e.g. "the integration we discussed") rather than naming an unverified capability.
+2. **Brand/voice check:** Run the drafted body through `get_writing_style` (Tim's voice) and `check_my_copy`
+   (brand gate) before creating the draft. Fix flagged issues; do not create the draft until it passes.
+
 **Draft Creation Logic:**
 ```
 FOR each contact IN dial_list:
@@ -341,6 +381,8 @@ FOR each contact IN dial_list:
     use_template = "C_Warm_Lead"
   
   personalize_template(contact, company, last_touch, deal)
+  verify_product_claims(body)   # search_product_knowledge / search_product_catalog
+  check_my_copy(body)           # get_writing_style + brand gate
   create_gmail_draft(to=contact.email, subject=..., body=...)
 ```
 
@@ -449,6 +491,26 @@ INSERT INTO disposition (
 ```
 
 **Next day's brief automatically excludes contacts in cooldown.**
+
+---
+
+## Stage 10b: Failure Handling
+
+Per-stage degrade ladder — a dead dependency must never silently produce a wrong or incomplete brief:
+
+| Dependency down | Stage | Behavior |
+|---|---|---|
+| Google Calendar unavailable | 1 | Skip calendar section, flag "CALENDAR UNAVAILABLE" in brief header, continue (status=partial) |
+| HubSpot unavailable | 2 | Halt run — no dial list is possible; alert Tim (status=error) |
+| `qualify_lead` unavailable | 2b | Halt run — do not fall back to the hand-rolled `custom_atl_btl_tier` sort as the gate; alert Tim (status=error) |
+| Supabase unavailable | 3 | Degrade: skip cooldown filter, flag "COOLDOWN CHECK SKIPPED — verify manually before dialing", continue with unfiltered list (status=partial) |
+| Clari unavailable | 4 / 6 | Skip call-summary sections, flag "CLARI UNAVAILABLE", continue (status=partial) |
+| Product-knowledge / brand-check tools unavailable | 7 | Halt drafting for affected contact(s) — never create a draft with an unverified product claim; log + skip, continue with remaining contacts (status=partial) |
+| Gmail draft creation fails (per-contact) | 7 | Retry once; on second failure skip that contact's draft, log contact_id, continue (status=partial) |
+
+**Ladder:** retry once (transient) -> degrade + flag in the brief (non-critical dependency) -> alert Tim (visible failure) -> halt (critical dependency: HubSpot or `qualify_lead`).
+
+**Run log:** append one line per run to `~/.claude/skill-runs/morning-brief.jsonl`: `{"ts":..., "stage_failures":[...], "status":...}`, mirroring the Stage 11 sidecar's `status` field for historical debugging.
 
 </workflow>
 
