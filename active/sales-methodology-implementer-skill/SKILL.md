@@ -1,18 +1,18 @@
 ---
 name: sales-methodology-implementer-skill
-description: Implement proven sales methodologies (MEDDIC, BANT, Sandler, Challenger, SPIN) across your team. Generate framework-specific questions, score deals, train reps, and enforce consistent qualification. Use when implementing or optimizing sales processes.
+description: Team-wide sales methodology enablement (MEDDIC, BANT, Sandler, Challenger, SPIN, Value/Gap Selling) — generate framework discovery questions, deal scorecards, rep training plans, and qualify_lead-grounded HubSpot deal scoring. Use when: "implement MEDDIC across my team", "build a BANT scorecard", "train reps on Sandler", "score this deal using [methodology]", "30/60/90 sales enablement rollout", "standardize qualification". (For single-call prep use meddic-call-prep-auto-skill; for the Challenger narrative use challenger-sale-skill.)
 ---
 
 # Sales Methodology Implementer
 
 <objective>
-Implement and scale proven sales methodologies across your team. Takes abstract frameworks (MEDDIC, BANT, Sandler, Challenger, SPIN, Value Selling, Gap Selling) and makes them concrete with discovery questions, deal scorecards, training materials, and CRM integration plans.
+Implement and scale proven sales methodologies across your team. Takes abstract frameworks (MEDDIC, BANT, Sandler, Challenger, SPIN, Value Selling, Gap Selling) and makes them concrete with discovery questions, deal scorecards, training materials, and a live HubSpot deal-scoring write-back — not just a field-naming spec.
 </objective>
 
 <quick_start>
 **Trigger:** "Implement MEDDIC across my team" or "Score this deal using [methodology]"
 **Input:** Methodology choice, deal type, average deal size, sales cycle length
-**Output:** Framework guide, discovery questions by component, deal scorecard, training plan, and CRM integration spec
+**Output:** Framework guide, discovery questions by component, deal scorecard (scored via `qualify_lead` + written back to the HubSpot deal), training plan, delivered as a markdown doc under `[output_dir]/` (see Delivery below)
 </quick_start>
 
 <success_criteria>
@@ -20,7 +20,7 @@ Implement and scale proven sales methodologies across your team. Takes abstract 
 - [ ] Deal scorecard with scoring rubric and red/green flags per component
 - [ ] Training plan covering 30/60/90 day implementation
 - [ ] Call prep template and manager coaching guide included
-- [ ] CRM custom fields specified for methodology tracking
+- [ ] Deal score qualified via `qualify_lead` (ATL/BTL + Golden Rules) and written back to the HubSpot deal record via the Epiphan HubSpot MCP — not just specified as CRM fields for someone to create by hand
 </success_criteria>
 
 <workflow>
@@ -49,6 +49,29 @@ You are an expert sales enablement specialist who helps teams implement and exec
 - Design pipeline stage gates aligned to methodology
 - Develop coaching conversation guides for managers
 - Score deals, identify gaps, predict health, flag disqualifications
+
+### Deal Scoring & CRM Write-Back (live tool calls, not a manual field-creation guide)
+
+When scoring an actual deal (not just generating a framework guide), don't hand the user a list of CRM
+fields to go create by hand — call the tools:
+
+1. **Qualify first:** for the Economic Buyer / Champion / Decision Process components (or the BANT
+   Authority component, etc.), call `qualify_lead` (Epiphan AI) on the relevant contact(s) and read
+   `power_level` (atl/btl/gray/unknown), `category`, and Golden Rules/suppression status — this is the
+   single source of truth (see `skill-audit/specs/suppression-spec.md`); don't re-derive it from a
+   hand-rolled title check. A non-ATL "Economic Buyer" caps that component's score rather than accepting
+   the rep's self-report. If `qualify_lead` is unavailable, fall back to CLAUDE.md's ATL/BTL keyword table
+   and mark the run `partial`.
+2. **Locate the deal:** `hubspot_search_deals` / `hubspot_get_deal` (Epiphan HubSpot MCP) to confirm the
+   deal record, current stage, and amount before writing anything back.
+3. **Persist the score:** write the overall score, per-component scores, and qualification date back to
+   the HubSpot deal record via the Epiphan HubSpot MCP's deal-write tool. Confirm the exact tool name
+   against `epiphan-ai-mcp-guide-skill/resources/crm-tools.md` at first live use — as of this writing that
+   guide documents `hubspot_search_deals`/`hubspot_get_deal` (read-only) but no deal-property write tool.
+   Until a deal-write tool is confirmed, degrade to `hubspot_update_contact_note` on the deal's primary
+   contact with the scorecard summary, and mark the run `partial` so Tim knows the score didn't land on
+   the deal record itself.
+4. Never propose Salesforce fields — Tim's stack is HubSpot only (portal `21530819` per CLAUDE.md).
 
 ### Output Format
 
@@ -221,19 +244,15 @@ You are an expert sales enablement specialist who helps teams implement and exec
 
 ---
 
-## CRM Integration
+## CRM Write-Back (HubSpot, via Epiphan MCP)
 
-### HubSpot Properties
-- `meddic_score` (Number, 0-100)
-- `meddic_metrics` / `meddic_decision_process` (Multi-line text)
-- `qualification_date` (Date)
-- `deal_risk_level` (Dropdown: Low/Med/High)
+**qualify_lead result**: [power_level ATL/BTL/GRAY for the Economic Buyer/Champion; category; suppression status]
+**Deal record**: [dealId from `hubspot_get_deal`] — [confirmed / not found]
+**Written to deal**: `meddic_score` [XX/100] · `qualification_date` [date] · `deal_risk_level` [Low/Med/High]
+(or, if no deal-write tool was confirmed yet: **Degraded** — summary posted via `hubspot_update_contact_note`
+on the primary contact instead; run marked `partial`)
 
-### Salesforce Custom Fields
-- `[Methodology]_[Component]_Score__c` (Number, 0-10) per component
-- `[Methodology]_[Component]_Evidence__c` (Long Text) per component
-- `[Methodology]_Overall_Score__c` (Formula: SUM)
-- `[Methodology]_Status__c` (Formula: IF >80 "Qualified", IF >50 "Risky", "Disqualified")
+No Salesforce fields are generated — Tim's stack is HubSpot only.
 
 ---
 
@@ -267,9 +286,44 @@ You are an expert sales enablement specialist who helps teams implement and exec
 3. Create methodology-specific discovery questions
 4. Build scoring system aligned to their business
 5. Provide training materials and coaching guides
-6. Design CRM integration plan
+6. When scoring a real deal: qualify via `qualify_lead`, then write the score back to the HubSpot deal via
+   the Epiphan HubSpot MCP (see Deal Scoring & CRM Write-Back above) — don't just hand back a field list
 
 Remember: The methodology is only as good as the execution. Focus on making it practical, measurable, and habitual for reps!
+
+### Delivery
+
+Write the full generated guide/scorecard/training plan to a markdown file at `[output_dir]/sales-methodology-<methodology>-<team-or-company>-<YYYY-MM-DD>.md`. When scoring a specific deal, also post the
+scorecard summary as a HubSpot note on the deal's primary contact (`hubspot_update_contact_note`) in
+addition to the deal-property write-back in the CRM Write-Back step, so the score is visible from the
+CRM record itself, not only in a chat reply that gets lost.
+
+</workflow>
+
+<dependencies>
+## MCP tools
+- **Epiphan AI:** `qualify_lead` (Golden Rules / ATL-BTL / suppression gate — see `skill-audit/specs/suppression-spec.md`), `ask_agent` (deal/activity history context when scoring an existing deal)
+- **Epiphan HubSpot MCP:** `hubspot_search_deals`, `hubspot_get_deal`, deal-property write tool (name TBC — see Deal Scoring & CRM Write-Back), `hubspot_update_contact_note` (degraded write-back path)
+
+## Sibling skills referenced (reuse, don't rebuild)
+- `meddic-call-prep-auto-skill` — single-call MEDDIC brief; this skill covers team-wide enablement + scoring, not per-call prep
+- `challenger-sale-skill` — Challenger-specific narrative/teaching pitch
+- `sales-revenue-skill` — MEDDIC/SPIN usage in the broader revenue workflow
+</dependencies>
+
+## Guardrails
+- Never fabricate an Economic Buyer/Champion's authority — `power_level` comes from `qualify_lead`, not the rep's say-so.
+- Never propose Salesforce fields; Tim's stack is HubSpot only (portal `21530819`).
+- If the HubSpot deal-write tool can't be confirmed, degrade to a contact note and mark the run `partial` — don't silently drop the write-back.
+
+## Self-Healing
+Follows `skill-audit/specs/self-healing-template.md`. For each external call (`qualify_lead`, HubSpot
+search/get/write): retry once on transient errors; degrade (CLAUDE.md ATL/BTL keyword fallback if
+`qualify_lead` is down, or a contact-note write if no deal-write tool is available) and mark the run
+`partial`; alert (surface a warning in the output) if a mandatory gate — ATL/BTL qualification on the
+Economic Buyer — can't be evaluated at all; halt (no scorecard) if the deal/company can't be identified.
+In addition to the outcome sidecar below, append one line per run to
+`~/.claude/skill-runs/sales-methodology-implementer.jsonl` per the template's run-log convention.
 
 ## Emit Outcome Sidecar
 
@@ -277,9 +331,13 @@ As the final step, write to `~/.claude/skill-analytics/last-outcome-sales-method
 ```json
 {"ts":"[UTC ISO8601]","skill":"sales-methodology-implementer","version":"1.0.0","variant":"default",
  "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
- "metrics":{"methodologies_implemented":[n],"scorecards_created":[n],"discovery_questions_generated":[n]},
+ "metrics":{"methodologies_implemented":[n],"scorecards_created":[n],"discovery_questions_generated":[n],"deals_scored":[n],"hubspot_writes":[n]},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
-Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+Use status "partial" if some stages failed but results were produced (including a degraded qualify_lead
+fallback or a deal-write that fell back to a contact note) — name the degraded stage in `error`. Use
+"error" only if no output was generated. The `version` above must match the Skill metadata footer below,
+per the template's version-consistency rule — don't hardcode it a second time.
 
-</workflow>
+## Skill metadata
+**Version:** 1.0.0 · **Author:** Tim Kipper · **Status:** active · **Tier:** P2 (Sales Enablement)
