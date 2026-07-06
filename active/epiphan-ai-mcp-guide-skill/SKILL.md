@@ -1,6 +1,6 @@
 ---
 name: epiphan-ai-mcp-guide
-description: Reference for Epiphan AI MCP tools — CRM, sales intel, device analytics, lead qualification, marketing (Semrush/GA4/GAds).
+description: Epiphan AI MCP tool picker — which tool answers which question across HubSpot CRM (read + admin-scoped writes + static lists), legacy CRM orders, Pearl device analytics, Clari calls, qualify_lead, enrich_contact, curated query_dataset/weekly_brief reports, and Semrush/GA4/GAds marketing intel. Use when: "which Epiphan tool for X", "look up a customer", "sales brief", "qualify a lead", "find the AV/IT director", "pull pipeline", "weekly sales tracker", "tool seems missing / wrong namespace".
 ---
 
 # Epiphan AI — MCP Tools Guide
@@ -252,7 +252,7 @@ Searches the `clari_calls` table in PostgreSQL (7K+ calls with AI summaries, act
 > "Open pipeline matrix — AE × stage for default sales pipeline"
 > "Won/lost deals last week, split by outcome"
 > "New contacts last week broken down by lifecycle and source"
-> "BDR activity for owner_ids 87486452, 423155215 last 7 days"
+> "BDR activity for owner_ids 87486452, 423155215 last 7 days" (illustrative — see the canonical owner-id roster in `nooks-autopilot`/CLAUDE.md rather than hardcoding ids)
 
 `group_by` supports cross-product matrix (e.g. `["owner","stage"]`), period grain (`period_day` / `period_week` / `period_month` / `period_quarter` / `period_year`), and dimensional breakdown (`owner` / `stage` / `outcome` / `country` / `lifecycle` / `source` / `pipeline`). `format=csv` returns an embedded CSV file (Claude Desktop attaches it). Custom HubSpot lifecycle stage IDs are normalized to MQL/SAL/SQL/Customer/Junk/Declined/Nurture labels.
 
@@ -314,6 +314,8 @@ Always provide the data (JSON/table) alongside the request.
 ### HubSpot Write Tools (admin-scoped: Tim / Victor)
 
 These mutate HubSpot. Restricted to an allowlist — others get a 403. Rate-limited: 1,000 writes / 5 min per user (bulk-friendly), 4 / 5 min per record.
+
+**Recovery when a write 403s or rate-limits:** don't retry the write blind. Fall back to the read-only equivalent (`hubspot_search_*` / `hubspot_get_*`) to keep answering the question, then surface the failure to Tim / Victor (the admin-scoped operators) so they can run or approve the write.
 
 | Tool | What it does |
 |------|-------------|

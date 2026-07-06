@@ -32,11 +32,12 @@ Replace manual call review with automated Clari transcript analysis. Every call 
 <success_criteria>
 - MEDDIC scorecard generated for every analyzed call
 - Missed discovery questions identified (what SHOULD have been asked)
-- Competitor mentions extracted and mapped to battlecard responses
+- Competitor mentions extracted and mapped to battlecard responses only after live verification via `search_product_knowledge`/`search_product_catalog` — never mapped from memory
 - Talk-to-listen ratio calculated (target: prospect talks 60%+)
 - Action items extracted with owner assignment
 - Coaching moments flagged (interruptions, missed objection follow-ups, premature pitching)
-- Results feed into deal-momentum-analyzer Signal 4 (call momentum scoring)
+- Scorecard persisted as an HTML report and staged as a Gmail draft — never left as chat-only text
+- Call quality signals written to the shared call-signals feed and consumed by deal-momentum-analyzer Signal 4, morning-brief, and meddic-call-prep-auto
 - Analysis completes in under 60 seconds per call
 </success_criteria>
 
@@ -62,8 +63,9 @@ Run these MCP calls in parallel:
 | Tool | Purpose |
 |------|---------|
 | `clari_search_calls` | Find the call by company name, attendee email, or date range |
-| `clari_get_call` | Full call metadata: duration, participants, recording URL |
-| `clari_get_call_summary` | AI summary, key moments, action items, sentiment |
+| `clari_get_call` (with `includeTranscript: true`) | Full call metadata + transcript: duration, participants, recording URL, summary, key moments, action items, sentiment |
+
+Standardized on the same Clari access pattern as sibling `sdr-call-coaching` (verified 2026-06-17): `clari_search_calls` + `clari_get_call(includeTranscript=true)`. Do not call `clari_get_call_summary` — it is not a confirmed tool in the live Clari MCP surface.
 
 **Search strategy:**
 1. If company name provided: `clari_search_calls(query=company_name, daysBack=7)`
@@ -77,15 +79,17 @@ Run these MCP calls in parallel:
 | `hubspot_search_deals` | Active deals associated with this company |
 | `hubspot_search_contacts` | Contact records for call participants |
 
-**Pre-Flight Golden Rules Check:**
-- If contact.lifecyclestage = 'customer' → Skip. Route to CSM.
-- If hubspot_owner_id IN ('82625923', '423155215', '190030668') AND Tim is NOT collaborator → Skip.
+**Pre-Flight Golden Rules Check (via `qualify_lead`):**
+Run `qualify_lead` (dry run) on the call's primary contact before scoring — don't hand-roll the customer/channel/AE-owned checks against raw HubSpot reads.
+- `qualify_lead` category = customer or channel partner → Skip. Route to CSM.
+- AE-owned (per CLAUDE.md Golden Rules canonical owner list, not re-listed here) AND Tim is NOT collaborator AND outside the 90-day stale exception → Skip.
+- If `qualify_lead` is unavailable, fall back to a raw `hubspot_search_contacts`/`hubspot_search_deals` read of lifecyclestage + `hubspot_owner_id` against the CLAUDE.md Golden Rules list, and note the degraded path in the outcome sidecar.
 
 ### 1c. Prior Call History
 | Tool | Purpose |
 |------|---------|
 | `clari_search_calls` | Find previous calls with same contacts (last 90 days) |
-| `clari_get_call_summary` | Summaries of prior calls for progression context |
+| `clari_get_call` (with `includeTranscript: true`) | Summaries of prior calls for progression context |
 
 ## Stage 2: MEDDIC Call Scoring
 
@@ -168,6 +172,12 @@ Classify ALL call attendees. If NO ATL attendee → Flag ⚠️ COACHING MOMENT:
 | Product feature dump | COACHING MOMENT |
 
 ### Competitive Intelligence Extraction
+
+**TECHNICAL-ACCURACY GATE (non-negotiable — run before mapping any competitor mention to a battlecard response):** a competitor mention is only "correct" or "wrong" relative to live, current facts, and battlecards go stale. For every competitor mention:
+1. Verify the underlying claim (spec, EOL/discontinued status, integration support) via `search_product_knowledge` or `search_product_catalog` (Epiphan AI) before selecting a battlecard response — never map from memory.
+2. Only present the battlecard rebuttal as fact once it's confirmed live.
+3. If verification is unavailable or inconclusive, mark it "unverified — flag for Tim to confirm" in the scorecard instead of presenting a rebuttal as settled fact.
+
 Scan for: Extron, Blackmagic, Crestron, vMix, Matrox, Teradek, Kaltura, Panopto, YuJa, Echo360
 
 ## Stage 4: Output Format
@@ -197,31 +207,44 @@ ACTION ITEMS:
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
+## Stage 5: Deliver + Feed Downstream
+
+Don't leave the scorecard as ephemeral chat text — persist it and push the signals to the skills that consume them.
+
+1. **Save the report.** Render the Stage 4 scorecard(s) as a self-contained HTML report and save to `${CLAUDE_OUTPUTS_DIR:-./outputs/}call_scorecard_<company-slug>_<YYYY-MM-DD>.html` (batch runs: one file, one card per call). Present via `mcp__cowork__present_files` if available.
+2. **Stage a Gmail draft.** Call `mcp__Gmail__create_draft` (sender `tkipper@epiphan.com` per CLAUDE.md — never any other sender) addressed to `tkipper@epiphan.com`, subject `Call Scorecard — [Company] — [Date]` (batch: `Call Scorecards — [Date]`), body = the HTML report. Draft only, never auto-sent — Tim reviews before anything goes further.
+3. **Write the downstream feed.** Append one JSON line per analyzed call to `~/.claude/skill-analytics/call-signals/<company-slug>.jsonl`:
+   `{"ts":"[UTC ISO8601]","company":"[name]","dealId":"[if known]","call_recency_days":[n],"call_sentiment":"[pos/neu/neg]","meddic_score":[0-100],"unresolved_actions":[n],"competitor_detected":["[names]"],"atl_attendee":[bool]}`
+   This is the concrete handoff `deal-momentum-analyzer` (Signal 4) and `morning-brief` read instead of re-deriving the same signals. If the feed directory is unwritable, note it in the outcome sidecar as `partial` and still deliver the scorecard (steps 1-2) — a failed handoff never blocks showing Tim the result.
+4. **meddic-call-prep-auto** reads the same feed's `meddic_score` gaps to seed next-call prep questions (see `<downstream_integration>`).
+
 </workflow>
 
 <downstream_integration>
 ## Feed to Sibling Skills
 
 ### deal-momentum-analyzer (Signal 4: Call Momentum)
-Push: call_recency, call_sentiment, meddic_score, unresolved_actions, competitor_detected
+Reads `~/.claude/skill-analytics/call-signals/<company-slug>.jsonl` for: call_recency, call_sentiment, meddic_score, unresolved_actions, competitor_detected
 
 ### morning-brief
-Include: yesterday's call scores, unresolved action items, deals with MEDDIC gaps needing follow-up
+Reads the same feed for: yesterday's call scores, unresolved action items, deals with MEDDIC gaps needing follow-up
 
 ### meddic-call-prep-auto
-Feed prior call gaps into next call prep
+Reads the same feed's prior call gaps to inform next call prep
 </downstream_integration>
 
 <dependencies>
 ## Required MCP Tools
-- **Epiphan Clari MCP:** clari_search_calls, clari_get_call, clari_get_call_summary
-- **Epiphan CRM MCP:** hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, ask_agent
-- **Gmail MCP:** gmail_create_draft
+- **Epiphan Clari MCP:** clari_search_calls, clari_get_call (with includeTranscript=true)
+- **Epiphan AI MCP:** qualify_lead (pre-flight Golden Rules gate, Stage 1b), search_product_knowledge, search_product_catalog (technical-accuracy gate, Stage 3 — required before mapping any competitor mention to a battlecard response)
+- **Epiphan CRM MCP:** hubspot_search_companies, hubspot_search_contacts, hubspot_search_deals, ask_agent (fallback only, if qualify_lead is unavailable)
+- **Gmail MCP:** mcp__Gmail__create_draft — stages the scorecard to tkipper@epiphan.com; never sent directly
 
 ## Sibling Skills Referenced
-- `deal-momentum-analyzer` — Consumes call quality signals for Signal 4 scoring
-- `meddic-call-prep-auto` — Receives call gaps to inform next call prep
-- `morning-brief` — Displays yesterday's call summaries
+- `deal-momentum-analyzer` — Consumes call quality signals for Signal 4 scoring, via the call-signals feed
+- `meddic-call-prep-auto` — Receives call gaps to inform next call prep, via the call-signals feed
+- `morning-brief` — Displays yesterday's call summaries, via the call-signals feed
+- `sdr-call-coaching` — sibling Clari access pattern this skill now matches (clari_search_calls + clari_get_call(includeTranscript=true))
 </dependencies>
 
 ## Emit Outcome Sidecar
@@ -233,4 +256,6 @@ As the final step, write to `~/.claude/skill-analytics/last-outcome-call-recordi
  "metrics":{"calls_analyzed":[n],"avg_meddic_score":[n],"coaching_moments_found":[n],"competitors_detected":[n]},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
-Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+Use status "partial" if some stages failed but results were produced (including a degraded qualify_lead fallback or a failed call-signals feed write). Use "error" only if no output was generated.
+
+Also append one line to `~/.claude/skill-runs/call-recording-analyzer.jsonl` (`{ts, status, calls_analyzed, feed_write_ok, draft_created, error}`) so a failed Clari pull, gate fallback, or feed write is visible in the run log, not just the analytics sidecar.

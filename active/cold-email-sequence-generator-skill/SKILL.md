@@ -7,12 +7,14 @@ description: Generate personalized cold email sequences (7-14 emails) with A/B t
 
 <objective>
 Craft personalized, value-driven cold email sequences (5-14 emails) with A/B test subject lines, optimal send timing, social proof integration, and breakup strategy. Produces complete multi-touch campaigns optimized for open and reply rates across any industry or persona.
+
+**Scope note:** this skill is the generic, industry-agnostic template engine (framework, timing, A/B copy structure). For Epiphan-specific BDR sequences that need live spec verification and Nooks/HubSpot enrollment, use `sdr-email-sms-playbook-skill` instead — it shares the same gates below but is scoped to Epiphan's product line and dial-list pipeline. This skill still applies Epiphan's Golden Rules gates whenever the input list is real Epiphan contacts (see Stage 0).
 </objective>
 
 <quick_start>
 **Trigger:** "Create a cold email sequence for [audience]" or "Write a 7-email sequence for [use case]"
-**Input:** Target audience/ICP, your value proposition, social proof/case studies, sequence length
-**Output:** Full email sequence with subject lines (A/B), body copy, timing, personalization variables, and performance benchmarks
+**Input:** Target audience/ICP or contact list, your value proposition, social proof/case studies, sequence length
+**Output:** Gmail drafts (one per email, via `mcp__Gmail__create_draft`, send-from `tkipper@epiphan.com`) for a real Epiphan contact list, plus the full sequence doc (subject lines A/B, body copy, timing, personalization variables, performance benchmarks) as the working reference. If the audience is a hypothetical/example persona with no real recipient, return the sequence doc only — there is nothing to draft.
 </quick_start>
 
 <variant_support>
@@ -28,16 +30,30 @@ This skill supports A/B variants via config.json.
 </variant_support>
 
 <success_criteria>
+- [ ] If the input is a real contact list, every contact survived the `qualify_lead` gate (Stage 0) before any sequence copy was generated
 - [ ] Sequence type selected (Classic 7-email, Fast-Track 5, Long-Play 12-14, Event-Based, Re-Engagement)
 - [ ] Each email has A/B subject lines, body copy, and clear single CTA
 - [ ] Send timing and day/time recommendations included
 - [ ] Personalization variables identified with sourcing guidance
 - [ ] Social proof integrated (case studies, stats, testimonials)
+- [ ] Every Epiphan/competitor product claim used in a step is confirmed via `search_product_knowledge` / `search_product_catalog` — never stated from memory; unverified claims are dropped, not guessed
+- [ ] Every filled email string passes `check_my_copy` (Epiphan Brand) before being treated as final
 - [ ] Breakup email included as final touch
 - [ ] Performance benchmarks provided for optimization
+- [ ] For a real contact list, each gated email is staged as a Gmail draft via `mcp__Gmail__create_draft` (send-from `tkipper@epiphan.com`) — not just returned as chat text
 </success_criteria>
 
 <workflow>
+
+## Stage 0: Qualify the List (gate)
+
+Run this stage whenever the input is a real Epiphan contact list (has contactIds/emails), before any template is filled in. Skip only when the "audience" is a hypothetical persona with no real recipients — note that explicitly and proceed straight to Sequence Types.
+
+1. For each contact, call `qualify_lead` (dry run — do not pass `writeToHubSpot: true` from this skill). Use the returned `category`, `power_level`, and junk flag as the single source of truth; don't hand-roll Golden Rules keyword tables here (see `skill-audit/specs/suppression-spec.md` for why — dedup/suppression logic drifts when reimplemented per skill).
+2. Drop contacts qualify_lead flags as junk, `lifecyclestage = customer`, or channel partner, per CLAUDE.md Golden Rules.
+3. AE-owned contacts (Lex Evans, Ron Epstein, Phillip Sandler): apply the 90-day stale exception from CLAUDE.md — only contacts stale >90 days stay eligible; otherwise exclude.
+4. Contacts that fail the gate are not sequenced and are not included in the emails-generated count — log the exclusion reason per contact instead of silently dropping it (see outcome sidecar below).
+5. Survivors carry forward `power_level` (ATL/BTL/GRAY) so later personalization/CTA intensity can be tiered if useful (optional; the template framework below works regardless).
 
 ## Sequence Types
 
@@ -74,6 +90,10 @@ This skill supports A/B variants via config.json.
 **Best Practices**: Tuesdays-Thursdays highest open rates. 10-11 AM and 2-3 PM optimal. Avoid Mondays (inbox overload) and Fridays (weekend mode). Send in recipient's local timezone.
 
 ## Email Templates
+
+**Verification Gate (applies to every template below):** any bracketed placeholder that resolves to a specific Epiphan product claim, spec, price/warranty figure, or competitor statement (e.g. "[achieve specific outcome]", "How [competitor] handles [challenge]", "[Specific result # with metric]") must be confirmed live via `search_product_knowledge` or `search_product_catalog` before it's filled in — never state a spec or competitor status from memory, they go stale. If verification fails or the tool is unavailable, mark the claim `[unverified — needs spec check]` and drop it from the email rather than guessing.
+
+**Brand Voice Gate (applies to every template below):** once a template is filled in with real copy, run `check_my_copy` (Epiphan Brand) on the full subject + body before treating it as final. Resolve every flag; never carry off-voice copy forward into a draft.
 
 ### Email #1: The Introduction
 **Subject Lines (A/B Test)**:
@@ -260,6 +280,16 @@ Adjust sequences by **Industry** (swap case studies, use industry terminology), 
 - [ ] A/B tests configured
 - [ ] Daily send limits set (avoid spam flags)
 
+## Stage Final: Stage Gmail Drafts (real contact list only)
+
+For a real, `qualify_lead`-gated contact list, do not return the sequence as chat text alone. Once each email has passed both the Verification Gate and the Brand Voice Gate:
+1. Call `mcp__Gmail__create_draft` once per gated email, per contact, sender `tkipper@epiphan.com` (never any other sender, per CLAUDE.md).
+2. Subject = the winning/primary A/B subject line unless the user asked to draft both variants (then draft both, clearly labeled).
+3. Leave send timing as guidance in the accompanying sequence doc — this skill stages drafts, it does not schedule or send them. Tim reviews and sends per his draft → review → send workflow.
+4. If a claim couldn't be verified or copy couldn't pass `check_my_copy`, do not draft that email — surface it as skipped with the reason instead.
+
+For a hypothetical/example persona (no real recipient), skip this stage and return the sequence doc only.
+
 ## Emit Outcome Sidecar
 
 As the final step, write to `~/.claude/skill-analytics/last-outcome-cold-email-sequence-generator.json`:
@@ -267,8 +297,39 @@ As the final step, write to `~/.claude/skill-analytics/last-outcome-cold-email-s
 {"ts":"[UTC ISO8601]","skill":"cold-email-sequence-generator","version":"1.1.0",
  "variant":"[assigned variant or default]","status":"[success|partial|error]",
  "runtime_ms":[estimated ms from start],
- "metrics":{"sequences_created":1,"emails_generated":[count],"subject_variants_generated":[count]},
+ "metrics":{"sequences_created":1,"emails_generated":[count],"subject_variants_generated":[count],
+            "contacts_qualified":[count or null],"contacts_dropped_gate":[count or null],
+            "claims_unverified":[count],"drafts_created":[count]},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
 
+**Status rules:**
+- `success` — sequence fully generated; for a real list, every survivor's emails passed both gates and were drafted.
+- `partial` — one or more claims failed `search_product_knowledge`/`search_product_catalog` verification (dropped, not guessed), or one or more filled emails failed `check_my_copy` and were skipped rather than drafted. Sequence still emitted for the rest.
+- `error` — `qualify_lead` gate left zero eligible contacts, or draft creation failed outright.
+
+Also append one line to `~/.claude/skill-runs/cold-email-sequence-generator.jsonl` (`{ts, status, contacts_in, contacts_qualified, drafts_created, error}`) so a failed/partial run is visible in the run log, not just the analytics sidecar.
+
 </workflow>
+
+<dependencies>
+## MCP tools
+- `qualify_lead` (Epiphan AI) — Stage 0 list gate; dry run by default, never pass `writeToHubSpot` from this skill.
+- `search_product_knowledge` / `search_product_catalog` (Epiphan AI) — required before any Epiphan/competitor product claim is used in a step.
+- `check_my_copy` (Epiphan Brand) — required brand-voice gate on every filled email before it's final.
+- `mcp__Gmail__create_draft` — stages the gated sequence as Gmail drafts; send-from `tkipper@epiphan.com` only.
+
+## Overlap (flag only — no removal/merge here)
+- `sdr-email-sms-playbook-skill` — Epiphan-specific equivalent with the same gates; prefer it for live Epiphan BDR sequences.
+- `email-template-generator-skill`, `personalization-at-scale-skill` — related template/personalization tooling; this skill owns the multi-touch sequence framework.
+</dependencies>
+
+## Guardrails
+- Never skip Stage 0 for a real contact list — no sequence copy is generated for a contact until it survives `qualify_lead`.
+- Never state an Epiphan/competitor spec, EOL status, or price/warranty figure from memory — confirm via `search_product_knowledge`/`search_product_catalog` first; unverified claims are dropped, not guessed.
+- Never treat a filled email as final, and never draft it, until it has passed `check_my_copy`.
+- Never send directly — `mcp__Gmail__create_draft` only, from `tkipper@epiphan.com`, so Tim reviews before send.
+- If a gate tool is unavailable, degrade to `partial` status and say so in the sidecar/run log — don't silently fall back to ungated output.
+
+## Skill metadata
+**Version:** 1.1.0 · **Author:** Tim Kipper · **Variants:** `cold-email-subject-style-001` (control/concise, see `config.json`)

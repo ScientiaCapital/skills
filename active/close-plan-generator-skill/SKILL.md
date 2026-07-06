@@ -41,6 +41,9 @@ and activity momentum to assign a deal confidence score and mutual action plan.
 ✓ Risk register flags actual blockers (budget, legal, procurement, incumbent)
 ✓ Mutual action plan is ready to email or share in meeting
 ✓ Timeline aligns with target close date (reverse-engineered milestones)
+✓ Every product/competitive claim is confirmed live via `search_product_knowledge`/`search_product_catalog` before it appears in output — never stated from memory
+✓ Mutual action plan passes `check_my_copy` before any Gmail draft is created
+✓ Sparse/missing Clari call data is labeled "limited call history" (not fabricated) and the run is marked partial; outcome sidecar is written
 </success_criteria>
 
 <core_content>
@@ -58,7 +61,10 @@ On trigger, gather parallel data:
   (pull 3-5 most recent calls with sentiment, objections, next steps)
 - **Activity Timeline:** `ask_agent` question for deal momentum 
   (last 30 days: calls, emails, meetings, sentiment trend)
-- **Company Context:** `apollo_organizations_enrich` (industry, headcount, location, tech stack)
+- **ATL/BTL Qualification:** `qualify_lead` on each contact (Epiphan-native ATL/BTL, region, category) — 
+  this is the required gate for Stage 2's ATL/BTL classification; don't infer ATL/BTL from title alone.
+- **Company Context:** `apollo_organizations_enrich` (industry, headcount, location, tech stack) — 
+  use Apollo only to fill firmographic gaps `qualify_lead` doesn't cover.
 
 *Parallel calls accelerate stage 1 from 2-3 min to <1 min.*
 
@@ -78,6 +84,7 @@ For each contact, assign:
 **ATL/BTL Classification:**
 - **ATL (Above-The-Line):** Visible, stakeholder map known to all
 - **BTL (Below-The-Line):** Hidden, only coach/champion know, key for consensus
+- Source each contact's ATL/BTL tier from Stage 1's `qualify_lead` call — the Epiphan-native gate, not a title guess.
 
 **Engagement Scoring (0-10):**
 - 10 = Champion, multiple recent calls, driving momentum
@@ -94,7 +101,7 @@ Document procurement/approval flow:
 - Who signs PO? (EB name, title, typical SLA)
 - Legal review required? (If yes, who, timeline, typical objections)
 - Budget cycle alignment? (FY-to-date spend, remaining budget, next approval cycle)
-- Vendor evaluation? (RFP process, incumbent incumbent, incumbent defense playbook)
+- Vendor evaluation? (RFP process, incumbent, incumbent defense playbook)
 - Competing alternatives? (Extron, Blackmagic, Crestron, vMix, Teradek—note which)
 
 Source from: Clari call summaries, HubSpot deal notes, coach intel via activity timeline.
@@ -111,14 +118,22 @@ Output: Decision process flowchart (text-based, ASCII).
 - Displacement angle: Why Epiphan Pearl + Epiphan Connect?
 - Battlecard: Key differentiators (price, ease of use, cloud integration, customer support)
 
-**Epiphan Competitive Advantages (by vertical):**
+**Product & Competitive Claim Verification (required, before any claim below is used):**
+Never state an Epiphan capability, spec, or competitive differentiator from memory. Before it
+appears in the battlecard, competitive summary, or mutual action plan, confirm it live via
+`search_product_knowledge` / `search_product_catalog`. If a claim can't be confirmed, drop it
+(don't guess) and note it as unverified in the output — this degrades the run to `partial`
+(see Self-Healing).
+
+**Epiphan Competitive Advantages (by vertical)** — illustrative starting points only; confirm
+each live via `search_product_knowledge`/`search_product_catalog` before citing it in output:
 - Higher Ed: NDI + Kaltura/Panopto integration, multi-campus cloud
 - Courts/Legal: SRT reliability, secure RTMP/S, compliance-ready
 - Live Events: Pearl Nano portability, EC20 PTZ flexibility, low latency
 - Corporate AV: Pearl Mini simplicity, Epiphan Connect for hybrid work
 - Houses of Worship: Affordable Pearl Nano, YouTube Live + Vimeo streaming
 
-Output: 1-2 sentence competitive summary + battlecard reference.
+Output: 1-2 sentence competitive summary (specs verified live) + battlecard reference.
 
 ---
 
@@ -203,7 +218,11 @@ OPEN ITEMS / RISKS:
 NEXT MEETING: [Date/Time/Format] with [stakeholders]
 ```
 
-Output as Gmail draft (optional) or copy-paste ready.
+**Brand Voice Gate (required before any Gmail draft):** run `check_my_copy` (Epiphan Brand;
+`get_writing_style` for voice reference) on the full mutual action plan body before creating the
+draft. Resolve every flag — never stage off-voice or unverified-claim copy as a draft.
+
+Output as Gmail draft (optional, after the Brand Voice Gate passes) or copy-paste ready.
 
 ---
 
@@ -249,11 +268,58 @@ Weighted scoring framework:
 - 40-59: Cautious, needs work on MEDDIC/momentum
 - <40: At risk, reassess or reset close date
 
+**Sparse Clari data:** if `clari_search_calls`/`clari_get_call_summary` return fewer than 2 calls
+or nothing at all, do not fabricate sentiment/objections/momentum detail. Degrade Activity
+Momentum and Champion Strength scoring to HubSpot notes + `ask_agent` activity timeline only,
+label the report with a "limited call history" caveat, and mark the run `partial` (see
+Self-Healing below).
+
 ---
 
 # Output Format
 
 Full ASCII Close Plan Report template and email-ready Mutual Action Plan format: see [reference/output-format.md](reference/output-format.md).
+
+---
+
+# Self-Healing
+
+Follows `skill-audit/specs/self-healing-template.md`. For each external call (HubSpot, Clari,
+Apollo, `qualify_lead`, `search_product_knowledge`/`search_product_catalog`, `check_my_copy`):
+retry once on a transient error, then degrade rather than fail the whole run:
+- **Clari sparse/unavailable:** proceed on HubSpot notes + `ask_agent` activity timeline only,
+  add a "limited call history" caveat to the report (Stage 9), and mark the run `partial` —
+  never invent call sentiment, objections, or next steps to fill the gap.
+- **Product/competitive claim unverifiable:** `search_product_knowledge`/`search_product_catalog`
+  fails or can't confirm a claim → drop that claim (don't guess), note it as unverified, mark
+  `partial`.
+- **`check_my_copy` fails or is unavailable:** do not create the Gmail draft; surface the mutual
+  action plan as copy-paste-ready only with a flag that the brand gate didn't clear, mark `partial`.
+- **`qualify_lead` unavailable:** fall back to title-based ATL/BTL heuristics (Key Definitions),
+  flag the stakeholder table as "ATL/BTL not gate-confirmed," mark `partial`.
+- **Alert:** if HubSpot deal/contact lookup fails outright, or every data source for the deal
+  comes back empty, flag it plainly at the top of the report rather than producing a plan that
+  looks complete.
+- **Halt:** if the deal/company can't be identified in HubSpot at all, stop and report the error —
+  don't guess which deal was meant.
+
+In addition to the outcome sidecar below, append one line per run to
+`~/.claude/skill-runs/close-plan-generator.jsonl` per the template's run-log convention.
+
+## Emit Outcome Sidecar
+As the final step, write to `~/.claude/skill-analytics/last-outcome-close-plan-generator.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"close-plan-generator","version":"1.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"contacts_mapped":[n],"atl_count":[n],"btl_count":[n],"calls_pulled":[n],
+            "close_confidence_score":[0-100],"claims_verified":[n],"claims_dropped_unverified":[n],
+            "brand_gate_passed":[true|false]},
+ "error":"[name the degraded stage, e.g. 'clari_sparse' | 'claim_unverified' | 'brand_gate_failed' | 'qualify_lead_unavailable', or null]",
+ "session_id":"[YYYY-MM-DD]"}
+```
+Use `"partial"` for any of the degrade cases above (name the stage in `error`); use `"error"` only
+if no usable close plan was produced at all (e.g. deal/company not found in HubSpot). The
+`version` above must match this SKILL.md's frontmatter `version:` — don't hardcode it a second time.
 
 ---
 
@@ -271,12 +337,18 @@ Full ASCII Close Plan Report template and email-ready Mutual Action Plan format:
 
 **Epiphan CRM AI Agent:**
 - `ask_agent` — activity timeline (calls, emails, notes, meetings, sentiment trend last 30d)
+- `qualify_lead` — required ATL/BTL/region/category gate for each contact (Stage 1/2); don't infer ATL/BTL from title alone
+- `search_product_knowledge` / `search_product_catalog` — required live verification for any Epiphan/competitor product or competitive claim (Stage 4) before it appears in output
 
 **Apollo Database:**
-- `apollo_organizations_enrich` — company context (headcount, industry, location, tech stack)
+- `apollo_organizations_enrich` — company context (headcount, industry, location, tech stack); firmographic gap-fill only, not the ATL/BTL gate
+
+**Epiphan Brand:**
+- `check_my_copy` — required brand-voice gate on the mutual action plan body before any Gmail draft (Stage 8)
+- `get_writing_style` — voice reference for the Brand Gate
 
 **Gmail (Optional):**
-- Create draft mutual action plan for prospect outreach
+- Create draft mutual action plan for prospect outreach (after the Brand Voice Gate passes)
 
 **Google Calendar (Optional):**
 - Check AE/prospect availability for next meeting booking

@@ -111,11 +111,16 @@ Score each deal on 5 death signals (0-20 pts each, 100 total).
 | 0 dimensions | 0 — UNQUALIFIED |
 
 ### Signal 5: Stakeholder Breadth (0-20)
+Call `qualify_lead` per contact and score off its returned `power_level` (`atl`/`btl`/`gray`/`unknown`)
+— don't hand-roll ATL/BTL keyword judgment inline. This is the same gate every sibling skill uses
+(see `skill-audit/specs/suppression-spec.md`) and keeps this scoring aligned with
+`deal-momentum-analyzer`'s read of the same deal.
+
 | Contacts | Score |
 |----------|-------|
-| 3+ contacts including ATL (economic buyer) | 20 |
-| 2+ contacts with ≥1 ATL | 15 |
-| 2+ contacts but all BTL | 8 |
+| 3+ contacts including ≥1 `power_level: atl` | 20 |
+| 2+ contacts with ≥1 `power_level: atl` | 15 |
+| 2+ contacts, all `power_level: btl` (or `gray`) | 8 |
 | Single-threaded (1 contact only) | 3 |
 | 0 active contacts | 0 — ABANDONED |
 
@@ -130,7 +135,7 @@ Score each deal on 5 death signals (0-20 pts each, 100 total).
 | Root Cause | Recovery Strategy |
 |-----------|-------------------|
 | GHOST | Multi-channel blitz: email + call + LinkedIn |
-| NO_CHAMPION | Find new contact via Apollo |
+| NO_CHAMPION | Find new contact via `apollo_mixed_people_api_search`, then gate discovered contacts through `qualify_lead` before drafting |
 | SINGLE_THREADED | Research org chart, find peer or manager |
 | BUDGET_STALL | Re-engage at next budget cycle |
 | COMPETITOR_WIN | Log intel. Re-engage in 12 months. |
@@ -139,9 +144,16 @@ Score each deal on 5 death signals (0-20 pts each, 100 total).
 
 ## Stage 3: Recovery Campaign (3-touch, 10 days)
 
+**Brand Gate (required before every draft below):** Run `check_my_copy` (and `get_writing_style`
+for voice reference) on each touch's body before it is staged as a Gmail draft. Fix anything
+flagged — off-voice copy does not go out. Stage each touch individually; never batch-create all 3
+drafts before gating each body.
+
 **Email 1 — Check-In (Day 0):** Tactical empathy. "It's been a while since we connected about [topic]..."
+*(Brand Gate: run `check_my_copy` on this body, then `gmail_create_draft`.)*
 
 **Email 2 — Value Bomb (Day 4):** Challenger reframe with new case study or vertical insight.
+*(Brand Gate: run `check_my_copy` on this body, then `gmail_create_draft`.)*
 
 **Email 3 — Break-Up (Day 10):**
 ```
@@ -154,8 +166,7 @@ Hi [First Name], I haven't heard back — one of three things:
 
 Would it be a terrible idea to reconnect next quarter instead?
 ```
-
-Create Gmail drafts via `gmail_create_draft` for all 3 touches.
+*(Brand Gate: run `check_my_copy` on this body, then `gmail_create_draft`.)*
 
 ## Stage 4: Disqualification Protocol
 
@@ -189,6 +200,7 @@ Before closing any deal as Lost:
 
 🔴 DEAD — DISQUALIFY:
 2. [Deal] — $[amt] | Evidence: [X] | Learning: [X]
+   → HubSpot updated: Yes/No | Lost reason: [X]
 
 PIPELINE IMPACT:
 Before: $[current] | After cleanup: $[cleaned]
@@ -222,7 +234,9 @@ Pull all deals closed as Lost in last 30 days and analyze:
 - **Epiphan CRM MCP:** hubspot_search_deals, hubspot_get_deal, hubspot_search_contacts, hubspot_search_companies, ask_agent
 - **Epiphan Clari MCP:** clari_search_calls, clari_get_call_summary
 - **Gmail MCP:** gmail_create_draft
-- **Apollo MCP:** enrich_contact (find new contacts for single-threaded deals)
+- **Epiphan Brand MCP:** check_my_copy, get_writing_style — brand-voice gate, required before any recovery-email draft is finalized (Stage 3)
+- **Epiphan AI MCP:** qualify_lead — per-contact `power_level` (atl/btl/gray/unknown), category, junk flag; single source of truth for ATL/BTL scoring (Signal 5) and for gating newly-discovered contacts (see `skill-audit/specs/suppression-spec.md`)
+- **Apollo MCP:** apollo_mixed_people_api_search (find new contacts for single-threaded deals; gate results through `qualify_lead` before drafting)
 
 ## Sibling Skills Referenced
 - `deal-momentum-analyzer` — Shares deal health scoring; dead-deal-recovery goes deeper on RED deals

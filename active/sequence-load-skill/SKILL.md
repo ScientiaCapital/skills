@@ -1,6 +1,6 @@
 ---
 name: sequence-load
-description: "Monday auto-load of weekly prospect refresh results into Apollo outreach sequences."
+description: "Monday 7:15 AM (and on demand) enrollment of prospect-refresh net-new leads into Apollo sequences: qualify_lead final gate + HubSpot/Apollo dedupe + phone validation -> vertical->sequence mapping -> batch add-to-sequence -> HubSpot contact sync -> enrollment report. Use when: 'load prospects into sequences', 'enroll new leads', 'run sequence load'."
 schedule: "0 7 15 * * 1"
 timezone: "America/New_York"
 ---
@@ -8,36 +8,57 @@ timezone: "America/New_York"
 # Sequence Load Skill
 
 <objective>
-Automatically load net-new prospects from prospect-refresh into Apollo outreach sequences. Validate Golden Rules, confirm phone numbers exist, check for duplicate enrollments, and execute batch add-to-sequence. Output enrollment report with per-prospect sequence assignment and contact IDs for HubSpot sync.
+Automatically load net-new prospects from prospect-refresh into Apollo outreach sequences. Read a structured handoff (not a scraped report), re-gate every survivor through `qualify_lead` as the final authoritative go/no-go, confirm phone numbers exist, check for duplicate enrollments, and execute batch add-to-sequence. Output enrollment report with per-prospect sequence assignment and contact IDs for HubSpot sync.
 </objective>
 
 <quick_start>
 **Trigger:** Monday 7:15 AM ET (runs after prospect-refresh at 6:30 AM)  
 **Manual Trigger:** "Load prospects into sequences" or "Enroll new leads"  
-**Dependencies:** Requires Apollo credits, prospect-refresh output, HubSpot portal 21530819  
+**Dependencies:** Requires Apollo credits, prospect-refresh's structured handoff, HubSpot portal 21530819, `qualify_lead` (Epiphan AI)  
 **Output:** Enrollment confirmation per prospect, sequence assignment, contact IDs for HubSpot creation
 </quick_start>
 
+<config>
+**Vertical → Sequence Mapping** (declared once here; Stage 4 resolves the live `sequence_id` dynamically via `apollo_emailer_campaigns_search` each run — never hardcode a sequence ID or email-account ID inline in a stage):
+
+| Vertical | Sequence Name Pattern |
+|----------|----------------------|
+| Higher Ed | BDR_HigherEd_OutboundX |
+| Courts | BDR_Courts_OutboundX |
+| Government | BDR_Government_OutboundX |
+| Corporate AV | BDR_CorporateAV_OutboundX |
+| Healthcare | BDR_Healthcare_OutboundX |
+| Houses of Worship | BDR_HoW_OutboundX |
+| K-12 | BDR_K12_OutboundX |
+
+Fallback sequence: `BDR_Outbound_General` if a vertical-specific match isn't found.
+</config>
+
 <success_criteria>
-- [ ] Read prospect-refresh output (30 net-new prospects from Gmail drafts + HTML report)
+- [ ] Read prospect-refresh's structured handoff (net-new prospects; JSON/CSV or direct MCP query — not HTML scraping)
 - [ ] Query HubSpot to verify prospect not already enrolled in any sequence
 - [ ] Validate phone number exists (from prospect-enrich or Apollo)
-- [ ] Apply Golden Rules (skip customers, channel, device owners, NEVER ATL)
-- [ ] Find target Apollo sequence(s) by ICP vertical
+- [ ] Call `qualify_lead` on every survivor as the final, authoritative enrollment gate (do not re-derive Golden Rules / NEVER-ATL prose here)
+- [ ] Find target Apollo sequence(s) by ICP vertical (config table above; resolved dynamically)
 - [ ] Get email account ID (tim@epiphan.com or primary)
 - [ ] Batch add prospects to sequence (max 100 per request)
 - [ ] Confirm enrollments (check Apollo contact.sequence_id)
 - [ ] Create HubSpot contacts if not exist (pull contact IDs for HubSpot sync)
 - [ ] Report: total enrolled, per-sequence breakdown, any failures
+- [ ] Halt + alert (not just log) on a Stage 6 email-account resolution failure or a Stage 7 sub-threshold batch success
 </success_criteria>
 
 <workflow>
 
-## Stage 1: Read Prospect Refresh Output
+## Stage 1: Read Prospect Refresh's Structured Handoff
 
-**Input Source:** prospect-refresh HTML report + Gmail drafts
+**Input Source:** a structured handoff from prospect-refresh — NOT the HTML report. Consume one of, in preference order:
+1. A shared HubSpot list of net-new refresh candidates (direct MCP query via `search_crm_objects`), or
+2. A structured JSON/CSV file prospect-refresh emits alongside its HTML report (e.g. `~/.claude/skill-state/prospect-refresh-handoff.json`, outside the repo per the sidecar-path convention), containing one record per prospect.
 
-**Extract from HTML Report:**
+The HTML report remains prospect-refresh's human-facing deliverable for Tim's review (drill-down links, sortable table) — it is not this skill's machine input. Re-parsing that HTML is exactly the silent-break risk this stage used to carry: any report-format change (a renamed column, restyled table) would break this skill without either skill raising an error. **Note:** emitting the structured handoff is prospect-refresh's responsibility — if `active/prospect-refresh-skill/SKILL.md` doesn't yet write one, that's a fix for that skill's own file, not this one; until then, degrade to the direct HubSpot list query (option 1) rather than falling back to HTML scraping.
+
+**Expected fields per record:**
 - Prospect name, email, title, company, vertical, ATL/BTL tier
 - Apollo person_id, organization_id, phone
 - Company revenue, headcount, funding
@@ -46,6 +67,8 @@ Automatically load net-new prospects from prospect-refresh into Apollo outreach 
 - Email format is valid
 - Phone exists (from enrichment)
 - Vertical is one of: Higher Ed, Courts, Gov, Corporate AV, Healthcare, HoW, K-12
+
+**If the structured handoff is missing or empty:** don't guess or silently skip — alert Tim and halt this run (see Failure Handling below) rather than falling back to scraping the HTML report.
 
 **Output:** Structured list of 30 prospects (or fewer if filtering applied)
 
@@ -90,16 +113,19 @@ per_page: 10
 
 ---
 
-## Stage 3: Validate Golden Rules + Phone Exists
+## Stage 3: Final Enrollment Gate — `qualify_lead` + Phone Exists
 
-**Golden Rules (Hard Exclusions):**
+This is the **last checkpoint** before a contact enters a live Apollo sequence, so it must be authoritative rather than a second, drifting copy of Golden Rules / NEVER-ATL prose.
 
-**Skip if:**
-- Email domain matches known customer domain (cross-check crm_customers)
-- Contact tagged "Channel Partner" in HubSpot
-- Contact tagged "Device Owner" in HubSpot
-- Company in "Product Page Engagers" tag
-- Title in NEVER ATL list: Warehouse Manager, Network Manager, Systems Admin, AV Technician, Graphic Design Instructor, Program Administrator, Web Designer, Classroom Support, Lab Coordinator, Maintenance, Building Engineer, Multimedia Services Manager, Video Production Specialist, Streaming Crew
+**MCP Tool:** `qualify_lead` (Epiphan AI) — call on every survivor of Stage 2 dedupe.
+
+**Decision Logic (treat the verdict as authoritative — do not re-derive it):**
+- `junk == true` → SKIP (do not enroll)
+- `category` flags a disqualification (customer match, channel partner, device-owner, product-only engager) → SKIP
+- `power_level == btl` with a NEVER-ATL title → SKIP
+- `power_level == atl` or `gray` (gray-zone $25K budget-authority rule already applied by `qualify_lead`) → PROCEED
+
+**Why re-gate here instead of trusting upstream:** prospect-refresh already calls `qualify_lead` once at candidate-sourcing time (its own Stage 3), but ~45 minutes pass before this skill runs, and HubSpot/CRM state can change in that window (a contact converts to customer, gets suppressed, gets tagged channel). Don't skip this call as "already checked upstream" — a stale verdict here is exactly how a disqualified lead reaches a live sequence.
 
 **Phone Validation:**
 - Phone must be non-null (from Apollo enrichment or prospect-enrich)
@@ -126,17 +152,7 @@ Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_
 
 **MCP Tool:** `apollo_emailer_campaigns_search`
 
-**Search for sequences by vertical + template:**
-
-| Vertical | Sequence Name Pattern | Target Sequence ID |
-|----------|----------------------|------------------|
-| Higher Ed | BDR_HigherEd_OutboundX | [search by name] |
-| Courts | BDR_Courts_OutboundX | [search by name] |
-| Government | BDR_Government_OutboundX | [search by name] |
-| Corporate AV | BDR_CorporateAV_OutboundX | [search by name] |
-| Healthcare | BDR_Healthcare_OutboundX | [search by name] |
-| Houses of Worship | BDR_HoW_OutboundX | [search by name] |
-| K-12 | BDR_K12_OutboundX | [search by name] |
+**Search for sequences by vertical + template**, using the mapping declared once in `<config>` above (do not re-hardcode the vertical→sequence-name table per stage; resolve the actual `sequence_id` fresh each run by name search, since renames/new sequences shouldn't require an edit here).
 
 **Query Logic:**
 ```
@@ -195,9 +211,9 @@ label_names: [prospect.vertical, "BDR_Prospect", "2026_Q1"]
 **Selection Logic:**
 - Look for email containing "epiphan" or "tkipper"
 - Use primary email account if multiple
-- If none found → ERROR (cannot proceed without email account)
+- If none found → **HALT the run and alert Tim** (do not proceed without a resolvable email account; this is not a per-prospect failure to log and continue past — nothing can be enrolled without it). Mark the run `error` and name Stage 6 as the failing stage in the outcome sidecar.
 
-**Output:** email_account_id (e.g., "6633baaece5fbd01c791d7ca")
+**Output:** email_account_id (the id string returned by `apollo_email_accounts_index` — resolve it fresh each run, never hardcode a specific account id)
 
 ---
 
@@ -220,9 +236,11 @@ status: "active" (start sequence immediately)
 **Batch Logic:**
 - Group prospects by target sequence
 - Send 100 contacts max per API call
-- Retry if rate limited
+- Retry once if rate limited, then move to the next batch and log the failed one
 
 **Expected Success Rate:** 95%+ (most failures due to email validation)
+
+**Batch-level halt/alert (beyond per-prospect logging):** if success rate for the whole run falls below 70%, or an entire batch (not just scattered individual prospects) fails, don't just log it and continue quietly — alert Tim with the failing batch/sequence and mark the run `partial`, naming Stage 7 as the degraded stage.
 
 ---
 
@@ -321,6 +339,24 @@ associations: [
 
 ---
 
+## Failure Handling & Outcome Logging
+
+Follow `skill-audit/specs/self-healing-template.md` for the failure ladder (retry -> degrade ->
+alert -> halt) and the three-way status definition (success/partial/error — always name the
+failing stage for partial/error). Specific to this skill:
+- **Stage 1 handoff missing/empty:** halt, alert Tim, status `error`, name Stage 1 — never fall
+  back to scraping the HTML report.
+- **Stage 3 `qualify_lead` unavailable:** alert and halt rather than proceeding as if the gate
+  passed (per the spec's fallback ladder, item 3) — do not fall back to inline Golden Rules prose.
+- **Stage 6 no resolvable email account:** halt, alert Tim, status `error`.
+- **Stage 7 batch success below 70% or a whole batch failing:** alert Tim, status `partial`,
+  name Stage 7.
+- Append one line per run to `~/.claude/skill-runs/sequence-load.jsonl` (in addition to the
+  outcome sidecar below) per the spec's run-log convention, so failures are trendable rather than
+  visible only in the latest snapshot.
+
+---
+
 ## Emit Outcome Sidecar
 
 As the final step, write to `~/.claude/skill-analytics/last-outcome-sequence-load.json`:
@@ -334,6 +370,20 @@ Use status "partial" if some stages failed but results were produced. Use "error
 
 ---
 
+<dependencies>
+## MCP tools
+- **Epiphan AI:** `qualify_lead` — final, authoritative enrollment gate (Stage 3)
+- **HubSpot:** `search_crm_objects` (dedupe, Stage 2; sequence handoff query, Stage 1), `manage_crm_objects` (contact/company create, Stage 9)
+- **Apollo:** `apollo_contacts_search` (dedupe + Stage 5 lookup), `apollo_contacts_create` (Stage 5), `apollo_emailer_campaigns_search` (Stage 4), `apollo_email_accounts_index` (Stage 6), `apollo_emailer_campaigns_add_contact_ids` (Stage 7)
+
+## Sibling skills referenced (reuse, don't rebuild)
+- `prospect-refresh` — upstream source of net-new prospects; hands off a structured list (not this skill's input via HTML scraping).
+- `prospect-enrich` / `phone-verification-waterfall` — phone enrichment referenced in Stage 3.
+- `lead-suppression-spec` — Stage S suppression gate.
+</dependencies>
+
+---
+
 ## Skill Metadata
 
 **Version:** 1.0
@@ -343,4 +393,4 @@ Use status "partial" if some stages failed but results were produced. Use "error
 **Integration:** Apollo + HubSpot (portal 21530819)
 **Tier:** P1 (Core BDR Automation)
 **Triggers:** Scheduled (Monday 7:15 AM) + Manual ("Load sequences")
-**Dependencies:** prospect-refresh (6:30 AM) → sequence-load (7:15 AM) → morning-brief (7:30 AM)
+**Dependencies:** prospect-refresh (6:30 AM, structured handoff) → sequence-load (7:15 AM, `qualify_lead` final gate) → morning-brief (7:30 AM)

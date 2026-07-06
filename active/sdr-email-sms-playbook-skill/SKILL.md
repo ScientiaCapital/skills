@@ -20,11 +20,23 @@ qualifying answer first, then send the info email using the matching template.
    (org name + a known trigger: budget cycle, new building, accreditation,
    Extron SMP EOL, a failed recording).
 2. Pull the Touch 1 template for that vertical. Fill the [brackets].
-3. Enroll into the 5-touch cadence (Nooks handles enrollment; this skill is
+3. **Verification Gate (required, before any draft is created):**
+   a. **Spec/competitor check** — if the filled-in touch states or implies any
+      Epiphan/competitor product claim (Pearl = dedicated hardware, Extron SMP
+      EOL, Matrox exited the encoder market, vMix/OBS reliability limits, a
+      warranty/price figure, etc.), confirm it live via `search_product_knowledge`
+      or `search_product_catalog` before it goes further. Never state a spec
+      from memory. If verification fails or the tool is unavailable, mark the
+      claim `[unverified — needs spec check]` and drop it from the touch rather
+      than guessing.
+   b. **Brand/voice check** — run `check_my_copy` (Epiphan Brand) on the filled
+      touch. Resolve every flag; never carry off-voice copy forward.
+4. Enroll into the 5-touch cadence (Nooks handles enrollment; this skill is
    the CONTENT for each step). Send-from is always tkipper@epiphan.com.
-4. Create Gmail drafts for review before send (Tim's workflow: draft →
-   review/edit → send).
-5. When a prospect replies with a qualifying answer, STOP the cadence and send
+5. Only after the Verification Gate passes, create the Gmail draft via
+   `gmail_create_draft` for review before send (Tim's workflow: draft →
+   review/edit → send). One draft per touch — never send directly.
+6. When a prospect replies with a qualifying answer, STOP the cadence and send
    the tailored info email — or hand to epiphan-call-playbook for the call.
 </quick_start>
 
@@ -36,6 +48,11 @@ qualifying answer first, then send the info email using the matching template.
 - Closes are soft and permission-based — drawn from the Soft Close Phrases bank. No hard "book a call" CTAs on cold touches.
 - Personalization hook present in Touch 1 and Touch 2 (org name + trigger).
 - Cadence stops the moment a reply lands. No touch fires after engagement.
+- Every product/competitor claim (Pearl vs software, Extron SMP EOL, Matrox exit,
+  any spec/price/warranty figure) is confirmed via `search_product_knowledge` /
+  `search_product_catalog` before it appears in a touch — never stated from memory.
+- Every filled touch passes `check_my_copy` before a Gmail draft is created for it.
+- Drafts are staged via `gmail_create_draft` (one per touch) — never sent directly.
 </success_criteria>
 
 <core_content>
@@ -338,12 +355,21 @@ Tentative, permission-based lines for asking to reconnect — open-ended, low-pr
     send the tailored info email or route to the call playbook.
 11. **Never just send info.** Earn one qualifying answer first, then the info
     email.
+12. **Verification Gate before every draft.** Any product/competitor claim in a
+    filled touch must be confirmed via `search_product_knowledge` /
+    `search_product_catalog`, and the filled touch must pass `check_my_copy`,
+    before it is enrolled or staged as a Gmail draft (see Quick Start step 3).
 
 Competitive hooks to weave in (never as the lead):
 - **Extron SMP is EOL** — "What's your plan when support ends?"
 - **Matrox exited the encoder market** — abandoned-platform angle.
 - **vMix/OBS are software** — unreliable for mission-critical unattended
   recording; Pearl is dedicated hardware built for one job.
+
+*(Spec Verification Gate: all three hooks above are product/competitor claims —
+confirm each is still current via `search_product_knowledge` / `search_product_catalog`
+before using it in a touch. These go stale; don't repeat them from memory once a
+vendor's status may have changed.)*
 
 ---
 
@@ -364,6 +390,31 @@ Hand-off: when email earns a reply, pass the context to epiphan-call-playbook
 so the call opens where the thread left off — never restart discovery from zero.
 
 </core_content>
+
+<dependencies>
+## MCP tools
+- `search_product_knowledge` / `search_product_catalog` — spec/competitor
+  verification gate; required before any product or competitor claim (Pearl vs
+  software, Extron SMP EOL, Matrox exit, warranty/price figures) lands in a touch.
+- `check_my_copy` (Epiphan Brand) — brand-voice gate; required on every filled
+  touch before it's enrolled or staged.
+- `gmail_create_draft` — stages the gated touch as a Gmail draft (draft-first,
+  never direct send), one per touch.
+
+## Sibling skills referenced
+- `epiphan-call-playbook` — phone-side sibling; hand off on reply or live dial.
+- `epiphan-ai-mcp-guide-skill` — reference for product-tool usage patterns.
+</dependencies>
+
+## Guardrails
+- Never state an Epiphan/competitor spec, EOL status, or price/warranty figure
+  from memory — confirm it via `search_product_knowledge` / `search_product_catalog`
+  before it's used in any touch.
+- Never enroll or stage a touch that hasn't passed `check_my_copy`.
+- Drafts are draft-first: stage via `gmail_create_draft`, never send directly.
+- If a spec or brand check can't be resolved (tool unavailable, no match), don't
+  guess — mark the claim `[unverified]`, drop it from the touch, and continue with
+  the rest of the cadence rather than blocking the whole run.
 
 ## Emit Outcome Sidecar
 

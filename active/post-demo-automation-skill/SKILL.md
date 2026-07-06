@@ -5,7 +5,7 @@ description: "Automates post-demo follow-up sequence for Epiphan AEs: demo recap
 owner: "Phil Sandler, Lex Evans (Epiphan Video Account Executives)"
 slack_channel: "#epiphan-ae"
 category: "Sales Automation"
-version: "1.0"
+version: "1.1"
 status: "production"
 trigger_phrases:
   - "post-demo [company]"
@@ -63,7 +63,7 @@ Reduces manual work, ensures consistent follow-up quality, and flags at-risk dea
 
 </success_criteria>
 
-## Workflow: 5-Stage Post-Demo Automation
+## Workflow: 7-Stage Post-Demo Automation
 
 ### Stage 1: Data Collection (Parallel Calls)
 Execute in parallel to minimize latency:
@@ -84,6 +84,18 @@ Execute in parallel to minimize latency:
 
 ### Stage 2: Demo Recap Email (Challenger-Style)
 Generate Gmail draft with vertical-specific template:
+
+**Non-negotiable: spec/competitor live-verification gate.** Before including any Epiphan product
+spec, integration/API claim, performance number, or competitor comparison (e.g. "SMP discontinued,"
+transcoding/time-to-publish figures, Crestron/Blackmagic/vMix/Teradek comparisons) in the recap,
+call `search_product_catalog` (SKUs, pricing, short names) and/or `search_product_knowledge`
+(technical/integration/EOL status) to confirm it's current. Never state a spec or competitor claim
+from memory — if live lookup is unavailable, mark the line `⚠️ UNVERIFIED — confirm before sending`
+rather than shipping it as fact.
+
+**Brand Gate (required before every draft in this skill):** Run `check_my_copy` (and
+`get_writing_style` for voice reference) on the recap body before `gmail_create_draft`. Fix
+anything flagged — off-voice copy does not go out.
 
 **Email structure:**
 - **Subject line:** "Quick recap: [Company] demo + next steps" or "Thoughts on [Product] for [Company]"
@@ -130,6 +142,10 @@ Create deal note with:
 ### Stage 4: Next Meeting Scheduler
 Conditional logic based on demo outcome:
 
+**Brand Gate:** every email draft produced in this stage (Scenarios B, C, D) runs through
+`check_my_copy` (see Stage 2 gate) before `gmail_create_draft` — no exceptions for "quick" check-ins
+or recovery notes.
+
 **Scenario A: Next step agreed** (e.g., "Let's reconvene Tuesday")
 - Extract date/time from Clari call or HubSpot notes
 - `create_event` — calendar invite (attendees: all demo attendees + AE)
@@ -146,6 +162,10 @@ Conditional logic based on demo outcome:
 - Use LAER framework (Listen, Ask, Explore, Respond)
 - Example objection: "We're waiting to see if our Extron system can integrate"
 - Response: Acknowledge → Ask timeline → Offer to loop in their IT → Share integration guide
+- **Verification gate applies here too:** any integration claim, competitor status ("discontinued,"
+  "EOL"), or spec cited in the response must be confirmed live via `search_product_knowledge` /
+  `search_product_catalog` first — see Stage 2 gate. The Objection Response Library below is a
+  fallback reference only, not a source of truth.
 
 **Scenario D: Demo was negative or attendees disengaged**
 - Flag for AE review + create "recovery" email draft
@@ -157,8 +177,14 @@ If deal is single-threaded (only 1 attendee) OR only 1 attendee was truly engage
 1. **Research via Apollo:**
    - Identify 2-3 likely stakeholders (CFO/VP Finance if budget/ROI discussed; IT Director if integration discussed; Operations if deployment discussed)
    - Pull titles, emails, LinkedIn profiles
-   
-2. **Create "loop-in" email draft:**
+
+1b. **Qualify before drafting (required gate):**
+   - Run `qualify_lead` on every Apollo-discovered contact — dedup check, ATL/BTL power level, and
+     Golden Rules (customer/channel-partner/AE-owned exclusions) — before any loop-in email is drafted.
+   - Never draft to a duplicate, a customer, a channel partner, or a contact already owned by another
+     active AE per the Golden Rules gates in CLAUDE.md.
+
+2. **Create "loop-in" email draft** (run `check_my_copy` on the body before `gmail_create_draft` — Brand Gate applies here too):
    - AE sends to champion, asking them to forward/introduce to stakeholder
    - Example: "Hey [Champion], I wanted to loop in [IT Director] since we discussed integrations — could you forward this to them?"
    - Includes short value prop + relevant resource (case study, demo video)
@@ -168,7 +194,9 @@ If deal is single-threaded (only 1 attendee) OR only 1 attendee was truly engage
    - "I connected with [Champion] on the [Product] opportunity at [Company]..."
 
 ### Stage 6: 5-Touch Momentum Maintenance Sequence
-Outline the follow-up cadence (AE decides execution method: Gmail scheduled send, BDR, or calendar reminders):
+Outline the follow-up cadence (AE decides execution method: Gmail scheduled send, BDR, or calendar reminders).
+Any touch drafted as a Gmail draft (Day 3, 7) goes through the same Brand Gate (`check_my_copy`) and,
+if it references a spec/case-study stat or competitor, the same verification gate as Stage 2/4.
 
 **Day 0:** Demo recap email (Stage 2 output) — sent within 2 hours
 
@@ -226,8 +254,10 @@ Recommend HubSpot stage advances based on demo outcome + MEDDIC health:
 ### Required MCPs / Tools
 - **Clari** (clari_search_calls, clari_get_call_summary) — extract demo recording + sentiment
 - **HubSpot** (hubspot_get_deal, hubspot_search_contacts, deal updates) — deal context + contact research
-- **Apollo** (for stakeholder expansion research)
-- **Gmail** (gmail_create_draft) — compose recap email
+- **Apollo** (for stakeholder expansion research) — gate results through `qualify_lead` before drafting (Stage 5)
+- **Epiphan AI MCP** (`search_product_catalog`, `search_product_knowledge`) — required live verification for any spec, integration, or competitor claim before it enters a recap or objection email (Stage 2, Stage 4 Scenario C); `qualify_lead` — dedup/ATL-BTL/Golden Rules gate for Apollo-discovered contacts (Stage 5)
+- **Epiphan Brand MCP** (`check_my_copy`, `get_writing_style`) — required brand-voice gate on every email body before `gmail_create_draft` (recap, check-in, objection, recovery, loop-in, momentum touches)
+- **Gmail** (gmail_create_draft) — compose recap email; only after the Brand Gate passes
 - **Google Calendar** (create_event) — schedule next meeting
 - **Epiphan CRM MCP** (activity_get_timeline, ask_agent) — full engagement history
 
@@ -252,8 +282,12 @@ Edit the vertical angle in Stage 2 for your use case:
 - **K-12:** Teacher efficiency, remote learning continuity, parental engagement through videos
 
 ### Objection Response Library
-Customize LAER responses in Stage 4 Scenario C for common Epiphan objections:
-- "We have Extron SMP" → Position Pearl as upgrade (SMP discontinued; Pearl has cloud, AI)
+Customize LAER responses in Stage 4 Scenario C for common Epiphan objections. **Fallback
+reference only — confirm every status/spec claim live via `search_product_knowledge` /
+`search_product_catalog` before use; competitor status (e.g. "discontinued") and feature claims
+change over time and must never be sent from memory:**
+- "We have Extron SMP" → Position Pearl as upgrade (⚠️ confirm current SMP status + Pearl
+  cloud/AI capabilities live before claiming)
 - "Blackmagic is cheaper" → Emphasize integration ecosystem + support
 - "Crestron can do this" → Highlight simplicity, no programming required
 - "We're evaluating multiple vendors" → Offer POC or ROI calculator
@@ -265,6 +299,11 @@ Adjust Day 3, 7, 14 cadence in Stage 6 based on sales cycle length:
 - **Long cycle (Gov, Enterprise):** Day 0, 5, 14, 30
 
 ## Example Workflows
+
+**Note:** the spec figures, competitor statuses, and stats in these worked examples (e.g. transcoding
+times, adoption percentages) are illustrative only — they were not verified at write-time. Never copy
+them into a live draft; always confirm current figures via `search_product_knowledge` /
+`search_product_catalog` per the Stage 2 verification gate.
 
 ### Example 1: Higher Ed Demo (Positive)
 **Trigger:** "post-demo University of Michigan"
@@ -404,7 +443,28 @@ When AE escalates deal on Day 14:
    - Loop in Epiphan product specialist if technical objections exist
 4. Update HubSpot with BDR activity; hand back to AE once champion re-engaged
 
+## Emit Outcome Sidecar
+
+As the final step of every run, write to `~/.claude/skill-analytics/last-outcome-post-demo-automation.json`:
+```json
+{"ts":"[UTC ISO8601]","skill":"post-demo-automation","version":"1.1.0","variant":"default",
+ "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
+ "metrics":{"recap_sent":[0/1],"hubspot_note_logged":[0/1],"meeting_scheduled":[0/1],
+            "stakeholder_expansion_triggered":[0/1],"momentum_plan_created":[0/1],
+            "specs_verified":[n],"specs_unverified_flagged":[n],"brand_gate_fixes":[n]},
+ "error":null,"session_id":"[YYYY-MM-DD]"}
+```
+Use status "partial" if some stages failed but results were produced (e.g. Clari recording missing,
+so Stage 2-6 ran off manually-supplied context). Use "error" only if no output was generated.
+Also append one line to `~/.claude/skill-runs/post-demo-automation.jsonl` (same fields) as a run log
+for troubleshooting, matching the sibling deal skills' self-healing pattern.
+
 ## Version History
 
+- **v1.1** (July 2026): Added mandatory spec/competitor verification gate (`search_product_knowledge`/
+  `search_product_catalog`) before any claim in a recap or objection email; added brand-voice
+  `check_my_copy` gate before every `gmail_create_draft`; added `qualify_lead` gate on Apollo-discovered
+  stakeholders before loop-in drafts; added outcome sidecar + run log; fixed stage-count title
+  (was "5-Stage," file has 7 stages).
 - **v1.0** (April 2026): Initial release with 5-stage automation, vertical templates, MEDDIC integration
-- Roadmap: Add Slack notifications for momentum sequence; auto-escalation to BDR calendar; A/B testing on email subject lines
+- Roadmap: Add Slack notifications for momentum sequence; auto-escalation to BDR calendar; A/B testing on email subject lines; move vertical templates/objection library/worked examples to `references/` for progressive disclosure (file exceeds lean-context line guidance)

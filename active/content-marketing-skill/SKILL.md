@@ -29,6 +29,8 @@ Content is successful when:
 - Case studies include quantified results (metrics, not vague claims)
 - Video scripts have clear hook in first 15 seconds
 - Content repurposed: 1 long-form → multiple formats (LinkedIn, Twitter, email)
+- Any Epiphan product spec, feature, or competitor claim is verified via `search_product_knowledge`/`search_product_catalog` — never stated from memory
+- Every customer-facing draft (blog, LinkedIn, case study, video script, social copy) passes the `check_my_copy` brand-voice gate before it is marked ready to publish/send
 </success_criteria>
 
 <core_content>
@@ -267,6 +269,10 @@ What would you add?
 - [ ] Schema markup (if applicable)
 ```
 
+> If the blog references any Epiphan product spec, feature, or competitor comparison, verify it via
+> `search_product_knowledge`/`search_product_catalog` first (see the Verification Gate under Case Studies),
+> then run `check_my_copy` on the final draft before it's marked ready to publish.
+
 ## Case Studies
 
 ### Case Study Structure
@@ -282,7 +288,7 @@ What would you add?
 ## The Solution
 - Why they chose us
 - Implementation overview
-- Key features/services used
+- Key features/services used  *(verify each Epiphan feature/spec claim via `search_product_knowledge` before including — never from memory)*
 
 ## The Results
 - Quantified outcomes (3-5 metrics)
@@ -298,6 +304,17 @@ What would you add?
 2. [Lesson others can apply]
 3. [Lesson others can apply]
 ```
+
+### Verification Gate (before drafting or publishing)
+
+Case studies and any other content that references Epiphan product specs, features, or competitor
+comparisons must **never state those claims from memory**. Before the claim is used in output:
+1. Call `search_product_knowledge` (or `search_product_catalog`) to confirm the spec/feature/competitor
+   claim against current product data.
+2. If the tool returns nothing or is unavailable, do not guess — cut the claim or flag it in the draft
+   as `[UNVERIFIED — confirm before publishing]` and mark the run `partial`.
+3. Once the draft is complete, run `check_my_copy` (Epiphan brand-voice gate) on the full customer-facing
+   text. Only mark content "ready to publish/send" after it passes.
 
 ### Case Study Metrics to Include
 
@@ -359,6 +376,9 @@ Next video, I'll cover [teaser]"
 - [Graphic to create]
 ```
 
+> Same gate applies: verify any Epiphan spec/feature/competitor claim via `search_product_knowledge`
+> before it goes in the script, and run `check_my_copy` on the finished script before it's finalized.
+
 ## Content Repurposing
 
 ### One Piece → Many Formats
@@ -378,8 +398,9 @@ Original: Long-form blog post (2000 words)
 ## Integration Notes
 
 - **Pairs with**: gtm-strategy-skill (messaging), market-research-skill (topics)
-- **Tools**: LinkedIn, WordPress, Canva, Descript
-- **Projects**: coperniq-video-factory, gtm-engineer-journey
+- **Product/brand gates**: `search_product_knowledge` / `search_product_catalog` (Epiphan spec + competitor
+  claim verification), `check_my_copy` (brand-voice gate on customer-facing drafts) — see Verification Gate
+  under Case Studies.
 
 ## Reference Files
 

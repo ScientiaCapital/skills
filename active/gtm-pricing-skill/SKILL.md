@@ -1,6 +1,6 @@
 ---
 name: "gtm-pricing"
-description: "B2B go-to-market strategy, pricing models, ICP development, positioning, and competitive intelligence. Use when planning GTM strategy, setting pricing, defining ICP, or evaluating opportunities."
+description: "Generic B2B go-to-market frameworks: ICP scoring rubric, April Dunford positioning, value-based/tiered pricing, and opportunity scoring. Use when: 'build an ICP', 'write a positioning statement', 'design pricing tiers', 'set list price', 'feature gating', 'score an opportunity', 'competitive battle card', 'GTM launch checklist'. Not for Epiphan account/competitor research (use research-skill) or live lead ICP scoring (use qualify_lead) or current Epiphan pricing/SKU truth (use search_product_catalog)."
 ---
 
 <objective>
@@ -8,7 +8,9 @@ Comprehensive B2B go-to-market framework covering ICP development (firmographics
 </objective>
 
 <quick_start>
-**ICP scoring:** 80+ = Ideal | 60-79 = Good | 40-59 = Marginal | <40 = Pass
+**Trigger:** generic B2B GTM framework work — build an ICP, write positioning, design pricing tiers, score an opportunity, build a battle card, plan a launch. This skill is frameworks/templates only; it holds no live Epiphan data.
+
+**ICP scoring:** 80+ = Ideal | 60-79 = Good | 40-59 = Marginal | <40 = Pass. Scoring a *specific, live* Epiphan lead or deal? Call `qualify_lead` instead of hand-scoring here — it's the source of truth for category/ATL-BTL/suppression (see `skill-audit/specs/suppression-spec.md`). Use this skill's rubric only to design or calibrate the scoring criteria themselves.
 
 **Positioning statement:**
 ```
@@ -16,7 +18,7 @@ For [target] who [need], [product] is a [category] that [benefit].
 Unlike [alternative], our product [differentiator].
 ```
 
-**Value-based pricing:** Price at 10-20% of quantified value delivered
+**Value-based pricing:** Price at 10-20% of quantified value delivered. For an actual Epiphan quote, list price, or competitive price comparison, pull current numbers via `search_product_catalog` — never state an Epiphan price or SKU from memory.
 
 **Opportunity score:** /100 across Market Fit, Technical Fit, GTM Fit, Personal Fit, Economics
 </quick_start>
@@ -30,6 +32,7 @@ GTM strategy is successful when:
 - Opportunity scoring identifies red flags and good signals
 - Battle cards created for top 3 competitors
 - Launch checklist completed (pre-launch, launch, post-launch)
+- Deliverable has a landing place: render the finished ICP/positioning/pricing doc as an HTML one-pager artifact, or hand off the draft to a doc-coauthoring skill for a shareable doc — this skill produces the content, not the delivery channel
 </success_criteria>
 
 <core_content>
@@ -52,6 +55,8 @@ Comprehensive guide for B2B go-to-market strategy, pricing, and opportunity eval
 ## Part 1: Go-To-Market Strategy
 
 ### ICP Development Framework
+
+> **Epiphan-specific:** this section is for *designing* the ICP rubric (the dimensions, weights, and cutoffs). To score a real, live lead or account against Epiphan's ICP, call `qualify_lead` — don't re-derive category/ATL-BTL from raw CRM fields here.
 
 Build your ICP across three dimensions, then score each prospect:
 
@@ -127,6 +132,9 @@ our product [key differentiator tied to unique attribute].
 | Persona | End users, admins | Features, UX, daily workflow benefits |
 
 **Competitive Battle Card Essentials:**
+
+> **Epiphan-specific:** for Epiphan account or competitor research, use `research-skill`, not this framework skill; when a battle card needs a current Epiphan price, spec, or SKU, verify it live via `search_product_catalog` rather than from memory.
+
 For each top-3 competitor, document:
 - Overview: founded, HQ, funding, target market, pricing model
 - Strengths (acknowledge honestly -- credibility requires it)
@@ -214,6 +222,8 @@ Cost Avoidance: Costs eliminated or reduced per year
 **Never gate:** Security features, data export, basic integrations. Gating these breeds resentment and churn.
 
 ### Discounting Strategy
+
+> **Epiphan-specific:** discount ranges below are generic guardrails, not authorization. Current Epiphan list price, active promos, and warranty terms must come from `search_product_catalog` before quoting a real number to a prospect.
 
 | Type | Trigger | Range | Use When |
 |------|---------|-------|----------|
@@ -340,4 +350,6 @@ As the final step, write to `~/.claude/skill-analytics/last-outcome-gtm-pricing.
  "metrics":{"pricing_models_evaluated":[n],"tiers_designed":[n],"gtm_channels_mapped":[n]},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
-Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+**Degrade rule:** if inputs needed for a precise answer are missing (e.g. no quantified customer value for pricing, no competitor data for a battle card), don't block — proceed using clearly labeled assumptions/placeholders and flag them as low-confidence in the output, then mark status "partial" in the sidecar below.
+
+Use status "partial" if some stages failed but results were produced (including a degraded/assumption-based pass per the rule above). Use "error" only if no output was generated.
