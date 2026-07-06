@@ -15,6 +15,12 @@ Schema reference: reference/graph-schema.md
 Query patterns: reference/cypher-patterns.md
 </objective>
 
+<config>
+**GTM_BRAIN_OWNER_ID:** `87486452` (Tim's Nooks user id — reference this constant wherever a Nooks
+owner/user id is needed in this skill; don't re-hardcode it inline).
+**Aura host:** declared once in `<objective>` above — reference it there rather than repeating the URL.
+</config>
+
 <quick_start>
 **Setup (run once per machine):**
 ```bash
@@ -242,26 +248,32 @@ mcp__claude_ai_Epiphan_Ai__hubspot_search_contacts(query="Jane Smith")
 
 Extract from result: `id` (hubspot_id), `firstname`, `lastname`, `jobtitle`, `email`, `phone`, `associatedcompanyid`.
 
-### Step 2 — Classify ATL/BTL from title
+### Step 2 — Qualify the contact (tier + vertical) via qualify_lead
 
-Apply the ATL/BTL Classification from CLAUDE.md:
-- Match title against Universal ATL Keywords → `ATL`
-- Match against BTL / NEVER ATL lists → `BTL` or `NEVER`
-- Gray zone → `GRAY`
+Call `mcp__claude_ai_Epiphan_Ai__qualify_lead` for every contact before it's written to the graph — it
+is the house source of truth for tier, not a second classifier to keep in sync with CLAUDE.md:
 
-### Step 3 — Determine vertical
+```
+mcp__claude_ai_Epiphan_Ai__qualify_lead(contact fields)
+```
 
-Use `mcp__claude_ai_Epiphan_Ai__qualify_lead` or infer from company name/domain:
-Higher Ed → university/college; Courts → court/judicial; Government → city/county/state agency; Healthcare → hospital/health system; Corporate AV → enterprise/corporate.
+- `power_level` → write straight to `atl_btl` (`atl` | `btl` | `gray`).
+- `power_level == unknown` → fall back to the ATL/BTL Classification from CLAUDE.md (Universal ATL
+  Keywords → `ATL`; BTL / NEVER ATL lists → `BTL`/`NEVER`; else `GRAY`) — this keyword match is the
+  fallback path only, never the default.
+- `junk == true` → skip the write entirely; do not add a junk contact to the graph.
+- Vertical: use qualify_lead's vertical/category if it returns one; otherwise infer from company
+  name/domain — Higher Ed → university/college; Courts → court/judicial; Government → city/county/state
+  agency; Healthcare → hospital/health system; Corporate AV → enterprise/corporate.
 
-### Step 4 — Write contact to graph
+### Step 3 — Write contact to graph
 
 ```bash
 python3 "$SCRIPT" merge-contact \
   '{"hubspot_id":"<ID>","name":"<FIRST> <LAST>","title":"<JOBTITLE>","email":"<EMAIL>","phone":"<PHONE>","vertical":"<VERTICAL>","atl_btl":"<TIER>"}'
 ```
 
-### Step 5 — Fetch and write company
+### Step 4 — Fetch and write company
 
 ```
 mcp__claude_ai_Epiphan_Ai__hubspot_get_company(companyId="<associatedcompanyid>")
@@ -281,7 +293,7 @@ python3 "$SCRIPT" run \
   "MATCH (c:Contact {hubspot_id:'<C_ID>'}),(a:Account {hubspot_id:'<A_ID>'}) MERGE (c)-[:WORKS_AT]->(a)"
 ```
 
-**Batch sync tip:** "sync everyone at [company] from HubSpot" → `hubspot_search_contacts` with company filter → loop Steps 2-5 for each contact.
+**Batch sync tip:** "sync everyone at [company] from HubSpot" → `hubspot_search_contacts` with company filter → loop Steps 2-4 for each contact.
 
 ---
 
@@ -294,10 +306,11 @@ Import recent Nooks call dispositions as Outcome nodes. Run after a dial session
 ### Step 1 — List recent calls
 
 ```
-mcp__claude_ai_Nooks__listCalls(filter_owner_id="87486452", filter_time_gte="<TODAY_ISO>")
+mcp__claude_ai_Nooks__listCalls(filter_owner_id="<GTM_BRAIN_OWNER_ID>", filter_time_gte="<TODAY_ISO>")
 ```
 
-Use Tim's Nooks user ID `87486452`. Returns call list with `id`, `prospectId`, `sequenceId`.
+Use the `GTM_BRAIN_OWNER_ID` constant (see `<config>`) — Tim's Nooks user ID. Returns call list with
+`id`, `prospectId`, `sequenceId`.
 
 ### Step 2 — Get disposition per call
 
@@ -329,19 +342,31 @@ python3 "$SCRIPT" log-outcome \
   '{"id":"nooks-<CALL_ID>","contact_hubspot_id":"<HS_ID>","channel":"call","result":"<positive|neutral|negative>","notes":"<disposition label + any call notes>","timestamp":"<call_start_time>","sequence_nooks_id":"<SEQ_ID_IF_SET>"}'
 ```
 
-Process all calls in the batch. Report: N calls imported, breakdown by result (X positive / Y neutral / Z negative).
+Process each call independently — a missing `hubspotContactId` or an Aura timeout must not abort the
+batch. Per call: retry once on a transient error, then skip and tally it (don't stop the loop). Report:
+N calls imported, M skipped (with reasons), breakdown by result (X positive / Y neutral / Z negative).
+
+### Step 6 — Run log
+
+Append one line to `~/.claude/skill-runs/gtm-brain.jsonl` (in addition to the end-of-session sidecar
+below — the sidecar is a snapshot of the last run, this is the trendable history):
+```json
+{"ts":"<UTC ISO8601>","skill":"gtm-brain","version":"<frontmatter version>","status":"<success|partial|error>","imported":<int>,"skipped":<int>,"error":"<string|null>"}
+```
+Any skipped call → `status: "partial"` with the skip reasons in `error`; all calls written → `"success"`.
 
 </core_content>
 
 ## Emit Outcome Sidecar
 
-Write to `~/.claude/skill-analytics/last-outcome-gtm-brain.json`:
+Write to `~/.claude/skill-analytics/last-outcome-gtm-brain.json`. `version` must equal this file's
+frontmatter `version:` (currently `1.1.0`) — never hardcode a second copy that can drift from it:
 
 ```json
 {
   "ts": "<ISO-8601>",
   "skill": "gtm-brain",
-  "version": "1.0.0",
+  "version": "<this file's frontmatter version>",
   "variant": "control",
   "status": "<success|partial|error>",
   "runtime_ms": <int>,

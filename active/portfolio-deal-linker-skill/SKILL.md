@@ -50,7 +50,13 @@ deals (won + lost)        →  originated/influenced it  →  Update weekly dige
 Use `hubspot_search_deals` with filters:
 - `dealstage` IN ('closedwon', 'closedlost')
 - `closedate` >= last run timestamp (stored in `~/.claude/portfolio/last-run.json`)
-- Exclude channel deals (`is_channel = true`) and owned by AE IDs '82625923', '423155215', '190030668' (Lex Evans, Ron Epstein, Phillip Sandler)
+- Apply the CLAUDE.md Golden Rules lead-qualification gates (customers, channel partners, product-only engagers, geo). For the AE-owned exclusion, use the canonical owner list there (Lex Evans `82625923`, Ron Epstein `423155215`, Phillip Sandler `190030668`) — this is a **90-day stale exception, not a hard exclude**: if last activity on an AE-owned deal is >90 days old (Ron Epstein: all leads; Lex Evans/Phillip Sandler: North America only), surface it as a `STALE AE LEAD` in the portfolio run rather than dropping it.
+
+**last-run.json missing/corrupt recovery:** Before querying, read `~/.claude/portfolio/last-run.json`. If the file is missing, unparseable, or its `last_run_ts` is not a valid timestamp:
+1. Default the incremental window to a trailing 24 hours (`now - 24h`) instead of guessing or failing.
+2. Mark this run's outcome sidecar `status` as `"partial"` and add `"degraded_window":"missing_last_run_json"` (or `"corrupt_last_run_json"`) to `metrics` so the gap is visible downstream.
+3. Proceed with the scan using the 24h fallback window — never crash the run or silently assume a wider/narrower window.
+4. On successful completion, (re)write `~/.claude/portfolio/last-run.json` with the current run timestamp so the next run recovers a normal incremental window.
 
 For each deal, pull:
 | Field | Purpose |
@@ -190,7 +196,7 @@ leverage / systems thinking / revenue ownership] at VP BD scale."
 ╚══════════════════════════════════════════════════════════════╝
 ```
 
-## Stage 4: Comp Plan Attainment Tracker
+## Stage 5: Comp Plan Attainment Tracker
 
 Calculate daily progress against Tim's 2026 BDR comp plan targets.
 
@@ -261,6 +267,7 @@ When Tim says "EOD", include portfolio attribution summary for any deals closed 
 - **Epiphan CRM MCP:** hubspot_search_deals, hubspot_get_deal, hubspot_search_contacts, hubspot_get_company, ask_agent (activity history for attribution)
 - **Apollo MCP:** apollo_emailer_campaigns_search (check sequence enrollment history)
 - **Gmail MCP:** search_threads (check draft/sent history for attribution)
+- `qualify_lead` — dedupe when matching attributed contacts against already-qualified leads
 
 ## Sibling Skills Referenced
 - `portfolio-artifact-skill` — Base metrics capture, weekly digest format, executive summary template
@@ -269,14 +276,17 @@ When Tim says "EOD", include portfolio attribution summary for any deals closed 
 - `meddic-call-prep-auto-skill` — Influence attribution (call prep generated for deal)
 - `hubspot-revops-skill` — HubSpot query patterns, deal stage definitions
 
+## Failure Handling
+If `hubspot_search_deals` fails (timeout, rate limit, auth error): retry once with backoff, then skip the stage and mark the run `"partial"` rather than aborting the whole workflow — downstream stages (attribution, metrics) should still run on whatever deals were already fetched, if any. Append one line per run to `~/.claude/skill-runs/portfolio-deal-linker.jsonl` (`{ts, status, deals_seen, degraded_window, error}`) so incremental-window and retry failures are visible across runs, not just in the latest sidecar.
+
 ## Emit Outcome Sidecar
 
 As the final step, write to `~/.claude/skill-analytics/last-outcome-portfolio-deal-linker.json`:
 ```json
 {"ts":"[UTC ISO8601]","skill":"portfolio-deal-linker","version":"1.0.0","variant":"default",
  "status":"[success|partial|error]","runtime_ms":[estimated ms from start],
- "metrics":{"deals_linked":[n],"skills_attributed":[n],"revenue_tracked_usd":[n]},
+ "metrics":{"deals_linked":[n],"skills_attributed":[n],"revenue_tracked_usd":[n],"degraded_window":"[none|missing_last_run_json|corrupt_last_run_json]"},
  "error":null,"session_id":"[YYYY-MM-DD]"}
 ```
-Use status "partial" if some stages failed but results were produced. Use "error" only if no output was generated.
+Use status "partial" if some stages failed but results were produced, or if the last-run.json fallback window was used. Use "error" only if no output was generated.
 </dependencies>
