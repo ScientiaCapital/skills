@@ -1,24 +1,28 @@
 ---
 name: lookalike-customer-finder-skill
-description: Input your best customers and find 100+ companies that match the profile. Uses firmographic data, tech stack, growth signals, and similarity scoring to identify ideal prospects. Use when building target account lists or expanding to new markets.
+description: Build a tiered target-account list by analyzing Epiphan's best customers (pulled live from HubSpot + CRM order history), deriving an ICP across firmographics/tech/growth, and scoring 100+ net-new lookalike companies 0-100 via Apollo/Clay expansion. Gates every surfaced company/contact through Golden Rules + qualify_lead so existing customers, channel partners, and actively-AE-owned accounts are excluded. Use when: "find companies like [customers]", "build a lookalike list", "who else looks like [account]", or expanding into a new Epiphan vertical (Higher Ed, Live Events, Corporate AV, Houses of Worship, Government, Healthcare).
 ---
 
 # Lookalike Customer Finder
 
 <objective>
-Analyze your best customers to build an ideal customer profile (ICP), then find 100+ companies that match using firmographic data, tech stack, growth signals, and similarity scoring. Produces tiered target account lists ranked by match quality for account-based outreach.
+Analyze Epiphan's best customers — sourced live from HubSpot + CRM order history, not recalled from memory — to build an ideal customer profile (ICP), then find 100+ net-new companies that match using firmographic data, tech stack, growth signals, and similarity scoring, expanded via Apollo/Clay. Every surfaced company and contact is gated through Golden Rules + `qualify_lead` before it reaches the output, so existing customers, channel partners, and actively-AE-owned accounts never show up disguised as "net-new lookalikes." Produces tiered target account lists ranked by match quality for account-based outreach.
 </objective>
 
 <quick_start>
-**Trigger:** "find companies like [customer names]" or "build a lookalike target account list"
-**Output:** ICP analysis, 100+ ranked lookalike companies with similarity scores, tiered targeting strategy
+**Trigger:** "find companies like [customer names]", "build a lookalike target account list", "who else looks like [account]"
+**MCP Tools:** `hubspot_search_deals` / `hubspot_search_companies` / `crm_get_customer_orders` (seeds) → `apollo_organizations_enrich` / `apollo_mixed_companies_search` / Clay `find-and-enrich-company` (expansion) → `qualify_lead` (gate)
+**Output:** ICP analysis, 100+ ranked lookalike companies with similarity scores (post-gate only), tiered targeting strategy, exported CSV
 </quick_start>
 
 <success_criteria>
-- [ ] ICP derived from analysis of best customers (firmographics, tech, growth, behavior)
-- [ ] Lookalike companies scored 0-100 on weighted similarity model
+- [ ] Seed "best customers" pulled live via `hubspot_search_deals` (closed-won) + CRM order history — never fabricated
+- [ ] ICP derived from analysis of the real seed accounts (firmographics, tech, growth, behavior)
+- [ ] Lookalike companies sourced via live Apollo/Clay expansion, scored 0-100 on weighted similarity model
+- [ ] Every surfaced company/contact passes the Golden Rules + `qualify_lead` gate (Stage G) before inclusion — no existing customer, channel partner, or active-AE account surfaces as "net-new"
 - [ ] Companies tiered into priority outreach groups (Tier 1/2/3)
-- [ ] Contact intelligence and recommended approach per top prospect
+- [ ] Contact intelligence (ATL/BTL/GRAY tier from `qualify_lead`) and recommended approach per top prospect
+- [ ] Ranked list written to a real CSV export, not just asserted in prose
 </success_criteria>
 
 <workflow>
@@ -52,6 +56,29 @@ You are an expert at account-based prospecting and market analysis. Your mission
 - 70-79: Good match
 - 60-69: Moderate match
 - Below 60: Weak match
+
+## Stage 1 — Source Seed Customers (live, HubSpot + CRM)
+Never ask the analysis to run on remembered or assumed customer names. Pull the real seed set:
+1. `hubspot_search_deals` filtered to closed-won (sorted by amount/recency) to identify accounts that actually bought.
+2. `crm_get_customer_orders` / `crm_search_customers` to confirm device count, revenue, and order history per account — Epiphan's CRM is the source of truth for "customer" status, not `lifecyclestage` alone.
+3. `hubspot_search_companies` to pull the matching company record (industry, size, domain) for each seed.
+If the user names specific customers instead of asking for a general pull, still verify each one against HubSpot/CRM rather than trusting the name blind — an unverified "best customer" produces a garbage ICP downstream.
+
+## Stage 2 — Derive the ICP
+Score the Customer Profile Dimensions above (Firmographics, Technographics, Growth Signals, Behavioral, Psychographics) against the real seed accounts pulled in Stage 1 — not placeholder values.
+
+## Stage 3 — Expand to Lookalikes (Apollo + Clay)
+1. `apollo_mixed_companies_search` with filters derived from the Stage 2 ICP (industry, employee range, keywords, technologies) to surface 100+ candidate companies.
+2. `apollo_organizations_enrich` on each candidate to fill firmographics, tech stack, and funding/hiring signals for the Weighted Scoring Model below.
+3. Where Apollo returns incomplete data (missing tech stack, funding, or contact info), fall back to Clay's `find-and-enrich-company` waterfall.
+Score every enriched candidate against the Weighted Scoring Model above.
+
+## Stage G — Golden Rules + qualify_lead Gate (CRITICAL)
+Before any candidate company or contact reaches the output (Tier 1/2/3, the ranked table, or Contact Intelligence), call `qualify_lead` on it. This is the single qualification gate — do not re-derive Golden Rules, ATL/BTL keyword tables, or suppression logic inline. Per `skill-audit/specs/suppression-spec.md`, `qualify_lead` returns `category`, `power_level` (atl/btl/gray/unknown), and a `junk` flag, and is the enforcement point for suppression state.
+- **Exclude** anything `qualify_lead` flags as an existing customer, channel partner, or an account with an active AE deal inside the 90-day window (CLAUDE.md Golden Rules) — surfacing an existing customer as a "lookalike" is a bug, not a lead.
+- **Surface, don't silently drop**, any `STALE AE LEAD` (AE-owned, >90 days inactive per the Golden Rules exception) — flag it in the report instead of either excluding it or treating it as fresh net-new.
+- Tag every surviving contact with its `power_level` (ATL/GRAY/BTL) for Contact Intelligence — BTL-only accounts still get scored but are deprioritized, never presented as the primary contact.
+- Log excluded counts by reason (customer, channel, ae_active, suppressed, junk) — these feed the Golden Rules & qualify_lead Summary in the report below.
 
 ### Output Format
 
@@ -186,7 +213,7 @@ Common characteristics:
 - Tech: Using [X]/[Y] target technologies
 - Geography: [X]% in target regions
 
-**Export Available**: CSV with company details, contacts, and prioritization
+**Export**: write the full ranked list (all tiers, post-`qualify_lead`) to `lookalike_accounts_[YYYY-MM-DD].csv` — company, domain, industry, size, similarity score, tier, ATL/BTL/GRAY contact(s), `qualify_lead` category. Don't assert an export exists without producing the file.
 
 ---
 
@@ -259,15 +286,20 @@ Why they score lower:
 
 ---
 
-### Stage S — Suppression Gate
+### Golden Rules & qualify_lead Summary
 
-Before including any contact in outreach or dial output:
-- **EXCLUDE** if `bdr_suppression_until` IS SET AND `bdr_suppression_until` > TODAY
-- **INCLUDE** if `bdr_suppression_until` IS NOT SET (never suppressed)
-- **INCLUDE** if `bdr_suppression_until` < TODAY (cooling period expired)
+Every company/contact below already passed the Stage G gate — this section reports the gate's counts, it does not re-derive the rule:
 
-HubSpot filter: `propertyName: "bdr_suppression_until", operator: "NOT_HAS_PROPERTY"` OR `operator: "LT", value: TODAY_ISO`
-Reference: `lead-suppression-spec` (bdr_suppressed, bdr_suppression_reason, bdr_suppression_until)
+| Excluded reason | Count |
+|---|---|
+| Existing customer | [X] |
+| Channel partner | [X] |
+| Active AE deal (<90d) | [X] |
+| Suppressed (`qualify_lead` suppression state) | [X] |
+| Junk / unqualified | [X] |
+| **STALE AE LEAD (surfaced, not excluded)** | [X] — see flagged rows above |
+
+Reference: `skill-audit/specs/suppression-spec.md` (enforcement point = `qualify_lead`).
 
 ---
 
